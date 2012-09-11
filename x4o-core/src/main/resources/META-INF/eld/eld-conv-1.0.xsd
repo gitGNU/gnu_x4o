@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<!-- ==================================================================== -->
+<!-- =====  Automatic generated schema for language: eld            ===== -->
+<!-- ==================================================================== -->
+<!--
+	ProviderName:	x4o.org
+	ModuleName:		Element Language Definition
+	Namespaces:		3
+	Namespace:		http://eld.x4o.org/xml/ns/eld-conv
+	Created on:		Fri Aug 24 17:55:33 CEST 2012
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+ xmlns:this="http://eld.x4o.org/xml/ns/eld-conv"
+ xmlns:lang="http://eld.x4o.org/xml/ns/eld-lang"
+ version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://eld.x4o.org/xml/ns/eld-conv">
+	<import namespace="http://eld.x4o.org/xml/ns/eld-lang" schemaLocation="eld-lang-1.0.xsd"/>
+	<complexType name="byteConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="booleanConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="urlConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="beanConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+		<attribute name="bean.class" type="string"/>
+		<anyAttribute/>
+	</complexType>
+	<complexType name="stringSplitConverterStepType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="booleanConverter" type="this:booleanConverterType"/>
+			<element name="byteConverter" type="this:byteConverterType"/>
+			<element name="characterConverter" type="this:characterConverterType"/>
+			<element name="classConverter" type="this:classConverterType"/>
+			<element name="doubleConverter" type="this:doubleConverterType"/>
+			<element name="enumConverter" type="this:enumConverterType"/>
+			<element name="floatConverter" type="this:floatConverterType"/>
+			<element name="integerConverter" type="this:integerConverterType"/>
+			<element name="longConverter" type="this:longConverterType"/>
+			<element name="stringSplitConverter" type="this:stringSplitConverterType"/>
+			<element name="urlConverter" type="this:urlConverterType"/>
+		</choice>
+		<attribute name="toMethod" type="string"/>
+		<attribute name="fromOrder" type="string" use="required"/>
+		<attribute name="fromMethod" type="string" use="required"/>
+		<attribute name="toOrder" type="string" use="required"/>
+		<attribute name="objectConverter" type="string"/>
+	</complexType>
+	<complexType name="doubleConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="longConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="classConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="stringSplitConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="stringSplitConverterStep" type="this:stringSplitConverterStepType"/>
+		</choice>
+		<attribute name="useNativeType" type="string"/>
+		<attribute name="singleToMethod" type="string"/>
+		<attribute name="splitSize" type="string" use="required"/>
+		<attribute name="split" type="string" use="required"/>
+		<attribute name="classTo" type="string" use="required"/>
+	</complexType>
+	<complexType name="integerConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="floatConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="characterConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="enumConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+		<attribute name="enumClass" type="string"/>
+	</complexType>
+	<element name="byteConverter" type="this:byteConverterType"/>
+	<element name="booleanConverter" type="this:booleanConverterType"/>
+	<element name="urlConverter" type="this:urlConverterType"/>
+	<element name="beanConverter" type="this:beanConverterType">
+		<annotation>
+			<documentation xml:lang="en">Define an loadable in bean.class for an ObjectConverter.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="stringSplitConverterStep" type="this:stringSplitConverterStepType"/>
+	<element name="doubleConverter" type="this:doubleConverterType"/>
+	<element name="longConverter" type="this:longConverterType"/>
+	<element name="classConverter" type="this:classConverterType"/>
+	<element name="stringSplitConverter" type="this:stringSplitConverterType"/>
+	<element name="integerConverter" type="this:integerConverterType"/>
+	<element name="floatConverter" type="this:floatConverterType"/>
+	<element name="characterConverter" type="this:characterConverterType"/>
+	<element name="enumConverter" type="this:enumConverterType"/>
+</schema>

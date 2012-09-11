@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<root:JFrame
+	xmlns:root="http://swixml.x4o.org/xml/ns/swixml-root"
+	xmlns="http://swixml.x4o.org/xml/ns/swixml-lang"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://test.x4o.org/xml/ns/test-root test-root-1.0.xsd"
+	name="mainframe" size="800,600" title="SWIXML-X4O" plaf="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" defaultCloseOperation="3"
+	>
+	<JMenubar name="menubar">
+		<JMenu name="filemenu" text="File">
+			<JMenuItem name="mi_new" text="New" icon="icons/new.gif" mnemonic="VK_N" accelerator="control N" Action="newAction"/>
+			<JMenuItem name="mi_open" text="Open" icon="icons/open.gif" mnemonic="VK_O" Accelerator="control O" ActionCommand="open"/>
+			<JMenuItem name="mi_save" text="Save" icon="icons/save.gif" mnemonic="VK_S" ActionCommand="save"/>
+			<JMenu name="propmenu" text="Properties" icon="icons/new.gif" >
+				<JMenuItem name="mi_prop_edit" text="Edit" icon="icons/new.gif"/>
+				<JMenuItem name="mi_prop_clear" text="Clear" icon="icons/new.gif"/>	
+			</JMenu>
+			<JMenu.Separator/>
+			<JMenuItem name="mi_exit" text="Exit" icon="icons/exit.gif" mnemonic="VK_X" Accelerator="control X" ActionCommand="exit" Action="exitAction"/>
+		</JMenu>
+		<JMenu text="Help">
+			<JMenuItem name="mi_about" text="About" enabled="true" icon="icons/info.gif" Accelerator="alt A" Action="aboutAction" />
+		</JMenu>
+	</JMenubar>
+	<JDesktopPane>
+		<JInternalFrame title="Flow Layout (right aligned)" bounds="10,10,150,150" layout="FlowLayout(FlowLayout.RIGHT)" visible="true" resizable="true">
+			<JButton text="1"/>
+			<JButton text="2"/>
+			<JButton text="3"/>
+			<JButton text="4"/>
+		</JInternalFrame>
+		<JInternalFrame title="Grid Layout" bounds="200,10,170,170" layout="GridLayout(4,3)" visible="true" resizable="true">
+			<JButton text="1"/><JButton text="2"/><JButton text="3"/>
+			<JButton text="4"/><JButton text="5"/><JButton text="6"/>
+			<JButton text="7"/><JButton text="8"/><JButton text="9"/>
+			<JButton text="*"/><JButton text="0"/><JButton text="#"/>
+		</JInternalFrame>
+		<JInternalFrame title="Border Layout" bounds="390,10,150,150" layout="borderlayout" visible="true" resizable="true">
+			<JButton constraints="BorderLayout.NORTH" text="1"/>
+			<JButton constraints="BorderLayout.EAST"  text="2"/>
+			<JButton constraints="BorderLayout.SOUTH" text="3"/>
+			<JButton constraints="BorderLayout.WEST"  text="4"/>
+		</JInternalFrame>
+		<JInternalFrame title="Gridbag Layout" bounds="400,170,220,210" visible="true" resizable="true">
+		<!--  Layout="GridBagLayout"
+			<JButton text="Wonderful">
+				<gridbagconstraints id="gbc_1" insets="2,2,2,2" gridx="0" gridy="0" ipadx="15" ipady="15" weightx="1" weighty="1"/>
+			</JButton>
+			<JButton text="World">
+				<gridbagconstraints refid="gbc_1" gridx="1"/>
+			</JButton>
+			<JButton text="of">
+				<gridbagconstraints refid="gbc_1" gridy="1"/>
+			</JButton>
+			<JButton text="Swixml">
+				<gridbagconstraints refid="gbc_1" gridx="1" gridy="1"/>
+			</JButton>
+			 -->
+		</JInternalFrame>
+		<JInternalFrame title="Tree Window" bounds="10,170,350,360" layout="borderlayout" visible="true" resizable="true">
+			<JPanel layout="borderlayout" constraints="BorderLayout.CENTER">
+				<JSplitPane oneTouchExpandable="true" dividerLocation="200">
+					<JSplitPane oneTouchExpandable="true" dividerLocation="140" orientation="VERTICAL">
+						<JScrollPane background="blue" >
+							<JTree name="tree"/>
+						</JScrollPane>
+						<JPanel layout="borderlayout">
+							<JPanel constraints="BorderLayout.NORTH">
+								<JButton name="btn_copy" toolTipText="JPanel" enabled="true" borderPainted="false" focusPainted="false" icon="icons/copy.gif" size="24,24"/>
+								<JButton name="btn_paste" toolTipText="JJButton" enabled="true" borderPainted="false" focusPainted="false" icon="icons/paste.gif" size="24,24"/>
+								<JButton name="btn_cut" toolTipText="JLabel" enabled="true" icon="icons/cut.gif" borderPainted="false" focusPainted="false" size="24,24"/>
+							</JPanel>
+							<JScrollPane constraints="BorderLayout.CENTER">
+								<JTable name="table"/>
+							</JScrollPane>
+						</JPanel>
+					</JSplitPane>
+					<JPanel name="preview" border="LoweredBevelBorder">
+						<JTextArea name="ta" text="Tree Status Log....." background="red"/>
+					</JPanel>
+				</JSplitPane>
+			</JPanel>
+			<JPanel constraints="BorderLayout.SOUTH">
+				<JLabel text="Status:"/>
+				<JTextField text="OK"/>
+			</JPanel>
+		</JInternalFrame>
+	</JDesktopPane>
+</root:JFrame>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<project name="ant-elddoc-task" basedir="../../../..">
+
+	<property name="test.dir" value="${basedir}/target/test-elddoc/"/>
+
+	<target name="init">
+		<taskdef name="eldDocWriter" classname="org.x4o.plugin.ant.eld.doc.EldDocWriterTask"/>
+		<mkdir dir="${test.dir}"/>
+		<mkdir dir="${test.dir}/test"/>
+	</target>
+	
+	<target name="test-elddoc-cel" depends="init">
+		<mkdir dir="${test.dir}/cel"/>
+		<eldDocWriter
+			destdir="${test.dir}/cel"
+			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			/>
+	</target>
+	
+	<target name="test-elddoc-cel-verbose" depends="init">
+		<mkdir dir="${test.dir}/cel"/>
+		<eldDocWriter
+			verbose="true"
+			destdir="${test.dir}/cel"
+			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			/>
+	</target>
+	
+	<target name="test-elddoc-eld" depends="init">
+		<mkdir dir="${test.dir}/eld"/>
+		<eldDocWriter
+			destdir="${test.dir}/eld"
+			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			/>
+	</target>
+	
+	<target name="test-fail-all" depends="init">
+		<eldDocWriter/>
+	</target>
+	<target name="test-fail-destdir" depends="init">
+		<eldDocWriter supportclass="org.x4o.xml.eld.EldParserSupportCore"/>
+	</target>
+	<target name="test-fail-destdir-error" depends="init">
+		<eldDocWriter supportclass="org.x4o.xml.eld.EldParserSupportCore" destdir="${test.dir}/no-dir"/>
+	</target>
+	<target name="test-fail-supportclass" depends="init">
+		<eldDocWriter destdir="${test.dir}/test"/>
+	</target>
+	<target name="test-fail-supportclass-error" depends="init">
+		<eldDocWriter destdir="${test.dir}/test" supportclass="org.x4o.xml.eld.EldErrorParserSupport"/>
+	</target>
+	<target name="test-fail-class-error" depends="init">
+		<eldDocWriter destdir="${test.dir}/test" supportclass="non.excisting.clazz"/>
+	</target>
+	<target name="test-fail-class-error-no" depends="init">
+		<eldDocWriter destdir="${test.dir}/test" supportclass="non.excisting.clazz" failonerror="false"/>
+	</target>
+	
+</project>

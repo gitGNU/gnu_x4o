@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<x4o:root  xmlns:x4o="http://meta.x4o.org/xml/ns/meta-lang"
+		  xmlns:test="http://test.x4o.org/xml/ns/test"
+	      >
+	<!-- XML_COMMENT_TEXT -->
+	
+	<x4o:bean el.id="date" bean.class="java.util.Date"/>
+	<test:testObjectChild el.id="child1" name="Im bean1" price="555" size="234.34"/>	
+	
+	<!--  bind parent and child8888 -->
+	<test:testObjectParent el.id="parent2">
+		<!-- comment1 .... -->
+		<test:testObjectChild el.id="child2" name="Im bean2" price="345236" size="12.09"/>
+		<!-- comment2 .... -->
+		<!-- comment3 .... -->
+		<!-- comment4 .... -->
+		<x4o:bean el.id="date" bean.class="java.util.Date"/>
+					<!-- comment5 .... -->
+		<x4o:bean el.id="date" bean.class="java.util.Date"/><!-- comment6 .... -->
+	</test:testObjectParent>
+	
+	<!-- Test EL -->
+	<test:testObjectChild el.id="bean3" parent="${parent2}" name="TEST ${child1.name}" price="0" size="0"/>	
+
+	<!--  this does NOT bind !! -->
+	<test:testObjectChild>
+		<test:testObjectParent/>
+	</test:testObjectChild>
+	
+</x4o:root>

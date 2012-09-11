@@ -1,0 +1,96 @@
+~~
+~~ Copyright (c) 2004-2012, Willem Cazander
+~~ All rights reserved.
+~~
+~~ Redistribution and use in source and binary forms, with or without modification, are permitted provided
+~~ that the following conditions are met:
+~~ 
+~~ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+~~   following disclaimer.
+~~ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+~~   the following disclaimer in the documentation and/or other materials provided with the distribution.
+~~ 
+~~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+~~ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+~~ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+~~ THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+~~ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+~~ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+~~ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+~~ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+~~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+~~
+
+Usage
+   
+* X4O maven modules
+  
+  * x4o = project base.
+  
+  * x4o-core = Main x4o library.
+  
+  * x4o-elddoc = X4O Eld documentation support.
+  
+  * x4o-meta = X4O Meta sibling language.
+  
+  * x4o-plugin = X4O external plugins.
+  
+  * x4o-plugin-ant-elddoc = Ant x4o elddoc task.
+  
+  * x4o-plugin-ant-schema = Ant x4o schema task.
+  
+
+* Setup as library
+
+  Append the core maven dependency;
+  
++--
+   <dependency>
+     <groupId>org.x4o</groupId>
+     <artifactId>x4o-core</artifactId>
+     <version>0.8.5-SNAPSHOT</version>
+   </dependency>
++--
+
+  Note: currently x4o is not in main maven repro, so build and install local yourself.
+
+* Setup ant task
+
+  Append one or both of the x4o eld ant tasks;
+
++--
+  <dependency>
+    <groupId>org.x4o.plugin</groupId>
+    <artifactId>x4o-plugin-ant-elddoc</artifactId>
+    <version>${project.version}</version>
+  </dependency>
+  <dependency>
+    <groupId>org.x4o.plugin</groupId>
+    <artifactId>x4o-plugin-ant-schema</artifactId>
+    <version>${project.version}</version>
+  </dependency>
++--
+
+  Use in ant and set the supportclass on the language you want todo the task for.
+  
++--
+	<taskdef name="eldDocWriter" classname="org.x4o.plugin.ant.eld.doc.EldDocWriterTask"/>
+	<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
+
+	<target name="test-cel-schema-full" depends="init">
+		<mkdir dir="${test.dir}/cel-full"/>
+		<eldXsdWriter
+			destdir="${test.dir}/cel-full"
+			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			/>
+	</target>
+	<target name="test-elddoc-cel" depends="init">
+		<mkdir dir="${test.dir}/cel"/>
+		<eldDocWriter
+			destdir="${test.dir}/cel"
+			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			/>
+	</target>
+	
++--
+

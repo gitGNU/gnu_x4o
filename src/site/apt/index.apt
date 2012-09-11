@@ -1,0 +1,77 @@
+~~
+~~ Copyright (c) 2004-2012, Willem Cazander
+~~ All rights reserved.
+~~
+~~ Redistribution and use in source and binary forms, with or without modification, are permitted provided
+~~ that the following conditions are met:
+~~ 
+~~ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+~~   following disclaimer.
+~~ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+~~   the following disclaimer in the documentation and/or other materials provided with the distribution.
+~~ 
+~~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+~~ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+~~ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+~~ THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+~~ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+~~ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+~~ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+~~ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+~~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+~~
+
+Overview
+  
+  X4O is a xml java parser library for development your own xml language.
+  This is preferable done for unmodified POJO objects so external libraries can be wrapped in xml.
+  This is done by defining your own element language definitions in one or more xml files, which in 
+  turn are also done by x4o recursively and so it can be extended.
+  
+  The extension modules are dynamically loaded from the classpath to define new namespaces.
+  Besides the elements in the namespace, modules also define the object parent child relation
+  binding interfaces which results in an object tree. 
+  
+  This all can be used to create your own powerful xml parser and (re)define your own xml
+  language, with using little code and also getting automatic schema generation.
+
+* Features
+
+  X4O takes a lot of work out of your hand while creating complex languages and still have fine control
+  over the parsing of the xml elements. 
+  
+  For more information visit the detailed list of the {{{./features.html}Features}} page.
+
+* Usage
+
+  Instructions on how to install X4O can be found {{{./usage.html}here}} and then start your
+  language {{{./examples/start-language.html}here}}.
+
+* Examples
+
+  There are two examples written out;
+
+  {{{./examples/sample-swixml.html}Sample SwiXml}}
+  
+  {{{./examples/sample-jr4o.html}Sample JR4O}}
+
+  But to put it simple, x4o translates the xml elements into beans;
+
++--
+<my:fooBean test="hello wold"/>
++--
+
+  Creates an instance and sets the name property of this bean;
+
++--
+class FooBean {
+	private String name=null;
+	public void setName(String name) {
+		this.name=name;
+	}
+	public String getName() {
+		return name;
+	}
+}
++--
+

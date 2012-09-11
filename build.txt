@@ -1,0 +1,66 @@
+
+Building X4O
+
+You need a few software packages;
+- java sdk 1.5 or higher.
+- maven 3 or higher.
+
+
+
+-- Create package --
+
+cd project-root/;
+mvn clean package;
+
+
+-- Install local package --
+
+cd project-root/;
+mvn clean install;
+
+
+-- Update schemas in src --
+
+cd project-root/;
+mvn clean install;
+mvn -Pupdate-schema-cel package;
+mvn -Pupdate-schema-eld package;
+- Add the license as manual step in xsd files. (todo in ant task)
+
+note: the do 'install' is because of circle plugins.
+
+
+-- Make release build --
+
+# todo make work
+cd project-root/;
+mvn clean package;
+mvn -B -Dusername=<scm_username> clean install release:clean release:prepare release:perform;
+src/build/gnu-up.sh <scm_username> <version>
+
+
+-- Make site --
+
+cd project-root/;
+mvn -Psite-elddoc clean package site site:stage
+
+
+-- Check for code style --
+
+cd project-root/;
+mvn checkstyle:checkstyle
+
+
+-- Check for licenses --
+
+cd project-root/;
+mvn -Pcheck-license license:check
+
+
+-- Check for versions-updates --
+
+cd project-root/;
+mvn versions:display-plugin-updates;
+mvn versions:display-dependency-updates;
+
+

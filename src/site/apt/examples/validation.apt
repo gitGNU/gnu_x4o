@@ -1,0 +1,78 @@
+~~
+~~ Copyright (c) 2004-2012, Willem Cazander
+~~ All rights reserved.
+~~
+~~ Redistribution and use in source and binary forms, with or without modification, are permitted provided
+~~ that the following conditions are met:
+~~ 
+~~ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+~~   following disclaimer.
+~~ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+~~   the following disclaimer in the documentation and/or other materials provided with the distribution.
+~~ 
+~~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+~~ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+~~ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+~~ THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+~~ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+~~ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+~~ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+~~ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+~~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+~~
+
+Validation
+
+  Schema validation is just new feature and work in progress to have it support all different xml language formats.
+  With x4o there are currently two options howto validate your documents, it depends if the language is extended.
+
+* Validating parser
+
++--
+	TestParser parser = new TestParser();
+	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
+	parser.parse(...);
++--
+
+* Generate static languages
+
+  Store the generated xsd files in the (resource)classpath of project in META-INF/<language>/<ns-schemaResource>. 
+  These schemas can be created or updates while package project or update manually by build script of profile.
+  
+  For example see the profile in the pom.xml of the x4o-plugin-ant-schema.
+  
+  * Validating parser
+  
++--
+	TestParser parser = new TestParser();
+	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
+	parser.parse(...);
++--
+
+* Generate dynamic languages
+
+  Generate the xsd files while all the language extensions are loaded in the classpath.
+  
+  Use the embedded java program in the x4o-core;
+  
++--
+  java -cp '...jar:x4o-core.jar' org.x4o.xml.eld.xsd.X4OLanguageEldXsdWriter -path /tmp -class org.foo.bar.TestParserSupport
++--
+  
+  Or use the ant task in the x4o-plugin-ant-schema;
+  
++--
+	<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
+	<eldXsdWriter destdir="/tmp" supportclass="org.foo.bar.TestParserSupport"/>
++--
+  
+  * Validating parser
+  
++--
+	TestParser parser = new TestParser();
+	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
+	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_SCHEMA_PATH, "/tmp");
+	parser.parse(...);
++--
+
+

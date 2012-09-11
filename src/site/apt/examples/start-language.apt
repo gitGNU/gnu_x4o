@@ -1,0 +1,130 @@
+~~
+~~ Copyright (c) 2004-2012, Willem Cazander
+~~ All rights reserved.
+~~
+~~ Redistribution and use in source and binary forms, with or without modification, are permitted provided
+~~ that the following conditions are met:
+~~ 
+~~ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+~~   following disclaimer.
+~~ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+~~   the following disclaimer in the documentation and/or other materials provided with the distribution.
+~~ 
+~~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+~~ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+~~ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+~~ THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+~~ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+~~ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+~~ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+~~ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+~~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+~~
+
+Start Language
+
+  To integrate x4o as parser for your language there needs to be a few minimal steps
+  be te taken, to have a working language.
+  
+  * Create parser and support classes.
+  
+  * Create language modules files.
+  
+  * Create eld files. 
+
+
+* Create your parser
+
++--
+public class FooBarParser extends X4OParser {
+	
+	static public String FOOBAR_LANGUAGE = "foobar";
+
+	public FooBarParser() throws Exception {
+		super(FOOBAR_LANGUAGE);
+	}
+}
++--
+
+* Create parser support
+
++--
+public class FooBarParserSupport implements X4OParserSupport {
+
+	public ElementLanguage loadElementLanguageSupport() throws X4OParserSupportException {
+		FooBarParser parser = new FooBarParser();
+		return parser.loadElementLanguageSupport();
+	}
+}
++--
+
+* Create modules
+
+  Create the file "META-INF/foobar/foobar-modules.xml" with:
+  
++--
+<?xml version="1.0" encoding="UTF-8"?>
+<modules version="1.0"
+	xmlns="http://language.x4o.org/xml/ns/modules"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://language.x4o.org/xml/ns/modules http://language.x4o.org/xml/ns/modules-1.0.xsd"
+	>
+	<language version="1.0">
+		<eld-resource>foobar-lang.eld</eld-resource>
+	</language>
+</modules>
++--
+
+* Create ELD file
+
+  Create the file "META-INF/foobar/foobar-lang.eld" with:
+  
++--
+<?xml version="1.0" encoding="UTF-8"?>
+<root:module
+	xmlns:root="http://eld.x4o.org/xml/ns/eld-root"
+	xmlns:eld="http://eld.x4o.org/xml/ns/eld-lang"
+	xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://eld.x4o.org/xml/ns/eld-root http://eld.x4o.org/xml/ns/eld-root-1.0.xsd"
+	providerName="foobar.test.x4o.org"
+	name="FooBar Language"
+	id="foobar"
+	>
+	
+	<eld:classBindingHandler id="test1" bean.class="org.foo.bar.x4o.MyFooBarBindingHandler"/>
+	<eld:classBindingHandler id="test2" parentClass="org.foo.bar.TestObjectParent" childClass="org.foo.bar.TestObjectChild" method="addTestObjectChild"/>
+
+	<eld:elementInterface id="JComponent" interfaceClass="javax.swing.JComponent">
+		<eld:classBindingHandler id="JComponent-JComponent" parentClass="javax.swing.JComponent" childClass="javax.swing.JComponent" method="add"/>
+	</eld:elementInterface>
+	
+	<eld:namespace
+		uri="http://foobar.test.x4o.org/xml/ns/foobar-root"
+		schemaUri="http://test.x4o.org/xml/ns/foobar-root-1.0.xsd"
+		schemaResource="foobar-root-1.0.xsd"
+		schemaPrefix="root"
+		name="FooBar Root Namespace"
+		languageRoot="true"
+		>
+		<eld:element tag="root" objectClass="org.foo.bar.TestBeanRoot">
+			<eld:description>The root element.</eld:description>
+		</eld:element>
+	</eld:namespace>
+	
+	<eld:namespace
+		uri="http://foobar.test.x4o.org/xml/ns/foobar-lang"
+		schemaUri="http://foobar.test.x4o.org/xml/ns/foobar-lang-1.0.xsd"
+		schemaResource="foobar-lang-1.0.xsd"
+		schemaPrefix="lang"
+		name="FooBar Language Namespace"
+		>		
+		<eld:element tag="testBean" objectClass="org.foo.bar.TestBean"/>
+		
+		<!--  etc  -->
+	</eld:namespace>
+</root:module>
++--
+
+  Now you can startup the parser to see it work.
+  

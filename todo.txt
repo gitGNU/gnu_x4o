@@ -1,0 +1,76 @@
+
+-- x4o TODO list --
+
+- fix bind of attributeFromBody on module !
+- static field constant converter
+- full Xinclude test
+- compleet eld doc html/css.
+- move loading back into sax phase so version can readout on root tag.
+- meta add more ns and jndi ref/etc'
+- redo eld/default converters config
+- tag aliases
+- maven plugin
+- code split in api/impl ?
+- lang-el-beans.xml loading
+- Add XML schema tags to ELD  
+- Auto generate schemas from eld
+- Basic write support (for editor)
+- Basic editor support
+- Make converter config/loading better
+- Single xsd output
+- class dtd entity loading
+- new ns for entity catalog for class resource 
+- Add w3c html namespace in eld for description tag
+- move Boolean default from code to xml + conf.
+
+-- IDEAS --
+
+- add support javax.xml.xpath for xpath support
+- add java.script support
+- event listeners on all DOM tree element operations
+- custom and merga'ble parse phases for speed
+- make element tree jdom api compatible
+- change phase enum to generic (text) phases. 
+- Test if possible to use threadpool for executing phases
+
+-- TODO for version 1.0 --
+
+## NON-CODE
+- Add tutorial
+- doc eld and x4o lang files
+- Create xslt eld to html converter
+- split into multiple maven projects
+	- x4o
+	- x4o-api
+	- x4o-core
+	- x4o-meta
+	- x4o-plugin
+	- x4o-plugin-ant-schema
+	- x4o-plugin-ant-elddoc
+	- x4o-plugin-mvn-schema
+	- x4o-plugin-mvn-elddoc
+	- x4o-plugin-ide-eclipse-editor
+	- x4o-plugin-ide-eclipse-catalog
+
+##CODE
+- Add (super) tag for extending tags of other namespace
+- Add EldInfo element
+- XMLOverrideEvent
+	- inboud sax parser !!
+	- input stream output converter :)
+- eld static method binding for EL
+- (50%) converters
+- more junit tests
+	- multi and overrides in namespaces
+	- localoverride
+- (DONE) multi phase parsing
+	- for loop support
+	- templateing.
+	- merging of object tree's
+	- sax with all x4o feutures like templating
+- x4o:include option
+	- Xinclude option
+	- SAX events as input source
+- (70%) XML debug output
+- (20%) x4o comment element
+

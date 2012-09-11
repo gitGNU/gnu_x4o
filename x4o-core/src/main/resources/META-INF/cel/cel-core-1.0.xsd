@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<!-- ==================================================================== -->
+<!-- =====  Automatic generated schema for language: cel            ===== -->
+<!-- ==================================================================== -->
+<!--
+	ProviderName:	x4o.org
+	ModuleName:		Core Element Language
+	Namespaces:		2
+	Namespace:		http://cel.x4o.org/xml/ns/cel-core
+	Created on:		Fri Aug 24 17:54:18 CEST 2012
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+ xmlns:this="http://cel.x4o.org/xml/ns/cel-core"
+ version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://cel.x4o.org/xml/ns/cel-core">
+	<complexType name="namespaceType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="element" type="this:elementType"/>
+		</choice>
+		<attribute name="uri" type="string" use="required"/>
+		<attribute name="name" type="string"/>
+		<attribute name="elementNamespaceInstanceProvider" type="string"/>
+		<attribute name="schemaUri" type="string"/>
+		<attribute name="schemaResource" type="string"/>
+		<attribute name="schemaPrefix" type="string"/>
+		<attribute name="languageRoot" type="boolean"/>
+		<attribute name="prefixMapping" type="string"/>
+		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
+	</complexType>
+	<complexType name="descriptionType">
+		<simpleContent>
+			<extension base="string">
+				<anyAttribute/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="elementType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="attribute" type="this:attributeType"/>
+			<element name="configurator" type="this:configuratorType"/>
+			<element name="description" type="this:descriptionType"/>
+			<element name="elementParent" type="this:elementParentType"/>
+		</choice>
+		<attribute name="objectClass" type="string"/>
+		<attribute name="elementClass" type="string"/>
+		<attribute name="tag" type="string"/>
+		<attribute name="schemaContentBase" type="string"/>
+		<attribute name="autoAttributes" type="boolean"/>
+		<attribute name="schemaContentComplex" type="boolean"/>
+		<attribute name="schemaContentMixed" type="boolean"/>
+		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
+	</complexType>
+	<complexType name="configuratorType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="description" type="this:descriptionType"/>
+		</choice>
+		<attribute name="bean.class" type="string" use="required"/>
+		<attribute name="configAction" type="string"/>
+		<anyAttribute/>
+	</complexType>
+	<complexType name="attributeHandlerType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="description" type="this:descriptionType"/>
+		</choice>
+		<attribute name="bean.class" type="string" use="required"/>
+		<anyAttribute/>
+	</complexType>
+	<complexType name="attributeType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="classConverter" type="this:classConverterType"/>
+		</choice>
+		<attribute name="name" type="string"/>
+		<attribute name="required" type="boolean"/>
+		<attribute name="defaultValue" type="string"/>
+		<attribute name="objectConverter" type="string"/>
+		<attribute name="disableEL" type="boolean"/>
+		<attribute name="disableFill" type="boolean"/>
+		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
+	</complexType>
+	<complexType name="classConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="bindingHandlerType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="description" type="this:descriptionType"/>
+		</choice>
+		<attribute name="id" type="string" use="required"/>
+		<attribute name="bean.class" type="string" use="required"/>
+		<anyAttribute/>
+	</complexType>
+	<complexType name="elementInterfaceType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="attribute" type="this:attributeType"/>
+			<element name="bindingHandler" type="this:bindingHandlerType"/>
+			<element name="configurator" type="this:configuratorType"/>
+			<element name="description" type="this:descriptionType"/>
+		</choice>
+		<attribute name="interfaceClass" type="string"/>
+		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
+	</complexType>
+	<complexType name="elementParentType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+		<attribute name="tag" type="string" use="required"/>
+		<attribute name="uri" type="string"/>
+		<anyAttribute/>
+	</complexType>
+	<element name="namespace" type="this:namespaceType"/>
+	<element name="description" type="this:descriptionType"/>
+	<element name="element" type="this:elementType"/>
+	<element name="configurator" type="this:configuratorType"/>
+	<element name="attributeHandler" type="this:attributeHandlerType"/>
+	<element name="attribute" type="this:attributeType"/>
+	<element name="classConverter" type="this:classConverterType"/>
+	<element name="bindingHandler" type="this:bindingHandlerType"/>
+	<element name="elementInterface" type="this:elementInterfaceType"/>
+	<element name="elementParent" type="this:elementParentType"/>
+</schema>

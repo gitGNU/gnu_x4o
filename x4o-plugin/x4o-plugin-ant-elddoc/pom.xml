@@ -1,0 +1,136 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>x4o-plugin</artifactId>
+    <groupId>org.x4o.plugin</groupId>
+    <version>0.8.2-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <artifactId>x4o-plugin-ant-elddoc</artifactId>
+  <packaging>jar</packaging>
+  <name>x4o-plugin-ant-elddoc</name>
+  <description>Creates elddoc for languauge</description>
+  <dependencies>
+    <dependency>
+      <groupId>org.x4o</groupId>
+      <artifactId>x4o-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.x4o</groupId>
+      <artifactId>x4o-elddoc</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>${ant.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant-testutil</artifactId>
+      <version>${ant-testutil.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>de.odysseus.juel</groupId>
+      <artifactId>juel</artifactId>
+      <version>${juel.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.x4o</groupId>
+      <artifactId>x4o-core</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${maven-site-plugin.version}</version>
+          <configuration>
+            <siteDirectory>${project.basedir}/../../src/site-child</siteDirectory>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  <profiles>
+    <profile>
+      <id>site-elddoc</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>${maven-antrun-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>site-elddoc-ant</id>
+                <phase>pre-site</phase>
+                <configuration>
+                  <target>
+                    <property name="coredir" value="${basedir}/../../target/site/elddocs"/>
+                    <mkdir dir="${coredir}/cel"/>
+                    <mkdir dir="${coredir}/eld"/>
+                    <mkdir dir="${coredir}/junit-test"/>
+                    <mkdir dir="${coredir}/junit-swixml2"/>
+                    <mkdir dir="${coredir}/junit-swixml3"/>
+                    <taskdef name="eldDocWriter" classname="org.x4o.plugin.ant.eld.doc.EldDocWriterTask" classpathref="maven.plugin.classpath"/>
+                    <eldDocWriter destdir="${coredir}/cel" supportclass="org.x4o.xml.eld.EldParserSupportCore"/>
+                    <eldDocWriter destdir="${coredir}/eld" supportclass="org.x4o.xml.eld.EldParserSupport"/>
+                    <eldDocWriter destdir="${coredir}/junit-test" supportclass="org.x4o.xml.test.TestParserSupport"/>
+                    <eldDocWriter destdir="${coredir}/junit-swixml2" supportclass="org.x4o.xml.test.swixml.SwiXmlParserSupport2"/>
+                    <eldDocWriter destdir="${coredir}/junit-swixml3" supportclass="org.x4o.xml.test.swixml.SwiXmlParserSupport3"/>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.x4o.plugin</groupId>
+                <artifactId>x4o-plugin-ant-elddoc</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.x4o</groupId>
+                <artifactId>x4o-core</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.x4o</groupId>
+                <artifactId>x4o-core</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+              </dependency>
+              <dependency>
+                <groupId>org.x4o</groupId>
+                <artifactId>x4o-elddoc</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel</artifactId>
+                <version>${juel.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

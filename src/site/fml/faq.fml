@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<faqs title="Frequently Asked Questions" toplink="false">
+
+  <part id="general">
+    <title>General</title>
+
+    <faq id="whats-x4o">
+      <question>What is X4O</question>
+      <answer>
+        <p>X4O is not a language but a framework to create other XML language implementations.</p>
+      </answer>
+    </faq>
+    
+    <faq id="x4o-licence">
+      <question>What is the linence of X4O</question>
+      <answer>
+        <p>X4O has an BSD style licence, to be compatible with wide range of software.</p>
+      </answer>
+    </faq>
+
+    <faq id="x4o-debug">
+      <question>How do I turn on debug mode.</question>
+      <answer>
+        <p>X4O can write all parsing steps in xml debug output file.<br/>To setup set the following properties before parsing a document.</p>
+        <pre>
+          TestParser parser = new TestParser();
+          parser.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
+          parser.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true); // optional
+        </pre>
+      </answer>
+    </faq>
+
+    <faq id="x4o-transform">
+      <question>Can i use x4o for transforming xml</question>
+      <answer>
+        <p>No, X4O had no built in xslt support.</p>
+        <p>But you can implement an transforming language yourself with X4O.</p>
+      </answer>
+    </faq>
+    
+  </part>
+</faqs>

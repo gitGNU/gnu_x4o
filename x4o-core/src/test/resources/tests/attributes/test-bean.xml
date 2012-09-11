@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<root:root
+	xmlns:root="http://test.x4o.org/xml/ns/test-root"
+	xmlns="http://test.x4o.org/xml/ns/test-lang"
+	>
+	<parent name="test-bean.xml"/>
+	<testBean
+		privateIntegerTypeField="123"
+		privateIntegerObjectField="123"
+		privateLongTypeField="123"
+		privateLongObjectField="123"
+		privateDoubleTypeField="123.45" 
+		privateDoubleObjectField = "123.45"
+		privateFloatTypeField="123.45"
+		privateFloatObjectField="123.45"
+		privateByteTypeField="67"
+		privateByteObjectField="67"
+		privateBooleanTypeField="true"
+		privateBooleanObjectField="true"
+		privateCharTypeField="W"
+		privateCharObjectField="C"
+		privateStringObjectField="x4o"
+		privateDateObjectField="${date0}"
+	/>
+	<testBean
+		publicIntegerTypeField="123"
+		publicIntegerObjectField="123"
+		publicLongTypeField="123"
+		publicLongObjectField="123"
+		publicDoubleTypeField="123.45" 
+		publicDoubleObjectField = "123.45"
+		publicFloatTypeField="123.45"
+		publicFloatObjectField="123.45"
+		publicByteTypeField="67"
+		publicByteObjectField="67"
+		publicBooleanTypeField="true"
+		publicBooleanObjectField="true"
+		publicCharTypeField="W"
+		publicCharObjectField="C"
+		publicStringObjectField="x4o"
+		publicDateObjectField="${date0}"
+	/>
+</root:root>

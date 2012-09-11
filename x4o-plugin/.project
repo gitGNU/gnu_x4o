@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>x4o</name>
-	<comment>x4o-base, Eclipse with Maven build project.</comment>
+	<name>x4o-plugin</name>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>

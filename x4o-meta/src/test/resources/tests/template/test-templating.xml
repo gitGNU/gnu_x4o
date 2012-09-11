@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2004-2012, Willem Cazander
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+      following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+      the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+<x4o:root xmlns:test="http://test.x4o.org/xml/ns/test"
+		   xmlns:x4o="http://meta.x4o.org/xml/ns/meta-lang"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://meta.x4o.org/xml/ns/meta-lang http://meta.x4o.org/xml/xsd/meta-lang/1
+                      http://test.x4o.org/xml/ns/test http://test.x4o.org/xml/ns/test-1.0.xsd"
+	      >
+		
+	<x4o:template el.id="master1">
+		<test:testObjectChild el.id="CHILD1" name="CHILD1" price="123" size="123.45"/>
+	</x4o:template>	
+	<test:testObjectChild el.id="child1" size="123.99" x4o.template="master1"/>
+
+	<x4o:template el.id="master2">
+		<test:testObjectChild el.id="CHILD2" name="CHILD2" price="2323" size="23.24"/>
+	</x4o:template>
+	<x4o:elReference el.id="child2" el.ref="child2" x4o.template="master2"/>
+		
+	<test:testObjectParent el.id="parent2">
+		<x4o:templateTag template="${master2}"/>		
+	</test:testObjectParent>
+	
+</x4o:root>
