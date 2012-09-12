@@ -24,7 +24,6 @@
 package	org.x4o.xml.element;
 
 import org.x4o.xml.conv.ObjectConverterException;
-import org.x4o.xml.element.Element;
 
 /**
  * Helper interface for setting properties.

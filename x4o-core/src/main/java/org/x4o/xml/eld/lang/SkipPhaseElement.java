@@ -37,6 +37,7 @@ public class SkipPhaseElement extends AbstractElement {
 
 	/**
 	 * @see org.x4o.xml.element.AbstractElement#doElementEnd()
+	 * @throws ElementException Gets thrown when name is not set or element object is not an element class instance.
 	 */
 	@Override
 	public void doElementEnd() throws ElementException {

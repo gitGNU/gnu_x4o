@@ -32,7 +32,7 @@ import java.util.List;
  * @author Willem Cazander
  * @version 1.0 Aug 10, 2006
  */
-abstract public class AbstractElementAttributeHandler extends AbstractElementConfigurator implements ElementAttributeHandler {
+public abstract class AbstractElementAttributeHandler extends AbstractElementConfigurator implements ElementAttributeHandler {
 	
 	private String attributeName = null;
 	private List<String> nextAttributes = new ArrayList<String>(2);

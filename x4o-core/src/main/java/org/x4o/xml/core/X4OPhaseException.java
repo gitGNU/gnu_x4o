@@ -32,7 +32,7 @@ package	org.x4o.xml.core;
 public class X4OPhaseException extends Exception {
 
 	/** The serial version uid */
-	static final long serialVersionUID = 10l;
+	static final long serialVersionUID = 10L;
 
 	private X4OPhaseHandler exceptionPhase = null; 
 	
@@ -68,7 +68,7 @@ public class X4OPhaseException extends Exception {
 	}
 	
 	/**
-	 * Returns the X4OPhaseHandler which created this Exception
+	 * Returns the X4OPhaseHandler which created this Exception.
 	 * @return	An X4OPhaseHandler
 	 */
 	public X4OPhaseHandler getX4OPhaseHandler() {

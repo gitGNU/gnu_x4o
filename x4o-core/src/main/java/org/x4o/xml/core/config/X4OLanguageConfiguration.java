@@ -39,10 +39,10 @@ import org.x4o.xml.element.ElementLanguage;
 public interface X4OLanguageConfiguration {
 	
 	/** Prefix where we load all language definitions from. */
-	public final static String DEFAULT_LANG_PATH_PREFIX = "META-INF";
+	public static final String DEFAULT_LANG_PATH_PREFIX = "META-INF";
 	
 	/** The modules file to startup the language definition process. */
-	public final static String DEFAULT_LANG_MODULES_FILE = "-modules.xml";
+	public static final String DEFAULT_LANG_MODULES_FILE = "-modules.xml";
 	
 	/**
 	 * Returns the language for which this ElementLanguage is created.
@@ -73,75 +73,75 @@ public interface X4OLanguageConfiguration {
 	
 	
 	// Core interfaces are also in class for text reference without instance
-	public Class<?> getDefaultElementNamespaceContext();
-	public Class<?> getDefaultElementInterface();
-	public Class<?> getDefaultElement();
-	public Class<?> getDefaultElementClass();
-	public Class<?> getDefaultElementClassAttribute();
+	Class<?> getDefaultElementNamespaceContext();
+	Class<?> getDefaultElementInterface();
+	Class<?> getDefaultElement();
+	Class<?> getDefaultElementClass();
+	Class<?> getDefaultElementClassAttribute();
 	
 	// Other needed interfaces in class form also
-	public Class<?> getDefaultElementLanguageModule();
-	public Class<?> getDefaultElementBodyComment();
-	public Class<?> getDefaultElementBodyCharacters();
-	public Class<?> getDefaultElementBodyWhitespace();
-	public Class<?> getDefaultElementNamespaceInstanceProvider();
-	public Class<?> getDefaultElementAttributeValueParser();
-	public Class<?> getDefaultElementObjectPropertyValue();
-	public Class<?> getDefaultElementAttributeHandlerComparator();
+	Class<?> getDefaultElementLanguageModule();
+	Class<?> getDefaultElementBodyComment();
+	Class<?> getDefaultElementBodyCharacters();
+	Class<?> getDefaultElementBodyWhitespace();
+	Class<?> getDefaultElementNamespaceInstanceProvider();
+	Class<?> getDefaultElementAttributeValueParser();
+	Class<?> getDefaultElementObjectPropertyValue();
+	Class<?> getDefaultElementAttributeHandlerComparator();
 	
 	/**
 	 * @return	Returns the X4OLanguageVersionFilter which filters the best version to use.
 	 */
-	public Class<?> getDefaultX4OLanguageVersionFilter();
+	Class<?> getDefaultX4OLanguageVersionFilter();
 	
 	/**
 	 * @return	Returns the X4OLanguageLoader which loads languages into the element context.
 	 */
-	public Class<?> getDefaultX4OLanguageLoader();
+	Class<?> getDefaultX4OLanguageLoader();
 
 	/**
 	 * Creates and filles the inital element language used to store the language.
 	 * @return	The newly created ElementLanguage.
 	 */
-	public ElementLanguage createElementLanguage();
+	ElementLanguage createElementLanguage();
 
 	/**
 	 * @return	Returns Map of SAX properties which are set.
 	 */
-	public Map<String,Object> getSAXParserProperties();
+	Map<String,Object> getSAXParserProperties();
 	
 	/**
 	 * @return	Returns Map of SAX properties which are optional set.
 	 */
-	public Map<String,Object> getSAXParserPropertiesOptional();
+	Map<String,Object> getSAXParserPropertiesOptional();
 	
 	/**
 	 * @return	Returns Map of SAX features which are set on the xml parser.
 	 */
-	public Map<String,Boolean> getSAXParserFeatures();
+	Map<String,Boolean> getSAXParserFeatures();
 	
 	/**
 	 * @return	Returns Map of SAX features which are optional set.
 	 */
-	public Map<String, Boolean> getSAXParserFeaturesOptional();
+	Map<String, Boolean> getSAXParserFeaturesOptional();
 	
 	/**
 	 * @return	Returns List of SAX features which are required for xml parsing.
 	 */
-	public List<String> getSAXParserFeaturesRequired();
+	List<String> getSAXParserFeaturesRequired();
 	
 	/**
 	 * @return	Returns null or an X4ODebugWriter to write parsing steps and debug data to.
 	 */
-	public X4ODebugWriter getX4ODebugWriter();
+	X4ODebugWriter getX4ODebugWriter();
 	
 	/** 
 	 * @return	Returns true if this config has a debug writer.
 	 */
-	public boolean hasX4ODebugWriter();
+	boolean hasX4ODebugWriter();
 	
 	/**
 	 * @param debugWriter	The debug writer to set
 	 */
-	public void setX4ODebugWriter(X4ODebugWriter debugWriter);
+	void setX4ODebugWriter(X4ODebugWriter debugWriter);
 }

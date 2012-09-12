@@ -31,7 +31,7 @@ package	org.x4o.xml.core;
  */
 public enum X4OPhase {
 	
-	/** Defines this meta startup phase */
+	/** Defines this meta startup phase. */
 	startupX4OPhase(true),
 	
 	/** Load all meta info of the language we are creating. */
@@ -46,10 +46,10 @@ public enum X4OPhase {
 	/** Optional extra config phase for injecting bean instances into the EL context. */
 	configGlobalElBeansPhase(true),
 	
-	/** emty meta phase to refer to that sax is ready and element s are waiting for processing */
+	/** emty meta phase to refer to that sax is ready and element s are waiting for processing. */
 	startX4OPhase(true),
 	
-	/** re runnable phases which config xml to beans and binds them together */
+	/** re runnable phases which config xml to beans and binds them together. */
 	configElementPhase,
 	configElementInterfacePhase,
 	configGlobalElementPhase,
@@ -76,10 +76,10 @@ public enum X4OPhase {
 	/** Rerun all needed phases for all element that requested it. */
 	runDirtyElementLastPhase,
 	
-	/** Releases all Elements, which clears attributes and childeren etc.. */
+	/** Releases all Elements, which clears attributes and childeren etc. */
 	releasePhase(true),
 	
-	/** write all phases and stuff to debug sax stream */
+	/** write all phases and stuff to debug sax stream. */
 	debugPhase;
 	
 	/** Defines which phase we start, when context is created. */
@@ -101,7 +101,7 @@ public enum X4OPhase {
 	private boolean runOnce = false;
 	
 	/**
-	 * Creates an X4O Phase
+	 * Creates an X4O Phase.
 	 */
 	private X4OPhase() {
 	}

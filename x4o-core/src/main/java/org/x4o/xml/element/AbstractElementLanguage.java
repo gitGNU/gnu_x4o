@@ -34,7 +34,6 @@ import javax.el.ExpressionFactory;
 
 import org.x4o.xml.core.X4OPhase;
 import org.x4o.xml.core.config.X4OLanguageConfiguration;
-import org.x4o.xml.element.ElementBindingHandler;
 
 /**
  * An AbstractElementLanguage.
@@ -42,7 +41,7 @@ import org.x4o.xml.element.ElementBindingHandler;
  * @author Willem Cazander
  * @version 1.0 Aug 20, 2005
  */
-abstract public class AbstractElementLanguage implements ElementLanguageLocal {
+public abstract class AbstractElementLanguage implements ElementLanguageLocal {
 
 	private Logger logger = null;
 	private ExpressionFactory expressionFactory = null;

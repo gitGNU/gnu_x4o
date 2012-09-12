@@ -30,7 +30,7 @@ package	org.x4o.xml.element;
  * @author Willem Cazander
  * @version 1.0 Jan 18, 2007
  */
-abstract public class AbstractElementConfigurator extends AbstractElementMetaBase implements ElementConfigurator {
+public abstract class AbstractElementConfigurator extends AbstractElementMetaBase implements ElementConfigurator {
 
 	/** Flag indicating that this is an config action and should run in runPhase */
 	private boolean configAction = false;

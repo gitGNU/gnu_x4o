@@ -35,8 +35,6 @@ import javax.el.ListELResolver;
 import javax.el.MapELResolver;
 import javax.el.VariableMapper;
 
-import org.x4o.xml.core.config.X4OLanguageConfiguration;
-
 /**
  * X4OELFunctionMapper simple EL context.
  * 
@@ -49,7 +47,7 @@ public class X4OELContext extends ELContext {
 	private FunctionMapper functionMapper = null;
 	private VariableMapper variableMapper = null;
 	
-	public X4OELContext(X4OLanguageConfiguration x4oParserConfig) {
+	public X4OELContext(/* X4OLanguageConfiguration x4oParserConfig */) {
 		
 		CompositeELResolver compositeELResolver = new CompositeELResolver();
 		compositeELResolver.add(new X4OELResolver(new HashMap<Object, Object>(100)));

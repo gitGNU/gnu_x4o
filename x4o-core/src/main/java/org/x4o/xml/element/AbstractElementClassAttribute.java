@@ -34,7 +34,7 @@ import org.x4o.xml.conv.ObjectConverter;
  * @author Willem Cazander
  * @version 1.0 Jan 19, 2012
  */
-abstract public class AbstractElementClassAttribute extends AbstractElementMetaBase implements ElementClassAttribute {
+public abstract class AbstractElementClassAttribute extends AbstractElementMetaBase implements ElementClassAttribute {
 
 	private String name = null;
 	private ObjectConverter objectConverter = null;

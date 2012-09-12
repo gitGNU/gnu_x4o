@@ -32,7 +32,7 @@ import java.util.List;
  * @author Willem Cazander
  * @version 1.0 Apr 15, 2008
  */
-abstract public class AbstractElementInterface extends AbstractElementClassBase implements ElementInterface {
+public abstract class AbstractElementInterface extends AbstractElementClassBase implements ElementInterface {
 
 	private Class<?> interfaceClass = null;
 	private List<ElementBindingHandler> elementBindingHandlers = null;

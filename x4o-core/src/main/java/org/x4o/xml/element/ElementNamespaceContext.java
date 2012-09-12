@@ -39,9 +39,22 @@ public interface ElementNamespaceContext extends ElementMetaBase {
 	//String getNamespaceResourceFile();
 	//String getNamespaceLanguage();
 	
+	/**
+	 * Sets the prefix mapping.
+	 * @param prefixMapping	The prefix mapping to set.
+	 */
 	void setPrefixMapping(String prefixMapping);
+	
+	/**
+	 * Gets the set prefix mapping of this namespace.
+	 * @return Returns the prefix mapping.
+	 */
 	String getPrefixMapping();
 	
+	/**
+	 * Sets the elememen instance provider which creates the elements objects.
+	 * @param elementNamespaceInstanceProvider	The ElementNamespaceInstanceProvider to set.
+	 */
 	void setElementNamespaceInstanceProvider(ElementNamespaceInstanceProvider elementNamespaceInstanceProvider);
 	
 	/**
@@ -132,7 +145,7 @@ public interface ElementNamespaceContext extends ElementMetaBase {
 	/**
 	 * @return the schemaPrefix
 	 */
-	public String getSchemaPrefix();
+	String getSchemaPrefix();
 
 	/**
 	 * @param schemaPrefix the schemaPrefix to set

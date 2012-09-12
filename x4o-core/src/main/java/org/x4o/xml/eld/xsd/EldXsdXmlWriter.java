@@ -297,7 +297,11 @@ public class EldXsdXmlWriter {
 		}
 		
 		if (ec.getAutoAttributes()!=null && ec.getAutoAttributes()==false) {
-			// oke
+			// oke, reverse this if and rm whitespace.
+			char[] msg;
+			msg = " ".toCharArray();
+			xmlWriter.ignorableWhitespace(msg,0,msg.length);
+			
 		} else {
 			
 			if (ec.getObjectClass()!=null) {
@@ -362,19 +366,13 @@ public class EldXsdXmlWriter {
 		List<String> refElements = new ArrayList<String>(20);
 		for (ElementClass checkClass:ns.getElementClasses()) {
 			List<String> parents = checkClass.getElementParents(nsWrite.getUri());
-			if (parents!=null) {
-				if (parents!=null) {
-					if (parents.contains(ec.getTag())) {
-						refElements.add(checkClass.getTag());
-					}
-				}
+			if (parents!=null && parents.contains(ec.getTag())) {
+				refElements.add(checkClass.getTag());
 			}
 			if (nsWrite.getUri().equals(ns.getUri())) {
 				parents = checkClass.getElementParents("");
-				if (parents!=null) {
-					if (parents.contains(ec.getTag())) {
-						refElements.add(checkClass.getTag());
-					}
+				if (parents!=null && parents.contains(ec.getTag())) {
+					refElements.add(checkClass.getTag());
 				}
 			}
 			if (ec.getObjectClass()==null) {

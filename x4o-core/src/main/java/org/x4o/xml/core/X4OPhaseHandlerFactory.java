@@ -561,10 +561,8 @@ public class X4OPhaseHandlerFactory {
 						Object value = valueString;
 						ElementClassAttribute attrClass = element.getElementClass().getElementClassAttributeByName(name);
 						if (attrClass!=null) {
-							if (attrClass.getRunResolveEL()==null || attrClass.getRunResolveEL()) {
-								if (attrParser.isELParameter(name, valueString, element)) {
-									value = attrParser.getELParameterValue(valueString, element);
-								}
+							if (attrClass.getRunResolveEL()==null || attrClass.getRunResolveEL() && attrParser.isELParameter(name, valueString, element)) {
+								value = attrParser.getELParameterValue(valueString, element);
 							}
 							if (attrClass.getRunConverters()==null || attrClass.getRunConverters()) {
 								value = attrParser.getConvertedParameterValue(name, value, element);

@@ -91,7 +91,7 @@ public interface ElementLanguageModule extends ElementMetaBase {
 	List<ElementConfigurator> getGlobalElementConfigurators();
 	
 	/**
-	 * Adds an ElementInterface
+	 * Adds an ElementInterface.
 	 * @param elementInterface	The elementInterface to add.
 	 */
 	void addElementInterface(ElementInterface elementInterface);
@@ -103,8 +103,8 @@ public interface ElementLanguageModule extends ElementMetaBase {
 	List<ElementInterface> getElementInterfaces();
 	
 	/**
-	 * 
-	 * @param elementNamespaceContext
+	 * Adds an namespace to this langauge module.
+	 * @param elementNamespaceContext Adds an ElementNamespaceContext to this langauge module.
 	 */
 	void addElementNamespaceContext(ElementNamespaceContext elementNamespaceContext);
 	

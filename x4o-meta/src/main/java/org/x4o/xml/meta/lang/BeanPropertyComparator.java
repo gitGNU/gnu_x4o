@@ -23,7 +23,6 @@
 
 package org.x4o.xml.meta.lang;
 
-import java.lang.Comparable;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -130,51 +130,49 @@ public class XMLWriter extends DefaultHandler2 {
 			}
 		
 
-			if (uri!=null & "".equals(uri)==false) {
-				if (printedMappings.contains(uri)==false) {
-					String prefix = prefixMapping.get(uri);
-					if (prefix==null) {
-						throw new SAXException("preFixUri: "+uri+" is not started.");
-					}
-					printedMappings.add(uri);
-					
-					startElement.append(' ');
-					startElement.append("xmlns");
-					if ("".equals(prefix)==false) {
-						startElement.append(':');
-						startElement.append(prefix);
-					}
-					startElement.append("=\"");
-					startElement.append(uri);
-					startElement.append('"');
-					
-					boolean first = true;
-					for (String uri2:prefixMapping.keySet()) {
-						if (printedMappings.contains(uri2)==false) {
-							prefix = prefixMapping.get(uri2);
-							if (prefix==null) {
-								throw new SAXException("preFixUri: "+uri+" is not started.");
-							}
-							printedMappings.add(uri2);
-							
-							if (first) {
-								startElement.append('\n');
-								first = false;
-							}
-							
-							startElement.append(' ');
-							startElement.append("xmlns");
-							if ("".equals(prefix)==false) {
-								startElement.append(':');
-								startElement.append(prefix);
-							}
-							startElement.append("=\"");
-							startElement.append(uri2);
-							startElement.append('"');
-							startElement.append('\n');
+			if ((uri!=null & "".equals(uri)==false) && printedMappings.contains(uri)==false) {
+				String prefix = prefixMapping.get(uri);
+				if (prefix==null) {
+					throw new SAXException("preFixUri: "+uri+" is not started.");
+				}
+				printedMappings.add(uri);
+				
+				startElement.append(' ');
+				startElement.append("xmlns");
+				if ("".equals(prefix)==false) {
+					startElement.append(':');
+					startElement.append(prefix);
+				}
+				startElement.append("=\"");
+				startElement.append(uri);
+				startElement.append('"');
+				
+				boolean first = true;
+				for (String uri2:prefixMapping.keySet()) {
+					if (printedMappings.contains(uri2)==false) {
+						prefix = prefixMapping.get(uri2);
+						if (prefix==null) {
+							throw new SAXException("preFixUri: "+uri+" is not started.");
 						}
+						printedMappings.add(uri2);
+						
+						if (first) {
+							startElement.append('\n');
+							first = false;
+						}
+						
+						startElement.append(' ');
+						startElement.append("xmlns");
+						if ("".equals(prefix)==false) {
+							startElement.append(':');
+							startElement.append(prefix);
+						}
+						startElement.append("=\"");
+						startElement.append(uri2);
+						startElement.append('"');
+						startElement.append('\n');
 					}
-				}	
+				}
 			}
 			
 			for (int i=0;i<atts.getLength();i++) {

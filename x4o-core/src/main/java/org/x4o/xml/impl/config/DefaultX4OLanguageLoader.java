@@ -126,6 +126,7 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 					} else if ("elb-resource".equals(key)) {
 						
 						// todo
+						logger.finer("elb-resources are not done yet.");
 						
 					} else if ("sibling-loader".equals(key)) {
 						try {
@@ -169,25 +170,24 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 		while(e.hasMoreElements()) {
 			URL u = e.nextElement();
 			logMessage(elementLanguage,"Loading relative modules: "+u+" for: "+language);
-			loadModuleXml(u.openStream(),u.toString());
+			loadModuleXml(u.openStream());
 		}
 		
 		e = Thread.currentThread().getContextClassLoader().getResources("/"+buf.toString());
 		while(e.hasMoreElements()) {
 			URL u = e.nextElement();
 			logMessage(elementLanguage,"Loading root modules: "+u+" for: "+language);
-			loadModuleXml(u.openStream(),u.toString());
+			loadModuleXml(u.openStream());
 		}
 	}
 	
 	/**
 	 * Parser xml inputstream to languge modules
-	 * @param in
-	 * @param resourceFile
+	 * @param in	The inputstream to parser.
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	private void loadModuleXml(InputStream in,String resourceFile) throws IOException, SAXException {
+	private void loadModuleXml(InputStream in) throws IOException, SAXException {
 		if (in==null) {
 			throw new NullPointerException("Can't parse null input stream");
 		}

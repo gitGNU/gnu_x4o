@@ -59,22 +59,28 @@ import org.x4o.xml.impl.DefaultElementClass;
 public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 
 	private Logger logger = null;
-	private static final String _CEL_XMLNS = "http://cel.x4o.org/xml/ns/";
-	private static final String _CEL_CORE = "cel-core";
-	private static final String _CEL_ROOT = "cel-root";
-	private static final String _CEL_XSD_FILE = "-1.0.xsd";
-	private static final String CEL_CORE_URI = _CEL_XMLNS+_CEL_CORE;
-	private static final String CEL_ROOT_URI = _CEL_XMLNS+_CEL_ROOT;
-	private static final String CEL_CORE_XSD_URI = CEL_CORE_URI+_CEL_XSD_FILE;
-	private static final String CEL_ROOT_XSD_URI = CEL_ROOT_URI+_CEL_XSD_FILE;
-	private static final String CEL_CORE_XSD_FILE = _CEL_CORE+_CEL_XSD_FILE;
-	private static final String CEL_ROOT_XSD_FILE = _CEL_ROOT+_CEL_XSD_FILE;
+	private static final String PP_CEL_XMLNS = "http://cel.x4o.org/xml/ns/";
+	private static final String PP_CEL_XSD_FILE = "-1.0.xsd";
+	private static final String CEL_CORE = "cel-core";
+	private static final String CEL_ROOT = "cel-root";
+	private static final String CEL_CORE_URI = PP_CEL_XMLNS+CEL_CORE;
+	private static final String CEL_ROOT_URI = PP_CEL_XMLNS+CEL_ROOT;
+	private static final String CEL_CORE_XSD_URI = CEL_CORE_URI+PP_CEL_XSD_FILE;
+	private static final String CEL_ROOT_XSD_URI = CEL_ROOT_URI+PP_CEL_XSD_FILE;
+	private static final String CEL_CORE_XSD_FILE = CEL_CORE+PP_CEL_XSD_FILE;
+	private static final String CEL_ROOT_XSD_FILE = CEL_ROOT+PP_CEL_XSD_FILE;
 	
+	/**
+	 * Creates the CEL module loader.
+	 */
 	public EldModuleLoaderCore() {
 		logger = Logger.getLogger(EldModuleLoaderCore.class.getName());
 	}
 
 	/**
+	 * Loads the CEL language into the module.
+	 * @param elementLanguage The langauge to load for.
+	 * @param elementLanguageModule The module to load it in.
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
 	 */
 	public void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
@@ -137,7 +143,9 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		try {
-			namespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
+			namespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)
+				X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider())
+				);
 		} catch (Exception e) {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
@@ -145,7 +153,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		namespace.setUri(CEL_CORE_URI);
 		namespace.setSchemaUri(CEL_CORE_XSD_URI);
 		namespace.setSchemaResource(CEL_CORE_XSD_FILE);
-		namespace.setSchemaPrefix(_CEL_CORE);
+		namespace.setSchemaPrefix(CEL_CORE);
 		
 		logger.finer("Loading elementClassList size: "+elementClassList.size());
 		for (ElementClass ecL:elementClassList) {
@@ -174,7 +182,9 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		try {
-			namespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
+			namespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)
+				X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider())
+				);
 		} catch (Exception e) {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
@@ -182,7 +192,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		namespace.setUri(CEL_ROOT_URI);
 		namespace.setSchemaUri(CEL_ROOT_XSD_URI);
 		namespace.setSchemaResource(CEL_ROOT_XSD_FILE);
-		namespace.setSchemaPrefix(_CEL_ROOT);
+		namespace.setSchemaPrefix(CEL_ROOT);
 		namespace.addElementClass(new DefaultElementClass("module",elementLanguage.getLanguageConfiguration().getDefaultElementLanguageModule(),ModuleElement.class));
 		namespace.setLanguageRoot(true); // Only define single language root so xsd is (mostly) not cicle import. 
 		try {

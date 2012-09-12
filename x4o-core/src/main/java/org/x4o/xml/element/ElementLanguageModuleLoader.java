@@ -35,8 +35,10 @@ package org.x4o.xml.element;
 public interface ElementLanguageModuleLoader {
 	
 	/**
-	 * Starts the ElementProvider
-	 * @throws ElementLanguageModuleLoaderException
+	 * Starts the ElementProvider.
+	 * @param elementLanguage The ElementLanguage to load for.
+	 * @param elementLanguageModule The ElementLanguageModule to load it into.
+	 * @throws ElementLanguageModuleLoaderException	Gets thrown when modules could not be correctly loaded.
 	 */
 	void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException;
 }

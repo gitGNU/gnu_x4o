@@ -3,7 +3,7 @@
   <parent>
     <artifactId>x4o</artifactId>
     <groupId>org.x4o</groupId>
-    <version>0.8.2-SNAPSHOT</version>
+    <version>0.8.5-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>x4o-plugin</artifactId>
@@ -12,8 +12,8 @@
   <name>x4o-plugin</name>
   <description>x4o plugins for other applications</description>
   <modules>
-  	<module>x4o-plugin-ant-schema</module>
-  	<module>x4o-plugin-ant-elddoc</module>
+    <module>x4o-plugin-ant-schema</module>
+    <module>x4o-plugin-ant-elddoc</module>
   </modules>
   <build>
     <pluginManagement>

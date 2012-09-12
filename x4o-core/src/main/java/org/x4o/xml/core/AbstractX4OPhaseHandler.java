@@ -36,7 +36,7 @@ import org.x4o.xml.element.ElementLanguage;
  * @author Willem Cazander
  * @version 1.0 Dec 31, 2008
  */
-abstract public class AbstractX4OPhaseHandler implements X4OPhaseHandler {
+public abstract class AbstractX4OPhaseHandler implements X4OPhaseHandler {
 
 	protected X4OPhase phase = null;
 	protected List<X4OPhaseListener> X4OPhaseListeners = null;

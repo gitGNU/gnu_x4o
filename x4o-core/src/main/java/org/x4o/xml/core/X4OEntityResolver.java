@@ -147,17 +147,15 @@ public class X4OEntityResolver implements EntityResolver {
 			}
 		}
 		
-		if (basePath!=null && systemId!=null) {
-			if (systemId.startsWith(basePath.toExternalForm())) {
-				logger.finer("Base reference basePath: "+basePath+" systemId: "+systemId);
-				try {
-					InputSource in = new InputSource(new URL(systemId).openStream());
-					in.setPublicId(publicId);
-					in.setSystemId(systemId);
-					return in;
-				} catch (IOException e) {
-					throw new IOException("Could not open: "+systemId+" error: "+e.getMessage(),e);
-				}
+		if (basePath!=null && systemId!=null && systemId.startsWith(basePath.toExternalForm())) {
+			logger.finer("Base reference basePath: "+basePath+" systemId: "+systemId);
+			try {
+				InputSource in = new InputSource(new URL(systemId).openStream());
+				in.setPublicId(publicId);
+				in.setSystemId(systemId);
+				return in;
+			} catch (IOException e) {
+				throw new IOException("Could not open: "+systemId+" error: "+e.getMessage(),e);
 			}
 		}
 		

@@ -23,9 +23,6 @@
 
 package org.x4o.xml.element;
 
-import org.x4o.xml.element.Element;
-
-
 /**
  * Provides elements from tag.<br>
  * And ElementClass from a tag.<br>

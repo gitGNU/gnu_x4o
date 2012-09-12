@@ -31,36 +31,36 @@ package org.x4o.xml.core.config;
  */
 public class X4OLanguagePropertyKeys {
 	
-	public final static String LANGUAGE_NAME				= X4OLanguageProperty.LANGUAGE_NAME.toUri();
-	public final static String LANGUAGE_VERSION				= X4OLanguageProperty.LANGUAGE_VERSION.toUri();
+	public static final String LANGUAGE_NAME				= X4OLanguageProperty.LANGUAGE_NAME.toUri();
+	public static final String LANGUAGE_VERSION				= X4OLanguageProperty.LANGUAGE_VERSION.toUri();
 		
-	public final static String DEBUG_OUTPUT_STREAM			= X4OLanguageProperty.DEBUG_OUTPUT_STREAM.toUri();
-	public final static String DEBUG_OUTPUT_HANDLER			= X4OLanguageProperty.DEBUG_OUTPUT_HANDLER.toUri();
-	public final static String DEBUG_OUTPUT_ELD_PARSER		= X4OLanguageProperty.DEBUG_OUTPUT_ELD_PARSER.toUri();
+	public static final String DEBUG_OUTPUT_STREAM			= X4OLanguageProperty.DEBUG_OUTPUT_STREAM.toUri();
+	public static final String DEBUG_OUTPUT_HANDLER			= X4OLanguageProperty.DEBUG_OUTPUT_HANDLER.toUri();
+	public static final String DEBUG_OUTPUT_ELD_PARSER		= X4OLanguageProperty.DEBUG_OUTPUT_ELD_PARSER.toUri();
 	
-	public final static String INPUT_BUFFER_SIZE			= X4OLanguageProperty.INPUT_BUFFER_SIZE.toUri();
-	public final static String INPUT_EMPTY_NAMESPACE_URI	= X4OLanguageProperty.INPUT_EMPTY_NAMESPACE_URI.toUri();
+	public static final String INPUT_BUFFER_SIZE			= X4OLanguageProperty.INPUT_BUFFER_SIZE.toUri();
+	public static final String INPUT_EMPTY_NAMESPACE_URI	= X4OLanguageProperty.INPUT_EMPTY_NAMESPACE_URI.toUri();
 	
-	public final static String INPUT_SOURCE_STREAM			= X4OLanguageProperty.INPUT_SOURCE_STREAM.toUri();
-	public final static String INPUT_SOURCE_ENCODING		= X4OLanguageProperty.INPUT_SOURCE_ENCODING.toUri();
-	public final static String INPUT_SOURCE_OBJECT			= X4OLanguageProperty.INPUT_SOURCE_OBJECT.toUri();
-	public final static String INPUT_SOURCE_SYSTEM_ID		= X4OLanguageProperty.INPUT_SOURCE_SYSTEM_ID.toUri();
-	public final static String INPUT_SOURCE_BASE_PATH		= X4OLanguageProperty.INPUT_SOURCE_BASE_PATH.toUri();
+	public static final String INPUT_SOURCE_STREAM			= X4OLanguageProperty.INPUT_SOURCE_STREAM.toUri();
+	public static final String INPUT_SOURCE_ENCODING		= X4OLanguageProperty.INPUT_SOURCE_ENCODING.toUri();
+	public static final String INPUT_SOURCE_OBJECT			= X4OLanguageProperty.INPUT_SOURCE_OBJECT.toUri();
+	public static final String INPUT_SOURCE_SYSTEM_ID		= X4OLanguageProperty.INPUT_SOURCE_SYSTEM_ID.toUri();
+	public static final String INPUT_SOURCE_BASE_PATH		= X4OLanguageProperty.INPUT_SOURCE_BASE_PATH.toUri();
 	
-	public final static String CONFIG_ERROR_HANDLER			= X4OLanguageProperty.CONFIG_ERROR_HANDLER.toUri();
-	public final static String CONFIG_ENTITY_RESOLVER		= X4OLanguageProperty.CONFIG_ENTITY_RESOLVER.toUri();
+	public static final String CONFIG_ERROR_HANDLER			= X4OLanguageProperty.CONFIG_ERROR_HANDLER.toUri();
+	public static final String CONFIG_ENTITY_RESOLVER		= X4OLanguageProperty.CONFIG_ENTITY_RESOLVER.toUri();
 	
-	public final static String EL_BEAN_INSTANCE_MAP			= X4OLanguageProperty.EL_BEAN_INSTANCE_MAP.toUri();
-	public final static String EL_FACTORY_INSTANCE			= X4OLanguageProperty.EL_FACTORY_INSTANCE.toUri();
+	public static final String EL_BEAN_INSTANCE_MAP			= X4OLanguageProperty.EL_BEAN_INSTANCE_MAP.toUri();
+	public static final String EL_FACTORY_INSTANCE			= X4OLanguageProperty.EL_FACTORY_INSTANCE.toUri();
 	
-	public final static String PHASE_STOP_AFTER				= X4OLanguageProperty.PHASE_STOP_AFTER.toUri();
-	public final static String PHASE_SKIP_RELEASE			= X4OLanguageProperty.PHASE_SKIP_RELEASE.toUri();
-	public final static String PHASE_SKIP_RUN				= X4OLanguageProperty.PHASE_SKIP_RUN.toUri();
-	public final static String PHASE_SKIP_SIBLINGS			= X4OLanguageProperty.PHASE_SKIP_SIBLINGS.toUri();
+	public static final String PHASE_STOP_AFTER				= X4OLanguageProperty.PHASE_STOP_AFTER.toUri();
+	public static final String PHASE_SKIP_RELEASE			= X4OLanguageProperty.PHASE_SKIP_RELEASE.toUri();
+	public static final String PHASE_SKIP_RUN				= X4OLanguageProperty.PHASE_SKIP_RUN.toUri();
+	public static final String PHASE_SKIP_SIBLINGS			= X4OLanguageProperty.PHASE_SKIP_SIBLINGS.toUri();
 	
-	public final static String VALIDATION_SCHEMA_PATH		= X4OLanguageProperty.VALIDATION_SCHEMA_PATH.toUri();
-	public final static String VALIDATION_INPUT				= X4OLanguageProperty.VALIDATION_INPUT.toUri();
-	public final static String VALIDATION_INPUT_XSD			= X4OLanguageProperty.VALIDATION_INPUT_XSD.toUri();
-	public final static String VALIDATION_ELD				= X4OLanguageProperty.VALIDATION_ELD.toUri();
-	public final static String VALIDATION_ELD_XSD			= X4OLanguageProperty.VALIDATION_ELD_XSD.toUri();
+	public static final String VALIDATION_SCHEMA_PATH		= X4OLanguageProperty.VALIDATION_SCHEMA_PATH.toUri();
+	public static final String VALIDATION_INPUT				= X4OLanguageProperty.VALIDATION_INPUT.toUri();
+	public static final String VALIDATION_INPUT_XSD			= X4OLanguageProperty.VALIDATION_INPUT_XSD.toUri();
+	public static final String VALIDATION_ELD				= X4OLanguageProperty.VALIDATION_ELD.toUri();
+	public static final String VALIDATION_ELD_XSD			= X4OLanguageProperty.VALIDATION_ELD_XSD.toUri();
 }

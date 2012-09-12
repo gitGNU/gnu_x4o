@@ -45,7 +45,7 @@ public class BooleanConverter extends AbstractStringObjectConverter {
 	
 	public Object convertStringTo(String str, Locale locale) throws ObjectConverterException {
 		// WARNING: this alway returns a boolean :''(
-		return new Boolean(str);
+		return Boolean.valueOf(str);
 	}
 	
 	public String convertStringBack(Object obj,Locale locale) throws ObjectConverterException {

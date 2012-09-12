@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Willem Cazander
  * @version 1.0 Oct 28, 2009
  */
-abstract public class AbstractElementNamespaceContext extends AbstractElementMetaBase implements ElementNamespaceContext {
+public abstract class AbstractElementNamespaceContext extends AbstractElementMetaBase implements ElementNamespaceContext {
 
 	private ElementNamespaceInstanceProvider elementNamespaceInstanceProvider = null;
 	private String prefixMapping = null;

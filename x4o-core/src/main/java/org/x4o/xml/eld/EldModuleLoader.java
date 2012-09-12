@@ -42,6 +42,11 @@ public class EldModuleLoader implements ElementLanguageModuleLoader {
 	private String eldResource = null;
 	private boolean isEldCore = false;
 	
+	/**
+	 * Creates an ELD/CEL module loader. 
+	 * @param eldResource	The resource to load.
+	 * @param isEldCore		If true then load CEL else load ELD.
+	 */
 	public EldModuleLoader(String eldResource,boolean isEldCore) {
 		if (eldResource==null) {
 			throw new NullPointerException("Can't load null eld resource.");
@@ -52,6 +57,9 @@ public class EldModuleLoader implements ElementLanguageModuleLoader {
 	}
 
 	/**
+	 * Loads the ELD language into the module.
+	 * @param elementLanguage The langauge to load for.
+	 * @param elementLanguageModule The module to load it in.
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
 	 */
 	public void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {

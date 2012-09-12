@@ -23,8 +23,6 @@
 
 package	org.x4o.xml.element;
 
-import org.x4o.xml.element.Element;
-
 /**
  * Bind ElementObjects together.
  * 

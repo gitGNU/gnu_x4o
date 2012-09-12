@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Willem Cazander
  * @version 1.0 Jan 19, 2012
  */
-abstract public class AbstractElementClassBase extends AbstractElementMetaBase implements ElementClassBase {
+public abstract class AbstractElementClassBase extends AbstractElementMetaBase implements ElementClassBase {
 
 	private Map<String,ElementClassAttribute> elementClassAttributes = null;
 	private List<ElementConfigurator> elementConfigurators = null;

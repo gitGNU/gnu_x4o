@@ -42,6 +42,7 @@ public class ModuleElement extends AbstractElement {
 	
 	/**
 	 * @see org.x4o.xml.element.AbstractElement#doElementStart()
+	 * @throws ElementException When module element is used and non-root element.
 	 */
 	@Override
 	public void doElementStart() throws ElementException {
@@ -53,7 +54,7 @@ public class ModuleElement extends AbstractElement {
 		if (m==null) {
 			return;
 		}
-		ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.PARENT_ELEMENT_LANGUAGE_MODULE);
+		ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.EL_PARENT_ELEMENT_LANGUAGE_MODULE);
 		setElementObject(elementLanguageModule);
 	}
 }

@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Willem Cazander
  * @version 1.0 Aug 11, 2005
  */
-abstract public class AbstractElementClass extends AbstractElementClassBase implements ElementClass {
+public abstract class AbstractElementClass extends AbstractElementClassBase implements ElementClass {
 
 	private String tag = null;
 	private Class<?> objectClass = null;

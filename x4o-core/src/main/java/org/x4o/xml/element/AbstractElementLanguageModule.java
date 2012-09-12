@@ -29,18 +29,13 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import org.x4o.xml.element.ElementAttributeHandler;
-import org.x4o.xml.element.ElementBindingHandler;
-import org.x4o.xml.element.ElementConfigurator;
-import org.x4o.xml.element.ElementLanguage;
-
 /**
  * An AbstractElementLanguageModule.
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 2, 2012
  */
-abstract public class AbstractElementLanguageModule extends AbstractElementMetaBase implements ElementLanguageModule {
+public abstract class AbstractElementLanguageModule extends AbstractElementMetaBase implements ElementLanguageModule {
 
 	private Logger logger = null;
 

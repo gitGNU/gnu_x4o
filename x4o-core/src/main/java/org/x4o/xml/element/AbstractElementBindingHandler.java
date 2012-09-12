@@ -30,6 +30,6 @@ package	org.x4o.xml.element;
  * @author Willem Cazander
  * @version 1.0 Apr 16, 2006
  */
-abstract public class AbstractElementBindingHandler extends AbstractElementMetaBase implements ElementBindingHandler {
+public abstract class AbstractElementBindingHandler extends AbstractElementMetaBase implements ElementBindingHandler {
 
 }

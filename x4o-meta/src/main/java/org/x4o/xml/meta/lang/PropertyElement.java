@@ -95,6 +95,7 @@ public class PropertyElement extends AbstractElement {
 					method.invoke(getParent().getElementObject(),new Object[]{name,value});
 					return;
 				} catch (Exception e) {
+					throw new ElementException("Could not invoke setproperty of "+method.getName()+" on: "+getParent().getElementObject(),e);
 				}
 			}
 		}
@@ -104,7 +105,7 @@ public class PropertyElement extends AbstractElement {
 			getElementLanguage().getElementObjectPropertyValue().setProperty(getParent().getElementObject(), name, value);
 			return;
 		} catch (Exception e) {
-			throw new ElementException("could not set property on parent element object: "+name,e);
+			throw new ElementException("Could not set property on parent element object: "+name,e);
 		}
 	}
 }

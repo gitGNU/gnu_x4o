@@ -37,7 +37,7 @@ public interface X4OParserSupport {
 	 * Loads the language ElementLanguage to provide support.
 	 * 
 	 * @return	Returns the ElementLanguage.
-	 * @throws X4OParserSupportException
+	 * @throws X4OParserSupportException Is thrown when supporting language could not be loaded.
 	 */
 	ElementLanguage loadElementLanguageSupport() throws X4OParserSupportException;
 }

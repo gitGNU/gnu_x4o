@@ -39,12 +39,15 @@ import org.x4o.xml.element.ElementLanguageModuleLoaderSibling;
 public class MetaLanguageSiblingLoader implements ElementLanguageModuleLoaderSibling {
 
 	/** Defines the identifier of the meta x4o language. */
-	public final static String META_LANGUAGE = "meta";
+	public static final String META_LANGUAGE = "meta";
 	
 	/** Defines the version of the meta x4o language. */
-	public final static String META_LANGUAGE_VERSION = "1.0";
+	public static final String META_LANGUAGE_VERSION = "1.0";
 	
 	/**
+	 * Loads an ElementLanguageModule.
+	 * @param elementLanguage	The ElementLanguage to load for.
+	 * @param elementLanguageModule	The ElementLanguageModule to load into.
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
 	 */
 	public void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
@@ -55,6 +58,9 @@ public class MetaLanguageSiblingLoader implements ElementLanguageModuleLoaderSib
 	}
 
 	/**
+	 * Loads an sibling language.
+	 * @param elementLanguage	The ElementLanguage to load for.
+	 * @param loader	The x4o language loader.
 	 * @throws X4OLanguageLoaderException 
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoaderSibling#loadLanguageSibling(org.x4o.xml.element.ElementLanguage, org.x4o.xml.core.config.X4OLanguageLoader)
 	 */

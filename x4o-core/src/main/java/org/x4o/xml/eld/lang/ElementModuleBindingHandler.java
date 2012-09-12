@@ -84,7 +84,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 		if (m==null) {
 			return;
 		}
-		ElementLanguage x4oParsingContext = (ElementLanguage)m.get(EldParser.PARENT_LANGUAGE_ELEMENT_LANGUAGE);
+		ElementLanguage x4oParsingContext = (ElementLanguage)m.get(EldParser.EL_PARENT_LANGUAGE_ELEMENT_LANGUAGE);
 		//ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.PARENT_ELEMENT_LANGUAGE_MODULE);
 		ElementLanguageModule elementLanguageModule = (ElementLanguageModule)parentObject;
 		if (x4oParsingContext==null) {

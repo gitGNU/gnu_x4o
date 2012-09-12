@@ -275,7 +275,7 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 			contextInit.setExpressionFactory(configExpressionFactory());
 		}
 		if (contextInit.getELContext()==null) {
-			contextInit.setELContext(new X4OELContext(this));
+			contextInit.setELContext(new X4OELContext());
 		}
 		try {
 			if (contextInit.getElementAttributeValueParser()==null) {
@@ -300,14 +300,14 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 			ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
 			return expressionFactory;
 		} catch (Exception e) {
+			try {
+				Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass("de.odysseus.el.ExpressionFactoryImpl");
+				ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
+				return expressionFactory;
+			} catch (Exception ee) {
+				throw new RuntimeException("Could not load ExpressionFactory tried: org.apache.el.ExpressionFactoryImpl and de.odysseus.el.ExpressionFactoryImpl but could not load one of them.");
+			}
 		}
-		try {
-			Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass("de.odysseus.el.ExpressionFactoryImpl");
-			ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
-			return expressionFactory;
-		} catch (Exception ee) {
-		}
-		throw new RuntimeException("Could not load ExpressionFactory tried: org.apache.el.ExpressionFactoryImpl and de.odysseus.el.ExpressionFactoryImpl but could not load one of them.");
 	}
 
 	/**

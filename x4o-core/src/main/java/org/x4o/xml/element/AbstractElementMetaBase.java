@@ -30,7 +30,7 @@ package	org.x4o.xml.element;
  * @author Willem Cazander
  * @version 1.0 Jan 18, 2009
  */
-abstract public class AbstractElementMetaBase implements ElementMetaBase {
+public abstract class AbstractElementMetaBase implements ElementMetaBase {
 	
 	/** The description */
 	private String id = null;

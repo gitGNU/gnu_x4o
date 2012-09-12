@@ -130,22 +130,18 @@ public class DefaultElementAttributeValueParser implements ElementAttributeValue
 			return true;	// null element disables checks
 		}
 		ElementClassAttribute attr = element.getElementClass().getElementClassAttributeByName(name);
-		if (attr!=null) {
-			if (attr.getRunResolveEL()!=null && attr.getRunResolveEL()==false) {
-				logger.finest("Skipping EL parsing for: "+name);
-				return false;
-			}
+		if (attr!=null && attr.getRunResolveEL()!=null && attr.getRunResolveEL()==false) {
+			logger.finest("Skipping EL parsing for: "+name);
+			return false;
 		}
 		
 		for (ElementInterface ei:element.getElementLanguage().findElementInterfaces(element.getElementObject())) {
 			logger.finest("Found interface match checking disables el parameters.");
 			
 			attr = ei.getElementClassAttributeByName(name);
-			if (attr!=null) {
-				if (attr.getRunResolveEL()!=null && attr.getRunResolveEL()==false) {
-					logger.finest("Skipping EL parsing for: "+name+" in interface element.");
-					return false;
-				}
+			if (attr!=null && attr.getRunResolveEL()!=null && attr.getRunResolveEL()==false) {
+				logger.finest("Skipping EL parsing for: "+name+" in interface element.");
+				return false;
 			}
 		}
 		return true;

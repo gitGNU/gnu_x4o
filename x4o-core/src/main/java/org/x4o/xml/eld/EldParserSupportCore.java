@@ -38,6 +38,7 @@ public class EldParserSupportCore implements X4OParserSupport {
 	/**
 	 * Loads the ElementLanguage of this language parser for support.
 	 * @return	The loaded ElementLanguage.
+	 * @throws X4OParserSupportException When support language could not be loaded.
 	 * @see org.x4o.xml.core.X4OParserSupport#loadElementLanguageSupport()
 	 */
 	public ElementLanguage loadElementLanguageSupport() throws X4OParserSupportException {

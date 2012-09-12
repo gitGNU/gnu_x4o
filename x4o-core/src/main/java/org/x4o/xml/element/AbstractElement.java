@@ -36,7 +36,7 @@ import org.x4o.xml.core.config.X4OLanguageClassLoader;
  * @author Willem Cazander
  * @version 1.0 Aug 8, 2005
  */
-abstract public class AbstractElement implements Element {
+public abstract class AbstractElement implements Element {
 
 	/** The parent Element */
 	private Element parent = null;

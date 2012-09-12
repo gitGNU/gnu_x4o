@@ -63,6 +63,5 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 		if (childObject instanceof ElementClass) {
 			parent.addElementClass((ElementClass)childObject);
 		}
-		return;
 	}
 }

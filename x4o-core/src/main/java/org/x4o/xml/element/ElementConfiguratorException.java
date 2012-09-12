@@ -33,6 +33,8 @@ package	org.x4o.xml.element;
 @SuppressWarnings("serial")
 public class ElementConfiguratorException extends ElementException {
 	
+	private ElementConfigurator elementConfigurator = null;
+	
 	/**
 	 * Creates an configurator exception.
 	 * @param config	The ElementConfigurator.
@@ -40,6 +42,7 @@ public class ElementConfiguratorException extends ElementException {
 	 */
 	public ElementConfiguratorException(ElementConfigurator config,String message) {
 		super(message);
+		this.elementConfigurator=config;
 	}
 	
 	/**
@@ -50,6 +53,7 @@ public class ElementConfiguratorException extends ElementException {
 	 */
 	public ElementConfiguratorException(ElementConfigurator config,String message,Exception exception) {
 		super(message,exception);
+		this.elementConfigurator=config;
 	}
 	
 	/**
@@ -60,5 +64,14 @@ public class ElementConfiguratorException extends ElementException {
 	 */
 	public ElementConfiguratorException(ElementConfigurator config,String message,ElementException exception) {
 		super(message,exception);
+		this.elementConfigurator=config;
+	}
+	
+	/**
+	 * Gets the ElementConfigurator which has thrown this exception.
+	 * @return	The ElementConfigurator.
+	 */
+	public ElementConfigurator getElementConfigurator() {
+		return elementConfigurator;
 	}
 }
