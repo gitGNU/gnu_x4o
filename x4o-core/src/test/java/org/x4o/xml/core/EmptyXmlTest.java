@@ -91,11 +91,11 @@ public class EmptyXmlTest extends TestCase {
 		try {
 			parser.parseResource("tests/empty-xml/empty-xml.xml");
 		} catch (SAXException e) {
-			boolean hasError = e.getMessage().contains("Premature end of file.");
-			if (System.getProperty("java.version").startsWith("1.5")) {
-				hasError = e.getMessage().contains("A well-formed document requires a root element.");
+			e.printStackTrace();
+			boolean hasError = e.getMessage().contains("Premature end of file."); // java6+ sax message
+			if (hasError==false) {
+				hasError = e.getMessage().contains("A well-formed document requires a root element."); // xercesImpl sax message
 			}
-			
 			assertEquals(true,hasError);
 			return;
 		}
