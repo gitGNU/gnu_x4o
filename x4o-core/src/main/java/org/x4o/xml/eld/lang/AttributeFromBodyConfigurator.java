@@ -48,7 +48,7 @@ public class AttributeFromBodyConfigurator extends AbstractElementConfigurator {
 		if (name==null) {
 			throw new ElementConfiguratorException(this,"name attribute is not set.");
 		}
-		if (name.isEmpty()) {
+		if (name.length()==0) {
 			throw new ElementConfiguratorException(this,"name attribute is empty.");
 		}
 		if (bodyType==null) {
@@ -64,7 +64,7 @@ public class AttributeFromBodyConfigurator extends AbstractElementConfigurator {
 		} else {
 			throw new ElementConfiguratorException(this,"bodyType attribute value is unknown; "+bodyType);
 		}
-		if (value.isEmpty()) {
+		if (value.length()==0) {
 			return;
 		}
 		element.getAttributes().put(name, value);

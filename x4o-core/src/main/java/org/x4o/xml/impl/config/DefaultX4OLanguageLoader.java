@@ -251,7 +251,7 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			String text = new String(ch,start,length).trim();
-			if (text.isEmpty()) {
+			if (text.length()==0) {
 				return;
 			}
 			buf.append(text);

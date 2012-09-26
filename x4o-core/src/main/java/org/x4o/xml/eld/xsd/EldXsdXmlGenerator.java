@@ -54,7 +54,7 @@ public class EldXsdXmlGenerator {
 		if (ns.getSchemaResource()==null) {
 			throw new NullPointerException("Can't generate xsd for namespace without schemaResource uri: "+ns.getUri());
 		}
-		if (ns.getSchemaResource().isEmpty()) {
+		if (ns.getSchemaResource().length()==0) {
 			throw new NullPointerException("Can't generate xsd for namespace with empty schemaResource uri: "+ns.getUri());
 		}
 	}

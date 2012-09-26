@@ -220,10 +220,10 @@ public class X4OTagHandler extends DefaultHandler2 {
 			return; // no text
 		}
 		String text = new String(ch,start,length);
-		if (text.isEmpty()) {
+		if (text.length()==0) {
 			return; // no text
 		}
-		if (elementStack.empty()) {
+		if (elementStack.isEmpty()) {
 			return;  // no element
 		}
 		Element e = elementStack.peek();

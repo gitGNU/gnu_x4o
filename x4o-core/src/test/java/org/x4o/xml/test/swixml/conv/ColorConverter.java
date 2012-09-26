@@ -50,7 +50,7 @@ public class ColorConverter extends AbstractStringObjectConverter {
 
 	public Object convertStringTo(String str, Locale locale) throws ObjectConverterException {
 		try {
-			if (str.isEmpty()) {
+			if (str.length()==0) {
 				throw new ObjectConverterException(this,"Can't convert empty color.");
 			}
 			if (Character.isDigit(str.charAt(0))) {

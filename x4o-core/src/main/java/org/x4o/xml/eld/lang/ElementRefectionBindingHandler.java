@@ -65,11 +65,18 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 		}
 		Method[] ms = parentObject.getClass().getMethods();
 		for (Method m:ms) {
-			if (method.equalsIgnoreCase(m.getName())) {
+			Class<?>[] types = m.getParameterTypes();
+			if (types.length == 0) {
+				continue;
+			}
+			if (types.length > 1) {
+				continue;
+			}
+			if (types[0].isAssignableFrom(childClass)) {
 				try {
 					m.invoke(parentObject, childObject);
 				} catch (Exception e) {
-					throw new ElementBindingHandlerException("Error in binding beans: "+e.getMessage(),e);
+					throw new ElementBindingHandlerException("Error invoke binding method of: "+getId()+" error: "+e.getMessage(),e);
 				}
 				return;
 			}

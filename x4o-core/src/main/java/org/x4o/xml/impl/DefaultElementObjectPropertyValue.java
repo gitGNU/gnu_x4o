@@ -46,6 +46,64 @@ public class DefaultElementObjectPropertyValue implements ElementObjectPropertyV
 
 	private static final long serialVersionUID = 1L;
 	
+	private Logger logger = Logger.getLogger(DefaultElementObjectPropertyValue.class.getName());
+	
+	private Method findMethod(Object object,String parameterName,Object parameter) {
+		
+		// Get class but can be null.
+		Class<?> parameterClass = null;
+		if(parameter!=null) {
+			parameterClass=parameter.getClass();
+		}
+		logger.finer("Trying value: pn="+parameterName+" o="+object+" p="+parameter+"("+parameterClass+")");
+		String parameterNameSet = "set"+parameterName;
+		Method[] methodes = object.getClass().getMethods();
+		Method lastMethodFall = null;
+		for (int i=0;i<methodes.length;i++) {
+			Method method = methodes[i];
+			Class<?>[] types = method.getParameterTypes();
+			if (types.length == 0) {
+				continue;
+			}
+			if (types.length > 1) {
+				continue;
+			}
+			if (method.getName().equalsIgnoreCase(parameterNameSet)) {
+				lastMethodFall = method;
+				if (parameterClass!=null) {
+					// Check for class based parameters.
+					if (types[0].isAssignableFrom(parameterClass)) {
+						logger.finest("Found method type: "+method.getParameterTypes()[0]+" for parameter: "+parameterName);
+						return method;
+					}
+					// Check the native parameter types.
+					if (parameterClass.isAssignableFrom(Boolean.class) && types[0].isAssignableFrom(Boolean.TYPE) ) {
+						return method;
+					}
+					if (parameterClass.isAssignableFrom(Integer.class) && types[0].isAssignableFrom(Integer.TYPE) ) {
+						return method;
+					}
+					if (parameterClass.isAssignableFrom(Long.class) && types[0].isAssignableFrom(Long.TYPE) ) {
+						return method;
+					}
+					if (parameterClass.isAssignableFrom(Double.class) && types[0].isAssignableFrom(Double.TYPE) ) {
+						return method;
+					}
+					if (parameterClass.isAssignableFrom(Float.class) && types[0].isAssignableFrom(Float.TYPE) ) {
+						return method;
+					}
+					if (parameterClass.isAssignableFrom(Byte.class) && types[0].isAssignableFrom(Byte.TYPE) ) {
+						return method;
+					}
+					if (parameterClass.isAssignableFrom(Character.class) && types[0].isAssignableFrom(Character.TYPE) ) {
+						return method;
+					}
+				}
+			}
+		}
+		return lastMethodFall;
+	}
+	
 	/**
 	 * TODO: this function is not completed !!
 	 * 
@@ -59,60 +117,36 @@ public class DefaultElementObjectPropertyValue implements ElementObjectPropertyV
 	 */
 	public void setProperty(Object object,String parameterName,Object parameter) throws ElementObjectPropertyValueException {
 		
-		// a bit hackie
-		Class<?> parameterClass = null;
-		if(parameter!=null) {
-			parameterClass=parameter.getClass();
-		}
-		
-		Logger logger = Logger.getLogger(DefaultElementObjectPropertyValue.class.getName());
-		
-		logger.finer("Trying value: pn="+parameterName+" o="+object+" p="+parameter+"("+parameterClass+")");
-		String parameterNameSet = "set"+parameterName;
-		Method[] methodes = object.getClass().getMethods();
-		Method lastMethod = null;
-		Method lastMethodFall = null;
-		
-		for (int i=0;i<methodes.length;i++) {
-			Method method = methodes[i];
-			if (method.getName().equalsIgnoreCase(parameterNameSet)) {
-				lastMethodFall = method;
-				if (parameterClass!=null && method.getParameterTypes()[0].isAssignableFrom(parameterClass)) {
-					logger.finest("Found method type: "+method.getParameterTypes()[0]+" for parameter: "+parameterName);
-					lastMethod = method;
-					break;	
-				}			
-			}
-		}
-	
-		// old loop is now fallback code
-		if (lastMethod==null && lastMethodFall!=null) {
-			lastMethod=lastMethodFall;
-		}
+		// find the method for the parameter
+		Method lastMethod = findMethod(object,parameterName,parameter);
 		if (lastMethod==null) {
 			logger.finest("No method found, aborting parameter: "+parameterName);
 			return;
 		}
 		
+		// Special case for null value.
 		if (parameter==null) {
 			logger.finest("Found parameter is null Setting method: "+lastMethod.getParameterTypes()[0]+" for parameter: "+parameterName);
 			try {
 				lastMethod.invoke(object,new Object[]{parameter});
+				return;
 			} catch (Exception e) {
 				throw new ElementObjectPropertyValueException(e.getMessage(),e);
 			}
-			return;
 		}
 		
+		// Invoke for class based parameters
 		if (lastMethod.getParameterTypes()[0].isAssignableFrom(parameter.getClass())) {
 			logger.finest("Found parameter type: "+lastMethod.getParameterTypes()[0]+" for parameter: "+parameterName+" setting value: "+parameter);
 			try {
 				lastMethod.invoke(object,new Object[]{parameter});
+				return;
 			} catch (Exception e) {
 				throw new ElementObjectPropertyValueException(e.getMessage(),e);
 			}
-			return;	
-		}			
+		}
+		
+		// Invoke for native based types
 		
 		
 		// not found 2sec try
@@ -140,118 +174,56 @@ public class DefaultElementObjectPropertyValue implements ElementObjectPropertyV
 		Object parameter2 = null;
 		
 		try {
-		DefaultObjectConverterProvider convProvider = new DefaultObjectConverterProvider();
-		convProvider.addDefaults();
-		ObjectConverter conv = convProvider.getObjectConverterForClass(lastMethod.getParameterTypes()[0]);
-		if (conv!=null) {
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		
-		/*
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Integer.class) ) {
-			logger.finest("found Integer");
-			parameter2 = Integer.parseInt(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Long.class) ) {
-			logger.finest("found Long");
-			parameter2 = Long.parseLong(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Double.class) ) {
-			logger.finest("found Double");
-			parameter2 = Double.parseDouble(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Float.class) ) {
-			logger.finest("found Float");
-			parameter2 = Float.parseFloat(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Byte.class) ) {
-			logger.finest("found Byte");
-			parameter2 = Byte.parseByte(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Character.class) ) {
-			logger.finest("found Character");
-			parameter2 = new Character(parameter.toString().charAt(0));
-		}		
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Boolean.class) ) {
-			logger.finest("found Boolean");
-			// WARNING: this alway returns a boolean :''(
-			parameter2 = Boolean.parseBoolean(parameter.toString());
-		}*/
-
-		/*
-		 * JAVA NATIVE TYPES:
-		 * 
-		 * TYPE:	Size in bits:
-		 * boolean	8, unsigned
-		 * byte		8
-		 * char		16, unsigned
-		 * short	16
-		 * int		32
-		 * long		64
-		 * float	32
-		 * double	64
-		 * void		n/a
-		 */
-		/*
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Boolean.TYPE) ) {
-			logger.finest("found boolean");
-			parameter2 = Boolean.parseBoolean(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Integer.TYPE) ) {
-			logger.finest("found int");
-			parameter2 = Integer.parseInt(parameter.toString());
-		}                           
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Long.TYPE) ) {
-			logger.finest("found long");
-			parameter2 = Long.parseLong(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Double.TYPE) ) {
-			logger.finest("found int");
-			parameter2 = Double.parseDouble(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Float.TYPE) ) {
-			logger.finest("found float");
-			parameter2 = Float.parseFloat(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Byte.TYPE) ) {
-			logger.finest("found byte");
-			parameter2 = Byte.parseByte(parameter.toString());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Character.TYPE) ) {
-			logger.finest("found char");
-			parameter2 = new Character(parameter.toString().charAt(0));
-		}
-		*/
-		
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Boolean.TYPE) ) {
-			conv = convProvider.getObjectConverterForClass(Boolean.class);
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Integer.TYPE) ) {
-			conv = convProvider.getObjectConverterForClass(Integer.class);
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Long.TYPE) ) {
-			conv = convProvider.getObjectConverterForClass(Long.class);
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Double.TYPE) ) {
-			conv = convProvider.getObjectConverterForClass(Double.class);
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Float.TYPE) ) {
-			conv = convProvider.getObjectConverterForClass(Float.class);
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Byte.TYPE) ) {
-			conv = convProvider.getObjectConverterForClass(Byte.class);
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		if (lastMethod.getParameterTypes()[0].isAssignableFrom(Character.TYPE) ) {
-			conv = convProvider.getObjectConverterForClass(Character.class);
-			parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
-		}
-		
+			DefaultObjectConverterProvider convProvider = new DefaultObjectConverterProvider();
+			convProvider.addDefaults();
+			ObjectConverter conv = convProvider.getObjectConverterForClass(lastMethod.getParameterTypes()[0]);
+			if (conv!=null) {
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+	
+			/*
+			 * JAVA NATIVE TYPES:
+			 * 
+			 * TYPE:	Size in bits:
+			 * boolean	8, unsigned
+			 * byte		8
+			 * char		16, unsigned
+			 * short	16
+			 * int		32
+			 * long		64
+			 * float	32
+			 * double	64
+			 * void		n/a
+			 */
+			if (lastMethod.getParameterTypes()[0].isAssignableFrom(Boolean.TYPE) ) {
+				conv = convProvider.getObjectConverterForClass(Boolean.class);
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+			if (lastMethod.getParameterTypes()[0].isAssignableFrom(Integer.TYPE) ) {
+				conv = convProvider.getObjectConverterForClass(Integer.class);
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+			if (lastMethod.getParameterTypes()[0].isAssignableFrom(Long.TYPE) ) {
+				conv = convProvider.getObjectConverterForClass(Long.class);
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+			if (lastMethod.getParameterTypes()[0].isAssignableFrom(Double.TYPE) ) {
+				conv = convProvider.getObjectConverterForClass(Double.class);
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+			if (lastMethod.getParameterTypes()[0].isAssignableFrom(Float.TYPE) ) {
+				conv = convProvider.getObjectConverterForClass(Float.class);
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+			if (lastMethod.getParameterTypes()[0].isAssignableFrom(Byte.TYPE) ) {
+				conv = convProvider.getObjectConverterForClass(Byte.class);
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+			if (lastMethod.getParameterTypes()[0].isAssignableFrom(Character.TYPE) ) {
+				conv = convProvider.getObjectConverterForClass(Character.class);
+				parameter2 = conv.convertTo(parameter.toString(), Locale.getDefault());
+			}
+			
 		} catch (ObjectConverterException oce) {
 			throw new ElementObjectPropertyValueException(oce.getMessage(),oce);
 		}

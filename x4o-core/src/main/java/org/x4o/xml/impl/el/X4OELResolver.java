@@ -67,7 +67,7 @@ public class X4OELResolver extends ELResolver {
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Iterator getFeatureDescriptors(ELContext context,Object base) {
 		base = checkBase(base);
 		return delegate.getFeatureDescriptors(context, base);

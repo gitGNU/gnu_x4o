@@ -2,10 +2,22 @@
 Building X4O
 
 You need a few software packages;
-- java sdk 1.5 or higher.
+- java 1.5 or higher.
 - maven 3 or higher.
 
 
+-- Run multi jvm test --
+
+todo make maven like;
+note2: this does need maven 3.0.3++ in 3.0.1 there is some java6 classes. 
+
+export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64/;mvn clean test
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/;mvn clean test
+export JAVA_HOME=/usr/lib/jvm/j2sdk1.6-oracle/;mvn clean test
+export JAVA_HOME=/usr/lib/jvm/j2sdk1.7-oracle/;mvn clean test
+export JAVA_HOME=/usr/lib/jvm/jdk1.5.0_22/;~/bin/mvn3/apache-maven-3.0.3/bin/mvn clean test
+#not working;
+#export JAVA_HOME=/usr/lib/jvm/java-1.5.0-gcj-4.7/;~/bin/mvn3/apache-maven-3.0.3/bin/mvn clean test
 
 -- Create package --
 

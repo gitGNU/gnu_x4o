@@ -127,7 +127,7 @@ public class X4OParser extends AbstractXMLParser implements X4OParserSupport {
 		if (name==null) {
 			throw new NullPointerException("Can't add null name.");
 		}
-		if (name.isEmpty()) {
+		if (name.length()==0) {
 			throw new NullPointerException("Can't add empty name.");
 		}
 		if (bean==null) {

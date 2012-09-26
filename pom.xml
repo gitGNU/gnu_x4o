@@ -96,9 +96,10 @@
     <mockito-all.version>1.9.0</mockito-all.version>
     <testng.version>6.3.1</testng.version>
     <junit.version>4.10</junit.version>
+    <xerces.version>2.10.0</xerces.version><!-- Only needed in jdk1.5 -->
     
     <!-- Application lib versions -->
-    <java.el.version>1.2</java.el.version>
+    <jasper-el.version>6.0.20</jasper-el.version>
     <juel.version>2.1.0</juel.version>
   </properties>
   <build>
@@ -414,6 +415,6 @@
       </plugin>
         </plugins>
       </build>
-    </profile> 
+    </profile>
   </profiles>
 </project>

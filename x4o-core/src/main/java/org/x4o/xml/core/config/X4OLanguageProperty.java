@@ -208,7 +208,7 @@ public enum X4OLanguageProperty {
 		if (uri==null) {
 			throw new NullPointerException("Can't search null uri.");
 		}
-		if (uri.isEmpty()) {
+		if (uri.length()==0) {
 			throw new IllegalArgumentException("Can't search empty uri.");
 		}
 		if (uri.startsWith(URI_PREFIX)==false)  {

@@ -71,13 +71,13 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 		if (language==null) {
 			throw new NullPointerException("language may not be null");
 		}
-		if (language.isEmpty()) {
+		if (language.length()==0) {
 			throw new IllegalArgumentException("language may not be empty");
 		}
 		if (languageVersion==null) {
 			throw new NullPointerException("languageVersion may not be null");
 		}
-		if (languageVersion.isEmpty()) {
+		if (languageVersion.length()==0) {
 			throw new IllegalArgumentException("languageVersion may not be empty");
 		}
 		languageProperties = new HashMap<X4OLanguageProperty,Object>(20);

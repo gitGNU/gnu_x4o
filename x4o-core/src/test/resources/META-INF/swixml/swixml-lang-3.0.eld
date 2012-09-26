@@ -39,7 +39,7 @@
 	<classBindingHandler id="JDesktopPane-JInternalFrame"	parentClass="javax.swing.JDesktopPane"		childClass="javax.swing.JInternalFrame"	method="add"/>
 	<classBindingHandler id="JFrame-JDesktopPane"			parentClass="javax.swing.JFrame"			childClass="javax.swing.JDesktopPane"	method="setContentPane"/>
 	<classBindingHandler id="JMenuBar-JMenu"				parentClass="javax.swing.JMenuBar"			childClass="javax.swing.JMenu"			method="add"/>
-	<classBindingHandler id="JMenu-JMenuItem"				parentClass="javax.swing.JMenu"			childClass="javax.swing.JMenuItem"		method="add"/>
+	<classBindingHandler id="JMenu-JMenuItem"				parentClass="javax.swing.JMenu"				childClass="javax.swing.JMenuItem"		method="add"/>
 	
 	<elementInterface id="Component" interfaceClass="java.awt.Component">
 		<attribute name="bounds">
@@ -103,6 +103,7 @@
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.KeyStrokeConverter"/>
 				<attributeAlias name="Accelerator"/>
 			</attribute>
+			<attribute name="mnemonic" runBeanFill="false"/>
 			<attribute name="Action" runBeanFill="false"/>
 			<configurator id="menuitem-action" bean.class="org.x4o.xml.test.swixml.SwiXmlActionConfigurator"/>
 		</element>
@@ -111,6 +112,9 @@
 		<element tag="JSplitPane"		objectClass="javax.swing.JSplitPane">
 			<attribute name="orientation">
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.JSplitPaneOrientationConverter"/>
+			</attribute>
+			<attribute name="dividerLocation">
+				<conv:integerConverter/>
 			</attribute>
 		</element>
 		<element tag="JScrollPane"		objectClass="javax.swing.JScrollPane"/>

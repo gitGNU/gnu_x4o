@@ -124,7 +124,8 @@ public class X4OEntityResolver implements EntityResolver {
 						in.setSystemId(systemId);
 						return in;
 					} catch (IOException e) {
-						throw new IOException("Could not open: "+schemaFile+" error: "+e.getMessage(),e);
+						// note; IOException(String,Exception) is java6
+						throw new SAXException("Could not open: "+schemaFile+" error: "+e.getMessage(),e);
 					}
 				}
 			}
@@ -142,7 +143,7 @@ public class X4OEntityResolver implements EntityResolver {
 					in.setSystemId(systemId);
 					return in;
 				} catch (IOException e) {
-					throw new IOException("Could not open: "+resource+" error: "+e.getMessage(),e);
+					throw new SAXException("Could not open: "+resource+" error: "+e.getMessage(),e);
 				}
 			}
 		}
@@ -155,7 +156,7 @@ public class X4OEntityResolver implements EntityResolver {
 				in.setSystemId(systemId);
 				return in;
 			} catch (IOException e) {
-				throw new IOException("Could not open: "+systemId+" error: "+e.getMessage(),e);
+				throw new SAXException("Could not open: "+systemId+" error: "+e.getMessage(),e);
 			}
 		}
 		

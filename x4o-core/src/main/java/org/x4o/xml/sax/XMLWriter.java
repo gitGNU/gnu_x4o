@@ -200,6 +200,12 @@ public class XMLWriter extends DefaultHandler2 {
 				if (attributeValue.contains("\"")) {
 					attributeValue=attributeValue.replaceAll("\"", "&quote;");
 				}
+				if (attributeValue.contains("<")) {
+					attributeValue=attributeValue.replaceAll("<", "&lt;");
+				}
+				if (attributeValue.contains(">")) {
+					attributeValue=attributeValue.replaceAll(">", "&gt;");
+				}
 				
 				startElement.append(attributeValue);
 				startElement.append('"');
