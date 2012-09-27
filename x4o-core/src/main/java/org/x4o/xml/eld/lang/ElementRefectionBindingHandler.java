@@ -72,6 +72,9 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 			if (types.length > 1) {
 				continue;
 			}
+			if (method.equalsIgnoreCase(m.getName())==false) {
+				continue;
+			}
 			if (types[0].isAssignableFrom(childClass)) {
 				try {
 					m.invoke(parentObject, childObject);
@@ -81,6 +84,7 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 				return;
 			}
 		}
+		throw new ElementBindingHandlerException("Could not find method: "+method+" on: "+childClass+" id:"+getId());
 	}
 
 	/**
