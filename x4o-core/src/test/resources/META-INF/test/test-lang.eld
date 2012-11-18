@@ -66,9 +66,9 @@
 		</eld:classBindingHandler>
 	</eld:elementInterface>
 	
-	<eld:configurator bean.class="org.x4o.xml.test.element.TestElementConfigurator" id="testConfigGlobal">
+	<eld:configuratorGlobal bean.class="org.x4o.xml.test.element.TestElementConfigurator" id="testConfigGlobal">
 		<eld:description>Test the global element configurator.</eld:description>
-	</eld:configurator>
+	</eld:configuratorGlobal>
 	
 	<eld:attributeHandler attributeName="tt.attr1" bean.class="org.x4o.xml.test.element.TestElementAttributeHandler" id="attrTest1">
 		<eld:description>Test the global element attribute1 handler.</eld:description>

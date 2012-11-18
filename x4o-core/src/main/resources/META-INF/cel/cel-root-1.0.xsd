@@ -7,7 +7,7 @@
 	ModuleName:		Core Element Languag Module
 	Namespaces:		2
 	Namespace:		http://cel.x4o.org/xml/ns/cel-root
-	Created on:		Sun Nov 18 05:10:55 CET 2012
+	Created on:		Sun Nov 18 06:22:14 CET 2012
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:cel-core="http://cel.x4o.org/xml/ns/cel-core"
@@ -24,11 +24,11 @@
 				<element ref="cel-core:namespace"/>
 			</choice>
 			<attribute name="name" type="string"/>
+			<attribute name="providerName" type="string"/>
 			<attribute name="sourceResource" type="string"/>
 			<attribute name="elementLanguageModuleLoader" type="string"/>
-			<attribute name="providerName" type="string"/>
-			<attribute name="description" type="string"/>
 			<attribute name="id" type="string"/>
+			<attribute name="description" type="string"/>
 		</complexType>
 	</element>
 </schema>

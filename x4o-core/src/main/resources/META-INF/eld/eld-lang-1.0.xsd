@@ -7,7 +7,7 @@
 	ModuleName:		Element Language Definition
 	Namespaces:		3
 	Namespace:		http://eld.x4o.org/xml/ns/eld-lang
-	Created on:		Sun Nov 18 05:06:09 CET 2012
+	Created on:		Sun Nov 18 06:22:58 CET 2012
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
@@ -20,14 +20,14 @@
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
 		<attribute name="name" type="string"/>
-		<attribute name="languageRoot" type="boolean"/>
-		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
 		<attribute name="schemaPrefix" type="string"/>
 		<attribute name="prefixMapping" type="string"/>
-		<attribute name="description" type="string"/>
+		<attribute name="languageRoot" type="boolean"/>
+		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="id" type="string"/>
+		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="descriptionType">
 		<simpleContent>
@@ -58,8 +58,8 @@
 		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
-		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
+		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="attributeAliasType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
@@ -67,7 +67,9 @@
 		<anyAttribute/>
 	</complexType>
 	<complexType name="configuratorGlobalType">
-		<choice minOccurs="0" maxOccurs="unbounded"/>
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="description" type="this:descriptionType"/>
+		</choice>
 		<attribute name="id" type="string" use="required"/>
 		<attribute name="bean.class" type="string" use="required"/>
 		<attribute name="configAction" type="string"/>
@@ -124,14 +126,14 @@
 			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="name" type="string"/>
-		<attribute name="runConverters" type="boolean"/>
-		<attribute name="runBeanFill" type="boolean"/>
+		<attribute name="defaultValue" type="string"/>
 		<attribute name="objectConverter" type="string"/>
 		<attribute name="runResolveEL" type="boolean"/>
+		<attribute name="runConverters" type="boolean"/>
+		<attribute name="runBeanFill" type="boolean"/>
 		<attribute name="required" type="boolean"/>
-		<attribute name="defaultValue" type="string"/>
-		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
+		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="bindingHandlerType">
 		<choice minOccurs="0" maxOccurs="unbounded">

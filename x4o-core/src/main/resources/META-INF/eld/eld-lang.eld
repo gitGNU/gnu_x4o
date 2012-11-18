@@ -163,6 +163,7 @@
 			<elementParent tag="bindingHandler"/>
 			<elementParent tag="attributeHandler"/>
 			<elementParent tag="configurator"/>
+			<elementParent tag="configuratorGlobal"/>
 			<elementParent tag="elementInterface"/>
 			<elementParent tag="element"/>
 			<elementParent tag="attribute"/>

@@ -285,6 +285,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		ec.addElementParent("", "attributeHandler");
 		ec.addElementParent("", "bindingHandler");
 		ec.addElementParent("", "configurator");
+		ec.addElementParent("", "configuratorGlobal");
 		ec.addElementParent("", "elementInterface");
 		ec.addElementParent("", "element");
 		ec.addElementParent("", "attribute");
