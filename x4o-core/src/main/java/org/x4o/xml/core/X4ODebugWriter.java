@@ -38,6 +38,7 @@ import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementClassBase;
 import org.x4o.xml.element.ElementConfigurator;
+import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
@@ -231,7 +232,7 @@ public class X4ODebugWriter {
 				//module.getElementInterfaces();
 				//module.getElementNamespaceContexts();
 				
-				debugElementConfigurator(module.getGlobalElementConfigurators());
+				debugElementConfiguratorGlobal(module.getElementConfiguratorGlobals());
 				debugElementBindingHandler(module.getElementBindingHandlers());
 				
 				for (ElementAttributeHandler p:module.getElementAttributeHandlers()) {
@@ -464,6 +465,16 @@ public class X4ODebugWriter {
 			atts.addAttribute ("", "className", "", "", elementConfigurator.getClass().getName());
 			debugWriter.startElement (DEBUG_URI, "elementConfigurator", "", atts);
 			debugWriter.endElement(DEBUG_URI, "elementConfigurator", "");
+		}	
+	}
+	
+	private void debugElementConfiguratorGlobal(List<ElementConfiguratorGlobal> elementConfigurators) throws SAXException {
+		for (ElementConfiguratorGlobal elementConfigurator:elementConfigurators) {
+			AttributesImpl atts = new AttributesImpl();
+			atts.addAttribute ("", "description", "", "", elementConfigurator.getDescription());
+			atts.addAttribute ("", "className", "", "", elementConfigurator.getClass().getName());
+			debugWriter.startElement (DEBUG_URI, "elementConfiguratorGlobal", "", atts);
+			debugWriter.endElement(DEBUG_URI, "elementConfiguratorGlobal", "");
 		}	
 	}
 	

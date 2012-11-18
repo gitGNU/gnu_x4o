@@ -33,7 +33,7 @@ import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementBindingHandlerException;
-import org.x4o.xml.element.ElementConfigurator;
+import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementLanguageModule;
@@ -56,7 +56,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 		ElementNamespaceContext.class,
 		ElementBindingHandler.class,
 		ElementAttributeHandler.class,
-		ElementConfigurator.class,
+		ElementConfiguratorGlobal.class,
 	};
 	
 	
@@ -125,9 +125,9 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 			elementLanguageModule.addElementAttributeHandler(elementAttributeHandler);
 			return;
 		}
-		if (childObject instanceof ElementConfigurator) {
-			ElementConfigurator elementConfigurator = (ElementConfigurator)childObject;
-			elementLanguageModule.addGlobalElementConfigurator(elementConfigurator);
+		if (childObject instanceof ElementConfiguratorGlobal) {
+			ElementConfiguratorGlobal elementConfigurator = (ElementConfiguratorGlobal)childObject;
+			elementLanguageModule.addElementConfiguratorGlobal(elementConfigurator);
 			return;
 		}
 	}

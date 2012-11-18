@@ -95,7 +95,7 @@
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 			<elementParent tag="elementInterface"/>
 		</element>
-
+		
 		<element tag="attributeHandler"						elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an className in bean.class for an ElementAttributeHandler.</description>
 			<attribute name="id" required="true"/>
@@ -104,12 +104,19 @@
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 		</element>
 		
+		<element tag="configuratorGlobal"					elementClass="org.x4o.xml.eld.lang.BeanElement">
+			<description>Define an className in bean.class for an ElementConfiguratorGlobal.</description>
+			<attribute name="id" required="true"/>
+			<attribute name="bean.class" required="true"/>
+			<attribute name="configAction"/>
+			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
+		</element>
+		
 		<element tag="configurator"							elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an className in bean.class for an ElementConfigurator.</description>
 			<attribute name="id" required="true"/>
 			<attribute name="bean.class" required="true"/>
 			<attribute name="configAction"/>
-			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 			<elementParent tag="elementInterface"/>
 			<elementParent tag="element"/>
 		</element>

@@ -25,26 +25,11 @@ package	org.x4o.xml.element;
 
 
 /**
- * Provides an Interface to configure Element(Object).
- * 
+ * Provides an Interface to configure Element(Object) global.
  * 
  * @author Willem Cazanders
- * @version 1.0 Jan 18, 2007
+ * @version 1.0 Nov 18, 2012
  */
-public interface ElementConfigurator extends ElementMetaBase {
+public interface ElementConfiguratorGlobal extends ElementConfigurator {
 	
-	/**
-	 * Gets called for configuring the given Element.
-	 * @param element	The element to config.
-	 * @throws ElementConfiguratorException	Is thrown which error is done.
-	 */
-	void doConfigElement(Element element) throws ElementConfiguratorException;
-	
-	/**
-	 * Return if this ElementConfigurator is an Action.
-	 * which means is is executed in the runPhase in the end.
-	 * So all magic is done, and we can access the fully finnisched object and toss it around.
-	 * @return	Returns true if need to run in config phase.
-	 */
-	boolean isConfigAction();
 }

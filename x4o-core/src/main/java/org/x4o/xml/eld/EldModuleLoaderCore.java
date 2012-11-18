@@ -244,9 +244,25 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		elementClassList.add(ec);
 		
 		ec = new DefaultElementClass("configurator",null,BeanElement.class);
-		ec.addElementParent(CEL_ROOT_URI, "module");
+		//ec.addElementParent(CEL_ROOT_URI, "module");
 		ec.addElementParent("", "elementInterface");
 		ec.addElementParent("", "element");
+		try {
+			attr = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementClassAttribute());
+			attr.setName("bean.class");
+			attr.setRequired(true);
+			ec.addElementClassAttribute(attr);
+			
+			attr = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementClassAttribute());
+			attr.setName("configAction");
+			ec.addElementClassAttribute(attr);
+		} catch (Exception e) {
+			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+		}
+		elementClassList.add(ec);
+		
+		ec = new DefaultElementClass("configuratorGlobal",null,BeanElement.class);
+		ec.addElementParent(CEL_ROOT_URI, "module");
 		try {
 			attr = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementClassAttribute());
 			attr.setName("bean.class");

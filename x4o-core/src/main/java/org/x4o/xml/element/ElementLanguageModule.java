@@ -79,16 +79,16 @@ public interface ElementLanguageModule extends ElementMetaBase {
 	List<ElementBindingHandler> getElementBindingHandlers();
 	
 	/**
-	 * Adds an GlobalElementConfigurator.
+	 * Adds an ElementConfiguratorGlobal.
 	 * @param elementConfigurator	The ElementConfigurtor to add.
 	 */
-	void addGlobalElementConfigurator(ElementConfigurator elementConfigurator);
+	void addElementConfiguratorGlobal(ElementConfiguratorGlobal elementConfigurator);
 	
 	/**
-	 * Gets all global ElementConfigurators.
+	 * Gets all ElementConfiguratorGlobals.
 	 * @return	All gloval ElementConfigurators.
 	 */
-	List<ElementConfigurator> getGlobalElementConfigurators();
+	List<ElementConfiguratorGlobal> getElementConfiguratorGlobals();
 	
 	/**
 	 * Adds an ElementInterface.

@@ -37,6 +37,7 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
+import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementLanguageModule;
@@ -148,7 +149,7 @@ public class EldDocHtmlWriter {
 				attrHandlers =+ mod.getElementAttributeHandlers().size();
 				bindHandlers =+ mod.getElementBindingHandlers().size();
 				interFaces =+ mod.getElementInterfaces().size();
-				eleConfigs =+ mod.getGlobalElementConfigurators().size();
+				eleConfigs =+ mod.getElementConfiguratorGlobals().size();
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					namespaces++;
 					elements =+ ns.getElementClasses().size();
@@ -225,7 +226,7 @@ public class EldDocHtmlWriter {
 			printElementInterfaces(pw,mod.getElementInterfaces(),pathPrefixModule);
 			printAttributeHandlers(pw,mod.getElementAttributeHandlers(),pathPrefixModule);
 			printBindingHandlers(pw,mod.getElementBindingHandlers(),pathPrefixModule);
-			printConfigurators(pw, mod.getGlobalElementConfigurators(),pathPrefixModule);
+			printConfiguratorGlobals(pw, mod.getElementConfiguratorGlobals(),pathPrefixModule);
 			printNamespaces(pw, mod.getElementNamespaceContexts(),pathPrefix,mod);
 			
 			printBottom(pw,pathPrefix);
@@ -475,6 +476,14 @@ public class EldDocHtmlWriter {
 	}
 	
 	private void printConfigurators(PrintWriter pw,List<ElementConfigurator> confs,String pathPrefix) {
+		printTableStart(pw,"Configurators");
+		for (ElementConfigurator conf:confs) {
+			printTableRowOverview(pw,pathPrefix+"conf/"+toSafeUri(conf.getId())+".html",conf.getId(),conf.getDescription());
+		}
+		printTableEnd(pw);
+	}
+	
+	private void printConfiguratorGlobals(PrintWriter pw,List<ElementConfiguratorGlobal> confs,String pathPrefix) {
 		printTableStart(pw,"Configurators");
 		for (ElementConfigurator conf:confs) {
 			printTableRowOverview(pw,pathPrefix+"conf/"+toSafeUri(conf.getId())+".html",conf.getId(),conf.getDescription());

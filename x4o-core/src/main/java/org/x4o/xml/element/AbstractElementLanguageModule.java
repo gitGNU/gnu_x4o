@@ -49,7 +49,7 @@ public abstract class AbstractElementLanguageModule extends AbstractElementMetaB
 	/** The binding rules */
 	private List<ElementBindingHandler> elementBindingHandlers = null;
 
-	private List<ElementConfigurator> globalElementConfigurators = null;
+	private List<ElementConfiguratorGlobal> elementConfiguratorGlobals = null;
 
 	private List<ElementInterface> elementInterfaces = null;
 
@@ -65,7 +65,7 @@ public abstract class AbstractElementLanguageModule extends AbstractElementMetaB
 		logger.finest("Creating new ParsingContext");
 		elementAttributeHandlers = new ArrayList<ElementAttributeHandler>(4);
 		elementBindingHandlers = new ArrayList<ElementBindingHandler>(4);
-		globalElementConfigurators = new ArrayList<ElementConfigurator>(4);
+		elementConfiguratorGlobals = new ArrayList<ElementConfiguratorGlobal>(4);
 		elementInterfaces = new ArrayList<ElementInterface>(20);
 		elementNamespaceContexts = new HashMap<String,ElementNamespaceContext>(10);
 	}
@@ -140,22 +140,22 @@ public abstract class AbstractElementLanguageModule extends AbstractElementMetaB
 	/**
 	 * @see org.x4o.xml.element.ElementLanguageModule#addGlobalElementConfigurator(ElementConfigurator)
 	 */
-	public void addGlobalElementConfigurator(ElementConfigurator elementConfigurator) {
+	public void addElementConfiguratorGlobal(ElementConfiguratorGlobal elementConfigurator) {
 		if (elementConfigurator==null) {
 			throw new NullPointerException("Can't add null");
 		}
 		if (elementConfigurator.getId()==null) {
 			throw new NullPointerException("Can't add with null id property.");
 		}
-		logger.finer("Adding GlobalElementConfigurator: "+elementConfigurator);
-		globalElementConfigurators.add(elementConfigurator);
+		logger.finer("Adding ElementConfiguratorGlobal: "+elementConfigurator);
+		elementConfiguratorGlobals.add(elementConfigurator);
 	}
 	
 	/**
-	 * @see org.x4o.xml.element.ElementLanguageModule#getGlobalElementConfigurators()
+	 * @see org.x4o.xml.element.ElementLanguageModule#getElementConfiguratorGlobals()
 	 */
-	public List<ElementConfigurator> getGlobalElementConfigurators() {
-		return globalElementConfigurators;
+	public List<ElementConfiguratorGlobal> getElementConfiguratorGlobals() {
+		return elementConfiguratorGlobals;
 	}
 
 	/**

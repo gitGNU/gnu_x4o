@@ -1,7 +1,6 @@
 
 -- x4o TODO list --
 
-- fix bind of attributeFromBody on module !
 - static field constant converter
 - full Xinclude test
 - compleet eld doc html/css.

@@ -45,6 +45,7 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
+import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
@@ -89,17 +90,17 @@ public class X4OPhaseHandlerFactory {
 		}
 	}
 	
-	private void runElementConfigurators(List<ElementConfigurator> ecs,Element e,X4OPhaseHandler phase) throws X4OPhaseException {
-		int size = ecs.size();
-		for (int i=0;i<size;i++) {
-			ElementConfigurator ec = ecs.get(i);
+	private void runElementConfigurator(ElementConfigurator ec,Element e,X4OPhaseHandler phase) throws X4OPhaseException {
+		//int size = ecs.size();
+		//for (int i=0;i<size;i++) {
+			//ElementConfigurator ec = ecs.get(i);
 			if (ec.isConfigAction()) {
 				runConf.add(new RunConfigurator(e,ec));
 				return;
 			}
 			try {
 				if (hasX4ODebugWriter()) {
-					getX4ODebugWriter().debugElementConfigurator(ec,e);				
+					getX4ODebugWriter().debugElementConfigurator(ec,e);
 				}
 				ec.doConfigElement(e);
 				
@@ -110,7 +111,7 @@ public class X4OPhaseHandlerFactory {
 			} catch (ElementException ee) {
 				throw new X4OPhaseException(phase,ee);
 			}
-		}
+		//}
 	}
 	
 	private void debugPhaseMessage(String message,X4OPhaseHandler phaseHandler) throws X4OPhaseException {
@@ -436,7 +437,9 @@ public class X4OPhaseHandlerFactory {
 				}
 				
 				logger.finest("Do ElementClass Config Configurators: "+element.getElementClass().getElementConfigurators().size());
-				runElementConfigurators(element.getElementClass().getElementConfigurators(),element,this);
+				for (ElementConfigurator ec:element.getElementClass().getElementConfigurators()) {
+					runElementConfigurator(ec,element,this);
+				}
 			}
 		};
 		X4OPhaseHandler result = new ConfigElementPhase();
@@ -458,8 +461,10 @@ public class X4OPhaseHandlerFactory {
 					return;
 				}
 				for (ElementInterface ei:element.getElementLanguage().findElementInterfaces(element.getElementObject())) {
-					logger.finest("Do ElementInterface Config Configurators: "+element.getElementClass().getElementConfigurators().size());
-					runElementConfigurators(ei.getElementConfigurators(),element,this);
+					logger.finest("Do ElementInterface Config Configurators: "+ei.getElementConfigurators().size());
+					for (ElementConfigurator ec:ei.getElementConfigurators()) {
+						runElementConfigurator(ec,element,this);
+					}
 				}
 			}
 		};
@@ -479,8 +484,10 @@ public class X4OPhaseHandlerFactory {
 			}
 			public void runElementPhase(Element element) throws X4OPhaseException  {
 				for (ElementLanguageModule mod:element.getElementLanguage().getElementLanguageModules()) {
-					logger.finest("Do Element Config Global Configurators: "+mod.getGlobalElementConfigurators().size());
-					runElementConfigurators(mod.getGlobalElementConfigurators(),element,this);
+					logger.finest("Do Element Config Global Configurators: "+mod.getElementConfiguratorGlobals().size());
+					for (ElementConfiguratorGlobal ec:mod.getElementConfiguratorGlobals()) {
+						runElementConfigurator(ec,element,this);
+					}
 				}
 			}
 		};
@@ -523,7 +530,9 @@ public class X4OPhaseHandlerFactory {
 				Collections.sort(handlers,elementAttributeHandlerComparator);
 				List<ElementConfigurator> handlers2 = new ArrayList<ElementConfigurator>(handlers.size());
 				handlers2.addAll(handlers);
-				runElementConfigurators(handlers2,element,this);
+				for (ElementConfigurator ec:handlers) {
+					runElementConfigurator(ec,element,this);
+				}
 			}
 		};
 		X4OPhaseHandler result = new ConfigGlobalAttributePhase();

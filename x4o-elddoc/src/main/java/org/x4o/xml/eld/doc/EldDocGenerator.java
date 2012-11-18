@@ -68,7 +68,7 @@ public class EldDocGenerator {
 				for (ElementAttributeHandler attr:mod.getElementAttributeHandlers()) {
 					writer.writeAttributeHandler(basePath,attr,mod);
 				}
-				for (ElementConfigurator conf:mod.getGlobalElementConfigurators()) {
+				for (ElementConfigurator conf:mod.getElementConfiguratorGlobals()) {
 					writer.writeElementConfigurator(basePath,conf,mod);
 				}
 				for (ElementInterface iface:mod.getElementInterfaces()) {
