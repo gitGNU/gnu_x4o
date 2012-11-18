@@ -52,7 +52,9 @@
 		>
 		<!-- Root Element for nice namespace'ing  -->
 		<element tag="module"								objectClass="${parentLanguageConfiguration.defaultElementLanguageModule}" elementClass="org.x4o.xml.eld.lang.ModuleElement">
-			<attribute name="id" required="true"/>
+			<attribute name="id" required="true">
+				<description>The module id.</description>
+			</attribute>
 			<description>The module root element.</description>
 		</element>
 	</namespace>
@@ -68,55 +70,89 @@
 		
 		<!-- First copy some core elements over from parent config -->
 		<element tag="namespace"							objectClass="${parentLanguageConfiguration.defaultElementNamespaceContext}">
-			<attribute name="uri" required="true"/>
+			<description>Defines an namespace for the language.</description>
+			<attribute name="uri" required="true">
+				<description>The namespace id.</description>
+			</attribute>
 		</element>
 		<element		tag="element"						objectClass="${parentLanguageConfiguration.defaultElementClass}">
+			<description>The xml element.</description>
 			<attribute name="objectClass">
+				<description>The class of the wrapped object.</description>
 				<classConverter/>
 			</attribute>
-			<attribute name="elementClass">
+				<attribute name="elementClass">
+				<description>An custom element class to config object.</description>
 				<classConverter/>
 			</attribute>
 		</element>
 		<element		tag="elementInterface"				objectClass="${parentLanguageConfiguration.defaultElementInterface}">
-			<attribute name="id" required="true"/>
+			<description>Config element objects by java interface.</description>
+			<attribute name="id" required="true">
+				<description>The interface id.</description>
+			</attribute>
 			<attribute name="interfaceClass" required="true">
+				<description>The interface class.</description>
 				<classConverter/>
 			</attribute>
 		</element>
-		<element		tag="attribute"						objectClass="${parentLanguageConfiguration.defaultElementClassAttribute}"/>
+		<element		tag="attribute"						objectClass="${parentLanguageConfiguration.defaultElementClassAttribute}">
+			<description>XML Element Attribute tag.</description>
+		</element>
 		
 		<!-- Create some support elements to make language readable. -->
 			
 		<element tag="bindingHandler"						elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an className in bean.class for an ElementBindingHandler interface.</description>
-			<attribute name="id" required="true"/>
-			<attribute name="bean.class" required="true"/>
+			<attribute name="id" required="true">
+				<description>The binding handler id.</description>
+			</attribute>
+			<attribute name="bean.class" required="true">
+				<description>The class of the binding handler.</description>
+			</attribute>
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 			<elementParent tag="elementInterface"/>
 		</element>
 		
 		<element tag="attributeHandler"						elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an className in bean.class for an ElementAttributeHandler.</description>
-			<attribute name="id" required="true"/>
-			<attribute name="bean.class" required="true"/>
-			<attribute name="attributeName" required="true"/>
+			<attribute name="id" required="true">
+				<description>The atttribute handler id.</description>
+			</attribute>
+			<attribute name="bean.class" required="true">
+				<description>The class of the attribute handler.</description>
+			</attribute>
+			<attribute name="attributeName" required="true">
+				<description>The xml attribute name.</description>
+			</attribute>
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 		</element>
 		
 		<element tag="configuratorGlobal"					elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an className in bean.class for an ElementConfiguratorGlobal.</description>
-			<attribute name="id" required="true"/>
-			<attribute name="bean.class" required="true"/>
-			<attribute name="configAction"/>
+			<attribute name="id" required="true">
+				<description>The global element configurator id.</description>
+			</attribute>
+			<attribute name="bean.class" required="true">
+				<description>The class of the element configurator.</description>
+			</attribute>
+			<attribute name="configAction">
+				<description>If set to true then run in config phase.</description>
+			</attribute>
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 		</element>
 		
 		<element tag="configurator"							elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an className in bean.class for an ElementConfigurator.</description>
-			<attribute name="id" required="true"/>
-			<attribute name="bean.class" required="true"/>
-			<attribute name="configAction"/>
+			<attribute name="id" required="true">
+				<description>The element configurator id.</description>
+			</attribute>
+			<attribute name="bean.class" required="true">
+				<description>The class of the global element configurator.</description>
+			</attribute>
+			<attribute name="configAction">
+				<description>If set to true then run in config phase.</description>
+			</attribute>
 			<elementParent tag="elementInterface"/>
 			<elementParent tag="element"/>
 		</element>
@@ -129,6 +165,7 @@
 			<elementParent tag="configurator"/>
 			<elementParent tag="elementInterface"/>
 			<elementParent tag="element"/>
+			<elementParent tag="attribute"/>
 			<elementParent tag="attributeFromBody"/>
 			<elementParent tag="classBindingHandler"/>
 		</element>
@@ -139,48 +176,69 @@
 		<element tag="elementParent"						elementClass="org.x4o.xml.eld.lang.ElementClassAddParentElement">
 			<description>Adds an parent element tag for xsd</description>
 			<elementParent tag="element"/>
-			<attribute name="tag"/>
-			<attribute name="namespaceUri"/>
+			<attribute name="tag">
+				<description>The parent tag to have object for.</description>
+			</attribute>
+			<attribute name="namespaceUri">
+				<description>The element namespace uri if non local.</description>
+			</attribute>
 		</element>
 		
 		<element tag="elementSkipPhase"						elementClass="org.x4o.xml.eld.lang.SkipPhaseElement">
 			<description>Adds an phase to skip to the parent element.</description>
-			<attribute name="name" required="true"/>
+			<attribute name="name" required="true">
+				<description>The name of the phase to skip.</description>
+			</attribute>
 			<elementParent tag="element"/>
 		</element>
 		
 		<element tag="attributeHandlerNextAttribute"		elementClass="org.x4o.xml.eld.lang.NextAttributeElement">
 			<description>Defines the parameter order.</description>
-			<attribute name="attributeName" required="true"/>
+			<attribute name="attributeName" required="true">
+				<description>The attribute name to run after this attribute.</description>
+			</attribute>
 			<elementParent tag="attributeHandler"/>
 			<elementParent tag="bean"/>
 		</element>
 	
 		<element tag="attributeAlias"						elementClass="org.x4o.xml.eld.lang.AttributeAliasElement">
 			<description>Defines an alias for an attribute name.</description>
-			<attribute name="name" required="true"/>
+			<attribute name="name" required="true">	
+				<description>The alias name to add to the attribute.</description>
+			</attribute>
 			<elementParent tag="attribute"/>
 		</element>
 		
 		<element tag="attributeFromBody"					objectClass="org.x4o.xml.eld.lang.AttributeFromBodyConfigurator" autoAttributes="false">
 			<description>Defines an alias for an attribute name.</description>
-			<attribute name="name" required="true"/>
-			<attribute name="id" required="true"/>
-			<attribute name="bodyType"/>
+			<attribute name="id" required="true">
+				<description>The id for this configurator.</description>
+			</attribute>
+			<attribute name="name" required="true">
+				<description>The attribute name to fill the value.</description>
+			</attribute>
+			<attribute name="bodyType">
+				<description>See org.x4o.xml.element.Element.ElementType for options defaults to 'characters'.</description>
+			</attribute>
 		</element>
 		
 		<element tag="classBindingHandler"					objectClass="org.x4o.xml.eld.lang.ElementRefectionBindingHandler"
 			autoAttributes="false"
 			>
 			<description>Lets you dynamicly bind to object togecher.</description>
-			<attribute name="id" required="true"/>
+			<attribute name="id" required="true">
+				<description>The id for this binding handler.</description>
+			</attribute>
 			<attribute name="parentClass">
+				<description>The parent class.</description>
 				<classConverter/>
 			</attribute>
 			<attribute name="childClass">
+				<description>The child class.</description>
 				<classConverter/>
 			</attribute>
 			<attribute name="method">
+				<description>The method name of the method used to add the child to the parent.</description>
 			</attribute>
 		</element>
 		
@@ -190,7 +248,9 @@
 		<element tag="bean"									elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<!-- BIG NOTE: maybe beanElement most go to meta to have clean impl. -->
 			<description>Loads bean into the Element</description>
-			<attribute name="bean.class"/>
+			<attribute name="bean.class">
+				<description>The class name of the the class to load.</description>
+			</attribute>
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 			<elementParent tag="elementInterface"/>
 			<elementParent tag="element"/>
@@ -204,11 +264,14 @@
 		schemaResource="eld-conv-1.0.xsd"
 		schemaPrefix="conv"
 		name="Element Attribute Converters"
+		id="eld-conv"
 		>
 		<!-- Config all converters, move ? -->
 		<element tag="beanConverter"			elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an loadable in bean.class for an ObjectConverter.</description>
-			<attribute name="bean.class"/>
+			<attribute name="bean.class">
+				<description>The class name of the converter to load.</description>
+			</attribute>
 			<elementParent tag="attribute" uri="http://eld.x4o.org/xml/ns/eld-lang"/>
 			<!-- todo: make converter which loads converter so xsd is correct.  -->
 		</element>
@@ -224,17 +287,20 @@
 		<element tag="enumConverter"			objectClass="org.x4o.xml.conv.text.EnumConverter"		/>
 		
 		<element tag="stringSplitConverter"		objectClass="org.x4o.xml.conv.text.StringSplitConverter">
-			<attribute name="classTo"	required="true"><classConverter/></attribute>
-			<attribute name="split"		required="true"/>
-			<attribute name="splitSize"	required="true"/>
-			<attribute name="singleToMethod"/>
-			<attribute name="useNativeType"/>
+			<attribute name="classTo"	required="true">
+				<description>The class name to convert the string to.</description>
+				<classConverter/>
+			</attribute>
+			<attribute name="split"		required="true"		description="The split regex."/>
+			<attribute name="splitSize"	required="true"		description="The split value expected size."/>
+			<attribute name="singleToMethod"	description="Shortcut to use only this method for the 'to' convert."/>
+			<attribute name="useNativeType"		description="Set to true to convert to native data type."/>
 		</element>
 		<element tag="stringSplitConverterStep"	objectClass="org.x4o.xml.conv.text.StringSplitConverterStep">
-			<attribute name="fromMethod"	required="true"/>
-			<attribute name="toMethod"		required="false"/>
-			<attribute name="fromOrder"		required="true"/>
-			<attribute name="toOrder"		required="true"/>
+			<attribute name="fromMethod"	required="true"		description="The convert 'from' method step."/>
+			<attribute name="toMethod"		required="false"	description="The convert 'to' method step."/>
+			<attribute name="fromOrder"		required="true"		description="The convert 'from' order."/>
+			<attribute name="toOrder"		required="true"		description="The convert 'to' order."/>
 		</element>
 	</namespace>
 </root:module>

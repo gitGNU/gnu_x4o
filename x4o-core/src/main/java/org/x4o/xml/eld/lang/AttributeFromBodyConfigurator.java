@@ -52,7 +52,7 @@ public class AttributeFromBodyConfigurator extends AbstractElementConfigurator {
 			throw new ElementConfiguratorException(this,"name attribute is empty.");
 		}
 		if (bodyType==null) {
-			bodyType = "characters";
+			bodyType = ElementType.characters.name();
 		}
 		String value = null;
 		if ("characters".equals(bodyType)) {

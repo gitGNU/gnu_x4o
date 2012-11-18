@@ -54,7 +54,7 @@ src/build/gnu-up.sh <scm_username> <version>
 -- Make site --
 
 cd project-root/;
-mvn -Psite-elddoc clean package site site:stage
+MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" mvn -Psite-elddoc clean package site site:stage
 
 
 -- Check for code style --

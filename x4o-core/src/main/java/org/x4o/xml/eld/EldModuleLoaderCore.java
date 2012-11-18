@@ -150,6 +150,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		
+		namespace.setId(CEL_CORE);
 		namespace.setUri(CEL_CORE_URI);
 		namespace.setSchemaUri(CEL_CORE_XSD_URI);
 		namespace.setSchemaResource(CEL_CORE_XSD_FILE);
@@ -189,6 +190,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		
+		namespace.setId(CEL_ROOT);
 		namespace.setUri(CEL_ROOT_URI);
 		namespace.setSchemaUri(CEL_ROOT_XSD_URI);
 		namespace.setSchemaResource(CEL_ROOT_XSD_FILE);
@@ -285,6 +287,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		ec.addElementParent("", "configurator");
 		ec.addElementParent("", "elementInterface");
 		ec.addElementParent("", "element");
+		ec.addElementParent("", "attribute");
 		elementClassList.add(ec);
 		
 		ec = new DefaultElementClass("elementParent",null,ElementClassAddParentElement.class);

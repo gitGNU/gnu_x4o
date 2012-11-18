@@ -111,18 +111,15 @@ public class EldDocHtmlWriter {
 			pw.write("\n\n");
 			pw.flush();
 			pw.print("body { background-color: #FFFFFF; color:#000000 }\n");
-			pw.print("h1 { font-size: 145% }\n");
-			pw.print(".TableHeadingColor     { background: #CCCCFF; color:#000000 }\n");
+			pw.print("h1 { font-size: 145%;text-align: center; }\n");
+			pw.print(".Copyright             { font-size: 70%;text-align: center; }\n");
+			pw.print(".TableHeadingColor     { background: #CCCCFF; color:#000000;font-weight: bold;font-size: 110%; }\n");
 			pw.print(".TableSubHeadingColor  { background: #EEEEFF; color:#000000 }\n");
 			pw.print(".TableRowColor         { background: #FFFFFF; color:#000000 }\n");
-			pw.print(".FrameTitleFont   { font-size: 100%; font-family: Helvetica, Arial, sans-serif; color:#000000 }\n");
-			pw.print(".FrameHeadingFont { font-size:  90%; font-family: Helvetica, Arial, sans-serif; color:#000000 }\n");
-			pw.print(".FrameItemFont    { font-size:  90%; font-family: Helvetica, Arial, sans-serif; color:#000000 }\n");
 			pw.print(".NavBarCell1    { background-color:#EEEEFF; color:#000000}\n");
 			pw.print(".NavBarCell1Rev { background-color:#00008B; color:#FFFFFF}\n");
-			pw.print(".NavBarFont1    { font-family: Arial, Helvetica, sans-serif; color:#000000;color:#000000;}\n");
-			pw.print(".NavBarFont1Rev { font-family: Arial, Helvetica, sans-serif; color:#FFFFFF;color:#FFFFFF;}\n");
-			pw.print(".NavBarCell2    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}\n");
+			pw.print(".NavBarCell1 a  { font-size: 120%;font-weight: bold;}\n");
+			pw.print(".NavBarCell2    { font-size: 80%;font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}\n");
 			pw.print(".NavBarCell3    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}\n");
 			pw.flush();
 		} finally {
@@ -517,40 +514,38 @@ public class EldDocHtmlWriter {
 	
 	private void printTableStart(PrintWriter pw,String title) {
 		pw.print("<table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\" summary=\"\">\n");
-		pw.print("<tr bgcolor=\"#CCCCFF\" class=\"TableHeadingColor\">\n");
-		pw.print("<th align=\"left\" colspan=\"2\"><font size=\"+2\">\n");
-		pw.print("<b>");
+		pw.print("\t<tr class=\"TableHeadingColor\">\n");
+		pw.print("\t\t<th align=\"left\" colspan=\"2\">\n");
 		pw.print(title);
-		pw.print("</b>");
-		pw.print("</font></th>\n</tr>\n");
+		pw.print("</th>\n\t</tr>\n");
 	}
 	
 	private void printTableRowSummary(PrintWriter pw,String name,String description) {
-		pw.print("<tr bgcolor=\"white\" class=\"TableRowColor\">\n");
-		pw.print("<td width=\"20%\">");
+		pw.print("\t<tr class=\"TableRowColor\">\n");
+		pw.print("\t\t<td width=\"20%\">");
 		pw.print(name);
 		pw.print("</td>\n");
-		pw.print("<td>\n");
+		pw.print("\t\t<td>");
 		if (description!=null) {
 			pw.print(description);
 		}
-		pw.print("</td>\n");
-		pw.print("</tr>\n");
+		pw.print("\t\t</td>\n");
+		pw.print("\t</tr>\n");
 	}
 	
 	private void printTableRowOverview(PrintWriter pw,String href,String hrefTitle,String description) {
-		pw.print("<tr bgcolor=\"white\" class=\"TableRowColor\">\n");
-		pw.print("<td width=\"20%\"><b><a href=\"\n");
+		pw.print("\t<tr class=\"TableRowColor\">\n");
+		pw.print("\t\t<td width=\"20%\"><b><a href=\"\n");
 		pw.print(href);
 		pw.print("\">");
 		pw.print(hrefTitle);
-		pw.print("</a></b></td>\n");
-		pw.print("<td>\n");
+		pw.print("</a></td>\n");
+		pw.print("\t\t<td>");
 		if (description!=null) {
 			pw.print(description);
 		}
-		pw.print("</td>\n");
-		pw.print("</tr>\n");
+		pw.print("\t\t</td>\n");
+		pw.print("\t</tr>\n");
 	}
 	
 	private void printTableEnd(PrintWriter pw) {
@@ -573,13 +568,13 @@ public class EldDocHtmlWriter {
 	}
 	
 	private void printPageIndexTitle(PrintWriter pw,String title,String titleContext,String description) {
-		pw.print("<h1><center>");
+		pw.print("<h1>");
 		pw.print(title);
 		pw.print(" ");
 		if (titleContext!=null) {
 			pw.print(titleContext);
 		}
-		pw.print("</center></h1>\n");
+		pw.print("</h1>\n");
 		if (description!=null) {
 			pw.print(description);
 		}
@@ -609,25 +604,23 @@ public class EldDocHtmlWriter {
 		pw.print("<a href=\"#skip-navbar_top\" title=\"Skip navigation links\"></a>\n");
 		pw.print("<table border=\"0\" width=\"100%\" cellpadding=\"1\" cellspacing=\"0\" summary=\"\">\n");
 		pw.print("<tr>\n");
-		pw.print("<td colspan=\"2\" bgcolor=\"#EEEEFF\" class=\"NavBarCell1\">\n");
+		pw.print("<td colspan=\"2\" class=\"NavBarCell1\">\n");
 		pw.print("<a name=\"navbar_top_firstrow\"><!-- --></a>\n");
 		
 		pw.print("<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" summary=\"\">\n");
-		pw.print("<tr align=\"center\" valign=\"top\">\n");
-		//pw.print("<TD BGCOLOR=\"#EEEEFF\" CLASS=\"NavBarCell1Rev\"> &nbsp;<FONT CLASS=\"NavBarFont1Rev\"><B>Overview</B></FONT>&nbsp;</TD>\n");
+		pw.print("\t<tr align=\"center\" valign=\"top\">\n");
 		printNavBar(pw,pathPrefix);
-		
-		pw.print("</tr>\n");
+		pw.print("\t</tr>\n");
 		pw.print("</table>\n");
 		
 		pw.print("</td>\n");
-		pw.print("<td align=\"right\" valign=\"top\" rowspan=\"3\"><EM>\n</EM></td>");
+		pw.print("<td align=\"right\" valign=\"top\" rowspan=\"3\"><em>\n</em></td>");
 		pw.print("</tr>\n");
 		
 		pw.print("<tr>\n");
-		pw.print("<TD BGCOLOR=\"white\" CLASS=\"NavBarCell2\"><FONT SIZE=\"-2\">\n");
-		pw.print("&nbsp;PREV&nbsp;&nbsp;NEXT</FONT></TD>\n");
-		pw.print("<TD BGCOLOR=\"white\" CLASS=\"NavBarCell2\"><FONT SIZE=\"-2\">...</TD>\n");
+		pw.print("<td class=\"NavBarCell2\">\n");
+		pw.print("&nbsp;PREV&nbsp;&nbsp;NEXT</td>\n");
+		pw.print("<td class=\"NavBarCell2\"></td>\n");
 		pw.print("</tr>\n");
 		
 		pw.print("</table>\n");
@@ -645,23 +638,23 @@ public class EldDocHtmlWriter {
 		pw.print("<a href=\"#skip-navbar_bottom\" title=\"Skip navigation links\"></a>\n");
 		pw.print("<table border=\"0\" width=\"100%\" cellpadding=\"1\" cellspacing=\"0\" summary=\"\">\n");
 		pw.print("<tr>\n");
-		pw.print("<td colspan=\"2\" bgcolor=\"#EEEEFF\" class=\"NavBarCell1\">\n");
+		pw.print("<td colspan=\"2\" class=\"NavBarCell1\">\n");
 		pw.print("<a name=\"navbar_bottom_firstrow\"><!-- --></a>\n");
 		
 		pw.print("<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" summary=\"\">\n");
-		pw.print("<tr align=\"center\" valign=\"top\">\n");
+		pw.print("\t<tr align=\"center\" valign=\"top\">\n");
 		printNavBar(pw,pathPrefix);
-		pw.print("</tr>\n");
+		pw.print("\t</tr>\n");
 		pw.print("</table>\n");
 		
 		pw.print("</td>\n");
-		pw.print("<td align=\"right\" valign=\"top\" rowspan=\"3\"><EM>\n</EM></td>");
+		pw.print("<td align=\"right\" valign=\"top\" rowspan=\"3\"><em>\n</em></td>");
 		pw.print("</tr>\n");
 		
 		pw.print("<tr>\n");
-		pw.print("<TD BGCOLOR=\"white\" CLASS=\"NavBarCell2\"><FONT SIZE=\"-2\">\n");
-		pw.print("&nbsp;PREV&nbsp;&nbsp;NEXT</FONT></TD>\n");
-		pw.print("<TD BGCOLOR=\"white\" CLASS=\"NavBarCell2\"><FONT SIZE=\"-2\">...</TD>\n");
+		pw.print("<td class=\"NavBarCell2\">\n");
+		pw.print("&nbsp;PREV&nbsp;&nbsp;NEXT</td>\n");
+		pw.print("<td class=\"NavBarCell2\"></td>\n");
 		pw.print("</tr>\n");
 		
 		pw.print("</table>\n");
@@ -669,7 +662,9 @@ public class EldDocHtmlWriter {
 		pw.print("<hr/>\n");
 		pw.print("\n");
 		
+		pw.print("<div class=\"Copyright\">");
 		pw.print("Copyright &#169; todo. All Rights Reserved.\n");
+		pw.print("</div>\n");
 		
 		pw.print("\n");
 		pw.print("</body>\n");
@@ -678,8 +673,8 @@ public class EldDocHtmlWriter {
 	}
 	
 	private void printNavBar(PrintWriter pw,String pathPrefix) throws IOException {
-		pw.print("<td bgcolor=\"#EEEEFF\" class=\"NavBarCell1\"><a href=\""+pathPrefix+"index.html\"><font class=\"NavBarFont1\"><b>Index</B></font></a>&nbsp;</td>\n");
-		pw.print("<td bgcolor=\"#EEEEFF\" class=\"NavBarCell1\"><a href=\""+pathPrefix+"module-overview.html\"><font class=\"NavBarFont1\"><b>Modules</B></font></a>&nbsp;</td>\n");
-		pw.print("<td bgcolor=\"#EEEEFF\" class=\"NavBarCell1\"><a href=\""+pathPrefix+"namespace-overview.html\"><font class=\"NavBarFont1\"><b>Namespaces</B></font></a>&nbsp;</td>\n");
+		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"index.html\">Index</a>&nbsp;</td>\n");
+		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"module-overview.html\">Modules</a>&nbsp;</td>\n");
+		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"namespace-overview.html\">Namespaces</a>&nbsp;</td>\n");
 	}
 }

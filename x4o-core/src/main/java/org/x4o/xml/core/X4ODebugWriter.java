@@ -355,10 +355,10 @@ public class X4ODebugWriter {
 	}
 	
 	/**
-	 * Todo move after xpath support
-	 * @param element
-	 * @param buff
-	 * @return
+	 * Todo move after xpath support.
+	 * @param element	The element.
+	 * @param buff		The buffer.
+	 * @return	Returns the buffer of the builf path.
 	 */
 	private StringBuffer getElementPath(Element element,StringBuffer buff) {
 		if (element.getParent()==null) {

@@ -7,7 +7,7 @@
 	ModuleName:		Element Language Definition
 	Namespaces:		3
 	Namespace:		http://eld.x4o.org/xml/ns/eld-lang
-	Created on:		Sun Nov 18 03:32:55 CET 2012
+	Created on:		Sun Nov 18 05:06:09 CET 2012
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
@@ -20,12 +20,12 @@
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
 		<attribute name="name" type="string"/>
-		<attribute name="prefixMapping" type="string"/>
+		<attribute name="languageRoot" type="boolean"/>
 		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
 		<attribute name="schemaPrefix" type="string"/>
-		<attribute name="languageRoot" type="boolean"/>
+		<attribute name="prefixMapping" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -53,11 +53,11 @@
 		</choice>
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
+		<attribute name="tag" type="string"/>
+		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
-		<attribute name="schemaContentBase" type="string"/>
-		<attribute name="tag" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -121,14 +121,15 @@
 			<element ref="conv:urlConverter"/>
 			<element name="attributeAlias" type="this:attributeAliasType"/>
 			<element name="bean" type="this:beanType"/>
+			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="name" type="string"/>
-		<attribute name="defaultValue" type="string"/>
-		<attribute name="runResolveEL" type="boolean"/>
-		<attribute name="objectConverter" type="string"/>
 		<attribute name="runConverters" type="boolean"/>
 		<attribute name="runBeanFill" type="boolean"/>
+		<attribute name="objectConverter" type="string"/>
+		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="required" type="boolean"/>
+		<attribute name="defaultValue" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -176,7 +177,12 @@
 		<attribute name="namespaceUri" type="string"/>
 		<anyAttribute/>
 	</complexType>
-	<element name="namespace" type="this:namespaceType"/>
+	<element name="namespace" type="this:namespaceType">
+		<annotation>
+			<documentation xml:lang="en">Defines an namespace for the language.
+			</documentation>
+		</annotation>
+	</element>
 	<element name="description" type="this:descriptionType">
 		<annotation>
 			<documentation xml:lang="en">An ELD elementDescription field which lets you type text like this one in xml characters instead of an attribute.
@@ -189,7 +195,12 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="element" type="this:elementType"/>
+	<element name="element" type="this:elementType">
+		<annotation>
+			<documentation xml:lang="en">The xml element.
+			</documentation>
+		</annotation>
+	</element>
 	<element name="attributeAlias" type="this:attributeAliasType">
 		<annotation>
 			<documentation xml:lang="en">Defines an alias for an attribute name.
@@ -226,7 +237,12 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="attribute" type="this:attributeType"/>
+	<element name="attribute" type="this:attributeType">
+		<annotation>
+			<documentation xml:lang="en">XML Element Attribute tag.
+			</documentation>
+		</annotation>
+	</element>
 	<element name="bindingHandler" type="this:bindingHandlerType">
 		<annotation>
 			<documentation xml:lang="en">Define an className in bean.class for an ElementBindingHandler interface.
@@ -245,7 +261,12 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="elementInterface" type="this:elementInterfaceType"/>
+	<element name="elementInterface" type="this:elementInterfaceType">
+		<annotation>
+			<documentation xml:lang="en">Config element objects by java interface.
+			</documentation>
+		</annotation>
+	</element>
 	<element name="elementParent" type="this:elementParentType">
 		<annotation>
 			<documentation xml:lang="en">Adds an parent element tag for xsd

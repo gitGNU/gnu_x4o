@@ -138,7 +138,7 @@ public abstract class AbstractElementLanguageModule extends AbstractElementMetaB
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementLanguageModule#addGlobalElementConfigurator(ElementConfigurator)
+	 * @see org.x4o.xml.element.ElementLanguageModule#addElementConfiguratorGlobal(ElementConfiguratorGlobal)
 	 */
 	public void addElementConfiguratorGlobal(ElementConfiguratorGlobal elementConfigurator) {
 		if (elementConfigurator==null) {

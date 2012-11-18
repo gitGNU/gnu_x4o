@@ -114,8 +114,8 @@ public class BeanPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Returns the Comparable property of the object.
-	 * @param object
-	 * @return
+	 * @param object	The object to get the property field of.
+	 * @return	Returns the Comparable casted object of the property field of the object.
 	 * @throws ClassCastException
 	 */
 	@SuppressWarnings("unchecked")

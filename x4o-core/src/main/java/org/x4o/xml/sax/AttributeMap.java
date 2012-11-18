@@ -125,8 +125,7 @@ public class AttributeMap<K,V> implements Map<K,V> {
 	/**
 	 * Gets the value of the attributes. uses the uri if not null.
 	 * 
-	 * @param name
-	 *            The name of the attributes.
+	 * @param name The name of the attributes.
 	 * @return The value of the attribute.
 	 */
 	private String getValue(String name) {
@@ -140,9 +139,8 @@ public class AttributeMap<K,V> implements Map<K,V> {
 	}
 
 	/**
-	 * @see getValue(String name)
-	 * @param key
-	 *            The name of the attribute.
+	 * Gets the attribute value.
+	 * @param key The name of the attribute.
 	 * @return The value of the attribute.
 	 */
 	private String getValue(Object key) {

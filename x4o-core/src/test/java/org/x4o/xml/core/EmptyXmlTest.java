@@ -91,7 +91,6 @@ public class EmptyXmlTest extends TestCase {
 		try {
 			parser.parseResource("tests/empty-xml/empty-xml.xml");
 		} catch (SAXException e) {
-			e.printStackTrace();
 			boolean hasError = e.getMessage().contains("Premature end of file."); // java6+ sax message
 			if (hasError==false) {
 				hasError = e.getMessage().contains("A well-formed document requires a root element."); // xercesImpl sax message

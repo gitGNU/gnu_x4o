@@ -7,7 +7,7 @@
 	ModuleName:		Core Element Languag Module
 	Namespaces:		2
 	Namespace:		http://cel.x4o.org/xml/ns/cel-core
-	Created on:		Sun Nov 18 03:27:37 CET 2012
+	Created on:		Sun Nov 18 05:10:55 CET 2012
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://cel.x4o.org/xml/ns/cel-core"
@@ -18,14 +18,14 @@
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
 		<attribute name="name" type="string"/>
+		<attribute name="prefixMapping" type="string"/>
 		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
 		<attribute name="schemaPrefix" type="string"/>
 		<attribute name="languageRoot" type="boolean"/>
-		<attribute name="prefixMapping" type="string"/>
-		<attribute name="id" type="string"/>
 		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
 	</complexType>
 	<complexType name="descriptionType">
 		<simpleContent>
@@ -43,13 +43,13 @@
 		</choice>
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
-		<attribute name="tag" type="string"/>
 		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
-		<attribute name="id" type="string"/>
+		<attribute name="tag" type="string"/>
 		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
 	</complexType>
 	<complexType name="configuratorGlobalType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
@@ -75,6 +75,7 @@
 	<complexType name="attributeType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="classConverter" type="this:classConverterType"/>
+			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="name" type="string"/>
 		<attribute name="objectConverter" type="string"/>
@@ -83,8 +84,8 @@
 		<attribute name="runBeanFill" type="boolean"/>
 		<attribute name="required" type="boolean"/>
 		<attribute name="defaultValue" type="string"/>
-		<attribute name="id" type="string"/>
 		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
 	</complexType>
 	<complexType name="classConverterType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
@@ -105,8 +106,8 @@
 			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="interfaceClass" type="string"/>
-		<attribute name="id" type="string"/>
 		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
 	</complexType>
 	<complexType name="elementParentType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
