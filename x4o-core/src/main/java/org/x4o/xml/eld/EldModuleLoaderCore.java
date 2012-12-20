@@ -217,7 +217,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		
 		ec = new DefaultElementClass("bindingHandler",null,BeanElement.class);
 		ec.addElementParent(CEL_ROOT_URI, "module");
-		ec.addElementParent("", "elementInterface");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
 		try {
 			attr = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementClassAttribute());
 			attr.setName("id");
@@ -247,8 +247,8 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		
 		ec = new DefaultElementClass("configurator",null,BeanElement.class);
 		//ec.addElementParent(CEL_ROOT_URI, "module");
-		ec.addElementParent("", "elementInterface");
-		ec.addElementParent("", "element");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
+		ec.addElementParent(CEL_CORE_URI, "element");
 		try {
 			attr = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementClassAttribute());
 			attr.setName("bean.class");
@@ -282,17 +282,18 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		ec = new DefaultElementClass("description",null,DescriptionElement.class);
 		ec.setSchemaContentBase("string");
 		ec.addElementParent(CEL_ROOT_URI, "module");
-		ec.addElementParent("", "attributeHandler");
-		ec.addElementParent("", "bindingHandler");
-		ec.addElementParent("", "configurator");
-		ec.addElementParent("", "configuratorGlobal");
-		ec.addElementParent("", "elementInterface");
-		ec.addElementParent("", "element");
-		ec.addElementParent("", "attribute");
+		ec.addElementParent(CEL_CORE_URI, "namespace");
+		ec.addElementParent(CEL_CORE_URI, "attributeHandler");
+		ec.addElementParent(CEL_CORE_URI, "bindingHandler");
+		ec.addElementParent(CEL_CORE_URI, "configurator");
+		ec.addElementParent(CEL_CORE_URI, "configuratorGlobal");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
+		ec.addElementParent(CEL_CORE_URI, "element");
+		ec.addElementParent(CEL_CORE_URI, "attribute");
 		elementClassList.add(ec);
 		
 		ec = new DefaultElementClass("elementParent",null,ElementClassAddParentElement.class);
-		ec.addElementParent("", "element");
+		ec.addElementParent(CEL_CORE_URI, "element");
 		try {
 			attr = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementClassAttribute());
 			attr.setName("tag");

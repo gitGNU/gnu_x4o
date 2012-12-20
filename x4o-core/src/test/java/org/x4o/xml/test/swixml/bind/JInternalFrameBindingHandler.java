@@ -23,8 +23,10 @@
 
 package	org.x4o.xml.test.swixml.bind;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
+import java.awt.BorderLayout;
+
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
 
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
@@ -36,28 +38,45 @@ import org.x4o.xml.element.ElementBindingHandlerException;
  * @author Willem Cazander
  * @version 1.0 Aug 16, 2012
  */
-public class JMenuBarBindingHandler extends AbstractElementBindingHandler {
+public class JInternalFrameBindingHandler extends AbstractElementBindingHandler {
 	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
 	 */
 	public Class<?> getBindParentClass() {
-		return JFrame.class;
+		return JInternalFrame.class;
 	}
 
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindChildClasses()
 	 */
 	public Class<?>[] getBindChildClasses() {
-		return new Class[] {JMenuBar.class};
+		return new Class[] {JComponent.class};
 	}
 
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
 	 */
 	public void doBind(Object parentObject, Object childObject,	Element childElement) throws ElementBindingHandlerException {
-		JMenuBar child = (JMenuBar)childObject;
-		JFrame frame = (JFrame)parentObject;
-		frame.getRootPane().setJMenuBar(child);
+		JComponent child = (JComponent)childObject;
+		
+		String c = childElement.getAttributes().get("constraints");
+		Object con = null;
+		if ("BorderLayout.CENTER".equals(c)) {
+			con = BorderLayout.CENTER;
+		} else if ("BorderLayout.NORTH".equals(c)) {
+			con = BorderLayout.NORTH;
+		} else if ("BorderLayout.CENTER".equals(c)) {
+			con = BorderLayout.CENTER;
+		} else if ("BorderLayout.SOUTH".equals(c)) {
+			con = BorderLayout.SOUTH;
+		}
+		
+		JInternalFrame frame = (JInternalFrame)parentObject;
+		if (con==null) {
+			frame.getContentPane().add(child);
+		} else {
+			frame.getContentPane().add(child,con);
+		}
 	}
 }

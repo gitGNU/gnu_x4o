@@ -34,8 +34,11 @@
 	id="swixml2-module"
 	>
 	
-	<bindingHandler id="JComponentBindingHandler"	bean.class="org.x4o.xml.test.swixml.bind.JComponentBindingHandler"/>
-	<bindingHandler id="JMenuBarBindingHandler" 	bean.class="org.x4o.xml.test.swixml.bind.JMenuBarBindingHandler"/>
+	<bindingHandler id="JFrameBindingHandler"			bean.class="org.x4o.xml.test.swixml.bind.JFrameBindingHandler"/>
+	<bindingHandler id="JInternalFrameBindingHandler" 	bean.class="org.x4o.xml.test.swixml.bind.JInternalFrameBindingHandler"/>
+	<bindingHandler id="JPanelBindingHandler"			bean.class="org.x4o.xml.test.swixml.bind.JPanelBindingHandler"/>
+	<bindingHandler id="JSplitPaneBindingHandler" 		bean.class="org.x4o.xml.test.swixml.bind.JSplitPaneBindingHandler"/>
+	<classBindingHandler id="JScrollPane-JComponent"		parentClass="javax.swing.JScrollPane"		childClass="javax.swing.JComponent"	method="setViewportView"/>
 	<classBindingHandler id="JDesktopPane-JInternalFrame"	parentClass="javax.swing.JDesktopPane"		childClass="javax.swing.JInternalFrame"	method="add"/>
 	<classBindingHandler id="JFrame-JDesktopPane"			parentClass="javax.swing.JFrame"			childClass="javax.swing.JDesktopPane"	method="setContentPane"/>
 	<classBindingHandler id="JMenuBar-JMenu"				parentClass="javax.swing.JMenuBar"			childClass="javax.swing.JMenu"			method="add"/>
@@ -87,9 +90,10 @@
 		uri="http://swixml.x4o.org/xml/ns/swixml-root"
 		schemaUri="http://swixml.x4o.org/xml/ns/swixml-root-2.0.xsd"
 		schemaResource="swixml-root-2.0.xsd"
-		schemaPrefix="root"
+		schemaPrefix="sx-root"
 		name="Root element"
 		languageRoot="true"
+		id="sx-root"
 		>
 		<!-- Single element in language root to create nice tree, for imports in xsd namespace aware generated files. -->
 		<element tag="frame"			objectClass="javax.swing.JFrame"/>
@@ -99,6 +103,7 @@
 		schemaUri="http://swixml.x4o.org/xml/ns/swixml-lang-2.0.xsd"
 		schemaResource="swixml-lang-2.0.xsd"
 		schemaPrefix="sx-lang"
+		id="sx-lang"
 		>
 		<!-- Note frame should not be here(it can but xsd needs root), but else classic xml does not parse without xmlns additions.  -->
 		<element tag="frame"			objectClass="javax.swing.JFrame"/>

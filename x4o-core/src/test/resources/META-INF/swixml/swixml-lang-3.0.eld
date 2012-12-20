@@ -34,8 +34,11 @@
 	id="swixml3-module"
 	>
 	
-	<bindingHandler id="JComponentBindingHandler"	bean.class="org.x4o.xml.test.swixml.bind.JComponentBindingHandler"/>
-	<bindingHandler id="JMenuBarBindingHandler" 	bean.class="org.x4o.xml.test.swixml.bind.JMenuBarBindingHandler"/>
+	<bindingHandler id="JFrameBindingHandler"			bean.class="org.x4o.xml.test.swixml.bind.JFrameBindingHandler"/>
+	<bindingHandler id="JInternalFrameBindingHandler" 	bean.class="org.x4o.xml.test.swixml.bind.JInternalFrameBindingHandler"/>
+	<bindingHandler id="JPanelBindingHandler"			bean.class="org.x4o.xml.test.swixml.bind.JPanelBindingHandler"/>
+	<bindingHandler id="JSplitPaneBindingHandler" 		bean.class="org.x4o.xml.test.swixml.bind.JSplitPaneBindingHandler"/>
+	<classBindingHandler id="JScrollPane-JComponent"		parentClass="javax.swing.JScrollPane"		childClass="javax.swing.JComponent"	method="setViewportView"/>
 	<classBindingHandler id="JDesktopPane-JInternalFrame"	parentClass="javax.swing.JDesktopPane"		childClass="javax.swing.JInternalFrame"	method="add"/>
 	<classBindingHandler id="JFrame-JDesktopPane"			parentClass="javax.swing.JFrame"			childClass="javax.swing.JDesktopPane"	method="setContentPane"/>
 	<classBindingHandler id="JMenuBar-JMenu"				parentClass="javax.swing.JMenuBar"			childClass="javax.swing.JMenu"			method="add"/>
@@ -84,9 +87,10 @@
 		uri="http://swixml.x4o.org/xml/ns/swixml-root"
 		schemaUri="http://swixml.x4o.org/xml/ns/swixml-root-3.0.xsd"
 		schemaResource="swixml-root-3.0.xsd"
-		schemaPrefix="root"
+		schemaPrefix="sx-root"
 		name="Root element"
 		languageRoot="true"
+		id="sx-root"
 		>
 		<element tag="JFrame"			objectClass="javax.swing.JFrame"/>
 	</namespace>
@@ -95,6 +99,7 @@
 		schemaUri="http://swixml.x4o.org/xml/ns/swixml-lang-3.0.xsd"
 		schemaResource="swixml-lang-3.0.xsd"
 		schemaPrefix="sx-lang"
+		id="sx-lang"
 		>
 		<element tag="JMenubar"			objectClass="javax.swing.JMenuBar"/>
 		<element tag="JMenu"			objectClass="javax.swing.JMenu"/>

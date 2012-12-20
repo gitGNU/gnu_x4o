@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -100,6 +102,9 @@ public class EldDocHtmlWriter {
 		buf.append(File.separatorChar);
 		buf.append(toSafeUri(argu[argu.length-1]));
 		File outputFile = new File(buf.toString());
+		if (outputFile.exists()) {
+			outputFile.delete();
+		}
 		//System.out.println("Creating file: "+outputFile);
 		PrintWriter pw = new PrintWriter(outputFile);
 		return pw;
@@ -143,13 +148,13 @@ public class EldDocHtmlWriter {
 			int elements = 0;
 			int namespaces = 0;
 			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
-				attrHandlers =+ mod.getElementAttributeHandlers().size();
-				bindHandlers =+ mod.getElementBindingHandlers().size();
-				interFaces =+ mod.getElementInterfaces().size();
-				eleConfigs =+ mod.getElementConfiguratorGlobals().size();
+				attrHandlers += mod.getElementAttributeHandlers().size();
+				bindHandlers += mod.getElementBindingHandlers().size();
+				interFaces += mod.getElementInterfaces().size();
+				eleConfigs += mod.getElementConfiguratorGlobals().size();
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					namespaces++;
-					elements =+ ns.getElementClasses().size();
+					elements += ns.getElementClasses().size();
 				}
 			}
 			
@@ -178,7 +183,7 @@ public class EldDocHtmlWriter {
 		PrintWriter pw = createPrintWriter(basePath,"module-overview.html");
 		try {
 			String title = context.getLanguageConfiguration().getLanguage()+" "+context.getLanguageConfiguration().getLanguageVersion()+" ELD";
-			printHeader(pw,"Overview ("+title+")","");
+			printHeader(pw,"Overview Modules ("+title+")","");
 			printPageIndexTitle(pw,title,null,null);
 			printTableStart(pw,"Modules");
 			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
@@ -198,7 +203,7 @@ public class EldDocHtmlWriter {
 		String pathPrefix = "";
 		try {
 			String title = context.getLanguageConfiguration().getLanguage()+" "+context.getLanguageConfiguration().getLanguageVersion()+" ELD";
-			printHeader(pw,"Overview ("+title+")",pathPrefix);
+			printHeader(pw,"Overview Namespace("+title+")",pathPrefix);
 			printPageIndexTitle(pw,title,null,null);
 			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
 				printNamespaces(pw,mod.getElementNamespaceContexts(),pathPrefix,mod);
@@ -210,6 +215,179 @@ public class EldDocHtmlWriter {
 			}
 		}
 	}
+	
+	public void writeOverviewTree(File basePath,ElementLanguage context) throws IOException {
+		PrintWriter pw = createPrintWriter(basePath,"tree-overview.html");
+		String pathPrefix = "";
+		try {
+			String title = context.getLanguageConfiguration().getLanguage()+" "+context.getLanguageConfiguration().getLanguageVersion()+" ELD";
+			printHeader(pw,"Overview Tree ("+title+")",pathPrefix);
+			printPageIndexTitle(pw,title,null,null);
+			
+			List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
+			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+					if (ns.getLanguageRoot()!=null && ns.getLanguageRoot()) {
+						// found language root elements.
+						for (ElementClass ec:ns.getElementClasses()) {
+							TreeNode node = new TreeNode();
+							node.context=context;
+							node.module=mod;
+							node.namespace=ns;
+							node.elementClass=ec;
+							rootNodes.add(node);
+						}
+					}
+				}
+			}
+			for (TreeNode rootNode:rootNodes) {
+				walkTree(rootNode,pw,pathPrefix);
+			}
+			
+			printBottom(pw,pathPrefix);
+		} finally {
+			if (pw!=null) {
+				pw.close();
+			}
+		}
+	}
+	
+	class TreeNode {
+		ElementLanguage context;
+		ElementLanguageModule module;
+		ElementNamespaceContext namespace;
+		ElementClass elementClass;
+		TreeNode parent;
+		int indent = 0;
+	}
+	
+	private void walkTree(TreeNode node,PrintWriter pw,String pathPrefix) {
+		
+		for (int i=0;i<node.indent;i++) {
+			pw.print(TAB);
+		}
+		pw.print("-&nbsp;<a href=\"");
+		pw.print(pathPrefix);
+		pw.print(toSafeUri(node.module.getId()));
+		pw.print("/");
+		pw.print(toSafeUri(node.namespace.getId()));
+		pw.print("/");
+		pw.print(toSafeUri(node.elementClass.getTag()));
+		pw.print("/index.html\">");
+		pw.print(node.namespace.getId());
+		pw.print(":");
+		pw.print(node.elementClass.getTag());
+		pw.print("</a><br/>\n");
+		
+		List<TreeNode> childs = findChilderen(node);
+		for (TreeNode child:childs) {
+			walkTree(child,pw,pathPrefix);
+		}
+	}
+	
+	private List<TreeNode> findChilderen(TreeNode node) {
+		List<TreeNode> result = new ArrayList<TreeNode>(10);
+		
+		if (node.indent>20) {
+			return result; // hard fail limit
+		}
+		
+		for (ElementLanguageModule mod:node.context.getElementLanguageModules()) {
+			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+				for (ElementClass ec:ns.getElementClasses()) {
+					TreeNode n=null;
+					List<String> tags = ec.getElementParents(node.namespace.getUri());
+					if (tags!=null && tags.contains(node.elementClass.getTag())) {
+						n = new TreeNode();
+						n.context=node.context;
+						n.module=mod;
+						n.namespace=ns;
+						n.elementClass=ec;
+						n.indent=node.indent+1;
+						n.parent=node;
+					} else {
+						if (node.elementClass.getObjectClass()==null | ec.getObjectClass()==null) {
+							continue;
+						}
+						List<ElementBindingHandler> binds = node.context.findElementBindingHandlers(node.elementClass.getObjectClass(), ec.getObjectClass());
+						if (binds.isEmpty()==false) {
+							n = new TreeNode();
+							n.context=node.context;
+							n.module=mod;
+							n.namespace=ns;
+							n.elementClass=ec;
+							n.indent=node.indent+1;
+							n.parent=node;
+						}
+					}
+					if (n!=null && isInTree(node,n)==false) {
+						result.add(n);
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private boolean isInTree(TreeNode node,TreeNode checkNode) {
+		
+		if (node.namespace.getUri().equals(checkNode.namespace.getUri())) {
+			if (node.elementClass.getTag().equals(checkNode.elementClass.getTag())) {
+				return true;
+			}
+		}
+		if (node.parent!=null) {
+			return isInTree(node.parent,checkNode);
+		}
+		return false;
+	}
+	
+	private List<TreeNode> findParents(TreeNode node) {
+		List<TreeNode> result = new ArrayList<TreeNode>(10);
+		TreeNode n=null;
+		for (ElementLanguageModule mod:node.context.getElementLanguageModules()) {
+			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+				
+				List<String> tags = node.elementClass.getElementParents(ns.getUri());
+				if (tags!=null) {
+					for (ElementClass ec:ns.getElementClasses()) {
+						if (tags.contains(ec.getTag())) {
+							n = new TreeNode();
+							n.context=node.context;
+							n.module=mod;
+							n.namespace=ns;
+							n.elementClass=ec;
+							n.indent=node.indent+1;
+							n.parent=node;
+							result.add(n);
+						}
+					}
+				}
+				for (ElementClass ec:ns.getElementClasses()) {
+					if (node.elementClass.getObjectClass()==null | ec.getObjectClass()==null) {
+						continue;
+					}
+					List<ElementBindingHandler> binds = node.context.findElementBindingHandlers(ec.getObjectClass(),node.elementClass.getObjectClass());
+					if (binds.isEmpty()==false) {
+						n = new TreeNode();
+						n.context=node.context;
+						n.module=mod;
+						n.namespace=ns;
+						n.elementClass=ec;
+						n.indent=node.indent+1;
+						n.parent=node;
+						if (isInTree(node,n)==false) {
+							result.add(n);
+						}
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	
 	public void writeOverviewModule(File basePath,ElementLanguageModule mod) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"index.html");
@@ -255,28 +433,98 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeElement(File basePath,ElementClass ec,ElementNamespaceContext ns,ElementLanguageModule mod) throws IOException {
+	private String printList(List<String> list) {
+		StringBuffer buf = new StringBuffer(40);
+		buf.append("[L: ");
+		if (list.isEmpty()) {
+			buf.append("Empty.");
+		}
+		for (String s:list) {
+			buf.append(s);
+			buf.append(' ');
+		}
+		buf.append("]");
+		return buf.toString();
+	}
+	
+	
+	public void writeElement(File basePath,ElementClass ec,ElementNamespaceContext ns,ElementLanguageModule mod,ElementLanguage context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),ec.getTag(),"index.html");
 		String pathPrefix = "../../../";
 		try {
 			printHeader(pw,"Tag ("+ec.getTag()+")",pathPrefix);
 			printPageTitle(pw,"Tag",ec.getTag(),ec.getDescription());
 			
+			TreeNode node = new TreeNode();
+			node.context=context;
+			node.module=mod;
+			node.namespace=ns;
+			node.elementClass=ec;
+			
+			List<TreeNode> parents = findParents(node);
+			printTableStart(pw,"Element Parents");
+			pw.print("\t<tr class=\"TableRowColor\">\n");
+			pw.print("\t\t<td colspan=\"2\">");
+			if (parents.isEmpty()) {
+				pw.print("No parent.");
+			}
+			for (TreeNode n:parents) {
+				pw.print("\t\t\t&nbsp;<a href=\"");
+				pw.print(pathPrefix);
+				pw.print(toSafeUri(n.module.getId()));
+				pw.print("/");
+				pw.print(toSafeUri(n.namespace.getId()));
+				pw.print("/");
+				pw.print(toSafeUri(n.elementClass.getTag()));
+				pw.print("/index.html\">");
+				pw.print(n.namespace.getId());
+				pw.print(":");
+				pw.print(n.elementClass.getTag());
+				pw.print("</a>\n");
+			}
+			pw.print("</td>\n");
+			pw.print("\t</tr>\n");
+			printTableEnd(pw);
+			
+			List<TreeNode> childs = findChilderen(node);
+			printTableStart(pw,"Element Childeren");
+			pw.print("\t<tr class=\"TableRowColor\">\n");
+			pw.print("\t\t<td colspan=\"2\">");
+			if (childs.isEmpty()) {
+				pw.print("No childeren.");
+			}
+			for (TreeNode n:childs) {
+				pw.print("\t\t\t&nbsp;<a href=\"");
+				pw.print(pathPrefix);
+				pw.print(toSafeUri(n.module.getId()));
+				pw.print("/");
+				pw.print(toSafeUri(n.namespace.getId()));
+				pw.print("/");
+				pw.print(toSafeUri(n.elementClass.getTag()));
+				pw.print("/index.html\">");
+				pw.print(n.namespace.getId());
+				pw.print(":");
+				pw.print(n.elementClass.getTag());
+				pw.print("</a>\n");
+			}
+			pw.print("</td>\n");
+			pw.print("\t</tr>\n");
+			printTableEnd(pw);
+			
+			
 			printTableStart(pw,"Element Properties");
+			printTableRowSummary(pw,"id",""+ec.getId());
+			printTableRowSummary(pw,"tag",""+ec.getTag());
 			printTableRowSummary(pw,"objectClass",""+ec.getObjectClass());
 			printTableRowSummary(pw,"elementClass",""+ec.getElementClass());
 			printTableRowSummary(pw,"autoAttributes",""+ec.getAutoAttributes());
+			printTableRowSummary(pw,"skipPhases",printList(ec.getSkipPhases()));
 			printTableRowSummary(pw,"schemaContentBase",""+ec.getSchemaContentBase());
 			printTableRowSummary(pw,"schemaContentComplex",""+ec.getSchemaContentComplex());
 			printTableRowSummary(pw,"schemaContentMixed",""+ec.getSchemaContentMixed());
+			//printTableRowSummary(pw,"description",""+ec.getDescription());
 			printTableEnd(pw);
-			
-			printTableStart(pw,"Element Attributes");
-			for (ElementClassAttribute attr:ec.getElementClassAttributes()) {
-				printTableRowSummary(pw,attr.getName(),attr.getDescription());
-			}
-			printTableEnd(pw);
-			
+			printElementAttributes(pw,ec.getElementClassAttributes());
 			if (ec.getObjectClass()!=null) {
 				printClassProperties(pw, ec.getObjectClass());
 			}
@@ -300,7 +548,8 @@ public class EldDocHtmlWriter {
 			
 			printConfigurators(pw,iface.getElementConfigurators(),pathLocal);
 			printBindingHandlers(pw,iface.getElementBindingHandlers(),pathLocal);
-			//iface.getElementClassAttributes()
+			
+			printElementAttributes(pw,iface.getElementClassAttributes());
 			
 			printBeanProperties(pw, iface);
 			printBottom(pw,pathPrefix);
@@ -366,11 +615,13 @@ public class EldDocHtmlWriter {
 			printHeader(pw,"BindingHandler ("+bind.getId()+")",pathPrefix);
 			printPageTitle(pw,"BindingHandler",bind.getId(),bind.getDescription());
 			
+			/*
 			printTableStart(pw,"Child Classes");
 			for (Class<?> clazz:bind.getBindChildClasses()) {
 				printTableRowSummary(pw,"class",""+clazz.getName());
 			}
 			printTableEnd(pw);
+			*/
 			printBeanProperties(pw, bind);
 			printBottom(pw,pathPrefix);
 		} finally {
@@ -458,8 +709,58 @@ public class EldDocHtmlWriter {
 					e.printStackTrace();
 				}
 				
-				printTableRowSummary(pw,n,""+value);
+				printTableRowSummary(pw,n,printValue(value));
 			}
+		}
+		printTableEnd(pw);
+	}
+	
+	private String printValue(Object value) {
+		if (value==null) {
+			return "null";
+		}
+		if (value instanceof String) {
+			return (String)value;
+		}
+		if (value instanceof Class) {
+			return "class "+((Class<?>)value).getName();
+		}
+		if (value instanceof List) {
+			StringBuffer buf = new StringBuffer(100);
+			buf.append("[L: ");
+			List<?> l = (List<?>)value;
+			if (l.isEmpty()) {
+				buf.append("Empty");
+			}
+			for (Object o:l) {
+				buf.append(""+o);
+				buf.append(" ");
+			}
+			buf.append("]");
+			return buf.toString();
+		}
+		if (value instanceof Object[]) {
+			StringBuffer buf = new StringBuffer(100);
+			buf.append("[A: ");
+			Object[] l = (Object[])value;
+			if (l.length==0) {
+				buf.append("Empty");
+			}
+			for (Object o:l) {
+				buf.append(""+o);
+				buf.append(" ");
+			}
+			buf.append("]");
+			return buf.toString();
+		}
+		
+		return value.toString();
+	}
+	
+	private void printElementAttributes(PrintWriter pw,Collection<ElementClassAttribute> elementClassAttributes) {
+		printTableStart(pw,"Element Attributes");
+		for (ElementClassAttribute attr:elementClassAttributes) {
+			printTableRowSummary(pw,attr.getName(),attr.getDescription());
 		}
 		printTableEnd(pw);
 	}
@@ -563,6 +864,7 @@ public class EldDocHtmlWriter {
 		pw.print("</h2>\n");
 		if (description!=null) {
 			pw.print(description);
+			pw.print("<br/>\n");
 			pw.print("<br/>\n");
 		}
 	}
@@ -676,5 +978,6 @@ public class EldDocHtmlWriter {
 		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"index.html\">Index</a>&nbsp;</td>\n");
 		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"module-overview.html\">Modules</a>&nbsp;</td>\n");
 		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"namespace-overview.html\">Namespaces</a>&nbsp;</td>\n");
+		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"tree-overview.html\">Tree</a>&nbsp;</td>\n");
 	}
 }

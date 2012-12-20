@@ -53,7 +53,6 @@
 
 ##CODE
 - Add (super) tag for extending tags of other namespace
-- Add EldInfo element
 - XMLOverrideEvent
 	- inboud sax parser !!
 	- input stream output converter :)
@@ -71,5 +70,4 @@
 	- Xinclude option
 	- SAX events as input source
 - (70%) XML debug output
-- (20%) x4o comment element
 

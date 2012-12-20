@@ -111,6 +111,12 @@ public abstract class AbstractElementClass extends AbstractElementClassBase impl
 	 * @see org.x4o.xml.element.ElementClass#addElementParent(java.lang.String,java.lang.String)
 	 */
 	public void addElementParent(String namespaceUri,String tag) {
+		if (namespaceUri==null) {
+			throw new NullPointerException("Can't add parent tag with null namespace uri.");
+		}
+		if (namespaceUri.isEmpty()) {
+			throw new IllegalArgumentException("Can't add parent tag with empty namespace uri.");
+		}
 		List<String> tags = elementParents.get(namespaceUri);
 		if (tags==null) {
 			tags = new ArrayList<String>(5);

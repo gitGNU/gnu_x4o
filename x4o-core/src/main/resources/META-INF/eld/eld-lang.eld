@@ -32,6 +32,7 @@
 	providerName="eld.x4o.org"
 	id="eld-module"
 	>
+	<description>The full element language definition(eld) which is used to define xml languages.</description>
 	
 	<bindingHandler id="ElementClassBindingHandler"				bean.class="org.x4o.xml.eld.lang.ElementClassBindingHandler"/>
 	<bindingHandler id="ElementModuleBindingHandler"			bean.class="org.x4o.xml.eld.lang.ElementModuleBindingHandler"/>
@@ -50,7 +51,7 @@
 		languageRoot="true"
 		id="eld-root"
 		>
-		<!-- Root Element for nice namespace'ing  -->
+		<description>Single root namespace so xsd schema generation works correct.</description>
 		<element tag="module"								objectClass="${parentLanguageConfiguration.defaultElementLanguageModule}" elementClass="org.x4o.xml.eld.lang.ModuleElement">
 			<attribute name="id" required="true">
 				<description>The module id.</description>
@@ -67,6 +68,7 @@
 		name="Element Language Definition"
 		id="eld-lang"
 		>
+		<description>Some basic language definitions and some helper tags.</description>
 		
 		<!-- First copy some core elements over from parent config -->
 		<element tag="namespace"							objectClass="${parentLanguageConfiguration.defaultElementNamespaceContext}">
@@ -160,6 +162,7 @@
 		<element tag="description"							elementClass="org.x4o.xml.eld.lang.DescriptionElement"	schemaContentBase="string">
 			<description>An ELD elementDescription field which lets you type text like this one in xml characters instead of an attribute.</description>
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
+			<elementParent tag="namespace"/>
 			<elementParent tag="bindingHandler"/>
 			<elementParent tag="attributeHandler"/>
 			<elementParent tag="configurator"/>
@@ -267,7 +270,8 @@
 		name="Element Attribute Converters"
 		id="eld-conv"
 		>
-		<!-- Config all converters, move ? -->
+		<description>Basic set of attribute value converters.</description>
+		
 		<element tag="beanConverter"			elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<description>Define an loadable in bean.class for an ObjectConverter.</description>
 			<attribute name="bean.class">

@@ -623,7 +623,7 @@ public class X4OPhaseHandlerFactory {
 			protected void setX4OPhase() {
 				phase = X4OPhase.fillTemplatingPhase;
 			}
-			public void runElementPhase(Element element) throws X4OPhaseException  {
+			public void runElementPhase(Element element) throws X4OPhaseException {
 			}
 		};
 		return result;
@@ -638,13 +638,13 @@ public class X4OPhaseHandlerFactory {
 			protected void setX4OPhase() {
 				phase = X4OPhase.transformPhase;
 			}
-			public void runElementPhase(Element element) throws X4OPhaseException  {
+			public void runElementPhase(Element element) throws X4OPhaseException {
 				if (element.isTransformingTree()==false) {
 					return;
 				}
 				try {
 					if (hasX4ODebugWriter()) {
-						getX4ODebugWriter().debugElement(element);				
+						getX4ODebugWriter().debugElement(element);
 					}
 					element.doElementRun();
 				} catch (ElementException e) {
@@ -665,7 +665,7 @@ public class X4OPhaseHandlerFactory {
 			protected void setX4OPhase() {
 				phase = X4OPhase.runDirtyElementPhase;
 			}
-			public void runElementPhase(Element element) throws X4OPhaseException  {
+			public void runElementPhase(Element element) throws X4OPhaseException {
 				Map<Element,X4OPhase> dirtyElements = element.getElementLanguage().getDirtyElements();
 				if (dirtyElements.isEmpty()) {
 					return;

@@ -26,7 +26,9 @@ package org.x4o.xml.eld.doc;
 import java.io.File;
 
 import org.x4o.xml.eld.EldParserSupport;
+import org.x4o.xml.eld.EldParserSupportCore;
 import org.x4o.xml.test.TestParserSupport;
+import org.x4o.xml.test.swixml.SwiXmlParserSupport2;
 import org.x4o.xml.test.swixml.SwiXmlParserSupport3;
 
 import junit.framework.TestCase;
@@ -51,6 +53,13 @@ public class EldDocTest extends TestCase {
 		return result;
 	}
 	
+	public void testCelDoc() throws Exception {
+		X4OLanguageEldDocWriter writer = new X4OLanguageEldDocWriter();
+		writer.setBasePath(getTempPath("junit-cel"));
+		writer.setLanguageParserSupport(EldParserSupportCore.class);
+		writer.execute();
+	}
+	
 	public void testEldDoc() throws Exception {
 		X4OLanguageEldDocWriter writer = new X4OLanguageEldDocWriter();
 		writer.setBasePath(getTempPath("junit-eld"));
@@ -62,6 +71,13 @@ public class EldDocTest extends TestCase {
 		X4OLanguageEldDocWriter writer = new X4OLanguageEldDocWriter();
 		writer.setBasePath(getTempPath("junit-test"));
 		writer.setLanguageParserSupport(TestParserSupport.class);
+		writer.execute();
+	}
+
+	public void testSwiXml2Doc() throws Exception {
+		X4OLanguageEldDocWriter writer = new X4OLanguageEldDocWriter();
+		writer.setBasePath(getTempPath("junit-swixml2"));
+		writer.setLanguageParserSupport(SwiXmlParserSupport2.class);
 		writer.execute();
 	}
 	

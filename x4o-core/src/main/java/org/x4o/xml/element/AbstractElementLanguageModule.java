@@ -123,8 +123,17 @@ public abstract class AbstractElementLanguageModule extends AbstractElementMetaB
 	 * @see org.x4o.xml.element.ElementLanguageModule#addElementBindingHandler(ElementBindingHandler)
 	 */
 	public void addElementBindingHandler(ElementBindingHandler elementBindingHandler) {
+		if (elementBindingHandler==null) {
+			throw new NullPointerException("Can't add null binding handler.");
+		}
 		if (elementBindingHandler.getId()==null) {
 			throw new NullPointerException("Can't add with null id property.");
+		}
+		// Check so doc tree does not loop; see EldDocHtmlWriter.findChilderen()
+		for (Class<?> cl:elementBindingHandler.getBindChildClasses()) {
+			if (elementBindingHandler.getBindParentClass().equals(cl)) {
+				throw new IllegalStateException("Can't add binding handler: "+elementBindingHandler.getId()+" with same parent as child class.");
+			}
 		}
 		logger.finer("Adding ElementBindingHandler: "+elementBindingHandler);
 		elementBindingHandlers.add(elementBindingHandler);

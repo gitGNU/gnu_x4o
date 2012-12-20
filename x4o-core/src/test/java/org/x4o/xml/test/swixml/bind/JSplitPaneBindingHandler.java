@@ -21,37 +21,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.xml.eld.lang;
+package	org.x4o.xml.test.swixml.bind;
 
-import org.x4o.xml.element.AbstractElement;
-import org.x4o.xml.element.ElementClass;
-import org.x4o.xml.element.ElementException;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JSplitPane;
+
+import org.x4o.xml.element.AbstractElementBindingHandler;
+import org.x4o.xml.element.Element;
+import org.x4o.xml.element.ElementBindingHandlerException;
 
 /**
- * ElementClassAddParentElement adds an parent tag to ElementClass for xsd.
+ * JSplitPaneBindingHandler binds components to the JSplitPane
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 21, 2012
+ * @version 1.0 Aug 16, 2012
  */
-public class ElementClassAddParentElement extends AbstractElement {
+public class JSplitPaneBindingHandler extends AbstractElementBindingHandler {
+	
+	/**
+	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
+	 */
+	public Class<?> getBindParentClass() {
+		return JSplitPane.class;
+	}
 
 	/**
-	 * @see org.x4o.xml.element.AbstractElement#doElementEnd()
+	 * @see org.x4o.xml.element.ElementBindingHandler#getBindChildClasses()
 	 */
-	@Override
-	public void doElementEnd() throws ElementException {
-		String tag = getAttributes().get("tag");
-		if (tag==null) {
-			throw new ElementException("'tag' attribute is not set on: "+getElementClass().getTag());
-		}
-		String namespaceUri = getAttributes().get("uri");
-		if (namespaceUri==null) {
-			namespaceUri = getParent().getParent().getAttributes().get("uri"); // copy uri from namespace element.
-		}
-		if (getParent().getElementObject() instanceof ElementClass) {
-			((ElementClass)getParent().getElementObject()).addElementParent(namespaceUri,tag);
+	public Class<?>[] getBindChildClasses() {
+		return new Class[] {JComponent.class};
+	}
+
+	/**
+	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 */
+	public void doBind(Object parentObject, Object childObject,	Element childElement) throws ElementBindingHandlerException {
+		JComponent child = (JComponent)childObject;
+		JSplitPane pane = (JSplitPane)parentObject;
+		if (pane.getLeftComponent() instanceof JButton) { // strange swing constructor for splitpane
+			pane.setLeftComponent(child);
+		} else if (pane.getRightComponent() instanceof JButton) {
+			pane.setRightComponent(child);
 		} else {
-			throw new ElementException("Wrong parent class is not ElementClass but: "+getParent().getElementObject());
+			throw new ElementBindingHandlerException("SplitPane is full.");
 		}
 	}
 }

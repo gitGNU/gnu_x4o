@@ -369,12 +369,6 @@ public class EldXsdXmlWriter {
 			if (parents!=null && parents.contains(ec.getTag())) {
 				refElements.add(checkClass.getTag());
 			}
-			if (nsWrite.getUri().equals(ns.getUri())) {
-				parents = checkClass.getElementParents("");
-				if (parents!=null && parents.contains(ec.getTag())) {
-					refElements.add(checkClass.getTag());
-				}
-			}
 			if (ec.getObjectClass()==null) {
 				continue;
 			}

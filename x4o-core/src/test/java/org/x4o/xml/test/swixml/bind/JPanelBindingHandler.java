@@ -25,13 +25,8 @@ package	org.x4o.xml.test.swixml.bind;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
@@ -43,14 +38,13 @@ import org.x4o.xml.element.ElementBindingHandlerException;
  * @author Willem Cazander
  * @version 1.0 Aug 16, 2012
  */
-public class JComponentBindingHandler extends AbstractElementBindingHandler {
+public class JPanelBindingHandler extends AbstractElementBindingHandler {
 	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
 	 */
 	public Class<?> getBindParentClass() {
-		return JComponent.class;
-		//return new Class[] {JPanel.class,JScrollPane.class,JSplitPane.class,JFrame.class,JInternalFrame.class};
+		return JPanel.class;
 	}
 
 	/**
@@ -78,41 +72,11 @@ public class JComponentBindingHandler extends AbstractElementBindingHandler {
 			con = BorderLayout.SOUTH;
 		}
 		
-		if (parentObject instanceof JSplitPane) {
-			JSplitPane pane = (JSplitPane)parentObject;
-			if (pane.getLeftComponent() instanceof JButton) { // strange swing constructor for splitpane
-				pane.setLeftComponent(child);
-			} else if (pane.getRightComponent() instanceof JButton) {
-				pane.setRightComponent(child);
-			} else {
-				throw new ElementBindingHandlerException("SplitPane is full.");
-			}
-		} else if (parentObject instanceof JScrollPane) {
-			JScrollPane pane = (JScrollPane)parentObject;
-			pane.setViewportView(child);
-		} else if (parentObject instanceof JFrame) {
-			JFrame frame = (JFrame)parentObject;
-			if (con==null) {
-				frame.getContentPane().add(child);
-			} else {
-				frame.getContentPane().add(child,con);
-			}
-		} else if (parentObject instanceof JInternalFrame) {
-			JInternalFrame frame = (JInternalFrame)parentObject;
-			if (con==null) {
-				frame.getContentPane().add(child);
-			} else {
-				frame.getContentPane().add(child,con);
-			}
-		} else if (parentObject instanceof JPanel) {
-			JPanel parent = (JPanel)parentObject;
-			if (con==null) {
-				parent.add(child);
-			} else {
-				parent.add(child,con);
-			}			
+		JPanel parent = (JPanel)parentObject;
+		if (con==null) {
+			parent.add(child);
 		} else {
-			// No bind but this destroys the xsd, change into multiple classes.
+			parent.add(child,con);
 		}
 	}
 }

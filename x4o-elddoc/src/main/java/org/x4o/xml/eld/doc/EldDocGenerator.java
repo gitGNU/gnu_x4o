@@ -56,6 +56,7 @@ public class EldDocGenerator {
 			writer.writeStylesheet(basePath);
 			writer.writeOverviewModule(basePath, context);
 			writer.writeOverviewNamespace(basePath, context);
+			writer.writeOverviewTree(basePath, context);
 			
 			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
 				
@@ -88,7 +89,7 @@ public class EldDocGenerator {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					writer.writeOverviewElement(basePath, ns,mod);
 					for (ElementClass ec:ns.getElementClasses()) {
-						writer.writeElement(basePath, ec, ns, mod);
+						writer.writeElement(basePath, ec, ns, mod,context);
 						for (ElementConfigurator conf:ec.getElementConfigurators()) {
 							writer.writeElementConfigurator(basePath,conf,mod,ns,ec);
 						}
