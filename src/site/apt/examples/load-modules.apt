@@ -23,11 +23,12 @@
 
 Load Modules
 
-  The default language loader of x4o load all 'META-INF/<language>/<language>-modules.xml' in the classpath.
-  So every extension library has its own modules definition file. 
+  The default language loader of x4o loads all 'META-INF/<language>/<language>-modules.xml' resources found in the classpath.
   
+  So every extension library has its own modules definition file. 
   All options are allowed in multiple forms and order.
-  For xsd file see x4o-core classpath 'META-INF/language/modules-1.0.xsd'.
+  
+  The xsd file can be found in the x4o-core project classpath 'META-INF/language/modules-1.0.xsd'.
   
 +--
 <?xml version="1.0" encoding="UTF-8"?>
@@ -50,3 +51,16 @@ Load Modules
 	</language>
 </modules>
 +--
+  
+ * eld-resource
+  
+  The eld-resource tag loads the eld resource relative from the modules xml resource.
+  
+ * module-loader
+  
+  The module-loader lets you define module extensions and namespaces in code.
+  
+ * sibling-loader
+  
+  The sibling-loader lets you load other languages into the language used.
+

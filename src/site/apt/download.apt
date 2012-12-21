@@ -29,7 +29,7 @@ Downloading
    <dependency>
    		<groupId>org.x4o</groupId>
    		<artifactId>x4o-core</artifactId>
-   		<version>0.8-SNAPSHOT</version>
+   		<version>0.8.5-SNAPSHOT</version>
    </dependency>
 +--
 
@@ -38,8 +38,9 @@ Downloading
 * Download binary release.
   
   Sorry we still have not done any binany releases.
+  When completed it should be on the {{{http://download.savannah.gnu.org/releases/x4o/}release}} page.
   
 * Downloading source code
   
-  Sorry we still have no source access.  
+  see {{{./source-repository.html}repository}} page.
   

@@ -275,7 +275,79 @@ public class BorderConverter extends AbstractStringObjectConverter {
 }
 +--
 
+* XML to parse
+
++--
+<frame name="mainframe" size="800,600" title="SWIXML-X4O" plaf="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" defaultCloseOperation="3">
+	<menubar name="menubar">
+		<menu name="filemenu" text="File">
+			<menuitem name="mi_new" text="New" icon="icons/new.gif" mnemonic="VK_N" accelerator="control N" Action="newAction"/>
+			<menuitem name="mi_open" text="Open" icon="icons/open.gif" mnemonic="VK_O" Accelerator="control O" ActionCommand="open"/>
+			<menuitem name="mi_save" text="Save" icon="icons/save.gif" mnemonic="VK_S" ActionCommand="save"/>
+			<menu name="propmenu" text="Properties" icon="icons/new.gif" >
+				<menuitem name="mi_prop_edit" text="Edit" icon="icons/new.gif"/>
+				<menuitem name="mi_prop_clear" text="Clear" icon="icons/new.gif"/>	
+			</menu>
+			<separator/>
+			<menuitem name="mi_exit" text="Exit" icon="icons/exit.gif" mnemonic="VK_X" Accelerator="control X" ActionCommand="exit" Action="exitAction"/>
+		</menu>
+		<menu text="Help">
+			<menuitem name="mi_about" text="About" enabled="true" icon="icons/info.gif" Accelerator="alt A" Action="aboutAction" />
+		</menu>
+	</menubar>
+	<desktoppane>
+		<internalframe Title="Flow Layout (right aligned)" Bounds="10,10,150,150" Layout="FlowLayout(FlowLayout.RIGHT)" Visible="true" Resizable="true">
+			<button>1</button>
+			<button>2</button>
+			<button>3</button>
+			<button>4</button>
+		</internalframe>
+		<internalframe Title="Grid Layout" Bounds="200,10,170,170" Layout="GridLayout(4,3)" Visible="true" Resizable="true">
+			<button text="1"/><button text="2"/><button text="3"/>
+			<button text="4"/><button text="5"/><button text="6"/>
+			<button text="7"/><button text="8"/><button text="9"/>
+			<button text="*"/><button text="0"/><button text="#"/>
+		</internalframe>
+		<internalframe Title="Border Layout" Bounds="390,10,150,150" Layout="borderlayout" Visible="true" Resizable="true">
+			<button constraints="BorderLayout.NORTH" text="1"/>
+			<button constraints="BorderLayout.EAST"  text="2"/>
+			<button constraints="BorderLayout.SOUTH" text="3"/>
+			<button constraints="BorderLayout.WEST"  text="4"/>
+		</internalframe>
+		<internalframe Title="Tree Window" Bounds="10,170,350,360" Layout="borderlayout" Visible="true" Resizable="true">
+			<panel layout="borderlayout" constraints="BorderLayout.CENTER">
+				<splitpane oneTouchExpandable="true" dividerLocation="200">
+					<splitpane oneTouchExpandable="true" dividerLocation="140" orientation="VERTICAL">
+						<scrollPane background="blue" >
+							<tree name="tree"/>
+						</scrollPane>
+						<panel layout="borderlayout">
+							<panel constraints="BorderLayout.NORTH">
+								<button name="btn_copy" ToolTipText="JPanel" enabled="true" BorderPainted="false" FocusPainted="false" icon="icons/copy.gif" size="24,24"/>
+								<button name="btn_paste" ToolTipText="JButton" enabled="true" BorderPainted="false" FocusPainted="false" icon="icons/paste.gif" size="24,24"/>
+								<button name="btn_cut" ToolTipText="JLabel" enabled="true" icon="icons/cut.gif" BorderPainted="false" FocusPainted="false" size="24,24"/>
+							</panel>
+							<scrollPane constraints="BorderLayout.CENTER">
+								<table name="table"/>
+							</scrollPane>
+						</panel>
+					</splitpane>
+					<panel name="preview" border="LoweredBevelBorder">
+						<textarea name="ta" text="Tree Status Log....." background="red"/>
+					</panel>
+				</splitpane>
+			</panel>
+			<panel constraints="BorderLayout.SOUTH">
+				<label text="Status:"/>
+				<textfield text="OK"/>
+			</panel>
+		</internalframe>
+	</desktoppane>
+</frame>
++--
+
+
 * Source
 
-  This example is found in the x4o-core source package in the test path.
+  This example is found in the x4o-core source package in the test java and resouces path.
   

@@ -22,7 +22,9 @@
 ~~
 
 Usage
-   
+  
+  X4O had multiple modules the one which is most used is x4o-core which implements the full x4o framework.
+  
 * X4O maven modules
   
   * x4o = project base.
@@ -54,7 +56,7 @@ Usage
 
   Note: currently x4o is not in main maven repro, so build and install local yourself.
 
-* Setup ant task
+* Setup build task
 
   Append one or both of the x4o eld ant tasks;
 
@@ -71,26 +73,26 @@ Usage
   </dependency>
 +--
 
-  Use in ant and set the supportclass on the language you want todo the task for.
+  Use in ant and set the supportclass from the language you want to run the task for.
   
 +--
-	<taskdef name="eldDocWriter" classname="org.x4o.plugin.ant.eld.doc.EldDocWriterTask"/>
-	<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
+<taskdef name="eldDocWriter" classname="org.x4o.plugin.ant.eld.doc.EldDocWriterTask"/>
+<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
 
-	<target name="test-cel-schema-full" depends="init">
-		<mkdir dir="${test.dir}/cel-full"/>
-		<eldXsdWriter
-			destdir="${test.dir}/cel-full"
-			supportclass="org.x4o.xml.eld.EldParserSupportCore"
-			/>
-	</target>
-	<target name="test-elddoc-cel" depends="init">
-		<mkdir dir="${test.dir}/cel"/>
-		<eldDocWriter
-			destdir="${test.dir}/cel"
-			supportclass="org.x4o.xml.eld.EldParserSupportCore"
-			/>
-	</target>
-	
+<target name="build-cel-schema" depends="init">
+	<mkdir dir="${test.dir}/cel-schema"/>
+	<eldXsdWriter
+		destdir="${test.dir}/cel-schema"
+		supportclass="org.x4o.xml.eld.EldParserSupportCore"
+		/>
+</target>
+<target name="build-cel-elddoc" depends="init">
+	<mkdir dir="${test.dir}/cel-elddoc"/>
+	<eldDocWriter
+		destdir="${test.dir}/cel-elddoc"
+		supportclass="org.x4o.xml.eld.EldParserSupportCore"
+		/>
+</target>
 +--
+
 

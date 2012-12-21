@@ -55,6 +55,12 @@ public class FooBarParserSupport implements X4OParserSupport {
 		FooBarParser parser = new FooBarParser();
 		return parser.loadElementLanguageSupport();
 	}
+	
+	public TestBeanRoot getRoot() {
+		// Simple way to return single root object.
+		// note; element tree is cleared after parsing only root element is there. 
+		return (TestBeanRoot)getDriver().getElementLanguage().getRootElement().getElementObject();
+	}
 }
 +--
 
@@ -128,3 +134,23 @@ public class FooBarParserSupport implements X4OParserSupport {
 
   Now you can startup the parser to see it work.
   
+* Create xml to parse
+  
++--
+<?xml version="1.0" encoding="UTF-8"?>
+<r:root
+	xmlns:l="http://foobar.test.x4o.org/xml/ns/foobar-lang"
+	xmlns:r="http://foobar.test.x4o.org/xml/ns/foobar-root""
+	>
+	<l:testBean value="testing xml"/>
+</r:root>
++--
+  
+* Parse the xml
+  
++--
+FooBarParser p = new FooBarParser();
+p.parseFile("foobar/example.xml");
+TestBeanRoot root = p.getRoot();
++--
+

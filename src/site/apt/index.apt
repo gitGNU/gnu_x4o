@@ -28,7 +28,7 @@ Overview
   This is done by defining your own element language definitions in one or more xml files, which in 
   turn are also done by x4o recursively and so it can be extended.
   
-  The extension modules are dynamically loaded from the classpath to define new namespaces.
+  The extension modules are dynamically loaded from the classpath to define the namespaces.
   Besides the elements in the namespace, modules also define the object parent child relation
   binding interfaces which results in an object tree. 
   
@@ -49,20 +49,11 @@ Overview
 
 * Examples
 
-  There are two examples written out;
-
-  {{{./examples/sample-swixml.html}Sample SwiXml}}
+  There are two examples; {{{./examples/sample-swixml.html}SwiXml}} and {{{./examples/sample-jr4o.html}JR4O}}
   
-  {{{./examples/sample-jr4o.html}Sample JR4O}}
-
-  But to put it simple, x4o translates the xml elements into beans;
-
-+--
-<my:fooBean test="hello wold"/>
-+--
-
-  Creates an instance and sets the name property of this bean;
-
+  But at its core the main function of x4o is to translates the xml elements into beans and binds them to an tree. 
+  See this example of the FooBean class;
+  
 +--
 class FooBean {
 	private String name=null;
@@ -74,4 +65,12 @@ class FooBean {
 	}
 }
 +--
-
+  
+  When using this in xml is looks like;
+  
++--
+<my:fooBean test="hello wold"/>
++--
+  
+  So x4o has created an instance and sets the xml attributes as properties of this bean.
+  

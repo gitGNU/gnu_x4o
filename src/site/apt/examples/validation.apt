@@ -23,56 +23,57 @@
 
 Validation
 
-  Schema validation is just new feature and work in progress to have it support all different xml language formats.
-  With x4o there are currently two options howto validate your documents, it depends if the language is extended.
-
-* Validating parser
-
-+--
-	TestParser parser = new TestParser();
-	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
-	parser.parse(...);
-+--
+  Schema validation is just an new feature and work in progress.
+  There are still option being added so it can support all different xml languages.
+  
+  With x4o there are currently two options to validate your documents, it depends if the language is extended at runtime or not.
+  The actual grammer validation is done by the java jaxp parser.
 
 * Generate static languages
 
-  Store the generated xsd files in the (resource)classpath of project in META-INF/<language>/<ns-schemaResource>. 
+  When the xml language is not dynamicly extended at runtime all the schemas can be generated in the build process
+  and be included in the jar file.
+  
+  These generated xsd files are stored in the (resource)classpath of project in META-INF/foobar/foobar-1.0.xsd.
+  Then the validating parser will find the schema resources while loading the namespace contexts.
+   
   These schemas can be created or updates while package project or update manually by build script of profile.
+  For example see the profile in the pom.xml of the x4o-plugin-ant-schema module.
   
-  For example see the profile in the pom.xml of the x4o-plugin-ant-schema.
-  
-  * Validating parser
+  Use validating parser
   
 +--
-	TestParser parser = new TestParser();
-	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
-	parser.parse(...);
+TestParser parser = new TestParser();
+parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
+parser.parse(...);
 +--
 
 * Generate dynamic languages
-
+  
   Generate the xsd files while all the language extensions are loaded in the classpath.
   
   Use the embedded java program in the x4o-core;
   
 +--
-  java -cp '...jar:x4o-core.jar' org.x4o.xml.eld.xsd.X4OLanguageEldXsdWriter -path /tmp -class org.foo.bar.TestParserSupport
+java -cp '...jar:x4o-core.jar' org.x4o.xml.eld.xsd.X4OLanguageEldXsdWriter -path /tmp -class org.foo.bar.TestParserSupport
 +--
   
   Or use the ant task in the x4o-plugin-ant-schema;
   
 +--
-	<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
-	<eldXsdWriter destdir="/tmp" supportclass="org.foo.bar.TestParserSupport"/>
+<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
+<eldXsdWriter destdir="/tmp" supportclass="org.foo.bar.TestParserSupport"/>
 +--
   
-  * Validating parser
+  Use validating parser
   
 +--
-	TestParser parser = new TestParser();
-	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
-	parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_SCHEMA_PATH, "/tmp");
-	parser.parse(...);
+TestParser parser = new TestParser();
+parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
+parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_SCHEMA_PATH, "/tmp");
+parser.parse(...);
 +--
-
+  
+  Note; In future there will be an automatic schema generation option for dynamicly defined langauges so that parser can
+  be set always on full validating.
 

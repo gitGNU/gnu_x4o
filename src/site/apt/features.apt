@@ -25,9 +25,9 @@ X4O Features
 
   * Advanced XML to Object tree parsing.
   
-  * Easy create an extensible xml language.
+  * Easy to create an extensible xml language.
   
-  * Dynamic module system for language loading.  
+  * Dynamic module system for language loading.
 
   * Fully namespace uri aware.
   
@@ -55,5 +55,5 @@ X4O Features
   
   * Basic XSD Schema generation from ELD.
   
-  
+  * Generate javadoc like documenation of the langauge.
   

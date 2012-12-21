@@ -32,6 +32,8 @@
 	providerName="x4o.org"
 	id="meta-lang"
 	>
+	<eld:description>The x4o meta language lets you do special xml tricks.</eld:description>
+	
 	<eld:attributeHandler id="global-el-id"	attributeName="el.id" bean.class="org.x4o.xml.meta.lang.ELIDAttributeHandler">
 		<eld:description>Lets you bind object into the expression language context.</eld:description>
 	</eld:attributeHandler>
@@ -39,8 +41,11 @@
 		uri="http://meta.x4o.org/xml/ns/meta-lang"
 		schemaUri="http://meta.x4o.org/xml/ns/meta-lang-1.0.xsd"
 		schemaResource="meta-lang-1.0.xsd"
+		schemaPrefix="meta-lang"
 		name="X4O Meta Language"
+		id="meta-lang"
 		>
+		<eld:description>Some special xml tags in this namespace.</eld:description>
 			
 		<eld:element tag="bean"				elementClass="org.x4o.xml.eld.lang.BeanElement">
 			<eld:description>
