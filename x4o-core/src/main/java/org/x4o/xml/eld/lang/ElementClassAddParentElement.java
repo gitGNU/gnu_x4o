@@ -24,7 +24,7 @@
 package org.x4o.xml.eld.lang;
 
 import org.x4o.xml.element.AbstractElement;
-import org.x4o.xml.element.ElementClass;
+import org.x4o.xml.element.ElementClassBase;
 import org.x4o.xml.element.ElementException;
 
 /**
@@ -48,10 +48,10 @@ public class ElementClassAddParentElement extends AbstractElement {
 		if (namespaceUri==null) {
 			namespaceUri = getParent().getParent().getAttributes().get("uri"); // copy uri from namespace element.
 		}
-		if (getParent().getElementObject() instanceof ElementClass) {
-			((ElementClass)getParent().getElementObject()).addElementParent(namespaceUri,tag);
+		if (getParent().getElementObject() instanceof ElementClassBase) {
+			((ElementClassBase)getParent().getElementObject()).addElementParent(namespaceUri,tag);
 		} else {
-			throw new ElementException("Wrong parent class is not ElementClass but: "+getParent().getElementObject());
+			throw new ElementException("Wrong parent class is not ElementClassBase but: "+getParent().getElementObject());
 		}
 	}
 }

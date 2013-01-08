@@ -41,4 +41,28 @@ public interface ElementClassBase extends ElementMetaBase {
 	Collection<ElementClassAttribute> getElementClassAttributes();
 	ElementClassAttribute getElementClassAttributeByName(String attributeName);
 	void addElementClassAttribute(ElementClassAttribute elementClassAttribute);
+	
+	/**
+	 * Add an parent element tag.
+	 * Used: for xsd/doc only.
+	 * @param namespaceUri The namespace uri of this tag relation.
+	 * @param tag	The parent element tag.
+	 */
+	void addElementParent(String namespaceUri,String tag);
+	
+	/**
+	 * Remove and parent element
+	 * Used: for xsd/doc only. 
+	 * @param namespaceUri The namespace uri of this tag relation.
+	 * @param tag	The parent element tag.
+	 */
+	void removeElementParent(String namespaceUri,String tag);
+	
+	/**
+	 * Returns list of parent element tags.
+	 * Used: for xsd/doc only. 
+	 * @param namespaceUri The namespace uri of this tag relation.
+	 * @return	The list of tags.
+	 */
+	List<String> getElementParents(String namespaceUri);
 }

@@ -180,11 +180,12 @@
 		<element tag="elementParent"						elementClass="org.x4o.xml.eld.lang.ElementClassAddParentElement">
 			<description>Adds an parent element tag for xsd</description>
 			<elementParent tag="element"/>
+			<elementParent tag="elementInterface"/>
 			<attribute name="tag">
 				<description>The parent tag to have object for.</description>
 			</attribute>
-			<attribute name="namespaceUri">
-				<description>The element namespace uri if non local.</description>
+			<attribute name="uri">
+				<description>The element namespace uri if non local parent.</description>
 			</attribute>
 		</element>
 		

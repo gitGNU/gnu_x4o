@@ -7,7 +7,7 @@
 	ModuleName:		Core Element Languag Module
 	Namespaces:		2
 	Namespace:		http://cel.x4o.org/xml/ns/cel-core
-	Created on:		Thu Dec 20 22:30:55 CET 2012
+	Created on:		Tue Jan 08 06:02:28 CET 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://cel.x4o.org/xml/ns/cel-core"
@@ -44,11 +44,11 @@
 		</choice>
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
-		<attribute name="tag" type="string"/>
+		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
-		<attribute name="schemaContentBase" type="string"/>
+		<attribute name="tag" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -81,12 +81,12 @@
 			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="name" type="string"/>
-		<attribute name="required" type="boolean"/>
+		<attribute name="objectConverter" type="string"/>
 		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="runConverters" type="boolean"/>
-		<attribute name="defaultValue" type="string"/>
-		<attribute name="objectConverter" type="string"/>
 		<attribute name="runBeanFill" type="boolean"/>
+		<attribute name="required" type="boolean"/>
+		<attribute name="defaultValue" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -107,6 +107,7 @@
 			<element name="bindingHandler" type="this:bindingHandlerType"/>
 			<element name="configurator" type="this:configuratorType"/>
 			<element name="description" type="this:descriptionType"/>
+			<element name="elementParent" type="this:elementParentType"/>
 		</choice>
 		<attribute name="interfaceClass" type="string"/>
 		<attribute name="description" type="string"/>

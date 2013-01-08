@@ -40,14 +40,12 @@ public abstract class AbstractElementClass extends AbstractElementClassBase impl
 	private Class<?> objectClass = null;
 	private Class<?> elementClass = null;
 	private Boolean autoAttributes = true;
-	private Map<String,List<String>> elementParents = null;
 	private String schemaContentBase = null;
 	private Boolean schemaContentComplex = null;
 	private Boolean schemaContentMixed = null;
 	private List<String> skipPhases = null;
 	
 	public AbstractElementClass() {
-		elementParents = new HashMap<String,List<String>>(5);
 		skipPhases = new ArrayList<String>(3);
 	}
 	
@@ -105,42 +103,6 @@ public abstract class AbstractElementClass extends AbstractElementClassBase impl
 	 */
 	public void setAutoAttributes(Boolean autoAttributes) {
 		this.autoAttributes = autoAttributes;
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementClass#addElementParent(java.lang.String,java.lang.String)
-	 */
-	public void addElementParent(String namespaceUri,String tag) {
-		if (namespaceUri==null) {
-			throw new NullPointerException("Can't add parent tag with null namespace uri.");
-		}
-		if (namespaceUri.isEmpty()) {
-			throw new IllegalArgumentException("Can't add parent tag with empty namespace uri.");
-		}
-		List<String> tags = elementParents.get(namespaceUri);
-		if (tags==null) {
-			tags = new ArrayList<String>(5);
-			elementParents.put(namespaceUri, tags);
-		}
-		tags.add(tag);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementClass#removeElementParent(java.lang.String,java.lang.String)
-	 */
-	public void removeElementParent(String namespaceUri,String tag) {
-		List<String> tags = elementParents.get(namespaceUri);
-		if (tags==null) {
-			return;
-		}
-		tags.remove(tag);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementClass#getElementParents(java.lang.String)
-	 */
-	public List<String> getElementParents(String namespaceUri) {
-		return elementParents.get(namespaceUri);
 	}
 
 	/**

@@ -130,11 +130,12 @@ public abstract class AbstractElementLanguageModule extends AbstractElementMetaB
 			throw new NullPointerException("Can't add with null id property.");
 		}
 		// Check so doc tree does not loop; see EldDocHtmlWriter.findChilderen()
+		/*
 		for (Class<?> cl:elementBindingHandler.getBindChildClasses()) {
 			if (elementBindingHandler.getBindParentClass().equals(cl)) {
 				throw new IllegalStateException("Can't add binding handler: "+elementBindingHandler.getId()+" with same parent as child class.");
 			}
-		}
+		}*/
 		logger.finer("Adding ElementBindingHandler: "+elementBindingHandler);
 		elementBindingHandlers.add(elementBindingHandler);
 	}

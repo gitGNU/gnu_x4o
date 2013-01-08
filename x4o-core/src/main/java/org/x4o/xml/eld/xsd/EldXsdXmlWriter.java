@@ -37,6 +37,7 @@ import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
+import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
@@ -127,6 +128,12 @@ public class EldXsdXmlWriter {
 										startNamespace(ns.getUri(),ns.getSchemaPrefix());
 									}
 								}
+							}
+						}
+						for (ElementInterface ei:context.findElementInterfaces(objectClass)) {
+							List<String> eiTags = ei.getElementParents(namespaceUri);
+							if (eiTags!=null) {
+								startNamespace(nsContext.getUri(),nsContext.getSchemaPrefix());
 							}
 						}
 					}
@@ -261,9 +268,10 @@ public class EldXsdXmlWriter {
 		
 		if (ec.getSchemaContentBase()==null) {
 			atts = new AttributesImpl();
-			atts.addAttribute ("", "minOccurs", "", "", "0"); // make unordered elements
+			atts.addAttribute ("", "minOccurs", "", "", "0"); // TODO: make unordered elements
 			atts.addAttribute ("", "maxOccurs", "", "", "unbounded");
 			xmlWriter.startElement (SCHEMA_URI, "choice", "", atts);
+			
 			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					writeElementClassNamespaces(ec,nsWrite,ns);
@@ -361,27 +369,36 @@ public class EldXsdXmlWriter {
 		}
 	}
 	
-	private void writeElementClassNamespaces(ElementClass ec,ElementNamespaceContext nsWrite,ElementNamespaceContext ns) throws SAXException {
+	private void writeElementClassNamespaces(ElementClass ecWrite,ElementNamespaceContext nsWrite,ElementNamespaceContext ns) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		List<String> refElements = new ArrayList<String>(20);
 		for (ElementClass checkClass:ns.getElementClasses()) {
 			List<String> parents = checkClass.getElementParents(nsWrite.getUri());
-			if (parents!=null && parents.contains(ec.getTag())) {
+			if (parents!=null && parents.contains(ecWrite.getTag())) {
 				refElements.add(checkClass.getTag());
-			}
-			if (ec.getObjectClass()==null) {
 				continue;
 			}
 			if (checkClass.getObjectClass()==null) {
 				continue;
 			}
-			Class<?> objectClass = ec.getObjectClass();
+			for (ElementInterface ei:context.findElementInterfaces(checkClass.getObjectClass())) {
+				parents = ei.getElementParents(nsWrite.getUri());
+				if (parents!=null && parents.contains(ecWrite.getTag())) {
+					refElements.add(checkClass.getTag());
+					break;
+				}
+			}
+			if (ecWrite.getObjectClass()==null) {
+				continue;
+			}
+			Class<?> objectClass = ecWrite.getObjectClass();
 			Class<?> checkObjectClass = checkClass.getObjectClass();
 			List<ElementBindingHandler> b = context.findElementBindingHandlers(objectClass,checkObjectClass);
 			if (b.isEmpty()==false) {
 				refElements.add(checkClass.getTag());
 			}
 		}
+		
 		if (refElements.isEmpty()==false) {
 			Set<String> s = new HashSet<String>(refElements.size());
 			s.addAll(refElements);

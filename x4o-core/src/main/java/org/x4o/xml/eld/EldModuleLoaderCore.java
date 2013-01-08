@@ -294,6 +294,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		
 		ec = new DefaultElementClass("elementParent",null,ElementClassAddParentElement.class);
 		ec.addElementParent(CEL_CORE_URI, "element");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
 		try {
 			attr = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguageConfiguration().getDefaultElementClassAttribute());
 			attr.setName("tag");

@@ -298,7 +298,6 @@ public class EldDocHtmlWriter {
 		if (node.indent>20) {
 			return result; // hard fail limit
 		}
-		
 		for (ElementLanguageModule mod:node.context.getElementLanguageModules()) {
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 				for (ElementClass ec:ns.getElementClasses()) {
@@ -313,7 +312,25 @@ public class EldDocHtmlWriter {
 						n.indent=node.indent+1;
 						n.parent=node;
 					} else {
-						if (node.elementClass.getObjectClass()==null | ec.getObjectClass()==null) {
+						if (ec.getObjectClass()==null) {
+							continue;
+						}
+						// Check interfaces of child , and see if parent tag is there.
+						for (ElementInterface ei:node.context.findElementInterfaces(ec.getObjectClass())) {
+							List<String> eiTags = ei.getElementParents(node.namespace.getUri());
+							if (eiTags!=null && eiTags.contains(node.elementClass.getTag())) {
+								n = new TreeNode();
+								n.context=node.context;
+								n.module=mod;
+								n.namespace=ns;
+								n.elementClass=ec;
+								n.indent=node.indent+1;
+								n.parent=node;
+								break;
+							}
+						}
+						
+						if (node.elementClass.getObjectClass()==null) {
 							continue;
 						}
 						List<ElementBindingHandler> binds = node.context.findElementBindingHandlers(node.elementClass.getObjectClass(), ec.getObjectClass());
@@ -372,7 +389,25 @@ public class EldDocHtmlWriter {
 					}
 				}
 				for (ElementClass ec:ns.getElementClasses()) {
-					if (node.elementClass.getObjectClass()==null | ec.getObjectClass()==null) {
+					if (ec.getObjectClass()==null) {
+						continue;
+					}
+					// Check interfaces of child , and see if parent tag is there.
+					for (ElementInterface ei:node.context.findElementInterfaces(ec.getObjectClass())) {
+						List<String> eiTags = ei.getElementParents(node.namespace.getUri());
+						if (eiTags!=null && eiTags.contains(node.elementClass.getTag())) {
+							n = new TreeNode();
+							n.context=node.context;
+							n.module=mod;
+							n.namespace=ns;
+							n.elementClass=ec;
+							n.indent=node.indent+1;
+							n.parent=node;
+							result.add(n);
+							break;
+						}
+					}
+					if (node.elementClass.getObjectClass()==null) {
 						continue;
 					}
 					List<ElementBindingHandler> binds = node.context.findElementBindingHandlers(ec.getObjectClass(),node.elementClass.getObjectClass());
