@@ -53,13 +53,19 @@ public interface Element {
 		/** The xml comments in xml. */
 		comment,
 		
-		/** ignorableWhitespace in xml */
+		/** ignorableWhitespace in xml. */
 		ignorableWhitespace,
 		
-		/** Receive raw sax event on elementObject */
+		/** Receive raw sax event on elementObject. */
 		overrideSax;
 		
-		static public List<Element> filterElements(List<Element> elements,ElementType elementType) {
+		/**
+		 * Filters the given elments list to elementType.
+		 * @param elements	The elements to filter.
+		 * @param elementType	The elementType to filter on.
+		 * @return	Always returns List of Elements of filter type. 
+		 */
+		public static List<Element> filterElements(List<Element> elements,ElementType elementType) {
 			List<Element> result = new ArrayList<Element>(3);
 			for (int i=0;i<elements.size();i++) {
 				Element element = elements.get(i);
@@ -73,16 +79,19 @@ public interface Element {
 	
 	/**
 	 * This method is fired when the end xml tag is parsed.
+	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void doElementEnd() throws ElementException;
 	
 	/**
 	 * This method is fired when the start of xml tag is parsed.
+	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void doElementStart() throws ElementException;
 
 	/**
 	 * This method is fired only once in the run phase.
+	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void doElementRun() throws ElementException;
 	
@@ -103,6 +112,7 @@ public interface Element {
 	/**
 	 * This method get called when this Element object is not needed anymore.<br>
 	 * Can be used to close resources.
+	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void release() throws ElementException;
 	
@@ -135,19 +145,21 @@ public interface Element {
 	/**
 	 * Sets the body texts on an event based system.
 	 * @param body	The body text.
+	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void doCharacters(String body) throws ElementException;
 	
 	/**
 	 * Sets the comment texts on an event based system.
 	 * @param comment	The comment text.
+	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void doComment(String comment) throws ElementException;
 	
 	/**
 	 * Is called when there is whitespace in xml.
 	 * @param space	The space.
-	 * @throws ElementException
+	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void doIgnorableWhitespace(String space) throws ElementException; 
 	

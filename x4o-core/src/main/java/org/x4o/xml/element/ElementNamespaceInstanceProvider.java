@@ -24,9 +24,7 @@
 package org.x4o.xml.element;
 
 /**
- * Provides elements from tag.<br>
- * And ElementClass from a tag.<br>
- * 
+ * ElementNamespaceInstanceProvider is provider for creating new Element instances for an xml tag.<br>
  * 
  * @author Willem Cazander
  * @version 1.0 Jul 8, 2006
@@ -34,23 +32,18 @@ package org.x4o.xml.element;
 public interface ElementNamespaceInstanceProvider {
 	
 	/**
-	 * Starts the ElementProvider
-	 * @throws ElementLanguageModuleLoaderException
+	 * Starts the ElementProvider.
+	 * @param elementLanguage The ElementLanguage to start in.
+	 * @param elementNamespaceContext The ElementNamespaceContext to start for.
+	 * @throws ElementNamespaceInstanceProviderException	Thrown when error happened in language.
 	 */
 	void start(ElementLanguage elementLanguage,ElementNamespaceContext elementNamespaceContext) throws ElementNamespaceInstanceProviderException;
 	
 	/**
-	 * Provide an Element for an tag
-	 * @param tag   The xml tag 
-	 * @return  An Element
-	 * @throws ElementLanguageModuleLoaderException
+	 * Provide an Element for an xml tag.
+	 * @param tag   The xml tag to create instance for.
+	 * @return An new Element instance.
+	 * @throws ElementNamespaceInstanceProviderException	Thrown when error happened in language.
 	 */
 	Element createElementInstance(String tag) throws ElementNamespaceInstanceProviderException;
-	
-	/*
-	 * Sets the debug writer
-	 * @param debugWriter
-	 *
-	void setX4ODebugWriter(X4OParserDebugWriter debugWriter);
-	 */
 }

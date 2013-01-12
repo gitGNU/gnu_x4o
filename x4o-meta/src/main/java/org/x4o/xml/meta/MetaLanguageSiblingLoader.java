@@ -48,6 +48,7 @@ public class MetaLanguageSiblingLoader implements ElementLanguageModuleLoaderSib
 	 * Loads an ElementLanguageModule.
 	 * @param elementLanguage	The ElementLanguage to load for.
 	 * @param elementLanguageModule	The ElementLanguageModule to load into.
+	 * @throws ElementLanguageModuleLoaderException Is thrown when meta language could not be loaded.
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
 	 */
 	public void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {

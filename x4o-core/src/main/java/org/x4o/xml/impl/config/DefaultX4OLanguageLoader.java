@@ -52,7 +52,7 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- * Loads the namepsace defintions of language and create needed providers into the context.
+ * DefaultX4OLanguageLoader loads the modules of language.
  * 
  * @author Willem Cazander
  * @version 1.0 28 Oct 2009
@@ -62,11 +62,19 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 	private Logger logger = null;
 	protected List<Map<String,Map<String,String>>> modulesAll = null;
 	
+	/**
+	 * Creates the DefaultX4OLanguageLoader.
+	 */
 	public DefaultX4OLanguageLoader() {
 		logger = Logger.getLogger(DefaultX4OLanguageLoader.class.getName());
 		modulesAll = new ArrayList<Map<String,Map<String,String>>>(20);
 	}
 	
+	/**
+	 * Write log message to debug writer.
+	 * @param elementLanguage	The elementLanguage we are loading.
+	 * @param message	The message to log to the debug output.
+	 */
 	private void logMessage(ElementLanguage elementLanguage,String message) {
 		logger.finest(message);
 		if (elementLanguage.getLanguageConfiguration().hasX4ODebugWriter()) {
@@ -154,7 +162,9 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 	}
 
 	/**
-	 * Loads all modules of an language
+	 * Loads all modules of an language.
+	 * @param elementLanguage	The ElementLanguage to load for.
+	 * @param language The language to load.
 	 */
 	protected void loadLanguageModules(ElementLanguage elementLanguage,String language) throws IOException, SAXException {
 		StringBuilder buf = new StringBuilder(150);
@@ -182,7 +192,7 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 	}
 	
 	/**
-	 * Parser xml inputstream to languge modules
+	 * Parser xml inputstream to languge modules.
 	 * @param in	The inputstream to parser.
 	 * @throws IOException
 	 * @throws SAXException

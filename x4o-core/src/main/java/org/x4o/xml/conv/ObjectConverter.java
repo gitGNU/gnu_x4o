@@ -50,7 +50,7 @@ public interface ObjectConverter extends Cloneable,Serializable {
 	 * @param obj		The object to convert.
 	 * @param locale	The Object convert locale if needed.
 	 * @return Returns the converted object.
-	 * @throws ObjectConverterException
+	 * @throws ObjectConverterException	When the conversion failes.
 	 */
 	Object convertTo(Object obj,Locale locale) throws ObjectConverterException;
 	
@@ -59,7 +59,7 @@ public interface ObjectConverter extends Cloneable,Serializable {
 	 * @param obj		The object to convert.
 	 * @param locale	The Object convert locale if needed.
 	 * @return Returns the converted object.
-	 * @throws ObjectConverterException
+	 * @throws ObjectConverterException	When the conversion failes.
 	 */
 	Object convertBack(Object obj,Locale locale) throws ObjectConverterException;
 	

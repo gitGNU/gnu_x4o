@@ -37,27 +37,31 @@ import org.x4o.xml.conv.ObjectConverter;
 public interface ElementClassAttribute extends ElementMetaBase {
 		
 	/**
-	 * Gets the attribute name which this ElementAttributeConverter handlers
+	 * Gets the attribute name of the ElementClass.
+	 * @return The name.
 	 */
 	String getName();
 	
 	/**
-	 * Sets the attribute name which this ElementAttributeConverter handlers
+	 * Sets the attribute name of the ElementClass.
+	 * @param name	The name of the attribute.
 	 */
 	void setName(String name);
 	
 	/**
-	 * Gets the ObjectConverter
+	 * Gets the ObjectConverter.
+	 * @return The ObjectConverter.
 	 */
 	ObjectConverter getObjectConverter();
 	
 	/**
-	 * Add the ObjectConverter whichs converts 
+	 * Add the ObjectConverter whichs converts.
+	 * @param	objectConverter	The objectConverter to set for this attribute.
 	 */
 	void setObjectConverter(ObjectConverter objectConverter);
 	
 	/**
-	 * Sets the defaultValue of this attribute
+	 * Sets the defaultValue of this attribute.
 	 * @param defaultValue	The defaultValue to set.
 	 */
 	void setDefaultValue(Object defaultValue);
@@ -87,42 +91,44 @@ public interface ElementClassAttribute extends ElementMetaBase {
 	List<String> getAttributeAliases();
 	
 	/**
-	 * @return the required
+	 * Gets the required state of this attribute.
+	 * @return If true then attribute is required.
 	 */
 	Boolean getRequired();
 
 	/**
-	 * @param required the required to set
+	 * Sets the required state of this attribute.
+	 * @param required the required to set.
 	 */
 	void setRequired(Boolean required);
 	
 	/**
-	 * @return the runResolveEL
+	 * @return the runResolveEL.
 	 */
 	Boolean getRunResolveEL();
 
 	/**
-	 * @param runResolveEL the runResolveEL to set
+	 * @param runResolveEL the runResolveEL to set.
 	 */
 	void setRunResolveEL(Boolean runResolveEL);
 
 	/**
-	 * @return the runConverters
+	 * @return the runConverters.
 	 */
 	Boolean getRunConverters();
 
 	/**
-	 * @param runConverters the runConverters to set
+	 * @param runConverters the runConverters to set.
 	 */
 	void setRunConverters(Boolean runConverters);
 
 	/**
-	 * @return the runBeanFill
+	 * @return the runBeanFill.
 	 */
 	Boolean getRunBeanFill();
 
 	/**
-	 * @param runBeanFill the runBeanFill to set
+	 * @param runBeanFill the runBeanFill to set.
 	 */
 	void setRunBeanFill(Boolean runBeanFill);
 }

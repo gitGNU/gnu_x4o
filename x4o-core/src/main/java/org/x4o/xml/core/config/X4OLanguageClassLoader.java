@@ -32,6 +32,12 @@ package org.x4o.xml.core.config;
 public class X4OLanguageClassLoader {
 	
 	/**
+	 * Made X4OLanguageClassLoader have private constructor.
+	 */
+	private X4OLanguageClassLoader() {
+	}
+	
+	/**
 	 * Gets the thread classloader or the normal classloader.
 	 * @return	Returns the ClassLoader.
 	 */

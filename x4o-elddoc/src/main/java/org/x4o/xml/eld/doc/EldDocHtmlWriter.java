@@ -315,7 +315,7 @@ public class EldDocHtmlWriter {
 						if (ec.getObjectClass()==null) {
 							continue;
 						}
-						// Check interfaces of child , and see if parent tag is there.
+						// Check interfaces of parent , and see if child tag is there.
 						for (ElementInterface ei:node.context.findElementInterfaces(ec.getObjectClass())) {
 							List<String> eiTags = ei.getElementParents(node.namespace.getUri());
 							if (eiTags!=null && eiTags.contains(node.elementClass.getTag())) {
@@ -356,10 +356,10 @@ public class EldDocHtmlWriter {
 	
 	private boolean isInTree(TreeNode node,TreeNode checkNode) {
 		
-		if (node.namespace.getUri().equals(checkNode.namespace.getUri())) {
-			if (node.elementClass.getTag().equals(checkNode.elementClass.getTag())) {
-				return true;
-			}
+		if (	node.namespace.getUri().equals(checkNode.namespace.getUri()) &&
+				node.elementClass.getTag().equals(checkNode.elementClass.getTag())
+			) {
+			return true;
 		}
 		if (node.parent!=null) {
 			return isInTree(node.parent,checkNode);
@@ -389,23 +389,26 @@ public class EldDocHtmlWriter {
 					}
 				}
 				for (ElementClass ec:ns.getElementClasses()) {
+
+					// Check interfaces of parent , and see if child tag is there.
+					if (node.elementClass.getObjectClass()!=null) {
+						for (ElementInterface ei:node.context.findElementInterfaces(node.elementClass.getObjectClass())) {
+							List<String> eiTags = ei.getElementParents(ns.getUri());
+							if (eiTags!=null && eiTags.contains(ec.getTag())) {
+								n = new TreeNode();
+								n.context=node.context;
+								n.module=mod;
+								n.namespace=ns;
+								n.elementClass=ec;
+								n.indent=node.indent+1;
+								n.parent=node;
+								result.add(n);
+								break;
+							}
+						}
+					}
 					if (ec.getObjectClass()==null) {
 						continue;
-					}
-					// Check interfaces of child , and see if parent tag is there.
-					for (ElementInterface ei:node.context.findElementInterfaces(ec.getObjectClass())) {
-						List<String> eiTags = ei.getElementParents(node.namespace.getUri());
-						if (eiTags!=null && eiTags.contains(node.elementClass.getTag())) {
-							n = new TreeNode();
-							n.context=node.context;
-							n.module=mod;
-							n.namespace=ns;
-							n.elementClass=ec;
-							n.indent=node.indent+1;
-							n.parent=node;
-							result.add(n);
-							break;
-						}
 					}
 					if (node.elementClass.getObjectClass()==null) {
 						continue;

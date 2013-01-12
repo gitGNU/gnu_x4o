@@ -42,11 +42,20 @@ public class X4OELResolver extends ELResolver {
 	private ELResolver delegate = null;
 	private Map<Object,Object> objectStore = null;
 	
+	/**
+	 * Creates X4OELResolver which is backed by the objectStore.
+	 * @param objectStore	The objectStore.
+	 */
 	public X4OELResolver(Map<Object, Object> objectStore) {
 		this.objectStore = objectStore;
 		delegate = new MapELResolver();
 	}
 	
+	/**
+	 * Checks if base object is null and else return objectStore.
+	 * @param base	The base object to check.
+	 * @return	Returns the base object or objectStore.
+	 */
 	private Object checkBase(Object base) {
 		if (base==null) {
 			return objectStore;

@@ -23,12 +23,17 @@
 
 package org.x4o.xml.eld;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Logger;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementLanguageModuleLoader;
 import org.x4o.xml.element.ElementLanguageModuleLoaderException;
+import org.xml.sax.SAXException;
 
 /**
  * De default X4OElementConfigurator.
@@ -60,6 +65,7 @@ public class EldModuleLoader implements ElementLanguageModuleLoader {
 	 * Loads the ELD language into the module.
 	 * @param elementLanguage The langauge to load for.
 	 * @param elementLanguageModule The module to load it in.
+	 * @throws ElementLanguageModuleLoaderException When eld language could not be loaded.
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
 	 */
 	public void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
@@ -67,7 +73,17 @@ public class EldModuleLoader implements ElementLanguageModuleLoader {
 		try {
 			EldParser parser = new EldParser(elementLanguage,elementLanguageModule,isEldCore);
 			parser.parseResource(eldResource);
-		} catch (Exception e) {
+		} catch (FileNotFoundException e) {
+			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+		} catch (SecurityException e) {
+			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+		} catch (NullPointerException e) {
+			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+		} catch (ParserConfigurationException e) {
+			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+		} catch (SAXException e) {
+			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+		} catch (IOException e) {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		}
 	}

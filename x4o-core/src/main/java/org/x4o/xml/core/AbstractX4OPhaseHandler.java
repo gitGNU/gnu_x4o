@@ -31,7 +31,7 @@ import org.x4o.xml.element.ElementLanguage;
 
 
 /**
- * An base class for creating X4OPhaseHandlers.
+ * AbstractX4OPhaseHandler a base class for creating a phase handler.
  * 
  * @author Willem Cazander
  * @version 1.0 Dec 31, 2008
@@ -39,38 +39,73 @@ import org.x4o.xml.element.ElementLanguage;
 public abstract class AbstractX4OPhaseHandler implements X4OPhaseHandler {
 
 	protected X4OPhase phase = null;
-	protected List<X4OPhaseListener> X4OPhaseListeners = null;
+	protected List<X4OPhaseListener> phaseListeners = null;
 	
+	/**
+	 * Creates the AbstractX4OPhaseHandler.
+	 */
 	public AbstractX4OPhaseHandler() {
-		X4OPhaseListeners = new ArrayList<X4OPhaseListener>(3);
+		phaseListeners = new ArrayList<X4OPhaseListener>(3);
 		setX4OPhase();
 	}
 	
 	/**
-	 * Is called from constuctor
+	 * Is called from constructor.
 	 */
 	abstract protected void setX4OPhase();
 	
+	/**
+	 * Gets the current phase.
+	 * @return The current phase.
+	 */
 	public X4OPhase getX4OPhase() {
 		return phase;
 	}
 
-	public List<X4OPhaseListener> getX4OPhaseListeners() {
-		return X4OPhaseListeners;
+	/**
+	 * Gets the phase listeners.
+	 * @return	The x4o phase listeners.
+	 */
+	public List<X4OPhaseListener> getPhaseListeners() {
+		return phaseListeners;
 	}
+	
+	/**
+	 * Adds a phase listener.
+	 * @param listener The phase listener to add.
+	 */
 	public void addPhaseListener(X4OPhaseListener listener) {
-		X4OPhaseListeners.add(listener);
+		phaseListeners.add(listener);
 	}
+	
+	/**
+	 * Removed a phase listener.
+	 * @param listener The phase listener to remove.
+	 */
 	public void removePhaseListener(X4OPhaseListener listener) {
-		X4OPhaseListeners.remove(listener);
+		phaseListeners.remove(listener);
 	}
 
+	/**
+	 * If returns true then this handler will run on all elements. 
+	 * @return defaults to true.
+	 */
 	public boolean isElementPhase() {
 		return true;
 	}
 
+	/**
+	 * Abstract method.
+	 * @param element The element to run phase for.
+	 * @throws X4OPhaseException when phase has error.
+	 */
 	abstract public void runElementPhase(Element element) throws X4OPhaseException;
 
+	/**
+	 * Empty method.
+	 * @param elementLanguage The language to run phase for.
+	 * @throws X4OPhaseException when phase has error.
+	 */
 	public void runPhase(ElementLanguage elementLanguage) throws X4OPhaseException {
 	}
 }

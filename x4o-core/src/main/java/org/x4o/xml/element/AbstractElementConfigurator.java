@@ -38,13 +38,14 @@ public abstract class AbstractElementConfigurator extends AbstractElementMetaBas
 	/**
 	 * Defaults to false.
 	 * @see org.x4o.xml.element.ElementConfigurator#isConfigAction()
+	 * @return True if set to configAction
 	 */
 	public boolean isConfigAction() {
 		return configAction;
 	}
 	
 	/**
-	 * Sets the configAction
+	 * Sets the configAction.
 	 * @param configAction	The configAction to set.
 	 */
 	public void setConfigAction(boolean configAction) {

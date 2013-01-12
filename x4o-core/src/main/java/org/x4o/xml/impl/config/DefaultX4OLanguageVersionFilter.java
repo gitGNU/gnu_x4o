@@ -38,6 +38,9 @@ public class DefaultX4OLanguageVersionFilter implements X4OLanguageVersionFilter
 	/**
 	 * Filters to the best version.
 	 * @see org.x4o.xml.core.config.X4OLanguageVersionFilter#filterVersion(java.lang.String, java.util.List)
+	 * @return The perfect or best match or null if no match for requested language.
+	 * @param requestVersion	The language version to search for.
+	 * @param versions The list of version to search in.
 	 */
 	public String filterVersion(String requestVersion, List<String> versions) {
 		for (int i=0;i<versions.size();i++) {

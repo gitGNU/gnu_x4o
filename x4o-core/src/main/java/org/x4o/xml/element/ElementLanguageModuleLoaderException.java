@@ -23,11 +23,8 @@
 
 package	org.x4o.xml.element;
 
-
 /**
- * ElementNamespaceLoaderException.<br>
- * 
- * 
+ * ElementNamespaceLoaderException holds ElementLanguageModuleLoader which created the exception.<br>
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 29, 2008
@@ -37,16 +34,31 @@ public class ElementLanguageModuleLoaderException extends ElementException {
 	
 	private ElementLanguageModuleLoader elementLanguageModuleLoader = null;
 	
+	/**
+	 * Creates module loader exception. 
+	 * @param elementLanguageModuleLoader	The loader module which creates this exception.
+	 * @param message	The message of the exception.
+	 */
 	public ElementLanguageModuleLoaderException(ElementLanguageModuleLoader elementLanguageModuleLoader,String message) {
 		super(message);
 		this.elementLanguageModuleLoader=elementLanguageModuleLoader;
 	}
 	
+	/**
+	 * Creates module loader exception. 
+	 * @param elementLanguageModuleLoader	The loader module which creates this exception.
+	 * @param message	The message of the exception.
+	 * @param exception	The root cause of the exception.
+	 */
 	public ElementLanguageModuleLoaderException(ElementLanguageModuleLoader elementLanguageModuleLoader,String message,Exception exception) {
 		super(message,exception);
 		this.elementLanguageModuleLoader=elementLanguageModuleLoader;
 	}
 	
+	/**
+	 * Returns the module loader which created the exception.
+	 * @return Returns the module loader.
+	 */
 	public ElementLanguageModuleLoader getElementProvider() {
 		return elementLanguageModuleLoader;
 	}

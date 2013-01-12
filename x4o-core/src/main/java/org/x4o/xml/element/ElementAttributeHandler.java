@@ -41,25 +41,25 @@ public interface ElementAttributeHandler extends ElementConfigurator {
 	
 	/**
 	 * Sets the attribute name this attribute handler handles.
-	 * @param attributeName
+	 * @param attributeName	The attribute to handle.
 	 */
 	void setAttributeName(String attributeName);
 	
 	/**
 	 * Adds an NextAttribute.
 	 * There next attributes will defines the order in which the ElementAttributeHandlers are executed.
-	 * @param attribute
+	 * @param attribute	Add attribute which be will processed after this one.
 	 */
 	void addNextAttribute(String attribute);
 
 	/**
-	 * Removes an next attribute
-	 * @param attribute
+	 * Removes an next attribute.
+	 * @param attribute	Removes this next attribute.
 	 */
 	void removeNextAttribute(String attribute); 
 	
 	/**
-	 * Get all next attributes
+	 * Get all next attributes.
 	 * @return	Returns the list of all next attributes.
 	 */
 	List<String> getNextAttributes();

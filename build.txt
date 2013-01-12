@@ -48,7 +48,7 @@ note: the do 'install' is because of circle plugins.
 cd project-root/;
 mvn clean package;
 mvn -B -Dusername=<scm_username> clean install release:clean release:prepare release:perform;
-src/build/gnu-up.sh <scm_username> <version>
+src/main/build/gnu-up.sh <scm_username> <version>
 
 
 -- Make site --

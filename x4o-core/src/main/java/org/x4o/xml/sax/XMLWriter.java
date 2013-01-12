@@ -55,10 +55,19 @@ public class XMLWriter extends DefaultHandler2 {
 	private StringBuffer startElement = null;
 	private boolean printedReturn = false;
 
+	/**
+	 * Creates XmlWriter which prints to the Writer interface.
+	 * @param out	The writer to print the xml to.
+	 */
 	public XMLWriter(Writer out) {
 		this.out = out;
 	}
 
+	/**
+	 * Creates XmlWriter which prints to the OutputStream interface.
+	 * @param out	The OutputStream to write to.
+	 * @throws UnsupportedEncodingException	Is thrown when UTF-8 can't we printed.
+	 */
 	public XMLWriter(OutputStream out) throws UnsupportedEncodingException {
 		this.out = new OutputStreamWriter(out, "UTF-8");
 	}
@@ -89,6 +98,10 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 
 	/**
+	 * @param uri	The xml namespace uri.
+	 * @param localName	The local name of the xml tag.
+	 * @param name The (full) name of the xml tag.
+	 * @param atts The attributes of the xml tag. 
 	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override
@@ -219,6 +232,9 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 	
 	/**
+	 * @param uri	The xml namespace uri.
+	 * @param localName	The local name of the xml tag.
+	 * @param name The (full) name of the xml tag.
 	 * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -265,6 +281,9 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 		
 	/**
+	 * Starts the prefix mapping of an xml namespace uri.
+	 * @param prefix	The xml prefix of this xml namespace uri.
+	 * @param uri	The xml namespace uri to add the prefix for.
 	 * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -273,6 +292,7 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 	
 	/**
+	 * @param prefix	The xml prefix of this xml namespace uri to be ended.
 	 * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
 	 */
 	@Override
@@ -294,6 +314,12 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 
 	/**
+	 * Prints xml characters.
+	 * 
+	 * @param ch	Character buffer.
+	 * @param start The start index of the chars in the ch buffer.
+	 * @param length The length index of the chars in the ch buffer.
+	 * @throws SAXException When IOException has happend while printing.
 	 * @see org.xml.sax.ContentHandler#characters(char[], int, int)
 	 */
 	@Override
@@ -319,6 +345,12 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 	
 	/**
+	 * Prints xml ignorable whitespace.
+	 * 
+	 * @param ch	Character buffer.
+	 * @param start The start index of the chars in the ch buffer.
+	 * @param length The length index of the chars in the ch buffer.
+	 * @throws SAXException When IOException has happend while printing.
 	 * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
 	 */
 	@Override
@@ -335,7 +367,11 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 
 	/**
+	 * Prints xml instructions.
+	 * 
 	 * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
+	 * @param target The target.
+	 * @param data The data. 
 	 */
 	@Override
 	public void processingInstruction(String target, String data) throws SAXException {
@@ -348,14 +384,20 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 
 	/**
+	 * Not implemented.
+	 * 
 	 * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
+	 * @param locator The DocumentLocator to set.
 	 */
 	@Override
 	public void setDocumentLocator(Locator locator) {
 	}
 
 	/**
+	 * Not implemented.
+	 * 
 	 * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
+	 * @param name The name of the skipped entity.
 	 */
 	@Override
 	public void skippedEntity(String name) throws SAXException {
@@ -363,6 +405,12 @@ public class XMLWriter extends DefaultHandler2 {
 	}
 
 	/**
+	 * Prints xml comment.
+	 * 
+	 * @param ch	Character buffer.
+	 * @param start The start index of the chars in the ch buffer.
+	 * @param length The length index of the chars in the ch buffer.
+	 * @throws SAXException When IOException has happend while printing.
 	 * @see org.xml.sax.ext.DefaultHandler2#comment(char[], int, int)
 	 */
 	@Override
@@ -387,6 +435,10 @@ public class XMLWriter extends DefaultHandler2 {
 		}
 	}
 
+	/**
+	 * Indent the output writer with tabs by indent count.
+	 * @throws IOException	When prints gives exception.
+	 */
 	private void indent() throws IOException {
 		for (int i = 0; i < indent; i++) {
 			out.write('\t');

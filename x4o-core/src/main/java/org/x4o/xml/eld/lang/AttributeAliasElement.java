@@ -36,7 +36,9 @@ import org.x4o.xml.element.ElementException;
 public class AttributeAliasElement extends AbstractElement {
 
 	/**
+	 * Add the xml attribute 'name' to ElementClassAttribute as attribute alias.
 	 * @see org.x4o.xml.element.AbstractElement#doElementEnd()
+	 * @throws ElementException When name attribute is not set or when parent element object is not ElementClassAttribute interface.
 	 */
 	@Override
 	public void doElementEnd() throws ElementException {

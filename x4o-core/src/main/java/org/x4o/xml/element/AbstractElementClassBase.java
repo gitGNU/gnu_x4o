@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An AbstractElementClassBase.
+ * AbstractElementClassBase provides basic element meta class support.
  * 
  * @author Willem Cazander
  * @version 1.0 Jan 19, 2012
@@ -56,31 +56,40 @@ public abstract class AbstractElementClassBase extends AbstractElementMetaBase i
 
 	/**
 	 * @see ElementClass#addElementConfigurators(ElementConfigurator)
+	 * @param elementConfigurator The ElementConfigurator to add.
 	 */
 	public void addElementConfigurators(ElementConfigurator elementConfigurator) {
 		elementConfigurators.add(elementConfigurator);
 	}
 
 	/**
+	 * @param elementClassAttribute The ElementClassAttribute to add.
 	 */
 	public void addElementClassAttribute(ElementClassAttribute elementClassAttribute) {
 		elementClassAttributes.put(elementClassAttribute.getName(),elementClassAttribute);
 	}
 	
 	/**
+	 * @return All the element attributes.
 	 */
 	public Collection<ElementClassAttribute> getElementClassAttributes() {
 		return elementClassAttributes.values();
 	}
 	
 	/**
+	 * Get the ElementClassAttribute from its name. 
+	 * @param attributeName The attribute name.
+	 * @return The element class attribute for the name.
 	 */
 	public ElementClassAttribute getElementClassAttributeByName(String attributeName) {
 		return elementClassAttributes.get(attributeName);
 	}
 	
 	/**
+	 * Adds parent tag.
 	 * @see org.x4o.xml.element.ElementClassBase#addElementParent(java.lang.String,java.lang.String)
+	 * @param namespaceUri The namespace uri of the parent tag.
+	 * @param tag The tag of the parent of this tag.
 	 */
 	public void addElementParent(String namespaceUri,String tag) {
 		if (namespaceUri==null) {
@@ -98,7 +107,10 @@ public abstract class AbstractElementClassBase extends AbstractElementMetaBase i
 	}
 
 	/**
+	 * Removes parent tag.
 	 * @see org.x4o.xml.element.ElementClassBase#removeElementParent(java.lang.String,java.lang.String)
+	 * @param namespaceUri The namespace uri of the parent tag.
+	 * @param tag The tag of the parent of this tag.
 	 */
 	public void removeElementParent(String namespaceUri,String tag) {
 		List<String> tags = elementParents.get(namespaceUri);
@@ -109,7 +121,10 @@ public abstract class AbstractElementClassBase extends AbstractElementMetaBase i
 	}
 
 	/**
+	 * Returns the parent per namespace uri.
 	 * @see org.x4o.xml.element.ElementClassBase#getElementParents(java.lang.String)
+	 * @param namespaceUri The namespace uri to gets the parents of.
+	 * @return List of parent tags of requested parent namespace uri.
 	 */
 	public List<String> getElementParents(String namespaceUri) {
 		return elementParents.get(namespaceUri);

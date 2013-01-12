@@ -24,9 +24,7 @@
 package	org.x4o.xml.element;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * An AbstractElementClass.

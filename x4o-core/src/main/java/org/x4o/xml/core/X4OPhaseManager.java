@@ -34,8 +34,8 @@ import org.x4o.xml.element.ElementLanguage;
 
 
 /**
- * X4OPhaseManager stores the X4OPhaseHandler and puts them in the right order
- * and will execute the phases when runPhases is called.
+ * X4OPhaseManager stores the X4OPhaseHandler and puts them in the right order.
+ * And will execute the phases when runPhases is called.
  * 
  * @author Willem Cazander
  * @version 1.0 Jan 6, 2008
@@ -51,7 +51,8 @@ public class X4OPhaseManager {
 	private boolean skipSiblingsPhase = false;
 	
 	/**
-	 * Local package constuctor
+	 * Local package constructor.
+	 * @param elementLanguage The ElementLanguage to run the phases on.
 	 */
 	public X4OPhaseManager(ElementLanguage elementLanguage) {
 		if (elementLanguage==null) {
@@ -107,7 +108,7 @@ public class X4OPhaseManager {
 
 	/**
 	 * Runs all the phases in the right order.
-	 * @throws X4OPhaseException
+	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
 	public void runPhases() throws X4OPhaseException {
 
@@ -136,7 +137,7 @@ public class X4OPhaseManager {
 			elementLanguage.setCurrentX4OPhase(phaseHandler.getX4OPhase());
 			 
 			// run listeners
-			for (X4OPhaseListener l:phaseHandler.getX4OPhaseListeners()) {
+			for (X4OPhaseListener l:phaseHandler.getPhaseListeners()) {
 				l.preRunPhase(phaseHandler, elementLanguage);
 			}
 			
@@ -149,7 +150,7 @@ public class X4OPhaseManager {
 				executePhaseElement(phaseHandler);
 			} finally {
 				// run the listeners again
-				for (X4OPhaseListener l:phaseHandler.getX4OPhaseListeners()) {
+				for (X4OPhaseListener l:phaseHandler.getPhaseListeners()) {
 					l.endRunPhase(phaseHandler, elementLanguage);
 				}
 			}
@@ -160,6 +161,12 @@ public class X4OPhaseManager {
 		}
 	}
 	
+	/**
+	 * Runs phase on single element.
+	 * @param e	The Element to process.
+	 * @param p	The phase to run.
+	 * @throws X4OPhaseException When a running handlers throws one.
+	 */
 	public void runPhasesForElement(Element e,X4OPhase p) throws X4OPhaseException {
 		
 		// sort for the order
@@ -190,6 +197,10 @@ public class X4OPhaseManager {
 		}
 	}
 	
+	/**
+	 * Run release phase manual if auto release is disabled by config.
+	 * @throws X4OPhaseException When a running handlers throws one.
+	 */
 	public void doReleasePhaseManual() throws X4OPhaseException {
 		if (skipReleasePhase==false) {
 			throw new IllegalStateException("No manual release requested.");
@@ -266,6 +277,11 @@ public class X4OPhaseManager {
 		
 	}
 
+	/**
+	 * Execute element phase handler on full tree. 
+	 * @param phase	The phase to run.
+	 * @throws X4OPhaseException When a running handlers throws one.
+	 */
 	private void executePhaseElement(X4OPhaseHandler phase) throws X4OPhaseException {
 		if (elementLanguage.getRootElement()==null) {
 			return;
@@ -274,10 +290,10 @@ public class X4OPhaseManager {
 	}
 	
 	/**
-	 * todo: rewrite to itterator for big deep trees
+	 * todo: rewrite to itterator for big deep trees.
 	 * 
-	 * @param element
-	 * @param phase
+	 * @param element	The element in the tree.
+	 * @param phase	The phase to run.
 	 * @throws X4OPhaseException
 	 */
 	private void executePhaseTree(Element element,X4OPhaseHandler phase) throws X4OPhaseException {

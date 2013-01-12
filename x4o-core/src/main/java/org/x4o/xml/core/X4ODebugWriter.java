@@ -194,10 +194,10 @@ public class X4ODebugWriter {
 			AttributesImpl atts = new AttributesImpl();
 			atts.addAttribute ("", "name", "", "", phase.getX4OPhase().name());
 			atts.addAttribute ("", "runOnce", "", "", phase.getX4OPhase().isRunOnce()+"");
-			atts.addAttribute ("", "listenersSize", "", "", phase.getX4OPhaseListeners().size()+"");
+			atts.addAttribute ("", "listenersSize", "", "", phase.getPhaseListeners().size()+"");
 			
 			debugWriter.startElement (DEBUG_URI, "phase", "", atts);
-			for (X4OPhaseListener l:phase.getX4OPhaseListeners()) {
+			for (X4OPhaseListener l:phase.getPhaseListeners()) {
 				atts = new AttributesImpl();
 				atts.addAttribute ("", "className", "", "", l.getClass().getName());
 				debugWriter.startElement (DEBUG_URI, "X4OPhaseListener", "", atts);

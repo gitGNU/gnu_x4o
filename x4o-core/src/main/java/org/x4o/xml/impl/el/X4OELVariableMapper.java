@@ -49,6 +49,8 @@ public class X4OELVariableMapper extends VariableMapper {
 	
 	/**
 	 * @see javax.el.VariableMapper#resolveVariable(java.lang.String)
+	 * @param var Resolve this var to an ValueExpression.
+	 * @return The resolved ValueExpression of the var.
 	 */
 	@Override
 	public ValueExpression resolveVariable(String var) {
@@ -57,10 +59,12 @@ public class X4OELVariableMapper extends VariableMapper {
 
 	/**
 	 * @see javax.el.VariableMapper#setVariable(java.lang.String, javax.el.ValueExpression)
+	 * @param var Resolve this var to an ValueExpression.
+	 * @param expression The ValueExpression of the var.
+	 * @return The ValueExpression being set.
 	 */
 	@Override
 	public ValueExpression setVariable(String var, ValueExpression expression) {
 		return expressions.put(var, expression);
 	}
-
 }

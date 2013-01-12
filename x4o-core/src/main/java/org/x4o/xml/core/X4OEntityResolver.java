@@ -60,7 +60,10 @@ public class X4OEntityResolver implements EntityResolver {
 	private Map<String,String> schemaResources = null;
 	private Map<String,String> schemaPathResources = null;
 	
-	
+	/**
+	 * Creates an X4OEntityResolver for a language.
+	 * @param elementLanguage	The x4o language to resolve entities for.
+	 */
 	protected X4OEntityResolver(ElementLanguage elementLanguage) {
 		if (elementLanguage==null) {
 			throw new NullPointerException("Can't provide entities with null ElementLanguage.");
@@ -95,6 +98,13 @@ public class X4OEntityResolver implements EntityResolver {
 		}
 	}
 	
+	/**
+	 * Try to resolve xml entities by systemId.
+	 * 
+	 * @param publicId The public id to search for.
+	 * @param systemId The system id to search for.
+	 * @return Returns null or the InputSource of the requested ids.
+	 */
 	public InputSource resolveEntity(String publicId, String systemId) throws IOException,SAXException {
 		
 		logger.finer("Fetch sysId: "+systemId+" pubId: "+publicId);
@@ -115,7 +125,7 @@ public class X4OEntityResolver implements EntityResolver {
 				String schemeResource = schemaResources.get(systemId);
 				File schemaFile = new File(schemaBasePath.getAbsolutePath()+File.separatorChar+schemeResource);
 				if (schemaFile.exists()) {
-					if (schemaFile.canRead()==false) {
+					if (!schemaFile.canRead()) {
 						throw new SAXException("Can't read schema file: "+schemaFile);
 					}
 					try {

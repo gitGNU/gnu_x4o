@@ -39,18 +39,47 @@ public class DoubleConverter extends AbstractStringObjectConverter {
 
 	private static final long serialVersionUID = 3283317726435306051L;
 
+	/**
+	 * Returns the convert to class.
+	 * @see org.x4o.xml.conv.ObjectConverter#getObjectClassTo()
+	 * @return The class to convert to.
+	 */
 	public Class<?> getObjectClassTo() {
 		return Double.class;
 	}
 	
+	/**
+	 * Converts string into object.
+	 * 
+	 * @see org.x4o.xml.conv.AbstractStringObjectConverter#convertStringTo(java.lang.String, java.util.Locale)
+	 * @param str	The string to convert to object.
+	 * @param locale The locale to convert the string from.
+	 * @return The object converted from the string.
+	 * @throws ObjectConverterException When conversion fails.
+	 */
 	public Object convertStringTo(String str, Locale locale) throws ObjectConverterException {
 		return new Double(str);
 	}
 	
+	/**
+	 * Converts object into string.
+	 * 
+	 * @see org.x4o.xml.conv.AbstractStringObjectConverter#convertStringBack(java.lang.Object, java.util.Locale)
+	 * @param obj	The object to convert to string.
+	 * @param locale The locale to convert the object from.
+	 * @return The string converted from the object.
+	 * @throws ObjectConverterException When conversion fails.
+	 */
 	public String convertStringBack(Object obj,Locale locale) throws ObjectConverterException {
 		return ((Double)obj).toString();
 	}
 	
+	/**
+	 * Clone this ObjectConverter.
+	 * @see org.x4o.xml.conv.AbstractObjectConverter#clone()
+	 * @return The cloned ObjectConverter.
+	 * @throws CloneNotSupportedException When cloning fails.
+	 */
 	@Override
 	public ObjectConverter clone() throws CloneNotSupportedException {
 		DoubleConverter result = new DoubleConverter();

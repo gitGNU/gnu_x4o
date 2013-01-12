@@ -32,35 +32,43 @@ package	org.x4o.xml.element;
  */
 public abstract class AbstractElementMetaBase implements ElementMetaBase {
 	
-	/** The description */
+	/** The id */
 	private String id = null;
 	
 	/** The description */
 	private String description = null;
-
+	
 	/**
-	 * @see org.x4o.xml.element.ElementMetaBase#setId(java.lang.String)
-	 */
-	public void setId(String id) {
-		this.id=id;
-	}
-
-	/**
+	 * Gets the id.
 	 * @see org.x4o.xml.element.ElementMetaBase#getId()
+	 * @return The id.
 	 */
 	public String getId() {
 		return id;
 	}
-
+	
 	/**
+	 * Sets the id.
+	 * @see org.x4o.xml.element.ElementMetaBase#setId(java.lang.String)
+	 * @param id The id to set.
+	 */
+	public void setId(String id) {
+		this.id=id;
+	}
+	
+	/**
+	 * Gets the description.
 	 * @see org.x4o.xml.element.ElementConfigurator#getDescription()
+	 * @return The description.
 	 */
 	public String getDescription() {
 		return description;
 	}
-
+	
 	/**
+	 * Sets the description.
 	 * @see org.x4o.xml.element.ElementConfigurator#setDescription(java.lang.String)
+	 * @param description The description to set.
 	 */
 	public void setDescription(String description) {
 		this.description=description;

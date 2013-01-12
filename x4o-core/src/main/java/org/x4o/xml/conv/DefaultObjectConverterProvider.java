@@ -38,7 +38,7 @@ import org.x4o.xml.conv.text.LongConverter;
 import org.x4o.xml.conv.text.URLConverter;
 
 /**
- * DefaultObjectConverterProvider.
+ * DefaultObjectConverterProvider holds the defined converts.
  *
  * @author Willem Cazander
  * @version 1.0 Jan 20, 2012
@@ -89,11 +89,16 @@ public class DefaultObjectConverterProvider implements ObjectConverterProvider {
 
 	/**
 	 * @see org.x4o.xml.conv.ObjectConverterProvider#getObjectConverterForClass(java.lang.Class)
+	 * @param clazz The Class to search an ObjectConverter for.
+	 * @return The ObjectConverter or null  for the class.
 	 */
 	public ObjectConverter getObjectConverterForClass(Class<?> clazz) {
 		return converters.get(clazz);
 	}
 	
+	/**
+	 * @return	Returns all ObjectConverted stored in this class.
+	 */
 	protected Collection<ObjectConverter> getObjectConverters() {
 		return converters.values();
 	}

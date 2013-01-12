@@ -34,7 +34,6 @@ import junit.framework.TestCase;
 public class X4OLanguageClassLoaderTest extends TestCase {
 
 	public void testLoadObject() throws Exception {
-		new X4OLanguageClassLoader();
 		Object o = X4OLanguageClassLoader.newInstance("java.lang.Object");
 		assertNotNull(o);
 		assertEquals(Object.class, o.getClass());

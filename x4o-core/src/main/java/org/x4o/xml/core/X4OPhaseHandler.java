@@ -45,26 +45,26 @@ public interface X4OPhaseHandler {
 
 	/**
 	 * Runs this phase.
-	 * @param elementLanguage
-	 * @throws X4OPhaseException
+	 * @param elementLanguage	The elementLanguage running this phase.
+	 * @throws X4OPhaseException	When error has happend. 
 	 */
 	void runPhase(ElementLanguage elementLanguage) throws X4OPhaseException;
 	
 	/**
-	 * Returns all X4OPhaseListeners which where added.
+	 * Returns all phase listeners which where added.
 	 * @return All X4OPhaseListeners.
 	 */
-	List<X4OPhaseListener> getX4OPhaseListeners();
+	List<X4OPhaseListener> getPhaseListeners();
 	
 	/**
-	 * Adds an X4OPhaseListener
-	 * @param listener
+	 * Adds an X4OPhaseListener.
+	 * @param listener	The listener to add.
 	 */
 	void addPhaseListener(X4OPhaseListener listener);
 	
 	/**
-	 * Removes an X4OPhaseListener
-	 * @param listener
+	 * Removes an X4OPhaseListener.
+	 * @param listener	The listener to remove.
 	 */
 	void removePhaseListener(X4OPhaseListener listener);
 
@@ -78,8 +78,8 @@ public interface X4OPhaseHandler {
 	
 	/**
 	 * Run this phase for this Element.
-	 * @param element
-	 * @throws X4OPhaseException
+	 * @param element	The element to run this phase for.
+	 * @throws X4OPhaseException	Is thrown when error has happen.
 	 */
 	void runElementPhase(Element element) throws X4OPhaseException;
 }

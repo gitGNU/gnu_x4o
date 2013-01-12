@@ -25,9 +25,7 @@ package	org.x4o.xml.element;
 
 
 /**
- * ElementNamespaceInstanceProviderException.<br>
- * 
- * 
+ * ElementNamespaceInstanceProviderException holds the ElementNamespaceInstanceProvider which created this Exception.<br>
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 2, 2012
@@ -37,16 +35,31 @@ public class ElementNamespaceInstanceProviderException extends ElementException 
 	
 	private ElementNamespaceInstanceProvider elementNamespaceInstanceProvider = null;
 	
+	/**
+	 * Creates provider instance exception. 
+	 * @param elementNamespaceInstanceProvider	The provider which creates this exception.
+	 * @param message	The message of this exception.
+	 */
 	public ElementNamespaceInstanceProviderException(ElementNamespaceInstanceProvider elementNamespaceInstanceProvider,String message) {
 		super(message);
 		this.elementNamespaceInstanceProvider=elementNamespaceInstanceProvider;
 	}
 	
+	/**
+	 * Creates provider instance exception. 
+	 * @param elementNamespaceInstanceProvider	The provider which creates this exception.
+	 * @param message	The message of this exception.
+	 * @param exception	The root cause of this exception.
+	 */
 	public ElementNamespaceInstanceProviderException(ElementNamespaceInstanceProvider elementNamespaceInstanceProvider,String message,Exception exception) {
 		super(message,exception);
 		this.elementNamespaceInstanceProvider=elementNamespaceInstanceProvider;
 	}
 	
+	/**
+	 * Gets the ElementNamespaceInstanceProvider which created this exception.
+	 * @return	The provider which created the exception.
+	 */
 	public ElementNamespaceInstanceProvider getElementNamespaceInstanceProvider() {
 		return elementNamespaceInstanceProvider;
 	}

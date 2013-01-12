@@ -37,6 +37,7 @@ public class ElementClassAddParentElement extends AbstractElement {
 
 	/**
 	 * @see org.x4o.xml.element.AbstractElement#doElementEnd()
+	 * @throws ElementException When parent is not ElementClassBase.
 	 */
 	@Override
 	public void doElementEnd() throws ElementException {

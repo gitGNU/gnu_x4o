@@ -39,18 +39,47 @@ public class ByteConverter extends AbstractStringObjectConverter {
 
 	private static final long serialVersionUID = -719929830363810123L;
 
+	/**
+	 * Returns the convert to class.
+	 * @see org.x4o.xml.conv.ObjectConverter#getObjectClassTo()
+	 * @return The class to convert to.
+	 */
 	public Class<?> getObjectClassTo() {
 		return Byte.class;
 	}
 	
+	/**
+	 * Converts string into object.
+	 * 
+	 * @see org.x4o.xml.conv.AbstractStringObjectConverter#convertStringTo(java.lang.String, java.util.Locale)
+	 * @param str	The string to convert to object.
+	 * @param locale The locale to convert the string from.
+	 * @return The object converted from the string.
+	 * @throws ObjectConverterException When conversion fails.
+	 */
 	public Object convertStringTo(String str, Locale locale) throws ObjectConverterException {
 		return new Byte(str);
 	}
 	
+	/**
+	 * Converts object into string.
+	 * 
+	 * @see org.x4o.xml.conv.AbstractStringObjectConverter#convertStringBack(java.lang.Object, java.util.Locale)
+	 * @param obj	The object to convert to string.
+	 * @param locale The locale to convert the object from.
+	 * @return The string converted from the object.
+	 * @throws ObjectConverterException When conversion fails.
+	 */
 	public String convertStringBack(Object obj,Locale locale) throws ObjectConverterException {
 		return ((Byte)obj).toString();
 	}
 	
+	/**
+	 * Clone this ObjectConverter.
+	 * @see org.x4o.xml.conv.AbstractObjectConverter#clone()
+	 * @return The cloned ObjectConverter.
+	 * @throws CloneNotSupportedException When cloning fails.
+	 */
 	@Override
 	public ObjectConverter clone() throws CloneNotSupportedException {
 		ByteConverter result = new ByteConverter();

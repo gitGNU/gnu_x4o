@@ -50,7 +50,8 @@ public interface ElementBindingHandler extends ElementMetaBase {
 	 * Do the binding of this child to the parent object.
 	 * @param parentObject	The parentObject of this childElement.
 	 * @param childObject	The childObject of this childElement.
-	 * @param childElement	The child element to bind to the parent.
+	 * @param childElement	The child element to bind to the parent.'
+	 * @throws ElementBindingHandlerException When binding could not happen.
 	 */
 	void doBind(Object parentObject,Object childObject,Element childElement) throws ElementBindingHandlerException;
 }

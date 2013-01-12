@@ -141,7 +141,9 @@
         <module name="AvoidInlineConditionals"/>
         <module name="DoubleCheckedLocking"/>
         <module name="EmptyStatement"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">  
+          <property name="tokens" value="VARIABLE_DEF"/>
+        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <!-- 
