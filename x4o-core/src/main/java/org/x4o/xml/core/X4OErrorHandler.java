@@ -24,8 +24,8 @@
 package org.x4o.xml.core;
 
 import org.x4o.xml.core.config.X4OLanguageProperty;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementException;
+import org.x4o.xml.element.ElementLanguage;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -38,31 +38,31 @@ import org.xml.sax.SAXParseException;
  */
 public class X4OErrorHandler implements ErrorHandler {
 	
-	private ElementLanguage elementLanguage = null;
+	private ElementLanguage elementContext = null;
 	private ErrorHandler errorHandler = null;
 	
 	/**
 	 * Construct a new SAXErrorPrinter
-	 * @param elementLanguage	The elementLanguage to get errors to.
+	 * @param language	The language to get errors to.
 	 */
-	public X4OErrorHandler(ElementLanguage elementLanguage) {
-		if (elementLanguage==null) {
-			throw new NullPointerException("Can't debug and proxy errors with null elementLanguage.");
+	public X4OErrorHandler(ElementLanguage elementContext) {
+		if (elementContext==null) {
+			throw new NullPointerException("Can't debug and proxy errors with null elementContext.");
 		}
-		this.elementLanguage=elementLanguage;
-		this.errorHandler=(ErrorHandler)elementLanguage.getLanguageConfiguration().getLanguageProperty(X4OLanguageProperty.CONFIG_ERROR_HANDLER);
+		this.elementContext=elementContext;
+		this.errorHandler=(ErrorHandler)elementContext.getLanguageProperty(X4OLanguageProperty.CONFIG_ERROR_HANDLER);
 	}
 
 	/**
 	 * Prints the error message to debug output.
 	 */
 	private void printError(boolean isError, SAXParseException exception) throws SAXException {
-		if (elementLanguage.getLanguageConfiguration().hasX4ODebugWriter()==false) {
+		if (elementContext.hasX4ODebugWriter()==false) {
 			return;
 		}
 		String message = printErrorString(isError,exception);
 		try {
-			elementLanguage.getLanguageConfiguration().getX4ODebugWriter().debugPhaseMessage(message, X4OErrorHandler.class);
+			elementContext.getX4ODebugWriter().debugPhaseMessage(message, X4OErrorHandler.class);
 		} catch (ElementException e) {
 			throw new SAXException(e);
 		}

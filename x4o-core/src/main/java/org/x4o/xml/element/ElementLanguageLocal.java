@@ -26,8 +26,7 @@ package	org.x4o.xml.element;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
-import org.x4o.xml.core.config.X4OLanguageConfiguration;
-
+import org.x4o.xml.core.X4ODebugWriter;
 
 /**
  * ElementLanguageLocal is the local set interface for ElementLanguage.
@@ -54,14 +53,13 @@ public interface ElementLanguageLocal extends ElementLanguage {
 	 */
 	void setElementAttributeValueParser(ElementAttributeValueParser elementAttributeValueParser);
 	
-
 	/**
 	 * @param elementObjectPropertyValue	The elementObjectPropertyValue to set.
 	 */
 	void setElementObjectPropertyValue(ElementObjectPropertyValue elementObjectPropertyValue);
-
+	
 	/**
-	 * @param parserConfiguration The parserConfiguration to set.
+	 * @param debugWriter	The debug writer to set
 	 */
-	void setLanguageConfiguration(X4OLanguageConfiguration parserConfiguration);
+	void setX4ODebugWriter(X4ODebugWriter debugWriter);
 }

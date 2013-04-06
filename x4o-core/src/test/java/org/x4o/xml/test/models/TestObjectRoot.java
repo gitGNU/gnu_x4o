@@ -28,10 +28,10 @@ import java.util.List;
 
 public class TestObjectRoot {
 	
-	public List<TestObjectChild> testObjectChilds = new ArrayList<TestObjectChild>(2);
-	public List<TestObjectParent> testObjectParents = new ArrayList<TestObjectParent>(2);
-	public List<TestBean> testBeans = new ArrayList<TestBean>(2);
-	public List<Object> testObjects = new ArrayList<Object>(2);
+	private List<TestObjectChild> testObjectChilds = new ArrayList<TestObjectChild>(2);
+	private List<TestObjectParent> testObjectParents = new ArrayList<TestObjectParent>(2);
+	private List<TestBean> testBeans = new ArrayList<TestBean>(2);
+	private List<Object> testObjects = new ArrayList<Object>(2);
 	
 	public void addChild(TestObjectChild c) {
 		testObjectChilds.add(c);
@@ -48,4 +48,34 @@ public class TestObjectRoot {
 	public void addObject(Object c) {
 		testObjects.add(c);
 	}
+
+	/**
+	 * @return the testObjectChilds
+	 */
+	public List<TestObjectChild> getTestObjectChilds() {
+		return testObjectChilds;
+	}
+
+	/**
+	 * @return the testObjectParents
+	 */
+	public List<TestObjectParent> getTestObjectParents() {
+		return testObjectParents;
+	}
+
+	/**
+	 * @return the testBeans
+	 */
+	public List<TestBean> getTestBeans() {
+		return testBeans;
+	}
+
+	/**
+	 * @return the testObjects
+	 */
+	public List<Object> getTestObjects() {
+		return testObjects;
+	}
+	
+	
 }

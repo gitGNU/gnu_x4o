@@ -30,7 +30,7 @@ import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
-import org.x4o.xml.sax.AttributeMap;
+import org.x4o.xml.io.sax.AttributeMap;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -103,9 +103,9 @@ public class X4OTagHandler extends DefaultHandler2 {
 		if ("http://www.w3.org/2001/XInclude".equals(namespaceUri)) {
 			return; // skip xinclude ns.
 		}
-		ElementNamespaceContext enc = elementLanguage.findElementNamespaceContext(namespaceUri);
+		ElementNamespaceContext enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
 		if (enc==null) {
-			throw new SAXException("Can't find namespace uri: "+namespaceUri+" in language: "+elementLanguage.getLanguageConfiguration().getLanguage());
+			throw new SAXException("Can't find namespace uri: "+namespaceUri+" in language: "+elementLanguage.getLanguage().getLanguageName());
 		}
 		enc.setPrefixMapping(prefix);
 	}
@@ -122,13 +122,13 @@ public class X4OTagHandler extends DefaultHandler2 {
 			overrideSaxHandler.startElement(namespaceUri, tag, qName, attributes);
 			return;
 		}
-		ElementNamespaceContext enc = elementLanguage.findElementNamespaceContext(namespaceUri);
+		ElementNamespaceContext enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
 		if (enc==null) {
 			if ("".equals(namespaceUri)) {
-				String configEmptryUri = (String)elementLanguage.getLanguageConfiguration().getLanguageProperty(X4OLanguageProperty.INPUT_EMPTY_NAMESPACE_URI);
+				String configEmptryUri = (String)elementLanguage.getLanguageProperty(X4OLanguageProperty.INPUT_EMPTY_NAMESPACE_URI);
 				if (configEmptryUri!=null) {
 					namespaceUri = configEmptryUri;
-					enc = elementLanguage.findElementNamespaceContext(namespaceUri);
+					enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
 				}
 				if (enc==null) {	
 					throw new SAXParseException("No ElementNamespaceContext found for empty namespace.",locator);
@@ -143,7 +143,7 @@ public class X4OTagHandler extends DefaultHandler2 {
 		ElementNamespaceInstanceProvider eip = enc.getElementNamespaceInstanceProvider();
 		Element element = null;
 		try {
-			element = eip.createElementInstance(tag);
+			element = eip.createElementInstance(elementLanguage,tag);
 		} catch (Exception e) {
 			throw new SAXParseException("Error while creating element: "+e.getMessage(),locator,e);
 		}

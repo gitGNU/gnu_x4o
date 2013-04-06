@@ -139,7 +139,7 @@ public class EldDocHtmlWriter {
 	public void writeIndex(File basePath,ElementLanguage context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,"index.html");
 		try {
-			String title = context.getLanguageConfiguration().getLanguage()+" "+context.getLanguageConfiguration().getLanguageVersion()+" ELD";
+			String title = context.getLanguage().getLanguageName()+" "+context.getLanguage().getLanguageVersion()+" ELD";
 			printHeader(pw,"Index ("+title+")","");
 			printPageIndexTitle(pw,title,null,null);
 			
@@ -149,7 +149,7 @@ public class EldDocHtmlWriter {
 			int eleConfigs = 0;
 			int elements = 0;
 			int namespaces = 0;
-			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+			for (ElementLanguageModule mod:context.getLanguage().getElementLanguageModules()) {
 				attrHandlers += mod.getElementAttributeHandlers().size();
 				bindHandlers += mod.getElementBindingHandlers().size();
 				interFaces += mod.getElementInterfaces().size();
@@ -162,9 +162,9 @@ public class EldDocHtmlWriter {
 			
 			pw.print("<p>Welcome to the EldDocs</p>");
 			printTableStart(pw,"Language Stats");
-			printTableRowSummary(pw,"Language:",""+context.getLanguageConfiguration().getLanguage());
-			printTableRowSummary(pw,"LanguageVersion:",""+context.getLanguageConfiguration().getLanguageVersion());
-			printTableRowSummary(pw,"Modules:",""+context.getElementLanguageModules().size());
+			printTableRowSummary(pw,"Language:",""+context.getLanguage().getLanguageName());
+			printTableRowSummary(pw,"LanguageVersion:",""+context.getLanguage().getLanguageVersion());
+			printTableRowSummary(pw,"Modules:",""+context.getLanguage().getElementLanguageModules().size());
 			printTableRowSummary(pw,"Namespaces:",""+namespaces);
 			printTableRowSummary(pw,"Elements:",""+elements);
 			printTableRowSummary(pw,"ElementInterfaces:",""+interFaces);
@@ -184,11 +184,11 @@ public class EldDocHtmlWriter {
 	public void writeOverviewModule(File basePath,ElementLanguage context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,"module-overview.html");
 		try {
-			String title = context.getLanguageConfiguration().getLanguage()+" "+context.getLanguageConfiguration().getLanguageVersion()+" ELD";
+			String title = context.getLanguage().getLanguageName()+" "+context.getLanguage().getLanguageVersion()+" ELD";
 			printHeader(pw,"Overview Modules ("+title+")","");
 			printPageIndexTitle(pw,title,null,null);
 			printTableStart(pw,"Modules");
-			List<ElementLanguageModule> mods = context.getElementLanguageModules();
+			List<ElementLanguageModule> mods = context.getLanguage().getElementLanguageModules();
 			Collections.sort(mods,new ElementLanguageModuleComparator());
 			for (ElementLanguageModule mod:mods) {
 				printTableRowOverview(pw,toSafeUri(mod.getId())+"/index.html",mod.getId(),mod.getName());
@@ -206,10 +206,10 @@ public class EldDocHtmlWriter {
 		PrintWriter pw = createPrintWriter(basePath,"namespace-overview.html");
 		String pathPrefix = "";
 		try {
-			String title = context.getLanguageConfiguration().getLanguage()+" "+context.getLanguageConfiguration().getLanguageVersion()+" ELD";
+			String title = context.getLanguage().getLanguageName()+" "+context.getLanguage().getLanguageVersion()+" ELD";
 			printHeader(pw,"Overview Namespace("+title+")",pathPrefix);
 			printPageIndexTitle(pw,title,null,null);
-			List<ElementLanguageModule> mods = context.getElementLanguageModules();
+			List<ElementLanguageModule> mods = context.getLanguage().getElementLanguageModules();
 			Collections.sort(mods,new ElementLanguageModuleComparator());
 			for (ElementLanguageModule mod:mods) {
 				printNamespaces(pw,mod.getElementNamespaceContexts(),pathPrefix,mod);
@@ -226,12 +226,12 @@ public class EldDocHtmlWriter {
 		PrintWriter pw = createPrintWriter(basePath,"tree-overview.html");
 		String pathPrefix = "";
 		try {
-			String title = context.getLanguageConfiguration().getLanguage()+" "+context.getLanguageConfiguration().getLanguageVersion()+" ELD";
+			String title = context.getLanguage().getLanguageName()+" "+context.getLanguage().getLanguageVersion()+" ELD";
 			printHeader(pw,"Overview Tree ("+title+")",pathPrefix);
 			printPageIndexTitle(pw,title,null,null);
 			
 			List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
-			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+			for (ElementLanguageModule mod:context.getLanguage().getElementLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					if (ns.getLanguageRoot()!=null && ns.getLanguageRoot()) {
 						// found language root elements.
@@ -298,7 +298,7 @@ public class EldDocHtmlWriter {
 		if (node.indent>20) {
 			return result; // hard fail limit
 		}
-		for (ElementLanguageModule mod:node.context.getElementLanguageModules()) {
+		for (ElementLanguageModule mod:node.context.getLanguage().getElementLanguageModules()) {
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 				for (ElementClass ec:ns.getElementClasses()) {
 					TreeNode n=null;
@@ -316,7 +316,7 @@ public class EldDocHtmlWriter {
 							continue;
 						}
 						// Check interfaces of parent , and see if child tag is there.
-						for (ElementInterface ei:node.context.findElementInterfaces(ec.getObjectClass())) {
+						for (ElementInterface ei:node.context.getLanguage().findElementInterfaces(ec.getObjectClass())) {
 							List<String> eiTags = ei.getElementParents(node.namespace.getUri());
 							if (eiTags!=null && eiTags.contains(node.elementClass.getTag())) {
 								n = new TreeNode();
@@ -333,7 +333,7 @@ public class EldDocHtmlWriter {
 						if (node.elementClass.getObjectClass()==null) {
 							continue;
 						}
-						List<ElementBindingHandler> binds = node.context.findElementBindingHandlers(node.elementClass.getObjectClass(), ec.getObjectClass());
+						List<ElementBindingHandler> binds = node.context.getLanguage().findElementBindingHandlers(node.elementClass.getObjectClass(), ec.getObjectClass());
 						if (binds.isEmpty()==false) {
 							n = new TreeNode();
 							n.context=node.context;
@@ -370,7 +370,7 @@ public class EldDocHtmlWriter {
 	private List<TreeNode> findParents(TreeNode node) {
 		List<TreeNode> result = new ArrayList<TreeNode>(10);
 		TreeNode n=null;
-		for (ElementLanguageModule mod:node.context.getElementLanguageModules()) {
+		for (ElementLanguageModule mod:node.context.getLanguage().getElementLanguageModules()) {
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 				
 				List<String> tags = node.elementClass.getElementParents(ns.getUri());
@@ -392,7 +392,7 @@ public class EldDocHtmlWriter {
 
 					// Check interfaces of parent , and see if child tag is there.
 					if (node.elementClass.getObjectClass()!=null) {
-						for (ElementInterface ei:node.context.findElementInterfaces(node.elementClass.getObjectClass())) {
+						for (ElementInterface ei:node.context.getLanguage().findElementInterfaces(node.elementClass.getObjectClass())) {
 							List<String> eiTags = ei.getElementParents(ns.getUri());
 							if (eiTags!=null && eiTags.contains(ec.getTag())) {
 								n = new TreeNode();
@@ -413,7 +413,7 @@ public class EldDocHtmlWriter {
 					if (node.elementClass.getObjectClass()==null) {
 						continue;
 					}
-					List<ElementBindingHandler> binds = node.context.findElementBindingHandlers(ec.getObjectClass(),node.elementClass.getObjectClass());
+					List<ElementBindingHandler> binds = node.context.getLanguage().findElementBindingHandlers(ec.getObjectClass(),node.elementClass.getObjectClass());
 					if (binds.isEmpty()==false) {
 						n = new TreeNode();
 						n.context=node.context;

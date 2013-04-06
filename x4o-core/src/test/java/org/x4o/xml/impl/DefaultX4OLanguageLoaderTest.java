@@ -23,8 +23,14 @@
 
 package org.x4o.xml.impl;
 
-import org.x4o.xml.impl.config.DefaultX4OLanguageLoader;
-import org.x4o.xml.test.TestParser;
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.core.config.DefaultX4OLanguageLoader;
+import org.x4o.xml.core.config.X4OLanguage;
+import org.x4o.xml.core.config.X4OLanguageLoader;
+import org.x4o.xml.core.config.X4OLanguageLocal;
+import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.test.TestDriver;
+import org.x4o.xml.test.models.TestObjectRoot;
 
 import junit.framework.TestCase;
 
@@ -36,17 +42,20 @@ import junit.framework.TestCase;
  */
 public class DefaultX4OLanguageLoaderTest extends TestCase {
 
-	TestParser parser;
-	DefaultX4OLanguageLoader loader;
+	X4OLanguage language;
+	X4OLanguageLoader loader;
 	
 	public void setUp() throws Exception {
-		parser = new TestParser();
-		parser.parseResource("tests/namespace/uri-simple.xml");
-		loader = new DefaultX4OLanguageLoader();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		//X4OReader<TestObjectRoot> reader = driver.createReader();
+		//reader.readResource("tests/namespace/uri-simple.xml");
+		language = driver.createLanguageContext().getLanguage();
+		loader = (X4OLanguageLoader)language.getLanguageConfiguration().getDefaultX4OLanguageLoader().newInstance();
+		
 	}
 
 	public void testLanguageURINameSpaceTest() throws Exception {
-		loader.loadLanguage(parser.getElementLanguage(), "test", "1.0");
+		loader.loadLanguage((X4OLanguageLocal)language, "test", "1.0");
 	}
 	
 	/*

@@ -58,7 +58,7 @@ public class EldDocGenerator {
 			writer.writeOverviewNamespace(basePath, context);
 			writer.writeOverviewTree(basePath, context);
 			
-			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+			for (ElementLanguageModule mod:context.getLanguage().getElementLanguageModules()) {
 				
 				writer.writeOverviewModule(basePath, mod);
 				

@@ -23,6 +23,7 @@
 
 package org.x4o.xml.test;
 
+import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.test.models.TestObjectChild;
 import org.x4o.xml.test.models.TestObjectParent;
 import org.x4o.xml.test.models.TestObjectRoot;
@@ -40,16 +41,16 @@ public class XIncludeTest extends TestCase {
 	
 	
 	public void testXInclude() throws Exception {
-		TestParser parser = new TestParser();
-		parser.parseResource("tests/xinclude/include-base.xml");
-		Object root = parser.getDriver().getElementLanguage().getRootElement().getElementObject();
+		TestDriver driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		TestObjectRoot root = reader.readResource("tests/xinclude/include-base.xml");
 		assertNotNull(root);
 		TestObjectRoot parentRoot = (TestObjectRoot)root;
-		if (parentRoot.testObjectParents.size()==0) {
+		if (parentRoot.getTestObjectParents().size()==0) {
 			return; // FIXME: don't fail, as on jdk7 it 'sometimes' fails ...
 		}
-		assertEquals(1,parentRoot.testObjectParents.size());
-		TestObjectParent parent = parentRoot.testObjectParents.get(0);
+		assertEquals(1,parentRoot.getTestObjectParents().size());
+		TestObjectParent parent = parentRoot.getTestObjectParents().get(0);
 		TestObjectChild child = parent.testObjectChilds.get(0);
 		assertEquals("include-child.xml",child.getName());
 	}

@@ -25,8 +25,8 @@ package org.x4o.xml.eld;
 
 import java.io.File;
 
-import org.x4o.xml.eld.xsd.X4OLanguageEldXsdWriter;
-import org.x4o.xml.test.swixml.SwiXmlParserSupport2;
+import org.x4o.xml.eld.xsd.X4OSchemaWriterExecutor;
+import org.x4o.xml.test.swixml.SwiXmlDriver;
 
 import junit.framework.TestCase;
 
@@ -51,27 +51,27 @@ public class EldSchemaTest extends TestCase {
 	}
 	
 	public void testEldSchema() throws Exception {
-		X4OLanguageEldXsdWriter writer = new X4OLanguageEldXsdWriter();
+		X4OSchemaWriterExecutor writer = new X4OSchemaWriterExecutor();
 		writer.setBasePath(getTempPath("junit-xsd-eld"));
-		writer.setLanguageParserSupport(EldParserSupport.class);
+		writer.setLanguage(EldDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	
 	public void testEldCoreSchema() throws Exception {
-		X4OLanguageEldXsdWriter writer = new X4OLanguageEldXsdWriter();
+		X4OSchemaWriterExecutor writer = new X4OSchemaWriterExecutor();
 		writer.setBasePath(getTempPath("junit-xsd-cel"));
-		writer.setLanguageParserSupport(EldParserSupportCore.class);
+		writer.setLanguage(CelDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	
 	public void testSwiXmlSchema() throws Exception {
-		X4OLanguageEldXsdWriter writer = new X4OLanguageEldXsdWriter();
+		X4OSchemaWriterExecutor writer = new X4OSchemaWriterExecutor();
 		writer.setBasePath(getTempPath("junit-xsd-swixml2"));
-		writer.setLanguageParserSupport(SwiXmlParserSupport2.class);
+		writer.setLanguage(SwiXmlDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	
 	public void testEldDocMain() throws Exception {
-		X4OLanguageEldXsdWriter.main(new String[] {"-path",getTempPath("junit-xsd-main").getAbsolutePath(),"-class",EldParserSupport.class.getName()});
+		X4OSchemaWriterExecutor.main(new String[] {"-p",getTempPath("junit-xsd-main").getAbsolutePath(),"-l",EldDriver.LANGUAGE_NAME});
 	}
 }

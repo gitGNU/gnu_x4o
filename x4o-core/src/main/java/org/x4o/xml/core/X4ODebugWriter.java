@@ -31,6 +31,9 @@ import java.util.Map;
 import org.x4o.xml.conv.ObjectConverter;
 import org.x4o.xml.core.config.X4OLanguageConfiguration;
 import org.x4o.xml.core.config.X4OLanguageProperty;
+import org.x4o.xml.core.phase.X4OPhaseException;
+import org.x4o.xml.core.phase.X4OPhase;
+import org.x4o.xml.core.phase.X4OPhaseListener;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
@@ -65,8 +68,8 @@ public class X4ODebugWriter {
 	public X4ODebugWriter(DefaultHandler2 debugWriter) {
 		this.debugWriter=debugWriter;
 	}	
-
-	protected DefaultHandler2 getDebugWriter() {
+	
+	public DefaultHandler2 getDebugWriter() {
 		return debugWriter;
 	}
 	
@@ -80,14 +83,14 @@ public class X4ODebugWriter {
 		
 		/**
 		 * @throws X4OPhaseException 
-		 * @see org.x4o.xml.core.X4OPhaseListener#preRunPhase(org.x4o.xml.element.ElementLanguage)
+		 * @see org.x4o.xml.core.phase.X4OPhaseListener#preRunPhase(org.x4o.xml.element.ElementLanguage)
 		 */
-		public void preRunPhase(X4OPhaseHandler phase,ElementLanguage elementLanguage) throws X4OPhaseException {
+		public void preRunPhase(X4OPhase phase,ElementLanguage elementLanguage) throws X4OPhaseException {
 			startTime = System.currentTimeMillis();
 			try {
 				AttributesImpl atts = new AttributesImpl();
 				if (elementLanguage!=null) {
-					atts.addAttribute("", "language","","", elementLanguage.getLanguageConfiguration().getLanguage());
+					atts.addAttribute("", "language","","", elementLanguage.getLanguage().getLanguageName());
 				}
 				debugWriter.startElement (DEBUG_URI, "executePhase", "", atts);
 			} catch (SAXException e) {
@@ -96,11 +99,11 @@ public class X4ODebugWriter {
 			debugPhase(phase);
 		}
 		
-		public void endRunPhase(X4OPhaseHandler phase,ElementLanguage elementLanguage) throws X4OPhaseException {
+		public void endRunPhase(X4OPhase phase,ElementLanguage elementLanguage) throws X4OPhaseException {
 			long stopTime = System.currentTimeMillis();
 			try {
 				AttributesImpl atts = new AttributesImpl();
-				atts.addAttribute ("", "name", "", "", phase.getX4OPhase().name());
+				atts.addAttribute ("", "id", "", "", phase.getId());
 				atts.addAttribute ("", "speed", "", "", (stopTime-startTime)+" ms");
 				debugWriter.startElement (DEBUG_URI, "executePhaseDone", "", atts);
 				debugWriter.endElement (DEBUG_URI, "executePhaseDone" , "");
@@ -117,7 +120,7 @@ public class X4ODebugWriter {
 			AttributesImpl atts = new AttributesImpl();
 			debugWriter.startElement (DEBUG_URI, "X4OLanguageProperties", "", atts);
 			for (X4OLanguageProperty p:X4OLanguageProperty.values()) {
-				Object value = ec.getLanguageConfiguration().getLanguageProperty(p);
+				Object value = ec.getLanguageProperty(p);
 				if (value==null) {
 					continue;
 				}
@@ -137,7 +140,7 @@ public class X4ODebugWriter {
 		try {
 			AttributesImpl atts = new AttributesImpl();
 			debugWriter.startElement (DEBUG_URI, "X4OLanguageDefaultClasses", "", atts);
-			X4OLanguageConfiguration conf = ec.getLanguageConfiguration();
+			X4OLanguageConfiguration conf = ec.getLanguage().getLanguageConfiguration();
 
 			debugLanguageDefaultClass("getDefaultElementNamespaceContext",conf.getDefaultElementNamespaceContext());
 			debugLanguageDefaultClass("getDefaultElementInterface",conf.getDefaultElementInterface());
@@ -167,12 +170,12 @@ public class X4ODebugWriter {
 		debugWriter.endElement(DEBUG_URI, "X4OLanguageDefaultClass", "");
 	}
 	
-	public void debugPhaseOrder(List<X4OPhaseHandler> phases) throws X4OPhaseException {
-		X4OPhaseHandler phase = null;
+	public void debugPhaseOrder(List<X4OPhase> phases) throws X4OPhaseException {
+		X4OPhase phase = null;
 		try {
 			AttributesImpl atts = new AttributesImpl();
 			debugWriter.startElement (DEBUG_URI, "phaseOrder", "", atts);
-			for (X4OPhaseHandler phase2:phases) {
+			for (X4OPhase phase2:phases) {
 				phase = phase2;
 				debugPhase(phase2);
 			}
@@ -189,11 +192,11 @@ public class X4ODebugWriter {
 		}	
 	}
 	
-	private void debugPhase(X4OPhaseHandler phase) throws X4OPhaseException {
+	private void debugPhase(X4OPhase phase) throws X4OPhaseException {
 		try {
 			AttributesImpl atts = new AttributesImpl();
-			atts.addAttribute ("", "name", "", "", phase.getX4OPhase().name());
-			atts.addAttribute ("", "runOnce", "", "", phase.getX4OPhase().isRunOnce()+"");
+			atts.addAttribute ("", "id", "", "", phase.getId());
+			atts.addAttribute ("", "runOnce", "", "", phase.isRunOnce()+"");
 			atts.addAttribute ("", "listenersSize", "", "", phase.getPhaseListeners().size()+"");
 			
 			debugWriter.startElement (DEBUG_URI, "phase", "", atts);
@@ -214,7 +217,7 @@ public class X4ODebugWriter {
 			AttributesImpl attsEmpty = new AttributesImpl();
 			debugWriter.startElement (DEBUG_URI, "ElementLanguageModules", "", attsEmpty);
 			
-			for (ElementLanguageModule module:elementLanguage.getElementLanguageModules()) {
+			for (ElementLanguageModule module:elementLanguage.getLanguage().getElementLanguageModules()) {
 				AttributesImpl atts = new AttributesImpl();
 				atts.addAttribute ("", "className", "", "", module.getClass().getName());
 				atts.addAttribute ("", "name", "", "", module.getName());
@@ -422,10 +425,10 @@ public class X4ODebugWriter {
 	public void debugElementLanguage(ElementLanguage elementLanguage) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		//atts.addAttribute ("", key, "", "", value);
-		atts.addAttribute ("", "language", "", "", elementLanguage.getLanguageConfiguration().getLanguage());
-		atts.addAttribute ("", "languageVersion", "", "", elementLanguage.getLanguageConfiguration().getLanguageVersion());
+		atts.addAttribute ("", "language", "", "", elementLanguage.getLanguage().getLanguageName());
+		atts.addAttribute ("", "languageVersion", "", "", elementLanguage.getLanguage().getLanguageVersion());
 		atts.addAttribute ("", "className", "", "", elementLanguage.getClass().getName()+"");
-		atts.addAttribute ("", "currentX4OPhase", "", "", elementLanguage.getCurrentX4OPhase().name());
+		atts.addAttribute ("", "currentX4OPhase", "", "", elementLanguage.getCurrentX4OPhase().getId());
 		debugWriter.startElement (DEBUG_URI, "printElementLanguage", "", atts);
 		debugWriter.endElement(DEBUG_URI, "printElementLanguage", "");
 	}

@@ -24,7 +24,10 @@
 package org.x4o.xml.core;
 
 import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.test.TestParser;
+import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.io.X4OReaderContext;
+import org.x4o.xml.test.TestDriver;
+import org.x4o.xml.test.models.TestObjectRoot;
 
 import junit.framework.TestCase;
 
@@ -37,36 +40,42 @@ import junit.framework.TestCase;
 public class NamespaceUriTest extends TestCase {
 	
 	public void testSimpleUri() throws Exception {
-		TestParser parser = new TestParser();
-		parser.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		ElementLanguage context = null;
+		TestDriver driver = TestDriver.getInstance();
+		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
 		try {
-			parser.parseResource("tests/namespace/uri-simple.xml");
-			assertEquals(true,parser.getElementLanguage().getRootElement().getChilderen().size()==1);
+			context = reader.readResourceContext("tests/namespace/uri-simple.xml");
+			assertEquals(true,context.getRootElement().getChilderen().size()==1);
 		} finally {
-			parser.doReleasePhaseManual();
+			reader.releaseContext(context);
 		}
 	}
 	
 	public void testEmptyUri() throws Exception {
-		TestParser parser = new TestParser();
-		parser.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		parser.setProperty(X4OLanguagePropertyKeys.INPUT_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
+		ElementLanguage context = null;
+		TestDriver driver = TestDriver.getInstance();
+		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		reader.setProperty(X4OLanguagePropertyKeys.INPUT_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
 		try {
-			parser.parseResource("tests/namespace/uri-empty.xml");
-			assertEquals(true,parser.getElementLanguage().getRootElement().getChilderen().size()==1);
+			context = reader.readResourceContext("tests/namespace/uri-empty.xml");
+			assertEquals(true,context.getRootElement().getChilderen().size()==1);
 		} finally {
-			parser.doReleasePhaseManual();
+			reader.releaseContext(context);
 		}
 	}
 	
 	public void testSchemaUri() throws Exception {
-		TestParser parser = new TestParser();
-		parser.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		ElementLanguage context = null;
+		TestDriver driver = TestDriver.getInstance();
+		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
 		try {
-			parser.parseResource("tests/namespace/uri-schema.xml");
-			assertEquals(true,parser.getElementLanguage().getRootElement().getChilderen().size()==1);
+			context = reader.readResourceContext("tests/namespace/uri-schema.xml");
+			assertEquals(true,context.getRootElement().getChilderen().size()==1);
 		} finally {
-			parser.doReleasePhaseManual();
+			reader.releaseContext(context);
 		}
 	}
 }

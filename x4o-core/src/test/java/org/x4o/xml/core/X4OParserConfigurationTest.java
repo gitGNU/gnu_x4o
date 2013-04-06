@@ -24,11 +24,10 @@
 package org.x4o.xml.core;
 
 import org.x4o.xml.core.config.X4OLanguageConfiguration;
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
-import org.x4o.xml.test.TestParser;
+import org.x4o.xml.test.TestDriver;
 
 import junit.framework.TestCase;
 
@@ -40,22 +39,16 @@ import junit.framework.TestCase;
  */
 public class X4OParserConfigurationTest extends TestCase {
 	
-	TestParser parser;
+	TestDriver driver;
 	X4OLanguageConfiguration config;
 	
 	public void setUp() throws Exception {
-		parser = new TestParser();
-		parser.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		try {
-			parser.parseResource("tests/namespace/uri-simple.xml");
-			config = parser.getElementLanguage().getLanguageConfiguration();
-		} finally {
-			parser.doReleasePhaseManual();
-		}
+		driver = TestDriver.getInstance();
+		config = driver.createLanguageContext().getLanguage().getLanguageConfiguration();
 	}
 	
 	public void testParserConfigurationLanguage() {
-		assertEquals("test",config.getLanguage());
+		assertEquals("test",driver.getLanguageName());
 		assertEquals(X4OLanguageConfiguration.DEFAULT_LANG_MODULES_FILE,config.getLanguageResourceModulesFileName());
 		assertEquals(X4OLanguageConfiguration.DEFAULT_LANG_PATH_PREFIX,config.getLanguageResourcePathPrefix());
 	}

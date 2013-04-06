@@ -23,8 +23,6 @@
 
 package org.x4o.xml.test.swixml;
 
-import org.x4o.xml.test.swixml.SwiXmlParser.SwiXmlVersion;
-
 /**
  * Accelerator3 test demo.
  * 
@@ -38,7 +36,7 @@ public class Accelerator3 extends Accelerator2 {
 	public Accelerator3(boolean render) throws Exception {
 		super(false);
 		if (render) {
-			swix.render( Accelerator3.DESCRIPTOR, SwiXmlVersion.VERSION_3 ).setVisible( true );
+			swix.render( Accelerator3.DESCRIPTOR, SwiXmlDriver.LANGUAGE_VERSION_3 ).setVisible( true );
 		}
 	}
 	

@@ -28,9 +28,8 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.x4o.xml.core.X4OParserSupportException;
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
-import org.x4o.xml.eld.xsd.X4OLanguageEldXsdWriter;
+import org.x4o.xml.eld.xsd.X4OSchemaWriterExecutor;
+import org.x4o.xml.element.ElementException;
 
 /**
  * SchemaWriterTask creates schema for language.
@@ -40,8 +39,8 @@ import org.x4o.xml.eld.xsd.X4OLanguageEldXsdWriter;
  */
 public class EldXsdWriterTask extends Task {
 
+	private String language = null;
 	private String nsuri = null;
-	private String supportclass = null;
 	private String destdir = null;
 	private boolean verbose = false;
 	private boolean failonerror = true;
@@ -64,35 +63,29 @@ public class EldXsdWriterTask extends Task {
 	}
 	
 	private void executeTask() throws BuildException {
-		if (getSupportclass()==null) {
-			throw new BuildException("supportclass attribute is not set.");
+		if (getLanguage()==null) {
+			throw new BuildException("langauge attribute is not set.");
 		}
 		if (getDestdir()==null) {
 			throw new BuildException("destdir attribute is not set.");
 		}
 		if (isVerbose()) {
 			log("Execute task from: "+getLocation());
-			log("destdir:"+getDestdir());
-			log("supportclass:"+getSupportclass());
-			log("nsuri:"+getNsuri());
-			log("verbose:"+isVerbose());
-			log("failonerror:"+isFailonerror());
+			log("language: "+getLanguage());
+			log("destdir: "+getDestdir());
+			log("nsuri: "+getNsuri());
+			log("verbose: "+isVerbose());
+			log("failonerror: "+isFailonerror());
 		}
 		File basePathFile = new File(getDestdir());
 		if (basePathFile.exists()==false) {
 			throw new BuildException("destdir does not exists: "+basePathFile);
 		}
-		Class<?> parserSupport = null;
-		try {
-			parserSupport = X4OLanguageClassLoader.loadClass(getSupportclass());
-		} catch (ClassNotFoundException e) {
-			throw new BuildException("Could not load class: "+getSupportclass(),e);
-		}
-		
+
 		// Config and start schema writer
-		X4OLanguageEldXsdWriter writer = new X4OLanguageEldXsdWriter();
+		X4OSchemaWriterExecutor writer = new X4OSchemaWriterExecutor();
 		writer.setBasePath(basePathFile);
-		writer.setLanguageParserSupport(parserSupport);
+		writer.setLanguage(getLanguage());
 		writer.setLanguageNamespaceUri(getNsuri());
 		try {
 			if (isVerbose()) {
@@ -102,7 +95,11 @@ public class EldXsdWriterTask extends Task {
 			writer.execute();
 			long stopTime = System.currentTimeMillis();
 			log("Done writing schema in "+(stopTime-startTime)+" ms.");
-		} catch (X4OParserSupportException e) {
+		} catch (ElementException e) {
+			throw new BuildException(e);
+		} catch (InstantiationException e) {
+			throw new BuildException(e);
+		} catch (IllegalAccessException e) {
 			throw new BuildException(e);
 		}
 	}
@@ -120,19 +117,19 @@ public class EldXsdWriterTask extends Task {
 	public void setNsuri(String nsuri) {
 		this.nsuri = nsuri;
 	}
-
+	
 	/**
-	 * @return the supportclass
+	 * @return the language
 	 */
-	public String getSupportclass() {
-		return supportclass;
+	public String getLanguage() {
+		return language;
 	}
 
 	/**
-	 * @param supportclass the supportclass to set
+	 * @param language the language to set
 	 */
-	public void setSupportclass(String supportclass) {
-		this.supportclass = supportclass;
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	/**

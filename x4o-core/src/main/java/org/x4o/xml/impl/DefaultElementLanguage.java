@@ -23,6 +23,7 @@
 
 package	org.x4o.xml.impl;
 
+import org.x4o.xml.core.config.X4OLanguage;
 import org.x4o.xml.element.AbstractElementLanguage;
 
 /**
@@ -33,4 +34,7 @@ import org.x4o.xml.element.AbstractElementLanguage;
  */
 public class DefaultElementLanguage extends AbstractElementLanguage {
 
+	public DefaultElementLanguage(X4OLanguage language, String languageVersion) {
+		super(language, languageVersion);
+	}
 }

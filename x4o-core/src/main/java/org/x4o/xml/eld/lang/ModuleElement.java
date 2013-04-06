@@ -26,7 +26,7 @@ package org.x4o.xml.eld.lang;
 import java.util.Map;
 
 import org.x4o.xml.core.config.X4OLanguageProperty;
-import org.x4o.xml.eld.EldParser;
+import org.x4o.xml.eld.EldModuleLoader;
 import org.x4o.xml.element.AbstractElement;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementLanguageModule;
@@ -50,11 +50,11 @@ public class ModuleElement extends AbstractElement {
 			throw new ElementException("Need to be root tag");
 		}
 		@SuppressWarnings("rawtypes")
-		Map m = (Map)getElementLanguage().getLanguageConfiguration().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
+		Map m = (Map)getElementLanguage().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
 		if (m==null) {
 			return;
 		}
-		ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.EL_PARENT_ELEMENT_LANGUAGE_MODULE);
+		ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldModuleLoader.EL_PARENT_ELEMENT_LANGUAGE_MODULE);
 		setElementObject(elementLanguageModule);
 	}
 }

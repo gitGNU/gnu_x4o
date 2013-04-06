@@ -25,9 +25,10 @@ package	org.x4o.xml.eld.lang;
 
 import java.util.Map;
 
+import org.x4o.xml.core.config.X4OLanguage;
 import org.x4o.xml.core.config.X4OLanguageClassLoader;
 import org.x4o.xml.core.config.X4OLanguageProperty;
-import org.x4o.xml.eld.EldParser;
+import org.x4o.xml.eld.EldModuleLoader;
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementAttributeHandler;
@@ -80,11 +81,11 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 	public void doBind(Object parentObject, Object childObject,Element childElement) throws ElementBindingHandlerException {
 		
 		@SuppressWarnings("rawtypes")
-		Map m = (Map)childElement.getElementLanguage().getLanguageConfiguration().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
+		Map m = (Map)childElement.getElementLanguage().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
 		if (m==null) {
 			return;
 		}
-		ElementLanguage x4oParsingContext = (ElementLanguage)m.get(EldParser.EL_PARENT_LANGUAGE_ELEMENT_LANGUAGE);
+		X4OLanguage x4oParsingContext = (X4OLanguage)m.get(EldModuleLoader.EL_PARENT_LANGUAGE);
 		//ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.PARENT_ELEMENT_LANGUAGE_MODULE);
 		ElementLanguageModule elementLanguageModule = (ElementLanguageModule)parentObject;
 		if (x4oParsingContext==null) {
@@ -102,7 +103,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 		if (childObject instanceof ElementNamespaceContext) {
 			ElementNamespaceContext elementNamespaceContext = (ElementNamespaceContext)childObject;
 			try {
-				elementNamespaceContext.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getElementLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
+				elementNamespaceContext.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getElementLanguage().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
 			} catch (Exception e) {
 				throw new ElementBindingHandlerException("Error loading: "+e.getMessage(),e);
 			}

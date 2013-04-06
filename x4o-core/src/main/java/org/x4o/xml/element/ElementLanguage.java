@@ -23,15 +23,15 @@
 
 package	org.x4o.xml.element;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
-import org.x4o.xml.core.X4OPhase;
-import org.x4o.xml.core.config.X4OLanguageConfiguration;
-
+import org.x4o.xml.core.X4ODebugWriter;
+import org.x4o.xml.core.config.X4OLanguage;
+import org.x4o.xml.core.config.X4OLanguageProperty;
+import org.x4o.xml.core.phase.X4OPhase;
 
 /**
  * ElementLanguage is the central store of the defined element language.
@@ -41,27 +41,7 @@ import org.x4o.xml.core.config.X4OLanguageConfiguration;
  */
 public interface ElementLanguage {
 	
-	/**
-	 * Gets all ElementBindingHandlers.
-	 * @param parent The parent element object or class to search for.
-	 * @param child The parent element object or class to search for.
-	 * @return	Returns an List with all ElementBindingHandler for the search pair.
-	 */
-	List<ElementBindingHandler> findElementBindingHandlers(Object parent,Object child);
-	
-	/**
-	 * Returns list of ElementInterfaces for an element.
-	 * @param object The element object or class to search for.
-	 * @return	The list of elementInterfaces.
-	 */
-	List<ElementInterface> findElementInterfaces(Object object);
-	
-	/**
-	 * Returns the namespace context for an namespace uri.
-	 * @param namespaceUri the namespace uri.
-	 * @return	The ElementNamespaceContext.
-	 */
-	ElementNamespaceContext findElementNamespaceContext(String namespaceUri);
+	X4OLanguage getLanguage();
 	
 	/**
 	 * Gets the EL Context.
@@ -123,20 +103,24 @@ public interface ElementLanguage {
 	 * @param element	The root element to set.
 	 */
 	void setRootElement(Element element);
-		
-	/**
-	 * @return the languageConfiguration.
-	 */
-	X4OLanguageConfiguration getLanguageConfiguration();
+	
 	
 	/**
-	 * Adds an ElementLanguageModule to this language.
-	 * @param elementLanguageModule The element language module to add.
+	 * @return	Returns null or an X4ODebugWriter to write parsing steps and debug data to.
 	 */
-	void addElementLanguageModule(ElementLanguageModule elementLanguageModule);
+	X4ODebugWriter getX4ODebugWriter();
 	
-	/**
-	 * @return Returns a list of element language modules in this defined and loaded language.
+	/** 
+	 * @return	Returns true if this config has a debug writer.
 	 */
-	List<ElementLanguageModule> getElementLanguageModules();
+	boolean hasX4ODebugWriter();
+	
+	Object getLanguageProperty(String key);
+	void setLanguageProperty(String key,Object value);
+	
+	Object getLanguageProperty(X4OLanguageProperty property);
+	void setLanguageProperty(X4OLanguageProperty property,Object value);
+	boolean getLanguagePropertyBoolean(X4OLanguageProperty property);
+	int getLanguagePropertyInteger(X4OLanguageProperty property);
+	String getLanguagePropertyString(X4OLanguageProperty property);
 }

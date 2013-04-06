@@ -37,7 +37,7 @@
 		<mkdir dir="${test.dir}/cel"/>
 		<eldDocWriter
 			destdir="${test.dir}/cel"
-			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			language="cel"
 			/>
 	</target>
 	
@@ -46,7 +46,7 @@
 		<eldDocWriter
 			verbose="true"
 			destdir="${test.dir}/cel"
-			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			language="cel"
 			/>
 	</target>
 	
@@ -54,7 +54,7 @@
 		<mkdir dir="${test.dir}/eld"/>
 		<eldDocWriter
 			destdir="${test.dir}/eld"
-			supportclass="org.x4o.xml.eld.EldParserSupportCore"
+			language="cel"
 			/>
 	</target>
 	
@@ -62,22 +62,16 @@
 		<eldDocWriter/>
 	</target>
 	<target name="test-fail-destdir" depends="init">
-		<eldDocWriter supportclass="org.x4o.xml.eld.EldParserSupportCore"/>
+		<eldDocWriter language="cel"/>
 	</target>
 	<target name="test-fail-destdir-error" depends="init">
-		<eldDocWriter supportclass="org.x4o.xml.eld.EldParserSupportCore" destdir="${test.dir}/no-dir"/>
+		<eldDocWriter language="cel" destdir="${test.dir}/no-dir"/>
 	</target>
-	<target name="test-fail-supportclass" depends="init">
+	<target name="test-fail-language" depends="init">
 		<eldDocWriter destdir="${test.dir}/test"/>
 	</target>
-	<target name="test-fail-supportclass-error" depends="init">
-		<eldDocWriter destdir="${test.dir}/test" supportclass="org.x4o.xml.eld.EldErrorParserSupport"/>
-	</target>
-	<target name="test-fail-class-error" depends="init">
-		<eldDocWriter destdir="${test.dir}/test" supportclass="non.excisting.clazz"/>
-	</target>
-	<target name="test-fail-class-error-no" depends="init">
-		<eldDocWriter destdir="${test.dir}/test" supportclass="non.excisting.clazz" failonerror="false"/>
+	<target name="test-fail-language-error" depends="init">
+		<eldDocWriter destdir="${test.dir}/test" language="cel-error"/>
 	</target>
 	
 </project>

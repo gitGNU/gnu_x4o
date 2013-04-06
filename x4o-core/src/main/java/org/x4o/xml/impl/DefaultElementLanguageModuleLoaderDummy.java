@@ -25,7 +25,7 @@ package org.x4o.xml.impl;
 
 import java.util.logging.Logger;
 
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.core.config.X4OLanguageLocal;
 import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementLanguageModuleLoader;
 
@@ -51,7 +51,7 @@ public class DefaultElementLanguageModuleLoaderDummy implements ElementLanguageM
 	 * @param elementLanguageModule The elementLanguageModule to load for.
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
 	 */
-	public void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) {
+	public void loadLanguageModule(X4OLanguageLocal elementLanguage,ElementLanguageModule elementLanguageModule) {
 		logger.fine("Dummy loader loads nothing.");
 	}
 }

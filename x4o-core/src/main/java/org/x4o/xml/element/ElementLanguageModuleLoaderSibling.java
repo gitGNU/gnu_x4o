@@ -25,6 +25,7 @@ package org.x4o.xml.element;
 
 import org.x4o.xml.core.config.X4OLanguageLoader;
 import org.x4o.xml.core.config.X4OLanguageLoaderException;
+import org.x4o.xml.core.config.X4OLanguageLocal;
 
 
 /**
@@ -38,9 +39,9 @@ public interface ElementLanguageModuleLoaderSibling extends ElementLanguageModul
 	
 	/**
 	 * Loads in the sibling language.
-	 * @param elementLanguage The ElementLanguage for which we load an sibling.
+	 * @param languageLocal The ElementLanguage for which we load an sibling.
 	 * @param loader The loader to use to load the x4o languages.
 	 * @throws X4OLanguageLoaderException Gets thrown when there is an error loading the sibling language.
 	 */
-	void loadLanguageSibling(ElementLanguage elementLanguage,X4OLanguageLoader loader) throws X4OLanguageLoaderException;
+	void loadLanguageSibling(X4OLanguageLocal languageLocal,X4OLanguageLoader loader) throws X4OLanguageLoaderException;
 }

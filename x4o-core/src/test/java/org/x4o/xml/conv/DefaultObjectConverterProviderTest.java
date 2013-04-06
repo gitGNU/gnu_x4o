@@ -30,7 +30,7 @@ import java.util.Locale;
 import org.x4o.xml.conv.text.ClassConverter;
 import org.x4o.xml.conv.text.EnumConverter;
 import org.x4o.xml.conv.text.URLConverter;
-import org.x4o.xml.core.X4OPhase;
+import org.x4o.xml.core.phase.X4OPhaseType;
 
 import junit.framework.TestCase;
 
@@ -155,18 +155,18 @@ public class DefaultObjectConverterProviderTest extends TestCase {
 	
 	public void testConverterEnum() throws Exception {
 		EnumConverter convOrg = new EnumConverter();
-		convOrg.setEnumClass(X4OPhase.class.getName());
+		convOrg.setEnumClass(X4OPhaseType.class.getName());
 		ObjectConverter conv = convOrg.clone();
-		Object result = conv.convertTo("runAttributesPhase", locale);
+		Object result = conv.convertTo("XML_READ", locale);
 		assertNotNull(result);
-		assertEquals("runAttributesPhase", result.toString());
+		assertEquals("XML_READ", result.toString());
 		Object resultBack = conv.convertBack(result, locale);
-		assertEquals("runAttributesPhase", resultBack.toString());
+		assertEquals("XML_READ", resultBack.toString());
 	}
 	
 	public void testConverterEnumError() throws Exception {
 		EnumConverter convOrg = new EnumConverter();
-		convOrg.setEnumClass(X4OPhase.class.getName());
+		convOrg.setEnumClass(X4OPhaseType.class.getName());
 		ObjectConverter conv = convOrg.clone();
 		
 		Exception e = null;

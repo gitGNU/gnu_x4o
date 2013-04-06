@@ -23,17 +23,17 @@
 
 package org.x4o.xml.element;
 
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
-import org.x4o.xml.core.X4OPhase;
-import org.x4o.xml.core.config.X4OLanguageConfiguration;
+import org.x4o.xml.core.X4ODebugWriter;
+import org.x4o.xml.core.config.X4OLanguage;
+import org.x4o.xml.core.config.X4OLanguageProperty;
+import org.x4o.xml.core.phase.X4OPhase;
 
 /**
  * An AbstractElementLanguage.
@@ -44,6 +44,7 @@ import org.x4o.xml.core.config.X4OLanguageConfiguration;
 public abstract class AbstractElementLanguage implements ElementLanguageLocal {
 
 	private Logger logger = null;
+	private X4OLanguage language = null;
 	private ExpressionFactory expressionFactory = null;
 	private ELContext eLContext = null;
 	private ElementAttributeValueParser elementAttributeValueParser = null;
@@ -51,18 +52,33 @@ public abstract class AbstractElementLanguage implements ElementLanguageLocal {
 	private X4OPhase currentX4OPhase = null;
 	private Map<Element, X4OPhase> dirtyElements = null;
 	private Element rootElement = null;
-	private X4OLanguageConfiguration languageConfiguration = null;
-	private List<ElementLanguageModule> elementLanguageModules = null;
+	private X4ODebugWriter debugWriter;
+	private Map<String,Object> languageProperties;
 
 	/**
 	 * Creates a new empty ElementLanguage.
 	 */
-	public AbstractElementLanguage() {
+	public AbstractElementLanguage(X4OLanguage language,String languageVersion) {
+		if (language==null) {
+			throw new NullPointerException("language may not be null");
+		}
+		if (languageVersion==null) {
+			throw new NullPointerException("languageVersion may not be null");
+		}
+		if (languageVersion.length()==0) {
+			throw new IllegalArgumentException("languageVersion may not be empty");
+		}
 		logger = Logger.getLogger(AbstractElementLanguage.class.getName());
 		logger.finest("Creating new ParsingContext");
-		elementLanguageModules = new ArrayList<ElementLanguageModule>(20);
-		currentX4OPhase = X4OPhase.FIRST_PHASE;
+		this.language=language;
 		dirtyElements = new HashMap<Element, X4OPhase>(40);
+		languageProperties = new HashMap<String,Object>(20);
+		languageProperties.put(X4OLanguageProperty.LANGUAGE_NAME.toUri(), language.getLanguageName());
+		languageProperties.put(X4OLanguageProperty.LANGUAGE_VERSION.toUri(), languageVersion);
+	}
+
+	public X4OLanguage getLanguage() {
+		return language;
 	}
 	
 	/**
@@ -141,14 +157,14 @@ public abstract class AbstractElementLanguage implements ElementLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementLanguage#setCurrentX4OPhase(org.x4o.xml.core.X4OPhase)
+	 * @see org.x4o.xml.element.ElementLanguage#setCurrentX4OPhase(org.x4o.xml.core.phase.X4OPhase)
 	 */
 	public void setCurrentX4OPhase(X4OPhase currentX4OPhase) {
 		this.currentX4OPhase = currentX4OPhase;
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementLanguage#addDirtyElement(org.x4o.xml.element.Element, org.x4o.xml.core.X4OPhase)
+	 * @see org.x4o.xml.element.ElementLanguage#addDirtyElement(org.x4o.xml.element.Element, org.x4o.xml.core.phase.X4OPhase)
 	 */
 	public void addDirtyElement(Element element, X4OPhase phase) {
 		if (dirtyElements.containsKey(element)) {
@@ -184,120 +200,80 @@ public abstract class AbstractElementLanguage implements ElementLanguageLocal {
 		//}
 		rootElement=element;
 	}
-
-	/**
-	 * @return the languageConfiguration
-	 */
-	public X4OLanguageConfiguration getLanguageConfiguration() {
-		return languageConfiguration;
-	}
-
-	/**
-	 * @param languageConfiguration the languageConfiguration to set
-	 */
-	public void setLanguageConfiguration(X4OLanguageConfiguration languageConfiguration) {
-		this.languageConfiguration = languageConfiguration;
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementLanguage#addElementLanguageModule(org.x4o.xml.element.ElementLanguageModule)
-	 */
-	public void addElementLanguageModule(ElementLanguageModule elementLanguageModule) {
-		if (elementLanguageModule.getId()==null) {
-			throw new NullPointerException("Can't add module without id.");
-		}
-		elementLanguageModules.add(elementLanguageModule);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementLanguage#getElementLanguageModules()
-	 */
-	public List<ElementLanguageModule> getElementLanguageModules() {
-		return elementLanguageModules;
+	
+	public Object getLanguageProperty(String key) {
+		return languageProperties.get(key);
 	}
 	
-
-	/**
-	 * @see org.x4o.xml.element.ElementLanguage#findElementBindingHandlers(java.lang.Object,java.lang.Object)
-	 */
-	public List<ElementBindingHandler> findElementBindingHandlers(Object parent,Object child) {
-		List<ElementBindingHandler> result = new ArrayList<ElementBindingHandler>(50);
-		for (int i=0;i<elementLanguageModules.size();i++) {
-			ElementLanguageModule module = elementLanguageModules.get(i);
-			findElementBindingHandlerInList(parent,child,result,module.getElementBindingHandlers());
-		}
-		for (ElementInterface ei:findElementInterfaces(parent)) {
-			findElementBindingHandlerInList(parent,child,result,ei.getElementBindingHandlers());
-		}
-		return result;
-	}
-
-	private void findElementBindingHandlerInList(Object parent,Object child,List<ElementBindingHandler> result,List<ElementBindingHandler> checkList) {
-		for (ElementBindingHandler binding:checkList) {
-			boolean parentBind = false;
-			if (parent instanceof Class) {
-				parentBind = binding.getBindParentClass().isAssignableFrom((Class<?>)parent);
-			} else {
-				parentBind = binding.getBindParentClass().isInstance(parent);
-			}
-			if (parentBind==false) {
-				continue;
-			}
-			boolean childBind = false;
-			for (Class<?> childClass:binding.getBindChildClasses()) {
-				if (child instanceof Class && childClass.isAssignableFrom((Class<?>)child)) {
-					childBind=true;
-					break;	
-				} else if (childClass.isInstance(child)) {
-					childBind=true;
-					break;
-				}
-			}
-			if (parentBind & childBind) {
-				result.add(binding);
-			}
-		}	
+	public void setLanguageProperty(String key,Object value) {
+		languageProperties.put(key, value);
 	}
 	
 	/**
-	 * @see org.x4o.xml.element.ElementLanguage#findElementInterfaces(java.lang.Object)
+	 * @see org.x4o.xml.core.config.X4OLanguageConfiguration#getLanguageProperty(org.x4o.xml.core.config.X4OLanguageProperty)
 	 */
-	public List<ElementInterface> findElementInterfaces(Object elementObject) {
-		if (elementObject==null) {
-			throw new NullPointerException("Can't search for null object.");
-		}
-		List<ElementInterface> result = new ArrayList<ElementInterface>(50);
-		for (int i=0;i<elementLanguageModules.size();i++) {
-			ElementLanguageModule module = elementLanguageModules.get(i);
-			for (ElementInterface ei:module.getElementInterfaces()) {
-				Class<?> eClass = ei.getInterfaceClass();
-				logger.finest("Checking interface handler: "+ei+" for class: "+eClass);
-				if (elementObject instanceof Class && eClass.isAssignableFrom((Class<?>)elementObject)) {
-					logger.finer("Found interface match from class; "+elementObject);
-					result.add(ei);
-				} else if (eClass.isInstance(elementObject)) {
-					logger.finer("Found interface match from object; "+elementObject);
-					result.add(ei);
-				}
-			}
-		}
-		return result;
+	public Object getLanguageProperty(X4OLanguageProperty property) {
+		return getLanguageProperty(property.toUri());
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementLanguage#findElementNamespaceContext(java.lang.String)
+	 * @see org.x4o.xml.core.config.X4OLanguageConfiguration#setLanguageProperty(org.x4o.xml.core.config.X4OLanguageProperty, java.lang.Object)
 	 */
-	public ElementNamespaceContext findElementNamespaceContext(String namespaceUri) {
-		
-		// TODO: refactor so no search for every tag !!
-		ElementNamespaceContext result = null;
-		for (int i=0;i<elementLanguageModules.size();i++) {
-			ElementLanguageModule module = elementLanguageModules.get(i);
-			result = module.getElementNamespaceContext(namespaceUri);
-			if (result!=null) {
-				return result;
-			}
+	public void setLanguageProperty(X4OLanguageProperty property, Object value) {
+		if (property.isValueValid(value)==false) {
+			throw new IllegalArgumentException("Now allowed to set value: "+value+" in property: "+property.name());
 		}
-		return result;
+		setLanguageProperty(property.toUri(), value);
+	}
+
+	/**
+	 * @see org.x4o.xml.core.config.X4OLanguageConfiguration#getLanguagePropertyBoolean(org.x4o.xml.core.config.X4OLanguageProperty)
+	 */
+	public boolean getLanguagePropertyBoolean(X4OLanguageProperty property) {
+		Object value = getLanguageProperty(property);
+		if (value instanceof Boolean) {
+			return (Boolean)value;
+		}
+		return (Boolean)property.getDefaultValue();
+	}
+
+	/**
+	 * @see org.x4o.xml.core.config.X4OLanguageConfiguration#getLanguagePropertyInteger(org.x4o.xml.core.config.X4OLanguageProperty)
+	 */
+	public int getLanguagePropertyInteger(X4OLanguageProperty property) {
+		Object value = getLanguageProperty(property);
+		if (value instanceof Integer) {
+			return (Integer)value;
+		}
+		return (Integer)property.getDefaultValue();
+	}
+	
+	public String getLanguagePropertyString(X4OLanguageProperty property) {
+		Object value = getLanguageProperty(property);
+		if (value instanceof String) {
+			return (String)value;
+		}
+		return (String)property.getDefaultValue();
+	}
+	
+	/**
+	 * @see org.x4o.xml.core.config.X4OLanguageConfiguration#getX4ODebugWriter()
+	 */
+	public X4ODebugWriter getX4ODebugWriter() {
+		return debugWriter;
+	}
+
+	/**
+	 * @see org.x4o.xml.core.config.X4OLanguageConfiguration#hasX4ODebugWriter()
+	 */
+	public boolean hasX4ODebugWriter() {
+		return debugWriter!=null;
+	}
+
+	/**
+	 * @see org.x4o.xml.core.config.X4OLanguageConfiguration#setX4ODebugWriter(org.x4o.xml.core.X4ODebugWriter)
+	 */
+	public void setX4ODebugWriter(X4ODebugWriter debugWriter) {
+		this.debugWriter=debugWriter;
 	}
 }

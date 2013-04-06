@@ -63,4 +63,39 @@ public class X4OLanguagePropertyKeys {
 	public static final String VALIDATION_INPUT_XSD			= X4OLanguageProperty.VALIDATION_INPUT_XSD.toUri();
 	public static final String VALIDATION_ELD				= X4OLanguageProperty.VALIDATION_ELD.toUri();
 	public static final String VALIDATION_ELD_XSD			= X4OLanguageProperty.VALIDATION_ELD_XSD.toUri();
+	
+	public final static String[] DEFAULT_X4O_GLOBAL_KEYS;
+	public final static String[] DEFAULT_X4O_READER_KEYS;
+	public final static String[] DEFAULT_X4O_WRITER_KEYS;
+	public final static String[] DEFAULT_X4O_SCHEMA_WRITER_KEYS;
+	
+	static {
+		X4OLanguageProperty[] globalKeys = X4OLanguageProperty.DEFAULT_X4O_GLOBAL_KEYS;
+		String[] globalResultKeys = new String[globalKeys.length];
+		for (int i=0;i<globalResultKeys.length;i++) {
+			globalResultKeys[i] = globalKeys[i].toUri();
+		}
+		DEFAULT_X4O_GLOBAL_KEYS = globalResultKeys;
+		
+		X4OLanguageProperty[] readerKeys = X4OLanguageProperty.DEFAULT_X4O_READER_KEYS;
+		String[] readerResultKeys = new String[readerKeys.length];
+		for (int i=0;i<readerResultKeys.length;i++) {
+			readerResultKeys[i] = readerKeys[i].toUri();
+		}
+		DEFAULT_X4O_READER_KEYS = readerResultKeys;
+		
+		X4OLanguageProperty[] writerKeys = X4OLanguageProperty.DEFAULT_X4O_WRITER_KEYS;
+		String[] writerResultKeys = new String[writerKeys.length];
+		for (int i=0;i<writerResultKeys.length;i++) {
+			writerResultKeys[i] = writerKeys[i].toUri();
+		}
+		DEFAULT_X4O_WRITER_KEYS = writerResultKeys; 
+		
+		X4OLanguageProperty[] schemaWriterKeys = X4OLanguageProperty.DEFAULT_X4O_SCHEMA_WRITER_KEYS;
+		String[] schemaWriterResultKeys = new String[schemaWriterKeys.length];
+		for (int i=0;i<schemaWriterResultKeys.length;i++) {
+			schemaWriterResultKeys[i] = schemaWriterKeys[i].toUri();
+		}
+		DEFAULT_X4O_SCHEMA_WRITER_KEYS = schemaWriterResultKeys; 
+	}
 }

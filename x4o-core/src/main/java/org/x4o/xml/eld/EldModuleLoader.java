@@ -29,10 +29,15 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.X4ODriverManager;
+import org.x4o.xml.core.config.X4OLanguageLocal;
 import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementLanguageModuleLoader;
 import org.x4o.xml.element.ElementLanguageModuleLoaderException;
+import org.x4o.xml.io.DefaultX4OReader;
+import org.x4o.xml.io.X4OReader;
 import org.xml.sax.SAXException;
 
 /**
@@ -46,6 +51,17 @@ public class EldModuleLoader implements ElementLanguageModuleLoader {
 	private Logger logger = null;
 	private String eldResource = null;
 	private boolean isEldCore = false;
+	
+	/** The EL key to access the parent language configuration. */
+	public static final String EL_PARENT_LANGUAGE_CONFIGURATION = "parentLanguageConfiguration";
+	
+	/** The EL key to access the parent language module. */
+	public static final String EL_PARENT_ELEMENT_LANGUAGE_MODULE = "parentElementLanguageModule";
+	
+	/** The EL key to access the parent language element langauge. */
+	public static final String EL_PARENT_LANGUAGE = "parentLanguage";
+	
+	
 	
 	/**
 	 * Creates an ELD/CEL module loader. 
@@ -68,11 +84,31 @@ public class EldModuleLoader implements ElementLanguageModuleLoader {
 	 * @throws ElementLanguageModuleLoaderException When eld language could not be loaded.
 	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
 	 */
-	public void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
 		logger.fine("Loading name eld file from resource: "+eldResource);
 		try {
-			EldParser parser = new EldParser(elementLanguage,elementLanguageModule,isEldCore);
-			parser.parseResource(eldResource);
+			//EldDriver parser = new EldDriver(elementLanguage,elementLanguageModule,isEldCore);
+			
+			X4ODriver driver = null;
+			if (isEldCore) {
+				driver = X4ODriverManager.getX4ODriver(CelDriver.LANGUAGE_NAME);
+			} else {
+				driver = X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
+			}
+			
+			ElementLanguage eldLang = driver.createLanguageContext(driver.getLanguageVersionDefault()); 
+			X4OReader reader = new DefaultX4OReader(eldLang); 		//driver.createReader();
+			
+			
+			reader.addELBeanInstance(EL_PARENT_LANGUAGE_CONFIGURATION, language.getLanguageConfiguration());
+			reader.addELBeanInstance(EL_PARENT_LANGUAGE, language);
+			reader.addELBeanInstance(EL_PARENT_ELEMENT_LANGUAGE_MODULE, elementLanguageModule);
+			
+// TODO:			if (language.getLanguageConfiguration().getLanguagePropertyBoolean(X4OLanguageProperty.DEBUG_OUTPUT_ELD_PARSER)) {
+//				eldLang.setX4ODebugWriter(elementLanguage.getLanguageConfiguration().getX4ODebugWriter());
+//			}
+			
+			reader.readResource(eldResource);
 		} catch (FileNotFoundException e) {
 			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		} catch (SecurityException e) {

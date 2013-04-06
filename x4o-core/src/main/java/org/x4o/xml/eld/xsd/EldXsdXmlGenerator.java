@@ -26,12 +26,12 @@ package org.x4o.xml.eld.xsd;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import org.x4o.xml.core.config.X4OLanguage;
 import org.x4o.xml.element.ElementClass;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
-import org.x4o.xml.sax.XMLWriter;
+import org.x4o.xml.io.sax.XMLWriter;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
@@ -43,10 +43,10 @@ import org.xml.sax.ext.DefaultHandler2;
  */
 public class EldXsdXmlGenerator {
 
-	private ElementLanguage context = null;
+	private X4OLanguage language = null;
 	
-	public EldXsdXmlGenerator(ElementLanguage context) {
-		this.context=context;
+	public EldXsdXmlGenerator(X4OLanguage language) {
+		this.language=language;
 		
 	}
 	
@@ -62,7 +62,7 @@ public class EldXsdXmlGenerator {
 	public void writeSchema(File basePath,String namespace) throws ElementException {
 		try {
 			if (namespace!=null) {
-				ElementNamespaceContext ns = context.findElementNamespaceContext(namespace);
+				ElementNamespaceContext ns = language.findElementNamespaceContext(namespace);
 				if (ns==null) {
 					throw new NullPointerException("Could not find namespace: "+namespace);
 				}
@@ -76,7 +76,7 @@ public class EldXsdXmlGenerator {
 				}	
 				return;
 			}
-			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+			for (ElementLanguageModule mod:language.getElementLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					checkNamespace(ns);
 					FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));
@@ -96,14 +96,14 @@ public class EldXsdXmlGenerator {
 	
 	public void generateSchema(String namespaceUri,DefaultHandler2 xmlWriter) throws SAXException  {
 		
-		ElementNamespaceContext ns = context.findElementNamespaceContext(namespaceUri);
+		ElementNamespaceContext ns = language.findElementNamespaceContext(namespaceUri);
 		if (ns==null) {
 			throw new NullPointerException("Could not find namespace: "+namespaceUri);
 		}
 		
-		EldXsdXmlWriter xsdWriter = new EldXsdXmlWriter(xmlWriter,context);
+		EldXsdXmlWriter xsdWriter = new EldXsdXmlWriter(xmlWriter,language);
 		xsdWriter.startNamespaces(namespaceUri);
-		xsdWriter.startSchema(ns,context);
+		xsdWriter.startSchema(ns);
 		for (ElementClass ec:ns.getElementClasses()) {
 			xsdWriter.writeElementClass(ec,ns);
 		}

@@ -56,24 +56,24 @@ public class X4OEntityResolver implements EntityResolver {
 	
 	private Logger logger = null;
 	private URL basePath = null;
-	private ElementLanguage elementLanguage = null;
+	private ElementLanguage elementContext = null;
 	private Map<String,String> schemaResources = null;
 	private Map<String,String> schemaPathResources = null;
 	
 	/**
 	 * Creates an X4OEntityResolver for a language.
-	 * @param elementLanguage	The x4o language to resolve entities for.
+	 * @param elementContext	The x4o language to resolve entities for.
 	 */
-	protected X4OEntityResolver(ElementLanguage elementLanguage) {
-		if (elementLanguage==null) {
-			throw new NullPointerException("Can't provide entities with null ElementLanguage.");
+	public X4OEntityResolver(ElementLanguage elementContext) {
+		if (elementContext==null) {
+			throw new NullPointerException("Can't provide entities with null elementContext.");
 		}
 		this.logger=Logger.getLogger(X4OEntityResolver.class.getName());
-		this.elementLanguage=elementLanguage;
-		this.basePath=(URL)elementLanguage.getLanguageConfiguration().getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_BASE_PATH);
+		this.elementContext=elementContext;
+		this.basePath=(URL)elementContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_BASE_PATH);
 		this.schemaResources=new HashMap<String,String>(20);
 		this.schemaPathResources=new HashMap<String,String>(20);
-		for (ElementLanguageModule mod:elementLanguage.getElementLanguageModules()) {
+		for (ElementLanguageModule mod:elementContext.getLanguage().getElementLanguageModules()) {
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 				if (ns.getSchemaUri()==null) {
 					continue;
@@ -82,15 +82,15 @@ public class X4OEntityResolver implements EntityResolver {
 					continue;
 				}
 				StringBuffer buf = new StringBuffer(30);
-				buf.append(elementLanguage.getLanguageConfiguration().getLanguageResourcePathPrefix());
+				buf.append(elementContext.getLanguage().getLanguageConfiguration().getLanguageResourcePathPrefix());
 				buf.append('/');
-				buf.append(elementLanguage.getLanguageConfiguration().getLanguage());
+				buf.append(elementContext.getLanguage().getLanguageName());
 				buf.append('/');
 				buf.append(ns.getSchemaResource());
 				schemaResources.put( ns.getSchemaUri(), buf.toString() );
 				
 				buf = new StringBuffer(30);
-				buf.append(elementLanguage.getLanguageConfiguration().getLanguage());
+				buf.append(elementContext.getLanguage().getLanguageName());
 				buf.append(File.separatorChar);
 				buf.append(ns.getSchemaResource());
 				schemaPathResources.put( ns.getSchemaUri(), buf.toString() );
@@ -110,7 +110,7 @@ public class X4OEntityResolver implements EntityResolver {
 		logger.finer("Fetch sysId: "+systemId+" pubId: "+publicId);
 		
 		// Check if other resolver has resource
-		EntityResolver resolver = (EntityResolver)elementLanguage.getLanguageConfiguration().getLanguageProperty(X4OLanguageProperty.CONFIG_ENTITY_RESOLVER);
+		EntityResolver resolver = (EntityResolver)elementContext.getLanguageProperty(X4OLanguageProperty.CONFIG_ENTITY_RESOLVER);
 		if (resolver!=null) {
 			InputSource result = resolver.resolveEntity(publicId, systemId);
 			if (result!=null) {
@@ -120,7 +120,7 @@ public class X4OEntityResolver implements EntityResolver {
 		
 		// Check if we have it on user defined schema base path
 		if (schemaPathResources.containsKey(systemId)) {
-			File schemaBasePath = (File)elementLanguage.getLanguageConfiguration().getLanguageProperty(X4OLanguageProperty.VALIDATION_SCHEMA_PATH);
+			File schemaBasePath = (File)elementContext.getLanguageProperty(X4OLanguageProperty.VALIDATION_SCHEMA_PATH);
 			if (schemaBasePath!=null && schemaBasePath.exists()) {
 				String schemeResource = schemaResources.get(systemId);
 				File schemaFile = new File(schemaBasePath.getAbsolutePath()+File.separatorChar+schemeResource);

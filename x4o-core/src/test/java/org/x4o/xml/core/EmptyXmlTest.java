@@ -25,8 +25,10 @@ package org.x4o.xml.core;
 
 import java.io.FileNotFoundException;
 
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.test.TestParser;
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.test.TestDriver;
+import org.x4o.xml.test.models.TestObjectRoot;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import junit.framework.TestCase;
@@ -38,14 +40,12 @@ import junit.framework.TestCase;
  * @version 1.0 Jul 24, 2006
  */
 public class EmptyXmlTest extends TestCase {
-	
-	public void setUp() throws Exception {
-	}
 
 	public void testFileNotFound() throws Exception {
-		TestParser parser = new TestParser();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
 		try {
-			parser.parseFile("tests/empty-xml/non-excisting-file.xml");
+			reader.readFile("tests/empty-xml/non-excisting-file.xml");
 		} catch (FileNotFoundException e) {
 			assertEquals(true, e.getMessage().contains("non-excisting-file.xml"));
 			return;
@@ -54,9 +54,10 @@ public class EmptyXmlTest extends TestCase {
 	}
 	
 	public void testResourceNotFound() throws Exception {
-		TestParser parser = new TestParser();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
 		try {
-			parser.parseResource("tests/empty-xml/non-excisting-resource.xml");
+			reader.readResource("tests/empty-xml/non-excisting-resource.xml");
 		} catch (NullPointerException e) {
 			assertEquals(true,e.getMessage().contains("Could not find resource"));
 			return;
@@ -65,9 +66,10 @@ public class EmptyXmlTest extends TestCase {
 	}
 
 	public void testResourceParsing() throws Exception {
-		TestParser parser = new TestParser();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
 		try {
-			parser.parseResource("tests/empty-xml/empty-test.xml");	
+			reader.readResource("tests/empty-xml/empty-test.xml");	
 		} catch (SAXParseException e) {
 			assertEquals("No ElementNamespaceContext found for empty namespace.", e.getMessage());
 			return;
@@ -76,9 +78,10 @@ public class EmptyXmlTest extends TestCase {
 	}
 
 	public void testResourceEmptyReal() throws Exception {
-		TestParser parser = new TestParser();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
 		try {
-			parser.parseResource("tests/empty-xml/empty-real.xml");
+			reader.readResource("tests/empty-xml/empty-real.xml");
 		} catch (SAXException e) {
 			assertEquals(true,e.getMessage().contains("Premature end of file."));
 			return;
@@ -87,9 +90,10 @@ public class EmptyXmlTest extends TestCase {
 	}
 
 	public void testResourceEmptyXml() throws Exception {
-		TestParser parser = new TestParser();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
 		try {
-			parser.parseResource("tests/empty-xml/empty-xml.xml");
+			reader.readResource("tests/empty-xml/empty-xml.xml");
 		} catch (SAXException e) {
 			boolean hasError = e.getMessage().contains("Premature end of file."); // java6+ sax message
 			if (hasError==false) {
@@ -102,13 +106,18 @@ public class EmptyXmlTest extends TestCase {
 	}
 	
 	public void testEmptyX40() throws Exception {
-		TestParser parser = new TestParser();
-		parser.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		try {
-			parser.parseResource("tests/empty-xml/empty-x4o.xml");
-			assertEquals(true,parser.getElementLanguage().getRootElement().getChilderen().isEmpty());
-		} finally {
-			parser.doReleasePhaseManual();
-		}
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		assertNotNull(driver);
+		
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		assertNotNull(reader);
+		
+		TestObjectRoot root = reader.readResource("tests/empty-xml/empty-x4o.xml");
+		assertNotNull(root);
+		
+		assertEquals(true,root.getTestBeans().isEmpty());
+		assertEquals(true,root.getTestObjectChilds().isEmpty());
+		assertEquals(true,root.getTestObjectParents().isEmpty());
+		assertEquals(true,root.getTestObjects().isEmpty());
 	}
 }

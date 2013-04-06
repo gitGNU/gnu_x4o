@@ -27,7 +27,7 @@ import java.io.StringWriter;
 
 import org.x4o.xml.element.AbstractElement;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.sax.XMLWriter;
+import org.x4o.xml.io.sax.XMLWriter;
 
 /**
  * InlinePropertiesElement to test 

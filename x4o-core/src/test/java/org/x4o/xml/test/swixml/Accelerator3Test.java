@@ -29,7 +29,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import org.x4o.xml.test.swixml.SwiXmlParser.SwiXmlVersion;
+import org.x4o.xml.io.X4OReader;
 
 import junit.framework.TestCase;
 
@@ -42,10 +42,12 @@ import junit.framework.TestCase;
 public class Accelerator3Test extends TestCase {
 	
 	public void testSwingMenuAbout() throws Exception {
-		Accelerator3 ac3 = new Accelerator3(false);		
-		SwiXmlParser parser = new SwiXmlParser(ac3.swix,SwiXmlVersion.VERSION_3);
-		parser.parseResource(Accelerator3.DESCRIPTOR);
-		Component root = parser.getRootComponent();
+		Accelerator3 ac3 = new Accelerator3(false);
+		SwingEngine engine = new SwingEngine(ac3);
+		SwiXmlDriver driver = SwiXmlDriver.getInstance();
+		X4OReader<Component> reader = driver.createReader(SwiXmlDriver.LANGUAGE_VERSION_3);
+		reader.addELBeanInstance(SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE, engine);
+		Component root = reader.readResource(Accelerator3.DESCRIPTOR);
 		assertNotNull(root);
 		JFrame frame = (JFrame)root;
 		assertTrue(frame.getJMenuBar().getMenuCount()>0);

@@ -23,9 +23,11 @@
 
 package org.x4o.xml.core;
 
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.test.TestParser;
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestBean;
+import org.x4o.xml.test.models.TestObjectRoot;
 
 import junit.framework.TestCase;
 
@@ -38,37 +40,37 @@ import junit.framework.TestCase;
 public class AttributeBeanTest extends TestCase {
 	
 	public void testBeanProperties() throws Exception {
-		TestParser parser = new TestParser();
-		parser.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		try {
-			parser.parseResource("tests/attributes/test-bean.xml");
-			TestBean b = (TestBean)parser.getElementLanguage().getRootElement().getChilderen().get(1).getElementObject();
-			
-			assertEquals(123		,0+	b.getPrivateIntegerTypeField());
-			assertEquals(123		,0+	b.getPrivateIntegerObjectField());
-			
-			assertEquals(123l		,0+	b.getPrivateLongTypeField());
-			assertEquals(123l		,0+	b.getPrivateLongObjectField());
-			
-			assertEquals(123.45d	,0+	b.getPrivateDoubleTypeField());
-			assertEquals(123.45d	,0+	b.getPrivateDoubleObjectField());
-			
-			assertEquals(123.45f	,0+	b.getPrivateFloatTypeField());
-			assertEquals(123.45f	,0+	b.getPrivateFloatObjectField());
-			
-			assertEquals(67			,0+	b.getPrivateByteTypeField());
-			assertEquals(67			,0+	b.getPrivateByteObjectField());
-			
-			assertEquals(true,		b.isPrivateBooleanTypeField());
-			assertEquals(new Boolean(true),	b.getPrivateBooleanObjectField());
-			
-			assertEquals('W'		,0+ b.getPrivateCharTypeField());
-			assertEquals('C'		,0+	b.getPrivateCharObjectField());
-			
-			assertEquals("x4o"		,b.getPrivateStringObjectField());
-			//TODO: add again: assertEquals(true		,null!=b.getPrivateDateObjectField());
-		} finally {
-			parser.doReleasePhaseManual();
-		}
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		
+		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
+		assertNotNull(root);
+		assertNotNull(root.getTestBeans());
+		assertEquals(2, root.getTestBeans().size());
+		TestBean b = root.getTestBeans().get(0);
+		
+		assertEquals(123		,0+	b.getPrivateIntegerTypeField());
+		assertEquals(123		,0+	b.getPrivateIntegerObjectField());
+		
+		assertEquals(123l		,0+	b.getPrivateLongTypeField());
+		assertEquals(123l		,0+	b.getPrivateLongObjectField());
+		
+		assertEquals(123.45d	,0+	b.getPrivateDoubleTypeField());
+		assertEquals(123.45d	,0+	b.getPrivateDoubleObjectField());
+		
+		assertEquals(123.45f	,0+	b.getPrivateFloatTypeField());
+		assertEquals(123.45f	,0+	b.getPrivateFloatObjectField());
+		
+		assertEquals(67			,0+	b.getPrivateByteTypeField());
+		assertEquals(67			,0+	b.getPrivateByteObjectField());
+		
+		assertEquals(true,		b.isPrivateBooleanTypeField());
+		assertEquals(new Boolean(true),	b.getPrivateBooleanObjectField());
+		
+		assertEquals('W'		,0+ b.getPrivateCharTypeField());
+		assertEquals('C'		,0+	b.getPrivateCharObjectField());
+		
+		assertEquals("x4o"		,b.getPrivateStringObjectField());
+		//TODO: add again: assertEquals(true		,null!=b.getPrivateDateObjectField());
 	}
 }

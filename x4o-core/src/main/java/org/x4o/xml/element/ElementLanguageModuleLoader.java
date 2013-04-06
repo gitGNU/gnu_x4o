@@ -23,6 +23,8 @@
 
 package org.x4o.xml.element;
 
+import org.x4o.xml.core.config.X4OLanguageLocal;
+
 
 /**
  * Provides elements from tag.<br>
@@ -36,9 +38,9 @@ public interface ElementLanguageModuleLoader {
 	
 	/**
 	 * Starts the ElementProvider.
-	 * @param elementLanguage The ElementLanguage to load for.
+	 * @param languageLocal The ElementLanguage to load for.
 	 * @param elementLanguageModule The ElementLanguageModule to load it into.
 	 * @throws ElementLanguageModuleLoaderException	Gets thrown when modules could not be correctly loaded.
 	 */
-	void loadLanguageModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException;
+	void loadLanguageModule(X4OLanguageLocal languageLocal,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException;
 }

@@ -23,8 +23,6 @@
 
 package org.x4o.xml.core.config;
 
-import org.x4o.xml.element.ElementLanguage;
-
 /**
  * Loads the language into the contexts.
  * 
@@ -40,5 +38,5 @@ public interface X4OLanguageLoader {
 	 * @param languageVersion	The language version to load.
 	 * @throws X4OLanguageLoaderException	When there is an error.
 	 */
-	void loadLanguage(ElementLanguage elementLanguage,String language,String languageVersion) throws X4OLanguageLoaderException;
+	void loadLanguage(X4OLanguageLocal languageLocal,String language,String languageVersion) throws X4OLanguageLoaderException;
 }

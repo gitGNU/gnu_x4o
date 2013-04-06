@@ -29,8 +29,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import org.x4o.xml.test.swixml.SwiXmlParser.SwiXmlVersion;
-
 /**
  * Accelerator2 test demo.
  * 
@@ -47,7 +45,7 @@ public class Accelerator2 {
 	
 	public Accelerator2(boolean render) throws Exception {
 		if (render) {
-			swix.render( Accelerator2.DESCRIPTOR, SwiXmlVersion.VERSION_2 ).setVisible( true );
+			swix.render( Accelerator2.DESCRIPTOR, SwiXmlDriver.LANGUAGE_VERSION_2 ).setVisible( true );
 		}
 	}
 	

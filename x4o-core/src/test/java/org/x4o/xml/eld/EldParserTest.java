@@ -23,14 +23,24 @@
 
 package org.x4o.xml.eld;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.X4ODriverManager;
 import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.eld.EldParser;
+import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.element.Element;
+import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.Element.ElementType;
 import org.x4o.xml.element.ElementClass;
+import org.x4o.xml.element.ElementLanguageModule;
+import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.io.X4OSchemaWriter;
+import org.x4o.xml.io.X4OWriter;
+import org.x4o.xml.test.TestDriver;
 
 import junit.framework.TestCase;
 
@@ -42,12 +52,46 @@ import junit.framework.TestCase;
  */
 public class EldParserTest extends TestCase {
 
-	public void testRunEldParserCore() throws Exception {
-		EldParser parser =  new EldParser(true);
-		parser.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+	public void testNone() {
+		/*
+		X4ODriver<ElementLanguageModule> driver = X4ODriverManager.getX4ODriver(TestDriver.LANGUAGE);
+		driver.setGlobalProperty("", "");
+		
+		ElementLanguage lang = driver.createLanguage();
+		X4OSchemaWriter schemaWriter = driver.createSchemaWriter();
+		schemaWriter.writeSchema(new File("/tmp"));
+		
+		X4OReader reader = driver.createReader();
+		//reader.setProperty("", "");
+		//reader.addELBeanInstance(name, bean)
+		Object rootTreeNode = (Object)reader.readResource("com/iets/foo/test.xml");
+		
+		
+		X4OWriter writer = driver.createWriter();
+		writer.writeFile(new File("/tmp/output.xml"));
+		
 		try {
-			parser.parseResource("META-INF/eld/eld-lang.eld");
+			read.readResource("");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		*/
+	}
+	
+	public void testRunEldParserCore() throws Exception {
+
+		X4ODriver<ElementLanguageModule> driver = (X4ODriver<ElementLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
+		
+		X4OReader<ElementLanguageModule> reader = driver.createReader();
+		//EldDriver parser =  new EldDriver(true);
+		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		try {
+			ElementLanguageModule module = reader.readResource("META-INF/eld/eld-lang.eld");
 			List<String> resultTags = new ArrayList<String>(50);
+			for (ElementNamespaceContext ns:module.getElementNamespaceContexts()) {
+				
+			}
+			/*
 			for (Element e:parser.getDriver().getElementLanguage().getRootElement().getAllChilderen()) {
 				//System.out.println("obj: "+e.getElementObject());
 				if (e.getElementType().equals(ElementType.element) && e.getElementObject() instanceof ElementClass) {
@@ -55,6 +99,7 @@ public class EldParserTest extends TestCase {
 					resultTags.add(ec.getTag());
 				}
 			}
+			*/
 			//TODO fix test
 			/*
 			assertTrue("No module tag found in core eld.", 				resultTags.contains("module"));
@@ -63,13 +108,18 @@ public class EldParserTest extends TestCase {
 			assertTrue("No bean tag found in core eld.",				resultTags.contains("bean"));
 			assertTrue("No elementConfigurator tag found in core eld.",	resultTags.contains("elementConfigurator"));
 			*/
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
-			parser.doReleasePhaseManual();
+		//	parser.doReleasePhaseManual();
 		}
 	}
 	
 	public void testRunEldParser() throws Exception {
-		EldParser parser =  new EldParser(false);
-		parser.parseResource("META-INF/test/test-lang.eld");
+		//EldDriver parser =  new EldDriver(false);
+		//parser.parseResource("META-INF/test/test-lang.eld");
+		X4ODriver<ElementLanguageModule> driver = (X4ODriver<ElementLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
+		X4OReader<ElementLanguageModule> reader = driver.createReader();
+		reader.readResource("META-INF/test/test-lang.eld");
 	}
 }

@@ -28,7 +28,7 @@ import java.lang.reflect.Field;
 
 import javax.swing.Action;
 
-import org.x4o.xml.test.swixml.SwiXmlParser.SwiXmlVersion;
+import org.x4o.xml.io.X4OReader;
 
 /**
  * SwingEngine demo.
@@ -69,14 +69,15 @@ public class SwingEngine {
 		return null;
 	}
 	
-	public Component render(String resource,SwiXmlVersion xmlVersion) {
-		SwiXmlParser parser = new SwiXmlParser(this,xmlVersion);
+	public Component render(String resource,String languageVersion) {
+		SwiXmlDriver driver = SwiXmlDriver.getInstance();
+		X4OReader<Component> reader = driver.createReader(languageVersion);
+		reader.addELBeanInstance(SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE, this);
 		try {
-			parser.parseResource(resource);
+			rootComponent = reader.readResource(resource);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		rootComponent = parser.getRootComponent();
 		return getRootComponent();
 	}
 	

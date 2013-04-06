@@ -43,7 +43,7 @@ public class EldXsdWriterTaskTest extends BuildFileTest {
 		executeTarget("test-cel-schema-full");
 		File testDir = new File("target/test-schemas/cel-full");
 		int files = testDir.listFiles().length;
-		assertEquals("Should created only two files", 2, files);
+		assertEquals("Should created only 3 files", 3, files);
 	}
 	
 	public void testCelSchemaSingle() {
@@ -61,27 +61,20 @@ public class EldXsdWriterTaskTest extends BuildFileTest {
 		executeTarget("test-cel-schema-verbose");
 		assertLogContaining("verbose:");
 	}
-	
+
+	public void testFailAllMissing() {
+		expectBuildException("test-fail-all", "Should get exception if no attributes are set.");
+	}
 	public void testFailBasePath() {
 		expectBuildException("test-fail-destdir", "Should get exception id destdir is not set.");
 	}
 	public void testFailBasePathError() {
 		expectBuildException("test-fail-destdir-error", "Should get exception id destdir does not exists.");
 	}
-	public void testFailSupportClass() {
-		expectBuildException("test-fail-supportclass", "Should get exception id supportclass is not set.");
+	public void testFailLanguage() {
+		expectBuildException("test-fail-language", "Should get exception id language is not set.");
 	}
-	public void testFailSupportClassError() {
-		expectBuildException("test-fail-supportclass-error", "Should get exception id supportclass throws error.");
-	}
-	public void testFailAllMissing() {
-		expectBuildException("test-fail-all", "Should get exception if no attributes are set.");
-	}
-	public void testFailClassError() {
-		expectBuildException("test-fail-class-error", "No build exception while class is missing.");
-	}
-	public void testFailClassErrorNo() {
-		executeTarget("test-fail-class-error-no");
-		assertLogContaining("Could not load class:");
+	public void testFailLanguageError() {
+		expectBuildException("test-fail-language-error", "Should get exception id language throws error.");
 	}
 }

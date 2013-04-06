@@ -28,9 +28,9 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.x4o.xml.core.X4OParserSupportException;
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
-import org.x4o.xml.eld.doc.X4OLanguageEldDocWriter;
+
+import org.x4o.xml.eld.doc.X4ODocWriterExecutor;
+import org.x4o.xml.element.ElementException;
 
 /**
  * EldDocWriterTask creates schema for language.
@@ -40,7 +40,7 @@ import org.x4o.xml.eld.doc.X4OLanguageEldDocWriter;
  */
 public class EldDocWriterTask extends Task {
 
-	private String supportclass = null;
+	private String language = null;
 	private String destdir = null;
 	private boolean verbose = false;
 	private boolean failonerror = true;
@@ -63,16 +63,16 @@ public class EldDocWriterTask extends Task {
 	}
 	
 	private void executeTask() throws BuildException {
-		if (getSupportclass()==null) {
-			throw new BuildException("supportclass attribute is not set.");
+		if (getLanguage()==null) {
+			throw new BuildException("language attribute is not set.");
 		}
 		if (getDestdir()==null) {
 			throw new BuildException("basePath attribute is not set.");
 		}
 		if (isVerbose()) {
 			log("Execute task from: "+getLocation());
+			log("language:"+getLanguage());
 			log("destdir:"+getDestdir());
-			log("supportclass:"+getSupportclass());
 			log("verbose:"+isVerbose());
 			log("failonerror:"+isFailonerror());
 		}
@@ -80,17 +80,11 @@ public class EldDocWriterTask extends Task {
 		if (basePathFile.exists()==false) {
 			throw new BuildException("destdir does not exists: "+basePathFile);
 		}
-		Class<?> parserSupport = null;
-		try {
-			parserSupport = X4OLanguageClassLoader.loadClass(getSupportclass());
-		} catch (ClassNotFoundException e) {
-			throw new BuildException("Could not load class: "+getSupportclass(),e);
-		}
 		
 		// Config and start schema writer
-		X4OLanguageEldDocWriter writer = new X4OLanguageEldDocWriter();
+		X4ODocWriterExecutor writer = new X4ODocWriterExecutor();
 		writer.setBasePath(basePathFile);
-		writer.setLanguageParserSupport(parserSupport);
+		writer.setLanguage(getLanguage());
 		try {
 			if (isVerbose()) {
 				log("Starting writing.");
@@ -99,23 +93,23 @@ public class EldDocWriterTask extends Task {
 			writer.execute();
 			long stopTime = System.currentTimeMillis();
 			log("Done writing elddoc in "+(stopTime-startTime)+" ms.");
-		} catch (X4OParserSupportException e) {
+		} catch (ElementException e) {
 			throw new BuildException(e);
 		}
 	}
-
+	
 	/**
-	 * @return the supportclass
+	 * @return the language
 	 */
-	public String getSupportclass() {
-		return supportclass;
+	public String getLanguage() {
+		return language;
 	}
 
 	/**
-	 * @param supportclass the supportclass to set
+	 * @param language the language to set
 	 */
-	public void setSupportclass(String supportclass) {
-		this.supportclass = supportclass;
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	/**

@@ -43,7 +43,7 @@ public class SwiXmlActionConfigurator extends AbstractElementConfigurator {
 		if (actionName==null) {
 			return;
 		}
-		SwingEngine se = SwiXmlParser.getSwingEngine(element.getElementLanguage());
+		SwingEngine se = SwiXmlDriver.getSwingEngine(element.getElementLanguage());
 		Action action = se.getUIActionByName(actionName);
 		Object object = element.getElementObject();
 		if (object instanceof JMenuItem) {

@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.x4o.xml.core.config.X4OLanguage;
 import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.xml.sax.SAXException;
@@ -58,14 +58,14 @@ public class EldXsdXmlWriter {
 	
 	static public final String SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
 
-	protected ElementLanguage context = null;
+	protected X4OLanguage language = null;
 	protected DefaultHandler2 xmlWriter = null;
 	protected String writeNamespace = null;
 	protected Map<String, String> namespaces = null;
 	
-	public EldXsdXmlWriter(DefaultHandler2 xmlWriter,ElementLanguage context) {
+	public EldXsdXmlWriter(DefaultHandler2 xmlWriter,X4OLanguage language) {
 		this.xmlWriter=xmlWriter;
-		this.context=context;
+		this.language=language;
 		this.namespaces=new HashMap<String,String>(10);
 	}
 	
@@ -110,27 +110,27 @@ public class EldXsdXmlWriter {
 		this.namespaces.clear();
 		
 		// redo this mess, add nice find for binding handlers
-		for (ElementLanguageModule modContext:context.getElementLanguageModules()) {
+		for (ElementLanguageModule modContext:language.getElementLanguageModules()) {
 			for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
 				for (ElementClass ec:nsContext.getElementClasses()) {
 					Class<?> objectClass = null;
 					if (ec.getObjectClass()!=null) {
 						objectClass = ec.getObjectClass();
-						for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+						for (ElementLanguageModule mod:language.getElementLanguageModules()) {
 							for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 								for (ElementClass checkClass:ns.getElementClasses()) {
 									if (checkClass.getObjectClass()==null) {
 										continue;
 									}
 									Class<?> checkObjectClass = checkClass.getObjectClass();
-									List<ElementBindingHandler> b = context.findElementBindingHandlers(objectClass,checkObjectClass);
+									List<ElementBindingHandler> b = language.findElementBindingHandlers(objectClass,checkObjectClass);
 									if (b.isEmpty()==false) {
 										startNamespace(ns.getUri(),ns.getSchemaPrefix());
 									}
 								}
 							}
 						}
-						for (ElementInterface ei:context.findElementInterfaces(objectClass)) {
+						for (ElementInterface ei:language.findElementInterfaces(objectClass)) {
 							List<String> eiTags = ei.getElementParents(namespaceUri);
 							if (eiTags!=null) {
 								startNamespace(nsContext.getUri(),nsContext.getSchemaPrefix());
@@ -146,7 +146,7 @@ public class EldXsdXmlWriter {
 	private static final String COMMENT_SEPERATOR = " ==================================================================== ";
 	private static final String COMMENT_TEXT = "=====";
 	
-	public void startSchema(ElementNamespaceContext ns,ElementLanguage elementLanguage) throws SAXException {
+	public void startSchema(ElementNamespaceContext ns) throws SAXException {
 		
 		xmlWriter.startDocument();
 		
@@ -156,7 +156,7 @@ public class EldXsdXmlWriter {
 		xmlWriter.ignorableWhitespace(msg,0,msg.length);
 		msg = COMMENT_SEPERATOR.toCharArray();
 		xmlWriter.comment(msg,0,msg.length);
-		String desc = "Automatic generated schema for language: "+elementLanguage.getLanguageConfiguration().getLanguage();
+		String desc = "Automatic generated schema for language: "+language.getLanguageName();
 		int space = COMMENT_SEPERATOR.length()-desc.length()-(2*COMMENT_TEXT.length())-4;
 		StringBuffer b = new StringBuffer(COMMENT_SEPERATOR.length());
 		b.append(" ");
@@ -181,7 +181,7 @@ public class EldXsdXmlWriter {
 		xmlWriter.ignorableWhitespace(msg,0,msg.length);
 		
 		ElementLanguageModule module = null;
-		for (ElementLanguageModule elm:elementLanguage.getElementLanguageModules()) {
+		for (ElementLanguageModule elm:language.getElementLanguageModules()) {
 			ElementNamespaceContext s = elm.getElementNamespaceContext(ns.getUri());
 			if (s!=null) {
 				module = elm;
@@ -223,7 +223,7 @@ public class EldXsdXmlWriter {
 			if (ns.getUri().equals(uri)) {
 				continue;
 			}
-			ElementNamespaceContext nsContext = context.findElementNamespaceContext(uri);
+			ElementNamespaceContext nsContext = language.findElementNamespaceContext(uri);
 			atts = new AttributesImpl();
 			atts.addAttribute ("", "namespace", "", "", nsContext.getUri());
 			atts.addAttribute ("", "schemaLocation", "", "", nsContext.getSchemaResource());
@@ -272,7 +272,7 @@ public class EldXsdXmlWriter {
 			atts.addAttribute ("", "maxOccurs", "", "", "unbounded");
 			xmlWriter.startElement (SCHEMA_URI, "choice", "", atts);
 			
-			for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+			for (ElementLanguageModule mod:language.getElementLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					writeElementClassNamespaces(ec,nsWrite,ns);
 				}
@@ -293,7 +293,7 @@ public class EldXsdXmlWriter {
 			xmlWriter.endElement(SCHEMA_URI, "attribute", "");	
 		}
 		
-		for (ElementLanguageModule mod:context.getElementLanguageModules()) {
+		for (ElementLanguageModule mod:language.getElementLanguageModules()) {
 			for (ElementAttributeHandler eah:mod.getElementAttributeHandlers()) {
 				attrNames.add(eah.getAttributeName());
 				atts = new AttributesImpl();
@@ -381,7 +381,7 @@ public class EldXsdXmlWriter {
 			if (checkClass.getObjectClass()==null) {
 				continue;
 			}
-			for (ElementInterface ei:context.findElementInterfaces(checkClass.getObjectClass())) {
+			for (ElementInterface ei:language.findElementInterfaces(checkClass.getObjectClass())) {
 				parents = ei.getElementParents(nsWrite.getUri());
 				if (parents!=null && parents.contains(ecWrite.getTag())) {
 					refElements.add(checkClass.getTag());
@@ -393,7 +393,7 @@ public class EldXsdXmlWriter {
 			}
 			Class<?> objectClass = ecWrite.getObjectClass();
 			Class<?> checkObjectClass = checkClass.getObjectClass();
-			List<ElementBindingHandler> b = context.findElementBindingHandlers(objectClass,checkObjectClass);
+			List<ElementBindingHandler> b = language.findElementBindingHandlers(objectClass,checkObjectClass);
 			if (b.isEmpty()==false) {
 				refElements.add(checkClass.getTag());
 			}

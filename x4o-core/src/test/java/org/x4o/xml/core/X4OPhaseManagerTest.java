@@ -23,12 +23,14 @@
 
 package org.x4o.xml.core;
 
+import java.util.Collection;
 import java.util.List;
 
-import org.x4o.xml.core.X4OPhase;
-import org.x4o.xml.core.X4OPhaseHandler;
-import org.x4o.xml.core.X4OPhaseManager;
-import org.x4o.xml.test.TestParser;
+import org.x4o.xml.core.phase.X4OPhase;
+import org.x4o.xml.core.phase.X4OPhaseManager;
+import org.x4o.xml.core.phase.X4OPhaseType;
+import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.test.TestDriver;
 
 
 import junit.framework.TestCase;
@@ -47,26 +49,27 @@ public class X4OPhaseManagerTest extends TestCase {
 		phaseRunned = false;
 	}
 
-	public void testPhaseOrder() throws Exception {
-		TestParser parser = new TestParser();
-		X4OPhaseManager manager = parser.getDriver().createX4OPhaseManager();
-		
-		assertEquals(false,manager.getPhases().isEmpty());
-		List<X4OPhaseHandler> phases = manager.getOrderedPhases();
-		
-		int i = 0;
-		for (X4OPhase phase:X4OPhase.PHASE_ORDER) {
-			//if (X4OPhase.configOptionalPhase.equals(phase)) {
-			//	continue;
-			//}
-			assertEquals(phase, phases.get(i).getX4OPhase());
-			i++;
+	public void testPhases() throws Exception {
+		TestDriver driver = TestDriver.getInstance();
+		ElementLanguage context = driver.createLanguageContext();
+		X4OPhaseManager manager = context.getLanguage().getPhaseManager();
+		Collection<X4OPhase> phasesAll = manager.getAllPhases();
+		List<X4OPhase> phases = manager.getOrderedPhases(X4OPhaseType.XML_READ);
+		assertNotNull(phases);
+		assertFalse(phases.isEmpty());
+		assertNotNull(phasesAll);
+		assertFalse(phasesAll.isEmpty());
+		for (X4OPhase phase:phases) {
+			assertNotNull(phase);
+			assertNotNull(phase.getId());
 		}
 	}
 	
+	/*
 	public void testPhaseManager() throws Exception {
-		TestParser parser = new TestParser();
-		X4OPhaseManager manager = parser.getDriver().createX4OPhaseManager();
+		TestDriver driver = TestDriver.getInstance();
+		ElementLanguage context = driver.createLanguageContext();
+		X4OPhaseManager manager = context.getLanguage().getPhaseManager();
 		
 		Exception e = null;
 		try {
@@ -76,4 +79,5 @@ public class X4OPhaseManagerTest extends TestCase {
 		}
 		assertEquals(true, e!=null );
 	}
+	*/
 }

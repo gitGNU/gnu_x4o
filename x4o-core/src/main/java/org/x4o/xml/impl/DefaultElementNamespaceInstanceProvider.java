@@ -25,6 +25,7 @@ package org.x4o.xml.impl;
 
 import java.util.logging.Logger;
 
+import org.x4o.xml.core.config.X4OLanguage;
 import org.x4o.xml.core.config.X4OLanguageClassLoader;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementClass;
@@ -42,7 +43,6 @@ import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 public class DefaultElementNamespaceInstanceProvider implements ElementNamespaceInstanceProvider {
 
 	private Logger logger = null;
-	private ElementLanguage elementLanguage = null;
 	private ElementNamespaceContext elementNamespaceContext = null;
 	
 	/**
@@ -53,12 +53,11 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 	}
 
 	/**
-	 * @param	elementLanguage	The elementLanguage of this provider.
+	 * @param	language	The elementLanguage of this provider.
 	 * @param	elementNamespaceContext	The elementNamespaceContext for this provider.
 	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#start(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementNamespaceContext)
 	 */
-	public void start(ElementLanguage elementLanguage,ElementNamespaceContext elementNamespaceContext) {
-		this.elementLanguage=elementLanguage;
+	public void start(X4OLanguage language,ElementNamespaceContext elementNamespaceContext) {
 		this.elementNamespaceContext=elementNamespaceContext;
 		logger.finer("Starting DefaultElementNamespaceInstanceProvider for: "+elementNamespaceContext.getUri());
 	}
@@ -69,7 +68,7 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 	 * @throws ElementNamespaceInstanceProviderException 
 	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#createElementInstance(java.lang.String)
 	 */
-	public Element createElementInstance(String tag) throws ElementNamespaceInstanceProviderException {
+	public Element createElementInstance(ElementLanguage elementLanguage,String tag) throws ElementNamespaceInstanceProviderException {
 		ElementClass	elementClass	= elementNamespaceContext.getElementClass(tag);
 		Element 		element			= null;
 		
@@ -85,7 +84,7 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 				}
 				element = (Element) obj;
 			} else {
-				element = (Element)X4OLanguageClassLoader.newInstance((elementLanguage.getLanguageConfiguration().getDefaultElement()));
+				element = (Element)X4OLanguageClassLoader.newInstance((elementLanguage.getLanguage().getLanguageConfiguration().getDefaultElement()));
 			}
 			
 			if (elementClass.getObjectClass()!=null) {

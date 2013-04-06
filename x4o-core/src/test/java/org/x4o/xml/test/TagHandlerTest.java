@@ -26,8 +26,10 @@ package org.x4o.xml.test;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import org.x4o.xml.core.X4OParser;
+import org.x4o.xml.X4ODriver;
 import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
+import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.test.models.TestObjectRoot;
 
 
 import junit.framework.TestCase;
@@ -53,14 +55,17 @@ public class TagHandlerTest extends TestCase {
 	}
 
 	public void testTagHanders() throws Exception {
-		X4OParser parser = new X4OParser("test");
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		/*
 		File f = File.createTempFile("test-taghandlers", ".xml");
 		f.deleteOnExit();
-		parser.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(f));
+		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(f));
 		try {
-			//parser.parseResource("tests/test-taghandlers.xml");
+			reader.readResource("tests/test-taghandlers.xml");
 		} catch (Exception e) {
 			printS(e);
 		}
+		*/
 	}
 }

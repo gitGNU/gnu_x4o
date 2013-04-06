@@ -26,7 +26,7 @@ package org.x4o.xml.core.config;
 import java.util.List;
 import java.util.Map;
 
-import org.x4o.xml.core.X4ODebugWriter;
+import org.x4o.xml.X4ODriver;
 import org.x4o.xml.element.ElementLanguage;
 
 
@@ -45,17 +45,6 @@ public interface X4OLanguageConfiguration {
 	public static final String DEFAULT_LANG_MODULES_FILE = "-modules.xml";
 	
 	/**
-	 * Returns the language for which this ElementLanguage is created.
-	 * @return	Returns the language.
-	 */
-	String getLanguage();
-	
-	/**
-	 * @return	Returns the languageVersion of the parsing of this language.
-	 */
-	String getLanguageVersion();
-	
-	/**
 	 * @return	Returns the path prefix for loading language resources.
 	 */
 	String getLanguageResourcePathPrefix();
@@ -64,13 +53,6 @@ public interface X4OLanguageConfiguration {
 	 * @return	Returns the filename (postfix) of the modules definition file.
 	 */
 	String getLanguageResourceModulesFileName();
-	
-	
-	Object getLanguageProperty(X4OLanguageProperty property);
-	void setLanguageProperty(X4OLanguageProperty property,Object object);
-	boolean getLanguagePropertyBoolean(X4OLanguageProperty property);
-	int getLanguagePropertyInteger(X4OLanguageProperty property);
-	
 	
 	// Core interfaces are also in class for text reference without instance
 	Class<?> getDefaultElementNamespaceContext();
@@ -103,45 +85,30 @@ public interface X4OLanguageConfiguration {
 	 * Creates and filles the inital element language used to store the language.
 	 * @return	The newly created ElementLanguage.
 	 */
-	ElementLanguage createElementLanguage();
+	ElementLanguage createElementLanguage(X4ODriver<?> driver);
 
 	/**
 	 * @return	Returns Map of SAX properties which are set.
 	 */
-	Map<String,Object> getSAXParserProperties();
+	Map<String,Object> getSAXParserProperties(ElementLanguage elementContext);
 	
 	/**
 	 * @return	Returns Map of SAX properties which are optional set.
 	 */
-	Map<String,Object> getSAXParserPropertiesOptional();
+	Map<String,Object> getSAXParserPropertiesOptional(ElementLanguage elementContext);
 	
 	/**
 	 * @return	Returns Map of SAX features which are set on the xml parser.
 	 */
-	Map<String,Boolean> getSAXParserFeatures();
+	Map<String,Boolean> getSAXParserFeatures(ElementLanguage elementContext);
 	
 	/**
 	 * @return	Returns Map of SAX features which are optional set.
 	 */
-	Map<String, Boolean> getSAXParserFeaturesOptional();
+	Map<String, Boolean> getSAXParserFeaturesOptional(ElementLanguage elementContext);
 	
 	/**
 	 * @return	Returns List of SAX features which are required for xml parsing.
 	 */
-	List<String> getSAXParserFeaturesRequired();
-	
-	/**
-	 * @return	Returns null or an X4ODebugWriter to write parsing steps and debug data to.
-	 */
-	X4ODebugWriter getX4ODebugWriter();
-	
-	/** 
-	 * @return	Returns true if this config has a debug writer.
-	 */
-	boolean hasX4ODebugWriter();
-	
-	/**
-	 * @param debugWriter	The debug writer to set
-	 */
-	void setX4ODebugWriter(X4ODebugWriter debugWriter);
+	List<String> getSAXParserFeaturesRequired(ElementLanguage elementContext);
 }

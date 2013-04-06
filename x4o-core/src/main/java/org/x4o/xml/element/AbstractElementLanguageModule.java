@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import org.x4o.xml.core.config.X4OLanguageLocal;
+
 /**
  * An AbstractElementLanguageModule.
  * 
@@ -264,7 +266,7 @@ public abstract class AbstractElementLanguageModule extends AbstractElementMetaB
 	/**
 	 * Reloads the module, experiment !!
 	 */
-	public void reloadModule(ElementLanguage elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
+	public void reloadModule(X4OLanguageLocal elementLanguage,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
 		elementAttributeHandlers.clear();
 		elementBindingHandlers.clear();
 		elementInterfaces.clear();
