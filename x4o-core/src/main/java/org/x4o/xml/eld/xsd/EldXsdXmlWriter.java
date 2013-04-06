@@ -33,14 +33,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.x4o.xml.core.config.X4OLanguage;
 import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.AttributesImpl;
@@ -110,13 +110,13 @@ public class EldXsdXmlWriter {
 		this.namespaces.clear();
 		
 		// redo this mess, add nice find for binding handlers
-		for (ElementLanguageModule modContext:language.getElementLanguageModules()) {
+		for (X4OLanguageModule modContext:language.getLanguageModules()) {
 			for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
 				for (ElementClass ec:nsContext.getElementClasses()) {
 					Class<?> objectClass = null;
 					if (ec.getObjectClass()!=null) {
 						objectClass = ec.getObjectClass();
-						for (ElementLanguageModule mod:language.getElementLanguageModules()) {
+						for (X4OLanguageModule mod:language.getLanguageModules()) {
 							for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 								for (ElementClass checkClass:ns.getElementClasses()) {
 									if (checkClass.getObjectClass()==null) {
@@ -180,8 +180,8 @@ public class EldXsdXmlWriter {
 		msg = "\n".toCharArray();
 		xmlWriter.ignorableWhitespace(msg,0,msg.length);
 		
-		ElementLanguageModule module = null;
-		for (ElementLanguageModule elm:language.getElementLanguageModules()) {
+		X4OLanguageModule module = null;
+		for (X4OLanguageModule elm:language.getLanguageModules()) {
 			ElementNamespaceContext s = elm.getElementNamespaceContext(ns.getUri());
 			if (s!=null) {
 				module = elm;
@@ -272,7 +272,7 @@ public class EldXsdXmlWriter {
 			atts.addAttribute ("", "maxOccurs", "", "", "unbounded");
 			xmlWriter.startElement (SCHEMA_URI, "choice", "", atts);
 			
-			for (ElementLanguageModule mod:language.getElementLanguageModules()) {
+			for (X4OLanguageModule mod:language.getLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					writeElementClassNamespaces(ec,nsWrite,ns);
 				}
@@ -293,7 +293,7 @@ public class EldXsdXmlWriter {
 			xmlWriter.endElement(SCHEMA_URI, "attribute", "");	
 		}
 		
-		for (ElementLanguageModule mod:language.getElementLanguageModules()) {
+		for (X4OLanguageModule mod:language.getLanguageModules()) {
 			for (ElementAttributeHandler eah:mod.getElementAttributeHandlers()) {
 				attrNames.add(eah.getAttributeName());
 				atts = new AttributesImpl();

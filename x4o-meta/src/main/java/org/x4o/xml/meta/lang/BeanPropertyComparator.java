@@ -27,7 +27,7 @@ import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.x4o.xml.impl.DefaultElementObjectPropertyValue;
+import org.x4o.xml.element.DefaultElementObjectPropertyValue;
 
 
 /**

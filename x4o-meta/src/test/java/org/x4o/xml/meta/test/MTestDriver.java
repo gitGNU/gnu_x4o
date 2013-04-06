@@ -25,12 +25,12 @@ package org.x4o.xml.meta.test;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.core.config.DefaultX4OLanguage;
-import org.x4o.xml.core.config.DefaultX4OLanguageConfiguration;
-import org.x4o.xml.core.config.X4OLanguage;
-import org.x4o.xml.core.phase.X4OPhaseManagerFactory;
 import org.x4o.xml.io.X4OReaderContext;
 import org.x4o.xml.io.X4OWriterContext;
+import org.x4o.xml.lang.DefaultX4OLanguage;
+import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.phase.X4OPhaseManagerFactory;
 
 public class MTestDriver extends X4ODriver {
 

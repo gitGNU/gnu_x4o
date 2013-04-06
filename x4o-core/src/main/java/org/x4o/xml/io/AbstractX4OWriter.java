@@ -31,13 +31,13 @@ import java.io.OutputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.xml.sax.SAXException;
 
 public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> implements X4OWriter<T> {
 
-	public AbstractX4OWriter(ElementLanguage elementLanguage) {
+	public AbstractX4OWriter(X4OLanguageContext elementLanguage) {
 		super(elementLanguage);
 	}
 	
@@ -49,7 +49,7 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 	}
 	
 	public void write(T object,OutputStream output) throws ParserConfigurationException, SAXException, IOException {
-		ElementLanguage context = getLanguageContext();
+		X4OLanguageContext context = getLanguageContext();
 		context.getRootElement().setElementObject(object); //TODO: check ??
 		writeContext(context,output);
 	}

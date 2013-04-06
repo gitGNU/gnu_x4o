@@ -29,17 +29,17 @@ import java.util.List;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
 import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.element.Element;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.Element.ElementType;
 import org.x4o.xml.element.ElementClass;
-import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.io.X4OSchemaWriter;
 import org.x4o.xml.io.X4OWriter;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.TestDriver;
 
 import junit.framework.TestCase;
@@ -80,13 +80,13 @@ public class EldParserTest extends TestCase {
 	
 	public void testRunEldParserCore() throws Exception {
 
-		X4ODriver<ElementLanguageModule> driver = (X4ODriver<ElementLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
+		X4ODriver<X4OLanguageModule> driver = (X4ODriver<X4OLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
 		
-		X4OReader<ElementLanguageModule> reader = driver.createReader();
+		X4OReader<X4OLanguageModule> reader = driver.createReader();
 		//EldDriver parser =  new EldDriver(true);
 		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
 		try {
-			ElementLanguageModule module = reader.readResource("META-INF/eld/eld-lang.eld");
+			X4OLanguageModule module = reader.readResource("META-INF/eld/eld-lang.eld");
 			List<String> resultTags = new ArrayList<String>(50);
 			for (ElementNamespaceContext ns:module.getElementNamespaceContexts()) {
 				
@@ -118,8 +118,8 @@ public class EldParserTest extends TestCase {
 	public void testRunEldParser() throws Exception {
 		//EldDriver parser =  new EldDriver(false);
 		//parser.parseResource("META-INF/test/test-lang.eld");
-		X4ODriver<ElementLanguageModule> driver = (X4ODriver<ElementLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
-		X4OReader<ElementLanguageModule> reader = driver.createReader();
+		X4ODriver<X4OLanguageModule> driver = (X4ODriver<X4OLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
+		X4OReader<X4OLanguageModule> reader = driver.createReader();
 		reader.readResource("META-INF/test/test-lang.eld");
 	}
 }

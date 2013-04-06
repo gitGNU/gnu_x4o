@@ -26,12 +26,12 @@ package org.x4o.xml.eld.xsd;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import org.x4o.xml.core.config.X4OLanguage;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.io.sax.XMLWriter;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
@@ -76,7 +76,7 @@ public class EldXsdXmlGenerator {
 				}	
 				return;
 			}
-			for (ElementLanguageModule mod:language.getElementLanguageModules()) {
+			for (X4OLanguageModule mod:language.getLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					checkNamespace(ns);
 					FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));

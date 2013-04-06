@@ -23,10 +23,10 @@
 
 package org.x4o.xml.core;
 
-import org.x4o.xml.core.config.X4OLanguageConfiguration;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
+import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.test.TestDriver;
 
 import junit.framework.TestCase;

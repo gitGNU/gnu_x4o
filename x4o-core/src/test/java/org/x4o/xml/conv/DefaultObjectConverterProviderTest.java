@@ -30,7 +30,7 @@ import java.util.Locale;
 import org.x4o.xml.conv.text.ClassConverter;
 import org.x4o.xml.conv.text.EnumConverter;
 import org.x4o.xml.conv.text.URLConverter;
-import org.x4o.xml.core.phase.X4OPhaseType;
+import org.x4o.xml.lang.phase.X4OPhaseType;
 
 import junit.framework.TestCase;
 

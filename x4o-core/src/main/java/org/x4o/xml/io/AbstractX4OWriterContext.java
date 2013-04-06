@@ -31,23 +31,23 @@ import java.io.OutputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
 import org.xml.sax.SAXException;
 
 public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection implements X4OWriterContext<T> {
 
-	public AbstractX4OWriterContext(ElementLanguage elementLanguage) {
+	public AbstractX4OWriterContext(X4OLanguageContext elementLanguage) {
 		super(elementLanguage);
 	}
 	
-	public void writeFileContext(ElementLanguage context,String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
+	public void writeFileContext(X4OLanguageContext context,String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
 		if (fileName==null) {
 			throw new NullPointerException("Can't convert null fileName to file object.");
 		}		
 		writeFileContext(context,new File(fileName));
 	}
 	
-	public void writeFileContext(ElementLanguage context,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
+	public void writeFileContext(X4OLanguageContext context,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
 		if (file==null) {
 			throw new NullPointerException("Can't read null file.");
 		}

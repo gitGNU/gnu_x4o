@@ -28,9 +28,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
 import org.x4o.xml.element.AbstractElement;
 import org.x4o.xml.element.ElementException;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
 
 /**
  * BeanElement fills it elementObject from source with the bean.class attribute.

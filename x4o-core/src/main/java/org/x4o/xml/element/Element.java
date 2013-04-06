@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.x4o.xml.lang.X4OLanguageContext;
+
 /**
  * Defines an XML element with an object.<br>
  * <br>
@@ -134,13 +136,13 @@ public interface Element {
 	 * Sets the ElementLanguage.
 	 * @param elementLanguage	The ElementLanguage to set.
 	 */
-	void setElementLanguage(ElementLanguage elementLanguage);
+	void setLanguageContext(X4OLanguageContext elementLanguage);
 	
 	/**
 	 * Gets the ElementLanguage.
 	 * @return	Returns the ElementLanguage.
 	 */
-	ElementLanguage getElementLanguage();
+	X4OLanguageContext getElementLanguage();
 	
 	/**
 	 * Sets the body texts on an event based system.

@@ -26,8 +26,8 @@ package org.x4o.xml;
 import java.util.List;
 
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.core.config.X4OLanguageLoaderException;
-import org.x4o.xml.core.phase.X4OPhaseException;
+import org.x4o.xml.lang.X4OLanguageLoaderException;
+import org.x4o.xml.lang.phase.X4OPhaseException;
 
 import junit.framework.TestCase;
 

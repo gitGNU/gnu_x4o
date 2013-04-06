@@ -28,7 +28,7 @@ import java.util.Locale;
 import org.x4o.xml.conv.AbstractStringObjectConverter;
 import org.x4o.xml.conv.ObjectConverter;
 import org.x4o.xml.conv.ObjectConverterException;
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
 
 /**
  * Converts Sring of an Enum into the enum value.

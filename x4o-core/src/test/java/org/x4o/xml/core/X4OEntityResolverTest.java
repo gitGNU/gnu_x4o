@@ -26,9 +26,10 @@ package org.x4o.xml.core;
 import java.io.IOException;
 
 import org.x4o.xml.X4ODriver;
-import org.x4o.xml.core.config.X4OLanguageProperty;
 import org.x4o.xml.eld.CelDriver;
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.io.sax.X4OEntityResolver;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageProperty;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 import org.xml.sax.EntityResolver;
@@ -80,7 +81,7 @@ public class X4OEntityResolverTest extends TestCase {
 	
 	public void testResolveProperty() throws Exception {
 		X4ODriver<TestObjectRoot> driver = new TestDriver();
-		ElementLanguage language = driver.createLanguageContext();
+		X4OLanguageContext language = driver.createLanguageContext();
 		language.setLanguageProperty(X4OLanguageProperty.CONFIG_ENTITY_RESOLVER, new TestEntityResolver());
 		X4OEntityResolver resolver = new X4OEntityResolver(language);
 		Exception e = null;
@@ -96,7 +97,7 @@ public class X4OEntityResolverTest extends TestCase {
 	
 	public void testResolvePropertyNull() throws Exception {
 		X4ODriver<TestObjectRoot> driver = new TestDriver();
-		ElementLanguage language = driver.createLanguageContext();
+		X4OLanguageContext language = driver.createLanguageContext();
 		language.setLanguageProperty(X4OLanguageProperty.CONFIG_ENTITY_RESOLVER, new TestEntityResolver());
 		X4OEntityResolver resolver = new X4OEntityResolver(language);
 		Exception e = null;

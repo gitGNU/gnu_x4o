@@ -29,12 +29,12 @@ import javax.el.ValueExpression;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.core.config.DefaultX4OLanguage;
-import org.x4o.xml.core.config.DefaultX4OLanguageConfiguration;
-import org.x4o.xml.core.config.X4OLanguage;
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.core.phase.X4OPhaseManagerFactory;
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.DefaultX4OLanguage;
+import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.lang.phase.X4OPhaseManagerFactory;
 
 /**
  * SwiXmlParser works with the SwingEngine to config the UI tree.
@@ -91,9 +91,9 @@ public class SwiXmlDriver extends X4ODriver<Component> {
 	 * @param elementLanguage	The elementLanguage to get the swingEngine out.
 	 * @return	Returns the SwingEngine for this elementLanguage.
 	 */
-	static public SwingEngine getSwingEngine(ElementLanguage elementLanguage) {
-		ValueExpression ee = elementLanguage.getExpressionFactory().createValueExpression(elementLanguage.getELContext(),"${"+SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE+"}",Object.class);    	
-		SwingEngine se = (SwingEngine)ee.getValue(elementLanguage.getELContext());
+	static public SwingEngine getSwingEngine(X4OLanguageContext elementLanguage) {
+		ValueExpression ee = elementLanguage.getExpressionLanguageFactory().createValueExpression(elementLanguage.getExpressionLanguageContext(),"${"+SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE+"}",Object.class);    	
+		SwingEngine se = (SwingEngine)ee.getValue(elementLanguage.getExpressionLanguageContext());
 		return se;
 	}
 	

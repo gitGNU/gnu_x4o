@@ -29,16 +29,16 @@ import java.io.OutputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
 import org.xml.sax.SAXException;
 
 public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 
-	public DefaultX4OWriter(ElementLanguage elementLanguage) {
+	public DefaultX4OWriter(X4OLanguageContext elementLanguage) {
 		super(elementLanguage);
 	}
 
-	public void writeContext(ElementLanguage context,OutputStream out) throws ParserConfigurationException,
+	public void writeContext(X4OLanguageContext context,OutputStream out) throws ParserConfigurationException,
 			FileNotFoundException, SecurityException, NullPointerException,
 			SAXException, IOException {
 		

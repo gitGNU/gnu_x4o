@@ -30,10 +30,10 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguageContext;
 
 /**
  * EldDocGenerator writes documentation.
@@ -43,9 +43,9 @@ import org.x4o.xml.element.ElementNamespaceContext;
  */
 public class EldDocGenerator {
 	
-	private ElementLanguage context = null;
+	private X4OLanguageContext context = null;
 	
-	public EldDocGenerator(ElementLanguage context) {
+	public EldDocGenerator(X4OLanguageContext context) {
 		this.context=context;
 	}
 	
@@ -58,7 +58,7 @@ public class EldDocGenerator {
 			writer.writeOverviewNamespace(basePath, context);
 			writer.writeOverviewTree(basePath, context);
 			
-			for (ElementLanguageModule mod:context.getLanguage().getElementLanguageModules()) {
+			for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
 				
 				writer.writeOverviewModule(basePath, mod);
 				

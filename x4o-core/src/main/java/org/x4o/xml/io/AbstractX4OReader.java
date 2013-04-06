@@ -31,8 +31,8 @@ import	java.io.IOException;
 import	java.io.InputStream;
 import	java.net.URL;
 
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import	org.xml.sax.SAXException;
 import	javax.xml.parsers.ParserConfigurationException;
 
@@ -46,7 +46,7 @@ import	javax.xml.parsers.ParserConfigurationException;
  */
 abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> implements X4OReader<T> {
 	
-	public AbstractX4OReader(ElementLanguage elementLanguage) {
+	public AbstractX4OReader(X4OLanguageContext elementLanguage) {
 		super(elementLanguage);
 	}
 
@@ -59,7 +59,7 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 
 	@SuppressWarnings("unchecked")
 	public T read(InputStream input, String systemId, URL basePath) throws ParserConfigurationException, SAXException, IOException {
-		ElementLanguage context = readContext(input, systemId, basePath);
+		X4OLanguageContext context = readContext(input, systemId, basePath);
 		return (T)context.getRootElement().getElementObject();
 	}
 	

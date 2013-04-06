@@ -24,11 +24,11 @@
 package	org.x4o.xml.eld;
 
 import org.x4o.xml.X4ODriver;
-import org.x4o.xml.core.config.DefaultX4OLanguage;
-import org.x4o.xml.core.config.DefaultX4OLanguageConfiguration;
-import org.x4o.xml.core.config.X4OLanguage;
-import org.x4o.xml.core.phase.X4OPhaseManagerFactory;
-import org.x4o.xml.element.ElementLanguageModule;
+import org.x4o.xml.lang.DefaultX4OLanguage;
+import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.phase.X4OPhaseManagerFactory;
 
 
 /**
@@ -37,7 +37,7 @@ import org.x4o.xml.element.ElementLanguageModule;
  * @author Willem Cazander
  * @version 1.0 Aug 20, 2005
  */
-public class CelDriver extends X4ODriver<ElementLanguageModule> {
+public class CelDriver extends X4ODriver<X4OLanguageModule> {
 
 	/** Defines the identifier of the 'Core Element Language' language. */
 	public static final String LANGUAGE_NAME = "cel";

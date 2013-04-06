@@ -42,10 +42,10 @@ import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguageContext;
 
 /**
  * EldDocHtmlWriter writes simple eld documentation.
@@ -136,7 +136,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeIndex(File basePath,ElementLanguage context) throws IOException {
+	public void writeIndex(File basePath,X4OLanguageContext context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,"index.html");
 		try {
 			String title = context.getLanguage().getLanguageName()+" "+context.getLanguage().getLanguageVersion()+" ELD";
@@ -149,7 +149,7 @@ public class EldDocHtmlWriter {
 			int eleConfigs = 0;
 			int elements = 0;
 			int namespaces = 0;
-			for (ElementLanguageModule mod:context.getLanguage().getElementLanguageModules()) {
+			for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
 				attrHandlers += mod.getElementAttributeHandlers().size();
 				bindHandlers += mod.getElementBindingHandlers().size();
 				interFaces += mod.getElementInterfaces().size();
@@ -164,7 +164,7 @@ public class EldDocHtmlWriter {
 			printTableStart(pw,"Language Stats");
 			printTableRowSummary(pw,"Language:",""+context.getLanguage().getLanguageName());
 			printTableRowSummary(pw,"LanguageVersion:",""+context.getLanguage().getLanguageVersion());
-			printTableRowSummary(pw,"Modules:",""+context.getLanguage().getElementLanguageModules().size());
+			printTableRowSummary(pw,"Modules:",""+context.getLanguage().getLanguageModules().size());
 			printTableRowSummary(pw,"Namespaces:",""+namespaces);
 			printTableRowSummary(pw,"Elements:",""+elements);
 			printTableRowSummary(pw,"ElementInterfaces:",""+interFaces);
@@ -181,16 +181,16 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeOverviewModule(File basePath,ElementLanguage context) throws IOException {
+	public void writeOverviewModule(File basePath,X4OLanguageContext context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,"module-overview.html");
 		try {
 			String title = context.getLanguage().getLanguageName()+" "+context.getLanguage().getLanguageVersion()+" ELD";
 			printHeader(pw,"Overview Modules ("+title+")","");
 			printPageIndexTitle(pw,title,null,null);
 			printTableStart(pw,"Modules");
-			List<ElementLanguageModule> mods = context.getLanguage().getElementLanguageModules();
+			List<X4OLanguageModule> mods = context.getLanguage().getLanguageModules();
 			Collections.sort(mods,new ElementLanguageModuleComparator());
-			for (ElementLanguageModule mod:mods) {
+			for (X4OLanguageModule mod:mods) {
 				printTableRowOverview(pw,toSafeUri(mod.getId())+"/index.html",mod.getId(),mod.getName());
 			}
 			printTableEnd(pw);
@@ -202,16 +202,16 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeOverviewNamespace(File basePath,ElementLanguage context) throws IOException {
+	public void writeOverviewNamespace(File basePath,X4OLanguageContext context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,"namespace-overview.html");
 		String pathPrefix = "";
 		try {
 			String title = context.getLanguage().getLanguageName()+" "+context.getLanguage().getLanguageVersion()+" ELD";
 			printHeader(pw,"Overview Namespace("+title+")",pathPrefix);
 			printPageIndexTitle(pw,title,null,null);
-			List<ElementLanguageModule> mods = context.getLanguage().getElementLanguageModules();
+			List<X4OLanguageModule> mods = context.getLanguage().getLanguageModules();
 			Collections.sort(mods,new ElementLanguageModuleComparator());
-			for (ElementLanguageModule mod:mods) {
+			for (X4OLanguageModule mod:mods) {
 				printNamespaces(pw,mod.getElementNamespaceContexts(),pathPrefix,mod);
 			}
 			printBottom(pw,pathPrefix);
@@ -222,7 +222,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeOverviewTree(File basePath,ElementLanguage context) throws IOException {
+	public void writeOverviewTree(File basePath,X4OLanguageContext context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,"tree-overview.html");
 		String pathPrefix = "";
 		try {
@@ -231,7 +231,7 @@ public class EldDocHtmlWriter {
 			printPageIndexTitle(pw,title,null,null);
 			
 			List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
-			for (ElementLanguageModule mod:context.getLanguage().getElementLanguageModules()) {
+			for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					if (ns.getLanguageRoot()!=null && ns.getLanguageRoot()) {
 						// found language root elements.
@@ -260,8 +260,8 @@ public class EldDocHtmlWriter {
 	}
 	
 	class TreeNode {
-		ElementLanguage context;
-		ElementLanguageModule module;
+		X4OLanguageContext context;
+		X4OLanguageModule module;
 		ElementNamespaceContext namespace;
 		ElementClass elementClass;
 		TreeNode parent;
@@ -298,7 +298,7 @@ public class EldDocHtmlWriter {
 		if (node.indent>20) {
 			return result; // hard fail limit
 		}
-		for (ElementLanguageModule mod:node.context.getLanguage().getElementLanguageModules()) {
+		for (X4OLanguageModule mod:node.context.getLanguage().getLanguageModules()) {
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 				for (ElementClass ec:ns.getElementClasses()) {
 					TreeNode n=null;
@@ -370,7 +370,7 @@ public class EldDocHtmlWriter {
 	private List<TreeNode> findParents(TreeNode node) {
 		List<TreeNode> result = new ArrayList<TreeNode>(10);
 		TreeNode n=null;
-		for (ElementLanguageModule mod:node.context.getLanguage().getElementLanguageModules()) {
+		for (X4OLanguageModule mod:node.context.getLanguage().getLanguageModules()) {
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 				
 				List<String> tags = node.elementClass.getElementParents(ns.getUri());
@@ -434,7 +434,7 @@ public class EldDocHtmlWriter {
 	}
 	
 	
-	public void writeOverviewModule(File basePath,ElementLanguageModule mod) throws IOException {
+	public void writeOverviewModule(File basePath,X4OLanguageModule mod) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"index.html");
 		String pathPrefix = "../";
 		try {
@@ -457,7 +457,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeOverviewElement(File basePath,ElementNamespaceContext ns,ElementLanguageModule mod) throws IOException {
+	public void writeOverviewElement(File basePath,ElementNamespaceContext ns,X4OLanguageModule mod) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),"index.html");
 		String pathPrefix = "../../";
 		try {
@@ -495,7 +495,7 @@ public class EldDocHtmlWriter {
 	}
 	
 	
-	public void writeElement(File basePath,ElementClass ec,ElementNamespaceContext ns,ElementLanguageModule mod,ElementLanguage context) throws IOException {
+	public void writeElement(File basePath,ElementClass ec,ElementNamespaceContext ns,X4OLanguageModule mod,X4OLanguageContext context) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),ec.getTag(),"index.html");
 		String pathPrefix = "../../../";
 		try {
@@ -585,7 +585,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeElementInterface(File basePath,ElementInterface iface,ElementLanguageModule mod) throws IOException {
+	public void writeElementInterface(File basePath,ElementInterface iface,X4OLanguageModule mod) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"interface",iface.getId()+".html");
 		String pathPrefix = "../../";
 		String pathLocal = toSafeUri(iface.getId())+"/";
@@ -607,7 +607,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeElementConfigurator(File basePath,ElementConfigurator conf,ElementLanguageModule mod) throws IOException {
+	public void writeElementConfigurator(File basePath,ElementConfigurator conf,X4OLanguageModule mod) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"conf",conf.getId()+".html");
 		String pathPrefix = "../../";
 		try {
@@ -623,7 +623,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeElementConfigurator(File basePath,ElementConfigurator conf,ElementLanguageModule mod,ElementInterface iface) throws IOException {
+	public void writeElementConfigurator(File basePath,ElementConfigurator conf,X4OLanguageModule mod,ElementInterface iface) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"interface",iface.getId(),"conf",conf.getId()+".html");
 		String pathPrefix = "../../../../";
 		try {
@@ -639,7 +639,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeElementConfigurator(File basePath,ElementConfigurator conf,ElementLanguageModule mod,ElementNamespaceContext ns,ElementClass ec) throws IOException {
+	public void writeElementConfigurator(File basePath,ElementConfigurator conf,X4OLanguageModule mod,ElementNamespaceContext ns,ElementClass ec) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),ec.getTag(),"conf",conf.getId()+".html");
 		String pathPrefix = "../../../../";
 		try {
@@ -655,7 +655,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeBindingHandler(File basePath,ElementBindingHandler bind,ElementLanguageModule mod) throws IOException {
+	public void writeBindingHandler(File basePath,ElementBindingHandler bind,X4OLanguageModule mod) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"bind",bind.getId()+".html");
 		String pathPrefix = "../../";
 		try {
@@ -678,7 +678,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeBindingHandler(File basePath,ElementBindingHandler bind,ElementLanguageModule mod,ElementInterface iface) throws IOException {
+	public void writeBindingHandler(File basePath,ElementBindingHandler bind,X4OLanguageModule mod,ElementInterface iface) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"interface",iface.getId(),"bind",bind.getId()+".html");
 		String pathPrefix = "../../../../";
 		try {
@@ -699,7 +699,7 @@ public class EldDocHtmlWriter {
 		}
 	}
 	
-	public void writeAttributeHandler(File basePath,ElementAttributeHandler attr,ElementLanguageModule mod) throws IOException {
+	public void writeAttributeHandler(File basePath,ElementAttributeHandler attr,X4OLanguageModule mod) throws IOException {
 		PrintWriter pw = createPrintWriter(basePath,mod.getId(),"attr",attr.getId()+".html");
 		String pathPrefix = "../../";
 		try {
@@ -812,7 +812,7 @@ public class EldDocHtmlWriter {
 		printTableEnd(pw);
 	}
 	
-	private void printNamespaces(PrintWriter pw,List<ElementNamespaceContext> namespaces,String pathPrefix ,ElementLanguageModule mod) {
+	private void printNamespaces(PrintWriter pw,List<ElementNamespaceContext> namespaces,String pathPrefix ,X4OLanguageModule mod) {
 		printTableStart(pw,"Namespaces");
 		for (ElementNamespaceContext ns:namespaces) {
 			printTableRowOverview(pw,pathPrefix+toSafeUri(mod.getId())+"/"+toSafeUri(ns.getId())+"/index.html",ns.getId(),"<b>"+ns.getUri()+"</b><br/>"+TAB+ns.getName());
@@ -1028,8 +1028,8 @@ public class EldDocHtmlWriter {
 		pw.print("\t\t<td class=\"NavBarCell1\"><a href=\""+pathPrefix+"tree-overview.html\">Tree</a>&nbsp;</td>\n");
 	}
 	
-	class ElementLanguageModuleComparator implements Comparator<ElementLanguageModule> {
-		public int compare(ElementLanguageModule o1,ElementLanguageModule o2) {
+	class ElementLanguageModuleComparator implements Comparator<X4OLanguageModule> {
+		public int compare(X4OLanguageModule o1,X4OLanguageModule o2) {
 			return o1.getId().compareTo(o2.getId());
 		}
 	}

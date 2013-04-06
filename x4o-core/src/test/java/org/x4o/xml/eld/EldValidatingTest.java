@@ -24,9 +24,9 @@
 package org.x4o.xml.eld;
 
 import org.x4o.xml.X4ODriver;
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
 import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 

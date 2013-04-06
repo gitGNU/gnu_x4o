@@ -23,18 +23,18 @@
 
 package org.x4o.xml.io;
 
-import org.x4o.xml.core.config.X4OLanguageProperty;
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageProperty;
 
 public abstract class AbstractX4OConnection implements X4OConnection {
 	
-	private ElementLanguage languageContext = null;
+	private X4OLanguageContext languageContext = null;
 	
-	public AbstractX4OConnection(ElementLanguage languageContext) {
+	public AbstractX4OConnection(X4OLanguageContext languageContext) {
 		this.languageContext=languageContext;
 	}
 	
-	protected ElementLanguage getLanguageContext() {
+	protected X4OLanguageContext getLanguageContext() {
 		return languageContext;
 	}
 

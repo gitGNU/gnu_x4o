@@ -35,14 +35,14 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.x4o.xml.core.X4ODebugWriter;
-import org.x4o.xml.core.config.X4OLanguageProperty;
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.core.phase.X4OPhaseException;
-import org.x4o.xml.core.phase.X4OPhaseType;
-import org.x4o.xml.element.ElementLanguage;
-import org.x4o.xml.element.ElementLanguageLocal;
+import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.io.sax.XMLWriter;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageContextLocal;
+import org.x4o.xml.lang.X4OLanguageProperty;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.lang.phase.X4OPhaseException;
+import org.x4o.xml.lang.phase.X4OPhaseType;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.AttributesImpl;
@@ -59,12 +59,12 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	/** The logger to log to. */
 	private Logger logger = null;
 	
-	public DefaultX4OReader(ElementLanguage elementLanguage) {
+	public DefaultX4OReader(X4OLanguageContext elementLanguage) {
 		super(elementLanguage);
 		logger = Logger.getLogger(DefaultX4OReader.class.getName());
 	}
 	
-	public ElementLanguage readContext(InputStream input, String systemId, URL basePath) throws ParserConfigurationException, SAXException, IOException {
+	public X4OLanguageContext readContext(InputStream input, String systemId, URL basePath) throws ParserConfigurationException, SAXException, IOException {
 		setProperty(X4OLanguagePropertyKeys.INPUT_SOURCE_STREAM, input);
 		setProperty(X4OLanguagePropertyKeys.INPUT_SOURCE_SYSTEM_ID, systemId);
 		setProperty(X4OLanguagePropertyKeys.INPUT_SOURCE_BASE_PATH, basePath);
@@ -96,7 +96,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	 * Parses the input stream as a X4O document.
 	 */
 	protected void read() throws ParserConfigurationException,SAXException,IOException {
-		ElementLanguage elementLanguage = getLanguageContext();
+		X4OLanguageContext elementLanguage = getLanguageContext();
 		if (elementLanguage.getLanguage()==null) {
 			throw new ParserConfigurationException("parserConfig is broken getLanguage() returns null."); 
 		}
@@ -116,7 +116,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				xmlDebugWriter.startDocument();
 				xmlDebugWriter.startPrefixMapping("debug", X4ODebugWriter.DEBUG_URI);
 				X4ODebugWriter debugWriter = new X4ODebugWriter(xmlDebugWriter);
-				ElementLanguageLocal local = (ElementLanguageLocal)elementLanguage;
+				X4OLanguageContextLocal local = (X4OLanguageContextLocal)elementLanguage;
 				local.setX4ODebugWriter(debugWriter);
 				startedDebugWriter = true;
 			}
@@ -195,7 +195,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		}
 	}
 
-	public void releaseContext(ElementLanguage context) throws X4OPhaseException {
+	public void releaseContext(X4OLanguageContext context) throws X4OPhaseException {
 		if (context==null) {
 			return;
 		}

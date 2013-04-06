@@ -25,14 +25,14 @@ package org.x4o.xml.io;
 
 import java.io.File;
 
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
 import org.x4o.xml.eld.xsd.EldXsdXmlGenerator;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 
 public class DefaultX4OSchemaWriter extends AbstractX4OConnection implements X4OSchemaWriter {
 	
-	public DefaultX4OSchemaWriter(ElementLanguage languageContext) {
+	public DefaultX4OSchemaWriter(X4OLanguageContext languageContext) {
 		super(languageContext);
 	}
 	

@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.x4o.xml.conv.text.ClassConverter;
-import org.x4o.xml.core.config.X4OLanguage;
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
-import org.x4o.xml.core.config.X4OLanguageLocal;
 import org.x4o.xml.eld.lang.BeanElement;
 import org.x4o.xml.eld.lang.DescriptionElement;
 import org.x4o.xml.eld.lang.ElementClassAddParentElement;
@@ -40,16 +37,19 @@ import org.x4o.xml.eld.lang.ElementInterfaceBindingHandler;
 import org.x4o.xml.eld.lang.ElementModuleBindingHandler;
 import org.x4o.xml.eld.lang.ElementNamespaceContextBindingHandler;
 import org.x4o.xml.eld.lang.ModuleElement;
+import org.x4o.xml.element.DefaultElementClass;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
-import org.x4o.xml.element.ElementLanguageModule;
-import org.x4o.xml.element.ElementLanguageModuleLoader;
-import org.x4o.xml.element.ElementLanguageModuleLoaderException;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
-import org.x4o.xml.impl.DefaultElementClass;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguageModuleLoader;
+import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageLocal;
 
 /** 
  * EldModuleLoaderCore provides a few basic elements for the core eld x4o language.
@@ -57,7 +57,7 @@ import org.x4o.xml.impl.DefaultElementClass;
  * @author Willem Cazander
  * @version 1.0 Jan 11, 2009
  */
-public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
+public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 
 	private Logger logger = null;
 	private static final String PP_CEL_PROVIDER = "cel.x4o.org";
@@ -83,9 +83,9 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 	 * Loads the CEL language into the module.
 	 * @param elementLanguage The langauge to load for.
 	 * @param elementLanguageModule The module to load it in.
-	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
+	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal language,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
 		
 		elementLanguageModule.setId("cel-module");
 		elementLanguageModule.setName("Core Element Languag Module");
@@ -130,18 +130,18 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		try {
 			namespace = (ElementNamespaceContext)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceContext());
 		} catch (InstantiationException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		try {
 			namespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)
 				X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider())
 				);
 		} catch (InstantiationException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		
 		namespace.setId(CEL_CORE);
@@ -164,7 +164,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		try {
 			namespace.getElementNamespaceInstanceProvider().start(language, namespace);
 		} catch (ElementNamespaceInstanceProviderException e) {
-			throw new ElementLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
 		}
 		
 		elementLanguageModule.addElementNamespaceContext(namespace);
@@ -174,18 +174,18 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		try {
 			namespace = (ElementNamespaceContext)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceContext());
 		} catch (InstantiationException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		try {
 			namespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)
 				X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider())
 				);
 		} catch (InstantiationException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		
 		namespace.setId(CEL_ROOT);
@@ -198,7 +198,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 		try {
 			namespace.getElementNamespaceInstanceProvider().start(language, namespace);
 		} catch (ElementNamespaceInstanceProviderException e) {
-			throw new ElementLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
 		}
 		elementLanguageModule.addElementNamespaceContext(namespace);
 	}
@@ -207,9 +207,9 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 	 * Adds only Element class beans which need extra meta info for schema.
 	 * 
 	 * @param elementClassList	The list to fill.
-	 * @throws ElementLanguageModuleLoaderException 
+	 * @throws X4OLanguageModuleLoaderException 
 	 */
-	private void createElementClasses(List<ElementClass> elementClassList,X4OLanguage language) throws ElementLanguageModuleLoaderException {
+	private void createElementClasses(List<ElementClass> elementClassList,X4OLanguage language) throws X4OLanguageModuleLoaderException {
 		ElementClass ec = null;
 		ElementClassAttribute attr = null;
 		
@@ -287,15 +287,15 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 	 * Creates new ElementClassAttribute instance.
 	 * @param elementLanguage	The ElementLanguage to create from.
 	 * @return	The new ElementClassAttribute instance.
-	 * @throws ElementLanguageModuleLoaderException	When class could not be created.
+	 * @throws X4OLanguageModuleLoaderException	When class could not be created.
 	 */
-	private ElementClassAttribute newElementClassAttribute(X4OLanguage language) throws ElementLanguageModuleLoaderException {
+	private ElementClassAttribute newElementClassAttribute(X4OLanguage language) throws X4OLanguageModuleLoaderException {
 		try {
 			return (ElementClassAttribute)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementClassAttribute());
 		} catch (InstantiationException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage(),e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		}
 	}
 	
@@ -305,7 +305,7 @@ public class EldModuleLoaderCore implements ElementLanguageModuleLoader {
 	 * @param handler The handler to add the the module.
 	 * @param elementLanguageModule	The module to add the handler to.
 	 */
-	private void addBindingHandler(String id,ElementBindingHandler handler,ElementLanguageModule elementLanguageModule) {
+	private void addBindingHandler(String id,ElementBindingHandler handler,X4OLanguageModule elementLanguageModule) {
 		handler.setId(id);
 		elementLanguageModule.addElementBindingHandler(handler);
 	}

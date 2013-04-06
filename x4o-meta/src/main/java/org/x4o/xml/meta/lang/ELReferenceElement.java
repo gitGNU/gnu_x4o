@@ -44,8 +44,8 @@ public class ELReferenceElement extends AbstractElement {
 	public void doElementRun() throws ElementException {
 		String attributeValue = getAttributes().get("el.ref");
 		if("".equals(attributeValue) | attributeValue==null) { throw new ElementException("Set the el.ref attribute"); }
-		ValueExpression ee = getElementLanguage().getExpressionFactory().createValueExpression(getElementLanguage().getELContext(),"${"+attributeValue+"}",Object.class);
+		ValueExpression ee = getElementLanguage().getExpressionLanguageFactory().createValueExpression(getElementLanguage().getExpressionLanguageContext(),"${"+attributeValue+"}",Object.class);
 		Logger.getLogger(ELReferenceElement.class.getName()).finer("Get Variable in ELContext: ${"+attributeValue+"}");
-		setElementObject(ee.getValue(getElementLanguage().getELContext()));
+		setElementObject(ee.getValue(getElementLanguage().getExpressionLanguageContext()));
 	} 
 }

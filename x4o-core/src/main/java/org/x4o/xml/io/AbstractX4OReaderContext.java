@@ -31,7 +31,7 @@ import	java.io.IOException;
 import	java.io.InputStream;
 import	java.net.URL;
 
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
 import	org.xml.sax.SAXException;
 import	javax.xml.parsers.ParserConfigurationException;
 
@@ -44,7 +44,7 @@ import	javax.xml.parsers.ParserConfigurationException;
  */
 abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection implements X4OReaderContext<T> {
 	
-	public AbstractX4OReaderContext(ElementLanguage languageContext) {
+	public AbstractX4OReaderContext(X4OLanguageContext languageContext) {
 		super(languageContext);
 	}
 
@@ -59,7 +59,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws IOException
 	 * @see org.x4o.xml.sax.AbstractXMLreadr#read(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public ElementLanguage readFileContext(String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
+	public X4OLanguageContext readFileContext(String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
 		if (fileName==null) {
 			throw new NullPointerException("Can't convert null fileName to file object.");
 		}		
@@ -77,7 +77,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws IOException
 	 * @see org.x4o.xml.sax.AbstractXMLreadr#read(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public ElementLanguage readFileContext(File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
+	public X4OLanguageContext readFileContext(File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
 		if (file==null) {
 			throw new NullPointerException("Can't read null file.");
 		}
@@ -108,7 +108,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public ElementLanguage readResourceContext(String resourceName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
+	public X4OLanguageContext readResourceContext(String resourceName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
 		if (resourceName==null) {
 			throw new NullPointerException("Can't read null resourceName from classpath.");
 		}
@@ -143,7 +143,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws NullPointerException
 	 * @see org.x4o.xml.sax.AbstractXMLreadr#read(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public ElementLanguage readStringContext(String xmlString) throws ParserConfigurationException,SAXException,IOException,NullPointerException {
+	public X4OLanguageContext readStringContext(String xmlString) throws ParserConfigurationException,SAXException,IOException,NullPointerException {
 		if (xmlString==null) {
 			throw new NullPointerException("Can't read null xml string.");
 		}
@@ -160,7 +160,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws NullPointerException
 	 * @see org.x4o.xml.sax.AbstractXMLreadr#read(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public ElementLanguage readUrlContext(URL url) throws ParserConfigurationException,SAXException,IOException,NullPointerException {
+	public X4OLanguageContext readUrlContext(URL url) throws ParserConfigurationException,SAXException,IOException,NullPointerException {
 		if (url==null) {
 			throw new NullPointerException("Can't read null url.");
 		}

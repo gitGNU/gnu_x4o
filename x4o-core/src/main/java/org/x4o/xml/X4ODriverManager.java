@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

@@ -25,9 +25,9 @@ package org.x4o.xml.meta;
 
 import java.util.Date;
 
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.io.X4OReaderContext;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.meta.test.MTestDriver;
 
 import junit.framework.TestCase;
@@ -41,7 +41,7 @@ import junit.framework.TestCase;
 public class ReferenceStoreTest extends TestCase {
 	
 	public void testMetaGeneric() throws Exception {
-		ElementLanguage context = null;
+		X4OLanguageContext context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
 		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
@@ -54,7 +54,7 @@ public class ReferenceStoreTest extends TestCase {
 	}
 	
 	public void testLoadClass() throws Exception {
-		ElementLanguage context = null;
+		X4OLanguageContext context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
 		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
@@ -67,7 +67,7 @@ public class ReferenceStoreTest extends TestCase {
 	}
 	
 	public void testStoreRef() throws Exception {
-		ElementLanguage context = null;
+		X4OLanguageContext context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
 		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);

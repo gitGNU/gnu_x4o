@@ -25,17 +25,17 @@ package org.x4o.xml;
 
 import java.util.Collection;
 
-import org.x4o.xml.core.config.X4OLanguage;
-import org.x4o.xml.core.config.X4OLanguagePropertyKeys;
-import org.x4o.xml.core.phase.X4OPhaseException;
-import org.x4o.xml.core.phase.X4OPhaseType;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.DefaultX4OSchemaWriter;
 import org.x4o.xml.io.DefaultX4OWriter;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.io.X4OSchemaWriter;
 import org.x4o.xml.io.X4OWriter;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.lang.phase.X4OPhaseException;
+import org.x4o.xml.lang.phase.X4OPhaseType;
 
 /**
  * This is the starting point of the XML X4O Language Driver.
@@ -69,13 +69,13 @@ public abstract class X4ODriver<T> {
 		return result;
 	}
 	
-	public ElementLanguage createLanguageContext() {
+	public X4OLanguageContext createLanguageContext() {
 		return createLanguageContext(getLanguageVersionDefault());
 	}
 	
-	public ElementLanguage createLanguageContext(String version) {
+	public X4OLanguageContext createLanguageContext(String version) {
 		X4OLanguage language = createLanguage(version);
-		ElementLanguage result = language.getLanguageConfiguration().createElementLanguage(this);
+		X4OLanguageContext result = language.getLanguageConfiguration().createElementLanguage(this);
 		
 		try {
 			result.getLanguage().getPhaseManager().runPhases(result, X4OPhaseType.INIT);

@@ -23,7 +23,8 @@
 
 package org.x4o.xml.element;
 
-import org.x4o.xml.core.config.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguage;
 
 /**
  * ElementNamespaceInstanceProvider is provider for creating new Element instances for an xml tag.<br>
@@ -47,5 +48,5 @@ public interface ElementNamespaceInstanceProvider {
 	 * @return An new Element instance.
 	 * @throws ElementNamespaceInstanceProviderException	Thrown when error happened in language.
 	 */
-	Element createElementInstance(ElementLanguage elementLanguage,String tag) throws ElementNamespaceInstanceProviderException;
+	Element createElementInstance(X4OLanguageContext elementLanguage,String tag) throws ElementNamespaceInstanceProviderException;
 }

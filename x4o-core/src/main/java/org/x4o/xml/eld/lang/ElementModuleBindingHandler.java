@@ -25,9 +25,6 @@ package	org.x4o.xml.eld.lang;
 
 import java.util.Map;
 
-import org.x4o.xml.core.config.X4OLanguage;
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
-import org.x4o.xml.core.config.X4OLanguageProperty;
 import org.x4o.xml.eld.EldModuleLoader;
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
@@ -35,12 +32,14 @@ import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
-import org.x4o.xml.element.ElementLanguage;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementLanguageModule;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageProperty;
 
 /**
  * An ParentLanguageElementConfigurator.
@@ -65,7 +64,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
 	 */
 	public Class<?> getBindParentClass() {
-		return ElementLanguageModule.class;
+		return X4OLanguageModule.class;
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 		}
 		X4OLanguage x4oParsingContext = (X4OLanguage)m.get(EldModuleLoader.EL_PARENT_LANGUAGE);
 		//ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.PARENT_ELEMENT_LANGUAGE_MODULE);
-		ElementLanguageModule elementLanguageModule = (ElementLanguageModule)parentObject;
+		X4OLanguageModule elementLanguageModule = (X4OLanguageModule)parentObject;
 		if (x4oParsingContext==null) {
 			return;
 		}

@@ -28,7 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.x4o.xml.core.config.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
 
 /**
  * An AbstractElement.
@@ -43,7 +44,7 @@ public abstract class AbstractElement implements Element {
 	/** The config object */
 	private Object elementObject = null;
 	/** The language parsing context */
-	private ElementLanguage elementLanguage = null;
+	private X4OLanguageContext elementLanguage = null;
 	/** The ElementClass */
 	private ElementClass elementClass = null;
 	/** The attributes */
@@ -93,7 +94,7 @@ public abstract class AbstractElement implements Element {
 		getAttributes().clear();
 		setElementClass(null);
 		setParent(null);
-		setElementLanguage(null);
+		setLanguageContext(null);
 		attributes.clear();
 		childeren.clear(); // we do not release childeren, x4o does that
 		allChilderen.clear();
@@ -114,16 +115,16 @@ public abstract class AbstractElement implements Element {
 	}
 	
 	/**
-	 * @see Element#setElementLanguage(ElementLanguage)
+	 * @see Element#setLanguageContext(X4OLanguageContext)
 	 */
-	public void setElementLanguage(ElementLanguage elementLanguage) {
+	public void setLanguageContext(X4OLanguageContext elementLanguage) {
 		this.elementLanguage=elementLanguage;
 	}
 	
 	/**
 	 * @see Element#getElementLanguage()
 	 */
-	public ElementLanguage getElementLanguage() {
+	public X4OLanguageContext getElementLanguage() {
 		return elementLanguage;
 	}
 

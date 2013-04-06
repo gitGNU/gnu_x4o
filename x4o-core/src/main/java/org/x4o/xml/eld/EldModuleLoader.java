@@ -31,13 +31,13 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.core.config.X4OLanguageLocal;
-import org.x4o.xml.element.ElementLanguage;
-import org.x4o.xml.element.ElementLanguageModule;
-import org.x4o.xml.element.ElementLanguageModuleLoader;
-import org.x4o.xml.element.ElementLanguageModuleLoaderException;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageModuleLoader;
+import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
+import org.x4o.xml.lang.X4OLanguageLocal;
 import org.xml.sax.SAXException;
 
 /**
@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  * @author Willem Cazander
  * @version 1.0 Aug 17, 2005
  */
-public class EldModuleLoader implements ElementLanguageModuleLoader {
+public class EldModuleLoader implements X4OLanguageModuleLoader {
 
 	private Logger logger = null;
 	private String eldResource = null;
@@ -81,46 +81,45 @@ public class EldModuleLoader implements ElementLanguageModuleLoader {
 	 * Loads the ELD language into the module.
 	 * @param elementLanguage The langauge to load for.
 	 * @param elementLanguageModule The module to load it in.
-	 * @throws ElementLanguageModuleLoaderException When eld language could not be loaded.
-	 * @see org.x4o.xml.element.ElementLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.element.ElementLanguageModule)
+	 * @throws X4OLanguageModuleLoaderException When eld language could not be loaded.
+	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageContext, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal language,ElementLanguageModule elementLanguageModule) throws ElementLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
 		logger.fine("Loading name eld file from resource: "+eldResource);
 		try {
 			//EldDriver parser = new EldDriver(elementLanguage,elementLanguageModule,isEldCore);
 			
-			X4ODriver driver = null;
+			X4ODriver<?> driver = null;
 			if (isEldCore) {
 				driver = X4ODriverManager.getX4ODriver(CelDriver.LANGUAGE_NAME);
 			} else {
 				driver = X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
 			}
 			
-			ElementLanguage eldLang = driver.createLanguageContext(driver.getLanguageVersionDefault()); 
-			X4OReader reader = new DefaultX4OReader(eldLang); 		//driver.createReader();
-			
+			X4OLanguageContext eldLang = driver.createLanguageContext(driver.getLanguageVersionDefault()); 
+			X4OReader<?> reader = new DefaultX4OReader<Object>(eldLang);
 			
 			reader.addELBeanInstance(EL_PARENT_LANGUAGE_CONFIGURATION, language.getLanguageConfiguration());
 			reader.addELBeanInstance(EL_PARENT_LANGUAGE, language);
 			reader.addELBeanInstance(EL_PARENT_ELEMENT_LANGUAGE_MODULE, elementLanguageModule);
 			
-// TODO:			if (language.getLanguageConfiguration().getLanguagePropertyBoolean(X4OLanguageProperty.DEBUG_OUTPUT_ELD_PARSER)) {
+//TODO:			if (language.getLanguageConfiguration().getLanguagePropertyBoolean(X4OLanguageProperty.DEBUG_OUTPUT_ELD_PARSER)) {
 //				eldLang.setX4ODebugWriter(elementLanguage.getLanguageConfiguration().getX4ODebugWriter());
 //			}
 			
 			reader.readResource(eldResource);
 		} catch (FileNotFoundException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		} catch (SecurityException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		} catch (NullPointerException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		} catch (ParserConfigurationException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		} catch (SAXException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		} catch (IOException e) {
-			throw new ElementLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		}
 	}
 }

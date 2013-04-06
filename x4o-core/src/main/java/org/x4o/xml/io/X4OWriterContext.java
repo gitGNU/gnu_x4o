@@ -30,14 +30,14 @@ import java.io.OutputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.x4o.xml.element.ElementLanguage;
+import org.x4o.xml.lang.X4OLanguageContext;
 import org.xml.sax.SAXException;
 
 public interface X4OWriterContext<T> extends X4OWriter<T> {
 
-	void writeContext(ElementLanguage context,OutputStream out) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	void writeContext(X4OLanguageContext context,OutputStream out) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
 	
-	void writeFileContext(ElementLanguage context,String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	void writeFileContext(X4OLanguageContext context,String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
 	
-	void writeFileContext(ElementLanguage context,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	void writeFileContext(X4OLanguageContext context,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
 }
