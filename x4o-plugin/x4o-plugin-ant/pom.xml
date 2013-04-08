@@ -1,0 +1,209 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.x4o.plugin</groupId>
+    <artifactId>x4o-plugin</artifactId>
+    <version>0.8.5-SNAPSHOT</version>
+  </parent>
+  <artifactId>x4o-plugin-ant</artifactId>
+  <name>x4o-plugin-ant</name>
+  <description>x4o-plugin-ant</description>
+  <dependencies>
+    <dependency>
+      <groupId>org.x4o</groupId>
+      <artifactId>x4o-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.x4o</groupId>
+      <artifactId>x4o-elddoc</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>${ant.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant-testutil</artifactId>
+      <version>${ant-testutil.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+  	</dependency>
+    <dependency>
+      <groupId>de.odysseus.juel</groupId>
+      <artifactId>juel</artifactId>
+      <version>${juel.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.x4o</groupId>
+      <artifactId>x4o-core</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>${xerces.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${maven-site-plugin.version}</version>
+          <configuration>
+            <siteDirectory>${project.basedir}/../../src/site-child</siteDirectory>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  <profiles>
+    <profile>
+      <id>update-schema-cel</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>${maven-antrun-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>update-schema-cel-ant</id>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <target>
+                    <property name="coredir" value="${basedir}/../../x4o-core/src/main/resources/META-INF"/>
+                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
+                    <writeLanguageSchema destdir="${coredir}/cel" language="cel"/>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.x4o.plugin</groupId>
+                <artifactId>x4o-plugin-ant-schema</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>update-schema-eld</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>${maven-antrun-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>update-schema-eld-ant</id>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <target>
+                    <property name="coredir" value="${basedir}/../../x4o-core/src/main/resources/META-INF"/>
+                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
+                    <writeLanguageSchema destdir="${coredir}/cel" language="cel"/>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.x4o.plugin</groupId>
+                <artifactId>x4o-plugin-ant-schema</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>site-elddoc</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>${maven-antrun-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>site-elddoc-ant</id>
+                <phase>pre-site</phase>
+                <configuration>
+                  <target>
+                    <property name="coredir" value="${basedir}/../../target/site/elddocs"/>
+                    <mkdir dir="${coredir}/cel"/>
+                    <mkdir dir="${coredir}/eld"/>
+                    <mkdir dir="${coredir}/junit-test"/>
+                    <mkdir dir="${coredir}/junit-swixml2"/>
+                    <mkdir dir="${coredir}/junit-swixml3"/>
+                    <taskdef name="writeLanguageDoc" classname="org.x4o.plugin.ant.X4OWriteLanguageDocTask" classpathref="maven.plugin.classpath"/>
+                    <writeLanguageDoc destdir="${coredir}/cel" language="cel"/>
+                    <writeLanguageDoc destdir="${coredir}/eld" language="eld"/>
+                    <writeLanguageDoc destdir="${coredir}/junit-test" language="test"/>
+                    <writeLanguageDoc destdir="${coredir}/junit-swixml2" language="swixml" version="2.0"/>
+                    <writeLanguageDoc destdir="${coredir}/junit-swixml3" language="swixml"/>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.x4o.plugin</groupId>
+                <artifactId>x4o-plugin-ant</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.x4o</groupId>
+                <artifactId>x4o-core</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.x4o</groupId>
+                <artifactId>x4o-core</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+              </dependency>
+              <dependency>
+                <groupId>org.x4o</groupId>
+                <artifactId>x4o-elddoc</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>de.odysseus.juel</groupId>
+                <artifactId>juel</artifactId>
+                <version>${juel.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
