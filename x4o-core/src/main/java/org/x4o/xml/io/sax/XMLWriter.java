@@ -48,11 +48,6 @@ import org.xml.sax.ext.DefaultHandler2;
  * @version 1.0 17/04/2005
  */
 public class XMLWriter extends DefaultHandler2 {
-
-	private final static String ENCODING = "http://writer.x4o.org/xml/properties/encoding";
-	private final static String CHAR_NEWLINE = "http://writer.x4o.org/xml/properties/char/newline";
-	private final static String CHAR_TAB = "http://writer.x4o.org/xml/properties/char/tab";
-	private final static String URI_PREFX = "http://writer.x4o.org/xml/properties/char/";
 	
 	private String encoding = null;
 	private String charNewline = null;
@@ -123,19 +118,13 @@ public class XMLWriter extends DefaultHandler2 {
 		this(new OutputStreamWriter(out, XMLConstants.XML_DEFAULT_ENCODING),XMLConstants.XML_DEFAULT_ENCODING);
 	}
 	
-
-	
 	/**
 	 * @see org.xml.sax.ContentHandler#startDocument()
 	 */
 	@Override
 	public void startDocument() throws SAXException {
 		indent = 0;
-		try {
-			out.write(XMLConstants.getDocumentDeclaration(encoding));
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
+		write(XMLConstants.getDocumentDeclaration(encoding));
 	}
 	
 	/**
@@ -143,11 +132,7 @@ public class XMLWriter extends DefaultHandler2 {
 	 */
 	@Override
 	public void endDocument() throws SAXException {
-		try {
-			out.flush();
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
+		writeFlush();
 	}
 
 	/**
@@ -159,112 +144,107 @@ public class XMLWriter extends DefaultHandler2 {
 	 */
 	@Override
 	public void startElement(String uri, String localName, String name,Attributes atts) throws SAXException {
-		try {
-			if (startElement!=null) {
-				out.write(startElement.toString());
-				startElement=null;
-			}
-			startElement = new StringBuffer(200);
-			
-			if (printedReturn==false) {
-				startElement.append(charNewline);
-			}
-			printedReturn=false;
-			
-			for (int i = 0; i < indent; i++) {
-				startElement.append(charTab);
-			}
-			startElement.append(XMLConstants.TAG_OPEN);
-			
-			if (localName==null) {
-				localName = "null";
-			}
-			
-			if (XMLConstants.NULL_NS_URI.equals(uri) | uri==null) {
-				startElement.append(localName);
-			} else {
-				String prefix = prefixMapping.get(uri);
-				if (prefix==null) {
-					throw new SAXException("preFixUri: "+uri+" is not started.");
-				}
-				if (XMLConstants.NULL_NS_URI.equals(prefix)==false) {
-					startElement.append(prefix);
-					startElement.append(XMLConstants.XMLNS_ASSIGN);
-				}
-				startElement.append(localName);
-			}
-			
-			if ((uri!=null & XMLConstants.NULL_NS_URI.equals(uri)==false) && printedMappings.contains(uri)==false) {
-				String prefix = prefixMapping.get(uri);
-				if (prefix==null) {
-					throw new SAXException("preFixUri: "+uri+" is not started.");
-				}
-				printedMappings.add(uri);
-				
-				startElement.append(' ');
-				startElement.append(XMLConstants.XMLNS_ATTRIBUTE);
-				if ("".equals(prefix)==false) {
-					startElement.append(':');
-					startElement.append(prefix);
-				}
-				startElement.append("=\"");
-				startElement.append(uri);
-				startElement.append('"');
-				
-				boolean first = true;
-				for (String uri2:prefixMapping.keySet()) {
-					if (printedMappings.contains(uri2)==false) {
-						prefix = prefixMapping.get(uri2);
-						if (prefix==null) {
-							throw new SAXException("preFixUri: "+uri+" is not started.");
-						}
-						printedMappings.add(uri2);
-						
-						if (first) {
-							startElement.append(charNewline);
-							first = false;
-						}
-						
-						startElement.append(' ');
-						startElement.append(XMLConstants.XMLNS_ATTRIBUTE);
-						if ("".equals(prefix)==false) {
-							startElement.append(XMLConstants.XMLNS_ASSIGN);
-							startElement.append(prefix);
-						}
-						startElement.append("=\"");
-						startElement.append(uri2);
-						startElement.append('"');
-						startElement.append(charNewline);
-					}
-				}
-			}
-			
-			for (int i=0;i<atts.getLength();i++) {
-				String attributeUri = atts.getURI(i);
-				String attributeName = atts.getLocalName(i);
-				String attributeValue = atts.getValue(i);
-				if (attributeValue==null) {
-					attributeValue = "null";
-				}
-				startElement.append(' ');
-				if (XMLConstants.NULL_NS_URI.equals(attributeUri) | attributeUri ==null) {
-					startElement.append(attributeName);
-				} else {
-					startElement.append(attributeUri);
-					startElement.append(XMLConstants.XMLNS_ASSIGN);
-					startElement.append(attributeName);
-				}
-				
-				startElement.append("=\"");
-				startElement.append(XMLConstants.escapeAttributeValue(attributeValue));
-				startElement.append('"');
-			}
-			startElement.append(XMLConstants.TAG_CLOSE);
-		} catch (IOException e) {
-			throw new SAXException(e);
-		} finally {
-			indent++;
+		if (startElement!=null) {
+			write(startElement.toString());
+			startElement=null;
 		}
+		startElement = new StringBuffer(200);
+		
+		if (printedReturn==false) {
+			startElement.append(charNewline);
+		}
+		printedReturn=false;
+		
+		for (int i = 0; i < indent; i++) {
+			startElement.append(charTab);
+		}
+		startElement.append(XMLConstants.TAG_OPEN);
+		
+		if (localName==null) {
+			localName = "null";
+		}
+		
+		if (XMLConstants.NULL_NS_URI.equals(uri) | uri==null) {
+			startElement.append(localName);
+		} else {
+			String prefix = prefixMapping.get(uri);
+			if (prefix==null) {
+				throw new SAXException("preFixUri: "+uri+" is not started.");
+			}
+			if (XMLConstants.NULL_NS_URI.equals(prefix)==false) {
+				startElement.append(prefix);
+				startElement.append(XMLConstants.XMLNS_ASSIGN);
+			}
+			startElement.append(localName);
+		}
+		
+		if ((uri!=null & XMLConstants.NULL_NS_URI.equals(uri)==false) && printedMappings.contains(uri)==false) {
+			String prefix = prefixMapping.get(uri);
+			if (prefix==null) {
+				throw new SAXException("preFixUri: "+uri+" is not started.");
+			}
+			printedMappings.add(uri);
+			
+			startElement.append(' ');
+			startElement.append(XMLConstants.XMLNS_ATTRIBUTE);
+			if ("".equals(prefix)==false) {
+				startElement.append(':');
+				startElement.append(prefix);
+			}
+			startElement.append("=\"");
+			startElement.append(uri);
+			startElement.append('"');
+			
+			boolean first = true;
+			for (String uri2:prefixMapping.keySet()) {
+				if (printedMappings.contains(uri2)==false) {
+					prefix = prefixMapping.get(uri2);
+					if (prefix==null) {
+						throw new SAXException("preFixUri: "+uri+" is not started.");
+					}
+					printedMappings.add(uri2);
+					
+					if (first) {
+						startElement.append(charNewline);
+						first = false;
+					}
+					
+					startElement.append(' ');
+					startElement.append(XMLConstants.XMLNS_ATTRIBUTE);
+					if ("".equals(prefix)==false) {
+						startElement.append(XMLConstants.XMLNS_ASSIGN);
+						startElement.append(prefix);
+					}
+					startElement.append("=\"");
+					startElement.append(uri2);
+					startElement.append('"');
+					startElement.append(charNewline);
+				}
+			}
+		}
+		
+		for (int i=0;i<atts.getLength();i++) {
+			String attributeUri = atts.getURI(i);
+			String attributeName = atts.getLocalName(i);
+			String attributeValue = atts.getValue(i);
+			if (attributeValue==null) {
+				attributeValue = "null";
+			}
+			startElement.append(' ');
+			if (XMLConstants.NULL_NS_URI.equals(attributeUri) | attributeUri ==null) {
+				startElement.append(attributeName);
+			} else {
+				startElement.append(attributeUri);
+				startElement.append(XMLConstants.XMLNS_ASSIGN);
+				startElement.append(attributeName);
+			}
+			
+			startElement.append("=\"");
+			startElement.append(XMLConstants.escapeAttributeValue(attributeValue));
+			startElement.append('"');
+		}
+		startElement.append(XMLConstants.TAG_CLOSE);
+		indent++;
 	}
 	
 	/**
@@ -275,45 +255,40 @@ public class XMLWriter extends DefaultHandler2 {
 	 */
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
-		try {
-			if (startElement!=null) {
-				String ss = startElement.toString();
-				out.write(ss,0,ss.length()-1);
-				out.write(XMLConstants.TAG_CLOSE_EMPTY);
-				startElement=null;
-				indent--;
-				return;
-			}
-			
-			if (printedReturn==false) {
-				out.write(charNewline);
-			}
-			printedReturn=false;
+		if (startElement!=null) {
+			write(startElement.toString());
+			write(XMLConstants.TAG_CLOSE_EMPTY);
+			startElement=null;
 			indent--;
-			writeIndent();
-			
-			if (localName==null) {
-				localName = "null";
-			}
-			
-			out.write(XMLConstants.TAG_OPEN_END);
-			if (XMLConstants.NULL_NS_URI.equals(uri) | uri==null) {
-				out.write(localName);
-			} else {
-				String prefix = prefixMapping.get(uri);
-				if (prefix==null) {
-					throw new SAXException("preFixUri: "+uri+" is not started.");
-				}
-				if (XMLConstants.NULL_NS_URI.equals(prefix)==false) {
-					out.write(prefix);
-					out.write(XMLConstants.XMLNS_ASSIGN);
-				}
-				out.write(localName);
-			}
-			out.write(XMLConstants.TAG_CLOSE);
-		} catch (IOException e) {
-			throw new SAXException(e);
+			return;
 		}
+		
+		if (printedReturn==false) {
+			write(charNewline);
+		}
+		printedReturn=false;
+		indent--;
+		writeIndent();
+		
+		if (localName==null) {
+			localName = "null";
+		}
+		
+		write(XMLConstants.TAG_OPEN_END);
+		if (XMLConstants.NULL_NS_URI.equals(uri) | uri==null) {
+			write(localName);
+		} else {
+			String prefix = prefixMapping.get(uri);
+			if (prefix==null) {
+				throw new SAXException("preFixUri: "+uri+" is not started.");
+			}
+			if (XMLConstants.NULL_NS_URI.equals(prefix)==false) {
+				write(prefix);
+				write(XMLConstants.XMLNS_ASSIGN);
+			}
+			write(localName);
+		}
+		write(XMLConstants.TAG_CLOSE);
 	}
 		
 	/**
@@ -360,20 +335,16 @@ public class XMLWriter extends DefaultHandler2 {
 	 */
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
-		try {
-			if (startElement!=null) {
-				out.write(startElement.toString());
-				startElement=null;
+		if (startElement!=null) {
+			write(startElement.toString());
+			startElement=null;
+		}
+		for (int i=start;i<(start+length);i++) {
+			char c = ch[i];
+			write(c);
+			if (c=='\n') {
+				printedReturn=true;
 			}
-			for (int i=start;i<(start+length);i++) {
-				char c = ch[i];
-				out.write(c);
-				if (c=='\n') {
-					printedReturn=true;
-				}
-			}
-		} catch (IOException e) {
-			throw new SAXException(e);
 		}
 	}
 	
@@ -388,15 +359,11 @@ public class XMLWriter extends DefaultHandler2 {
 	 */
 	@Override
 	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-		try {
-			if (startElement!=null) {
-				out.write(startElement.toString());
-				startElement=null;
-			}
-			out.write(ch, start, length); 
-		} catch (IOException e) {
-			throw new SAXException(e);
+		if (startElement!=null) {
+			write(startElement.toString());
+			startElement=null;
 		}
+		write(ch, start, length);
 	}
 
 	/**
@@ -408,18 +375,14 @@ public class XMLWriter extends DefaultHandler2 {
 	 */
 	@Override
 	public void processingInstruction(String target, String data) throws SAXException {
-		try {
-			writeIndent();
-			out.write(XMLConstants.PROCESS_START);
-			out.write(target);
-			out.write(' ');
-			out.write(data);
-			out.write(XMLConstants.PROCESS_END);
-			out.write(charNewline);
-			out.flush();
-		} catch (IOException e) {
-			throw new SAXException(e);
-		} 
+		writeIndent();
+		write(XMLConstants.PROCESS_START);
+		write(target);
+		write(' ');
+		write(data);
+		write(XMLConstants.PROCESS_END);
+		write(charNewline);
+		writeFlush();
 	}
 
 	/**
@@ -454,33 +417,61 @@ public class XMLWriter extends DefaultHandler2 {
 	 */
 	@Override
 	public void comment(char[] ch, int start, int length) throws SAXException {
-		try {
-			writeIndent();
-			out.write(XMLConstants.COMMENT_START);
-					
-			/// mmm todo improve a bit
-			for (int i=start;i<(start+length);i++) {
-				char c = ch[i];
-				if (c=='\n') {
-					out.write(c);
-					writeIndent();
-					continue;
-				}
-				out.write(c);
+		writeIndent();
+		write(XMLConstants.COMMENT_START);
+				
+		/// mmm todo improve a bit
+		for (int i=start;i<(start+length);i++) {
+			char c = ch[i];
+			if (c=='\n') {
+				write(c);
+				writeIndent();
+				continue;
 			}
-			out.write(XMLConstants.COMMENT_END);
-		} catch (IOException e) {
-			throw new SAXException(e);
+			write(c);
 		}
+		write(XMLConstants.COMMENT_END);
 	}
 
 	/**
 	 * Indent the output writer with tabs by indent count.
 	 * @throws IOException	When prints gives exception.
 	 */
-	private void writeIndent() throws IOException {
+	private void writeIndent() throws SAXException {
 		for (int i = 0; i < indent; i++) {
-			out.write(charTab);
+			write(charTab);
+		}
+	}
+	
+	private void writeFlush() throws SAXException {
+		try {
+			out.flush();
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
+	}
+	
+	private void write(String text) throws SAXException {
+		try {
+			out.write(text);
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
+	}
+	
+	private void write(char[] ch, int start, int length) throws SAXException {
+		try {
+			out.write(ch,start,length);
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
+	}
+	
+	private void write(char c) throws SAXException {
+		try {
+			out.write(c);
+		} catch (IOException e) {
+			throw new SAXException(e);
 		}
 	}
 }

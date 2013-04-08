@@ -46,7 +46,12 @@ import org.xml.sax.ext.DefaultHandler2;
  */
 public enum X4OLanguageProperty {
 	
-
+	/* TODO: refactor all keys ?
+	private final static String ENCODING = "http://writer.x4o.org/xml/properties/encoding";
+	private final static String CHAR_NEWLINE = "http://writer.x4o.org/xml/properties/char/newline";
+	private final static String CHAR_TAB = "http://writer.x4o.org/xml/properties/char/tab";
+	private final static String URI_PREFX = "http://writer.x4o.org/xml/properties/char/";
+	*/
 	
 	/** Read-Only property returning the language we are working with. */
 	LANGUAGE_NAME(IO.GLOBAL,"language/name"),

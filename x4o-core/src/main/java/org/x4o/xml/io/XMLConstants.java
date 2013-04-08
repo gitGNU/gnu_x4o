@@ -123,7 +123,6 @@ public final class XMLConstants {
 	public static final String CHAR_NEWLINE = "\r\n";
 	
 	
-
 	
 	static public String getDocumentDeclaration(String encoding) {
 		return getDocumentDeclaration(encoding,null);
