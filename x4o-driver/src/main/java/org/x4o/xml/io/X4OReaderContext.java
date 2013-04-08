@@ -35,6 +35,12 @@ import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.xml.sax.SAXException;
 
+/**
+ * X4OReaderContext is reader with language context.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public interface X4OReaderContext<T> extends X4OReader<T> {
 	
 	void releaseContext(X4OLanguageContext context) throws X4OPhaseException;

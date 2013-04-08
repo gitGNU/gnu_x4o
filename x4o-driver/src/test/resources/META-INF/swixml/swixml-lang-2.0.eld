@@ -43,6 +43,7 @@
 	<classBindingHandler id="JFrame-JDesktopPane"			parentClass="javax.swing.JFrame"			childClass="javax.swing.JDesktopPane"	addMethod="setContentPane"		getMethod="getContentPane"/>
 	<classBindingHandler id="JMenuBar-JMenu"				parentClass="javax.swing.JMenuBar"			childClass="javax.swing.JMenu"			addMethod="add"		getMethod="getComponents"/>
 	<classBindingHandler id="JMenu-JMenuItem"				parentClass="javax.swing.JMenu"				childClass="javax.swing.JMenuItem"		addMethod="add"		getMethod="getComponents"/>
+	<classBindingHandler id="JRootPane-JComponent"			parentClass="javax.swing.JRootPane"			childClass="javax.swing.JComponent"		addMethod="add"		getMethod="getComponents"/>
 	
 	<elementInterface id="Component" interfaceClass="java.awt.Component">
 		<attribute name="bounds">
@@ -128,6 +129,8 @@
 				<conv:integerConverter/>
 			</attribute>
 		</element>
+		<element tag="layeredPane"		objectClass="javax.swing.JLayeredPane"/>
+		<element tag="rootPane"			objectClass="javax.swing.JRootPane"/>
 		<element tag="scrollPane"		objectClass="javax.swing.JScrollPane"/>
 		<element tag="tree"				objectClass="javax.swing.JTree"/>
 		<element tag="button"			objectClass="javax.swing.JButton">

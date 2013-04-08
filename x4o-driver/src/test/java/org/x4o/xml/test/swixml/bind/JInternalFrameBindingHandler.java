@@ -86,6 +86,9 @@ public class JInternalFrameBindingHandler extends AbstractElementBindingHandler<
 	public void createChilderen(Element parentElement,JInternalFrame parent) throws ElementBindingHandlerException {
 		for (Component c:parent.getComponents()) {
 			if (c instanceof JComponent) {
+				if (c.getClass().getName().startsWith("javax.swing.plaf")) {
+					return;
+				}
 				createChild(parentElement, c);
 			}
 		}

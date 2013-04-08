@@ -32,6 +32,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+/**
+ * X4OWriter can write the xml language.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public interface X4OWriter<T> extends X4OConnection {
 
 	void write(T object,OutputStream out) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;

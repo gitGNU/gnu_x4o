@@ -33,6 +33,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.xml.sax.SAXException;
 
+/**
+ * X4OWriterContext is writer with language context.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public interface X4OWriterContext<T> extends X4OWriter<T> {
 
 	void writeContext(X4OLanguageContext context,OutputStream out) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;

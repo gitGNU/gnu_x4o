@@ -23,7 +23,6 @@
 
 package	org.x4o.xml.eld.lang;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +43,7 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 	private Class<?> childClass = null;
 	private String addMethod = null;
 	private String getMethod = null;
+	private String skipChilderenClassRegex = null;
 	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
@@ -105,37 +105,53 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 			if (getMethod.equalsIgnoreCase(m.getName())==false) {
 				continue;
 			}
+			Object result;
 			try {
-				Object result = m.invoke(parentObject, new Object[]{});
-				if (result==null) {
-					break;
-				}
-				if (result instanceof List) {
-					for (Object o:(List)result) {
-						createChild(parentElement, o);
-					}
-					return;
-				} else if (result instanceof Collection) {
-					for (Object o:(Collection)result) {
-						createChild(parentElement, o);
-					}
-					return;
-				} else if (result instanceof Array) {
-					for (Object o:(Object[])result) {
-						createChild(parentElement, o);
-					}
-					return;
-				} else {
-					throw new ElementBindingHandlerException("Unsuported return type: "+result.getClass()+" from: "+getMethod+" on: "+parentObject);
-				}
+				result = m.invoke(parentObject, new Object[]{});
 			} catch (Exception e) {
-				throw new ElementBindingHandlerException("Error invoke binding method of: "+getId()+" error: "+e.getMessage(),e);
+				throw new ElementBindingHandlerException("Invoke error: "+e.getMessage()+" from: "+getMethod+" on: "+parentObject+" id:"+getId(),e);
+			} 
+			if (result==null) {
+				break;
+			}
+			if (result instanceof List) {
+				for (Object o:(List)result) {
+					createSafeChild(parentElement, o);
+				}
+				return;
+			} else if (result instanceof Collection) {
+				for (Object o:(Collection)result) {
+					createSafeChild(parentElement, o);
+				}
+				return;
+			} else if (result.getClass().isArray()) {
+				for (Object o:(Object[])result) {
+					createSafeChild(parentElement, o);
+				}
+				return;
+			} else if (childClass.isAssignableFrom(result.getClass())) {
+				createSafeChild(parentElement, result);
+				return;
+			} else {
+				throw new ElementBindingHandlerException("Unsuported return type: "+result.getClass()+" need: "+childClass+" from: "+getMethod+" on: "+parentObject+" id:"+getId());
 			}
 		}
 		throw new ElementBindingHandlerException("Could not find method: "+getMethod+" on: "+parentObject+" id:"+getId());
-		
-	//	
 	}
+	
+	
+	protected void createSafeChild(Element parentElement,Object childObject) {
+		if (childClass.isAssignableFrom(childObject.getClass())==false) {
+			return;
+		}
+		if (skipChilderenClassRegex!=null) {
+			if (childObject.getClass().getName().matches(skipChilderenClassRegex)) {
+				return; // skip
+			}
+		}
+		createChild(parentElement,childObject);
+	}
+	
 	
 	/**
 	 * @return the parentClass
@@ -191,5 +207,19 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 	 */
 	public void setGetMethod(String getMethod) {
 		this.getMethod = getMethod;
+	}
+
+	/**
+	 * @return the skipChilderenClassRegex
+	 */
+	public String getSkipChilderenClassRegex() {
+		return skipChilderenClassRegex;
+	}
+
+	/**
+	 * @param skipChilderenClassRegex the skipChilderenClassRegex to set
+	 */
+	public void setSkipChilderenClassRegex(String skipChilderenClassRegex) {
+		this.skipChilderenClassRegex = skipChilderenClassRegex;
 	}
 }

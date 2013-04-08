@@ -33,6 +33,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+/**
+ * X4OReader can read different input formats.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public interface X4OReader<T> extends X4OConnection {
 
 	public void addELBeanInstance(String name,Object bean);

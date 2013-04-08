@@ -51,6 +51,12 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+/**
+ * X4ODriverManager controls all the x4o driver and languages loaded in the classpath.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public final class X4ODriverManager {
 
 	public final static String X4O_DRIVERS_RESOURCE = "META-INF/x4o-drivers.xml";

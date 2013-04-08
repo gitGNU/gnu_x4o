@@ -29,11 +29,7 @@ import javax.el.ValueExpression;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.lang.DefaultX4OLanguage;
-import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 
 /**
  * SwiXmlParser works with the SwingEngine to config the UI tree.

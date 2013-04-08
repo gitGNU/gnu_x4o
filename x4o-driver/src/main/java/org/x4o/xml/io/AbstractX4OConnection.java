@@ -26,6 +26,12 @@ package org.x4o.xml.io;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageProperty;
 
+/**
+ * AbstractX4OConnection is the read/write interface for the classes.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public abstract class AbstractX4OConnection implements X4OConnection {
 	
 	private X4OLanguageContext languageContext = null;

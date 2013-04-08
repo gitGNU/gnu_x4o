@@ -23,16 +23,18 @@
 
 package org.x4o.xml.io;
 
+import java.awt.Component;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
+import org.x4o.xml.test.swixml.Accelerator3;
+import org.x4o.xml.test.swixml.SwiXmlDriver;
+import org.x4o.xml.test.swixml.SwingEngine;
 
 import junit.framework.TestCase;
 
@@ -64,6 +66,27 @@ public class X4OWriterTest extends TestCase {
 		
 		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
 		System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
+		
+		outputFile.delete();
+	}
+	
+	public void testWriterSwiXmlOutput() throws Exception {
+		Accelerator3 ac3 = new Accelerator3(false);
+		SwingEngine engine = new SwingEngine(ac3);
+		
+		File outputFile = createOutputFile();
+		X4ODriver<Component> driver = SwiXmlDriver.getInstance();
+		X4OReader<Component> reader = driver.createReader();
+		X4OWriter<Component> writer = driver.createWriter();
+		
+		reader.addELBeanInstance(SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE, engine);
+		Component root = reader.readResource("tests/swixml/swixml-accelerator-3.0.xml");
+		writer.writeFile(root, outputFile);
+		
+		assertTrue("Debug file does not exists.",outputFile.exists());
+		
+		//String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		//System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
 		
 		outputFile.delete();
 	}

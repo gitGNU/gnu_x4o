@@ -30,6 +30,12 @@ import org.x4o.xml.element.ElementException;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 
+/**
+ * DefaultX4OSchemaWriter can write the schema of a x4o language.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public class DefaultX4OSchemaWriter extends AbstractX4OConnection implements X4OSchemaWriter {
 	
 	public DefaultX4OSchemaWriter(X4OLanguageContext languageContext) {

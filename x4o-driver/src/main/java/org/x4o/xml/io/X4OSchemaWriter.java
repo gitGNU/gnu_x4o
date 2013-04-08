@@ -27,6 +27,12 @@ import java.io.File;
 
 import org.x4o.xml.element.ElementException;
 
+/**
+ * X4OSchemaWriter can write the schema for the language.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public interface X4OSchemaWriter extends X4OConnection {
 
 	void writeSchema(File basePath) throws ElementException;

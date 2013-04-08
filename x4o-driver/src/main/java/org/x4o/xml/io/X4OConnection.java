@@ -23,6 +23,12 @@
 
 package org.x4o.xml.io;
 
+/**
+ * X4OConnection interface for config the io drivers.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public interface X4OConnection {
 	
 	/**

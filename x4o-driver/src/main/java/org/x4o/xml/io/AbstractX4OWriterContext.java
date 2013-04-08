@@ -34,6 +34,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.xml.sax.SAXException;
 
+/**
+ * AbstractX4OWriterContext.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection implements X4OWriterContext<T> {
 
 	public AbstractX4OWriterContext(X4OLanguageContext elementLanguage) {

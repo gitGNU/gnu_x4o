@@ -44,12 +44,17 @@ import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.element.ElementObjectPropertyValueException;
 import org.x4o.xml.io.sax.XMLWriter;
-import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+/**
+ * DefaultX4OWriter can write the xml language.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 
 	public DefaultX4OWriter(X4OLanguageContext elementLanguage) {
@@ -114,6 +119,9 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 			}
 			if (m.getName().startsWith("get")==false) {
 				continue;
+			}
+			if(m.getName().startsWith("getLocationOnScreen")) {
+				continue; // TODO: rm this
 			}
 			String name = m.getName().substring(3,4).toLowerCase()+m.getName().substring(4);
 			result.add(name);

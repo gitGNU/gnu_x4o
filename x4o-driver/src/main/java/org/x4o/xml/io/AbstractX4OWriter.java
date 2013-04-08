@@ -36,6 +36,12 @@ import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.xml.sax.SAXException;
 
+/**
+ * AbstractX4OWriter.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> implements X4OWriter<T> {
 
 	public AbstractX4OWriter(X4OLanguageContext elementLanguage) {

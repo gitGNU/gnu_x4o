@@ -39,10 +39,11 @@
 	<bindingHandler id="JPanelBindingHandler"			bean.class="org.x4o.xml.test.swixml.bind.JPanelBindingHandler"/>
 	<bindingHandler id="JSplitPaneBindingHandler" 		bean.class="org.x4o.xml.test.swixml.bind.JSplitPaneBindingHandler"/>
 	<classBindingHandler id="JScrollPane-JComponent"		parentClass="javax.swing.JScrollPane"		childClass="javax.swing.JComponent"		addMethod="setViewportView"		getMethod="getViewport"/>
-	<classBindingHandler id="JDesktopPane-JInternalFrame"	parentClass="javax.swing.JDesktopPane"		childClass="javax.swing.JInternalFrame"	addMethod="add"		getMethod="getComponents"/>
+	<classBindingHandler id="JDesktopPane-JInternalFrame"	parentClass="javax.swing.JDesktopPane"		childClass="javax.swing.JInternalFrame"	addMethod="add"		getMethod="getComponents" />
 	<classBindingHandler id="JFrame-JDesktopPane"			parentClass="javax.swing.JFrame"			childClass="javax.swing.JDesktopPane"	addMethod="setContentPane"		getMethod="getContentPane"/>
 	<classBindingHandler id="JMenuBar-JMenu"				parentClass="javax.swing.JMenuBar"			childClass="javax.swing.JMenu"			addMethod="add"		getMethod="getComponents"/>
 	<classBindingHandler id="JMenu-JMenuItem"				parentClass="javax.swing.JMenu"				childClass="javax.swing.JMenuItem"		addMethod="add"		getMethod="getComponents"/>
+	<classBindingHandler id="JRootPane-JComponent"			parentClass="javax.swing.JRootPane"			childClass="javax.swing.JComponent"		addMethod="add"		getMethod="getComponents"/>
 	
 	<elementInterface id="Component" interfaceClass="java.awt.Component">
 		<attribute name="bounds">
@@ -122,6 +123,9 @@
 				<conv:integerConverter/>
 			</attribute>
 		</element>
+		
+		<element tag="JLayeredPane"		objectClass="javax.swing.JLayeredPane"/>
+		<element tag="JRootPane"		objectClass="javax.swing.JRootPane"/>
 		<element tag="JScrollPane"		objectClass="javax.swing.JScrollPane"/>
 		<element tag="JTree"			objectClass="javax.swing.JTree"/>
 		<element tag="JButton"			objectClass="javax.swing.JButton"/>

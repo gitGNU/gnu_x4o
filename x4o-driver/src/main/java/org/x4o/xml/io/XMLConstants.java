@@ -196,6 +196,18 @@ public final class XMLConstants {
 		return false;
 	}
 	
+	static public boolean isNameString(String value) {
+		for (int i=0;i<value.length();i++) {
+			char c = value.charAt(i);
+			if (i==0 && isNameStartChar(c)==false) {
+				return false;
+			} else if (isNameChar(c)==false) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	static public String escapeAttributeValue(String value) {
 		int l = value.length();
 		StringBuffer result = new StringBuffer(l);

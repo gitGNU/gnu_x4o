@@ -272,7 +272,11 @@ public class DefaultElementObjectPropertyValue implements ElementObjectPropertyV
 		
 		// a bit hackie
 		for(int i=0;i<methodes.length;i++) {
-			Method method = methodes[i];				
+			Method method = methodes[i];
+			Class<?>[] types = method.getParameterTypes();
+			if (types.length != 0) {
+				continue;
+			}
 			if(method.getName().equalsIgnoreCase(parameterNameSet)) {
 				logger.finest("Found method: "+method.getName());
 				lastMethod = method;
@@ -282,7 +286,7 @@ public class DefaultElementObjectPropertyValue implements ElementObjectPropertyV
 		
 		if (lastMethod==null) {
 			for(int i=0;i<methodes.length;i++) {
-				Method method = methodes[i];				
+				Method method = methodes[i];
 				if(method.getName().equalsIgnoreCase("is"+parameterName)) {
 					logger.finest("Found is method: "+method.getName());
 					lastMethod = method;
@@ -302,7 +306,7 @@ public class DefaultElementObjectPropertyValue implements ElementObjectPropertyV
 
 		Object result = null;
 		try {
-			result = lastMethod.invoke(object);
+			result = lastMethod.invoke(object,new Object[]{});
 		} catch (Exception e) {
 			throw new ElementObjectPropertyValueException(e.getMessage(),e);
 		}

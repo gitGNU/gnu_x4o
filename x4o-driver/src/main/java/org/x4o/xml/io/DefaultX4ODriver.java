@@ -25,6 +25,12 @@ package org.x4o.xml.io;
 
 import org.x4o.xml.X4ODriver;
 
+/**
+ * DefaultX4ODriver can be used to create language without code and type safty.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Apr 6, 2013
+ */
 public class DefaultX4ODriver<T> extends X4ODriver<T> {
 
 	private final String languageName;

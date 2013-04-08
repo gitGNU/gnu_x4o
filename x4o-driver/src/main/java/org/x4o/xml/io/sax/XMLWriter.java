@@ -163,6 +163,9 @@ public class XMLWriter extends DefaultHandler2 {
 		if (localName==null) {
 			localName = "null";
 		}
+		if (XMLConstants.isNameString(localName)==false) {
+			throw new SAXException("LocalName of element is not valid in xml; '"+localName+"'");
+		}
 		
 		if (XMLConstants.NULL_NS_URI.equals(uri) | uri==null) {
 			startElement.append(localName);
