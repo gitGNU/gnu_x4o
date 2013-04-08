@@ -48,7 +48,7 @@ public class DefaultX4OLanguageLoaderTest extends TestCase {
 		//X4OReader<TestObjectRoot> reader = driver.createReader();
 		//reader.readResource("tests/namespace/uri-simple.xml");
 		language = driver.createLanguageContext().getLanguage();
-		loader = (X4OLanguageLoader)language.getLanguageConfiguration().getDefaultX4OLanguageLoader().newInstance();
+		loader = (X4OLanguageLoader)language.getLanguageConfiguration().getDefaultLanguageLoader().newInstance();
 		
 	}
 

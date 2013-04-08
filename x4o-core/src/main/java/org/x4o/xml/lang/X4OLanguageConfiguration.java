@@ -26,9 +26,6 @@ package org.x4o.xml.lang;
 import java.util.List;
 import java.util.Map;
 
-import org.x4o.xml.X4ODriver;
-
-
 /**
  * X4OLanguageConfiguration first used interface in x4o parser which does the hard config of the x4o xml parsing.
  * 
@@ -73,18 +70,17 @@ public interface X4OLanguageConfiguration {
 	/**
 	 * @return	Returns the X4OLanguageVersionFilter which filters the best version to use.
 	 */
-	Class<?> getDefaultX4OLanguageVersionFilter();
+	Class<?> getDefaultLanguageVersionFilter();
 	
 	/**
 	 * @return	Returns the X4OLanguageLoader which loads languages into the element context.
 	 */
-	Class<?> getDefaultX4OLanguageLoader();
+	Class<?> getDefaultLanguageLoader();
 
 	/**
-	 * Creates and filles the inital element language used to store the language.
-	 * @return	The newly created ElementLanguage.
+	 * @return	Returns the Expression Language Context which holds the el objects.
 	 */
-	X4OLanguageContext createElementLanguage(X4ODriver<?> driver);
+	Class<?> getDefaultExpressionLanguageContext();
 
 	/**
 	 * @return	Returns Map of SAX properties which are set.

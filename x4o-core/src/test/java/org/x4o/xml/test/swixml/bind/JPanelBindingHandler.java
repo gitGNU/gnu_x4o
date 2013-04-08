@@ -24,6 +24,7 @@
 package	org.x4o.xml.test.swixml.bind;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -38,7 +39,7 @@ import org.x4o.xml.element.ElementBindingHandlerException;
  * @author Willem Cazander
  * @version 1.0 Aug 16, 2012
  */
-public class JPanelBindingHandler extends AbstractElementBindingHandler {
+public class JPanelBindingHandler extends AbstractElementBindingHandler<JPanel> {
 	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
@@ -55,9 +56,9 @@ public class JPanelBindingHandler extends AbstractElementBindingHandler {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,	Element childElement) throws ElementBindingHandlerException {
+	public void bindChild(Element childElement, JPanel parent, Object childObject) throws ElementBindingHandlerException {
 		JComponent child = (JComponent)childObject;
 		
 		String c = childElement.getAttributes().get("constraints");
@@ -71,12 +72,22 @@ public class JPanelBindingHandler extends AbstractElementBindingHandler {
 		} else if ("BorderLayout.SOUTH".equals(c)) {
 			con = BorderLayout.SOUTH;
 		}
-		
-		JPanel parent = (JPanel)parentObject;
 		if (con==null) {
 			parent.add(child);
 		} else {
 			parent.add(child,con);
+		}
+	}
+	
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
+	@Override
+	public void createChilderen(Element parentElement,JPanel parent) throws ElementBindingHandlerException {
+		for (Component c:parent.getComponents()) {
+			if (c instanceof JComponent) {
+				createChild(parentElement, c);
+			}
 		}
 	}
 }

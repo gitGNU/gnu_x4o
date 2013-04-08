@@ -34,7 +34,6 @@ import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguagePropertyKeys;
-import org.x4o.xml.lang.phase.X4OPhaseManagerFactory;
 
 /**
  * SwiXmlParser works with the SwingEngine to config the UI tree.
@@ -110,10 +109,5 @@ public class SwiXmlDriver extends X4ODriver<Component> {
 	@Override
 	public String[] getLanguageVersions() {
 		return LANGUAGE_VERSIONS;
-	}
-	
-	@Override
-	public X4OLanguage buildLanguage(String version) {
-		return new DefaultX4OLanguage(new DefaultX4OLanguageConfiguration(),X4OPhaseManagerFactory.createDefaultX4OPhaseManager(),getLanguageName(),getLanguageVersionDefault());
 	}
 }

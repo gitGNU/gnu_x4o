@@ -31,6 +31,7 @@ import java.io.OutputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.x4o.xml.element.Element;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.xml.sax.SAXException;
@@ -50,7 +51,16 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 	
 	public void write(T object,OutputStream output) throws ParserConfigurationException, SAXException, IOException {
 		X4OLanguageContext context = getLanguageContext();
-		context.getRootElement().setElementObject(object); //TODO: check ??
+		Element rootElement = null;
+		try {
+			rootElement = (Element)context.getLanguage().getLanguageConfiguration().getDefaultElement().newInstance();
+		} catch (InstantiationException e) {
+			throw new SAXException(e);
+		} catch (IllegalAccessException e) {
+			throw new SAXException(e);
+		}
+		rootElement.setElementObject(object);
+		context.setRootElement(rootElement);
 		writeContext(context,output);
 	}
 	
@@ -64,9 +74,6 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 	public void writeFile(T object,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
 		if (file==null) {
 			throw new NullPointerException("Can't read null file.");
-		}
-		if (file.exists()) {
-			throw new FileNotFoundException("File does already exists; "+file);
 		}
 		if (file.canWrite()==false) {
 			throw new IOException("Can't write file: "+file);

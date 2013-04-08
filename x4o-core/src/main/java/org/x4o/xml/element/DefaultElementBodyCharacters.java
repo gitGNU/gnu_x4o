@@ -125,9 +125,9 @@ public class DefaultElementBodyCharacters implements Element {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.Element#getElementLanguage()
+	 * @see org.x4o.xml.element.Element#getLanguageContext()
 	 */
-	public X4OLanguageContext getElementLanguage() {
+	public X4OLanguageContext getLanguageContext() {
 		return null;
 	}
 

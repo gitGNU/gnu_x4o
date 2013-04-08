@@ -23,6 +23,7 @@
 
 package	org.x4o.xml.element;
 
+
 /**
  * An AbstractElementBindingHandler.<br>
  * Does nothing.
@@ -30,6 +31,35 @@ package	org.x4o.xml.element;
  * @author Willem Cazander
  * @version 1.0 Apr 16, 2006
  */
-public abstract class AbstractElementBindingHandler extends AbstractElementMetaBase implements ElementBindingHandler {
+public abstract class AbstractElementBindingHandler<T> extends AbstractElementMetaBase implements ElementBindingHandler {
 
+	abstract public void bindChild(Element childElement,T parentObject,Object childObject) throws ElementBindingHandlerException;
+	
+	abstract public void createChilderen(Element parentElement,T parentObject) throws ElementBindingHandlerException;
+	
+	@SuppressWarnings("unchecked")
+	public void bindChild(Element childElement) throws ElementBindingHandlerException {
+		bindChild(childElement,(T)childElement.getParent().getElementObject(), childElement.getElementObject());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void createChilderen(Element parentElement) throws ElementBindingHandlerException {
+		createChilderen(parentElement,(T)parentElement.getElementObject());
+	}
+	
+	protected void createChild(Element parentElement,Object childObject) {
+		if (childObject==null) {
+			return;
+		}
+		if (parentElement==null) {
+			throw new NullPointerException("Can't create child with null parent.");
+		}
+		Element childElement = parentElement.getLanguageContext().getLanguage().createElementInstance(parentElement.getLanguageContext(), childObject.getClass());
+		if (childElement==null) {
+			throw new NullPointerException("Could not find Element for child: "+childObject.getClass());
+		}
+		childElement.setElementObject(childObject);
+		childElement.setParent(parentElement);
+		parentElement.addChild(childElement);
+	}
 }

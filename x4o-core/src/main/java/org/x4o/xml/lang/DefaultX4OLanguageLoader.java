@@ -87,7 +87,7 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 			logger.finer("Loading all modules for language: "+language);
 			loadLanguageModules(languageLocal,language);
 			
-			X4OLanguageVersionFilter lvf = (X4OLanguageVersionFilter)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultX4OLanguageVersionFilter());
+			X4OLanguageVersionFilter lvf = (X4OLanguageVersionFilter)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultLanguageVersionFilter());
 			
 			for (Map<String,Map<String,String>> map:modulesAll) {
 				List<String> versions = new ArrayList<String>(map.keySet());

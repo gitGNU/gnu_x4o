@@ -35,7 +35,7 @@ import org.x4o.xml.element.ElementNamespaceContext;
  * @author Willem Cazander
  * @version 1.0 Aug 21, 2012
  */
-public class ElementNamespaceContextBindingHandler extends AbstractElementBindingHandler {
+public class ElementNamespaceContextBindingHandler extends AbstractElementBindingHandler<ElementNamespaceContext> {
 
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementClass.class
@@ -56,12 +56,17 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,Element childElement) throws ElementBindingHandlerException {
-		ElementNamespaceContext parent = (ElementNamespaceContext)parentObject;
+	public void bindChild(Element childElement,ElementNamespaceContext parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ElementClass) {
 			parent.addElementClass((ElementClass)childObject);
+		}
+	}
+	
+	public void createChilderen(Element parentElement,ElementNamespaceContext parent) throws ElementBindingHandlerException {
+		for (ElementClass child:parent.getElementClasses()) {
+			createChild(parentElement, child);
 		}
 	}
 }

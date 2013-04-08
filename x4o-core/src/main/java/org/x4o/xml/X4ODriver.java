@@ -31,11 +31,12 @@ import org.x4o.xml.io.DefaultX4OWriter;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.io.X4OSchemaWriter;
 import org.x4o.xml.io.X4OWriter;
+
+import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguagePropertyKeys;
-import org.x4o.xml.lang.phase.X4OPhaseException;
-import org.x4o.xml.lang.phase.X4OPhaseType;
+import org.x4o.xml.lang.phase.X4OPhaseManager;
 
 /**
  * This is the starting point of the XML X4O Language Driver.
@@ -55,37 +56,31 @@ public abstract class X4ODriver<T> {
 		X4ODriverManager.registerX4ODriver(this);
 	}
 	
+	/**
+	 * @return	Returns the langauge name of this driver.
+	 */
 	abstract public String getLanguageName();
 	
+	/**
+	 * @return	Returns the supported language versions for this driver.
+	 */
 	abstract public String[] getLanguageVersions();
 	
-	abstract public X4OLanguage buildLanguage(String version);
 	
-	public X4OLanguage createLanguage(String version) {
-		X4OLanguage result = null;
-		if (result==null) {
-			result = buildLanguage(version);
-		}
-		return result;
+	
+	protected X4OLanguage buildLanguage(String version) {
+		return X4ODriverManager.getDefaultBuildLanguage(this, version);
 	}
 	
-	public X4OLanguageContext createLanguageContext() {
-		return createLanguageContext(getLanguageVersionDefault());
+	protected X4OPhaseManager buildPhaseManager() {
+		return X4ODriverManager.getDefaultBuildPhaseManager();
 	}
 	
-	public X4OLanguageContext createLanguageContext(String version) {
-		X4OLanguage language = createLanguage(version);
-		X4OLanguageContext result = language.getLanguageConfiguration().createElementLanguage(this);
-		
-		try {
-			result.getLanguage().getPhaseManager().runPhases(result, X4OPhaseType.INIT);
-		} catch (X4OPhaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return result;
+	protected X4OLanguageConfiguration buildLanguageConfiguration() {
+		return X4ODriverManager.getDefaultBuildLanguageConfiguration();
 	}
+	
+	
 	
 	public X4OSchemaWriter createSchemaWriter() {
 		return createSchemaWriter(getLanguageVersionDefault());
@@ -112,24 +107,27 @@ public abstract class X4ODriver<T> {
 	}
 
 	public String getLanguageVersionDefault() {
-		String[] lang = getLanguageVersions();
-		if (lang==null || lang.length==0) {
-			return DEFAULT_LANGUAGE_VERSION;
-		}
-		String langVersion = lang[lang.length-1];
-		return langVersion;
+		return X4ODriverManager.getDefaultLanguageVersion(getLanguageVersions());
 	}
 	
-	/**
-	 * @return Returns the property keys which can be set.
-	 */
 	public String[] getGlobalPropertyKeySet() {
 		return X4OLanguagePropertyKeys.DEFAULT_X4O_GLOBAL_KEYS;
 	}
 	
-	/**
-	 * @return Returns the property keys which are set.
-	 */
+	
+	
+	final public X4OLanguage createLanguage(String version) {
+		return buildLanguage(version);
+	}
+	
+	final public X4OLanguageContext createLanguageContext() {
+		return createLanguageContext(getLanguageVersionDefault());
+	}
+	
+	final public X4OLanguageContext createLanguageContext(String version) {
+		return createLanguage(version).createLanguageContext(this);
+	}
+	
 	final public Collection<String> getGlobalPropertyKeys() {
 		return X4ODriverManager.getGlobalPropertyKeys(this);
 	}

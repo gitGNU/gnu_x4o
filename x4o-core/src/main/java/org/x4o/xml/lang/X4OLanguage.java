@@ -25,6 +25,8 @@ package org.x4o.xml.lang;
 
 import java.util.List;
 
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespaceContext;
@@ -58,9 +60,29 @@ public interface X4OLanguage {
 	 * @return the languageConfiguration.
 	 */
 	X4OLanguageConfiguration getLanguageConfiguration();
+
+	/**
+	 * Creates and filles the inital element language used to store the language.
+	 * @return	The newly created ElementLanguage.
+	 */
+	X4OLanguageContext createLanguageContext(X4ODriver<?> driver);
+
+	/**
+	 * Search language for object and create elememt for it.
+	 * @param object The object to search for.
+	 * @return	Returns an new Elememt instance for the object.
+	 */
+	Element createElementInstance(X4OLanguageContext context,Class<?> objectClass);
 	
 	/**
-	 * Gets all ElementBindingHandlers.
+	 * Gets all ElementBindingHandlers which are possible for parent.
+	 * @param parent The parent element object or class to search for.
+	 * @return	Returns an List with all ElementBindingHandler for the search.
+	 */
+	List<ElementBindingHandler> findElementBindingHandlers(Object parent);
+	
+	/**
+	 * Gets all ElementBindingHandlers for parent and child combination.
 	 * @param parent The parent element object or class to search for.
 	 * @param child The parent element object or class to search for.
 	 * @return	Returns an List with all ElementBindingHandler for the search pair.

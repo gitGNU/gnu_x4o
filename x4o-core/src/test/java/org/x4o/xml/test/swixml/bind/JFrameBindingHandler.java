@@ -24,6 +24,7 @@
 package	org.x4o.xml.test.swixml.bind;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -39,7 +40,7 @@ import org.x4o.xml.element.ElementBindingHandlerException;
  * @author Willem Cazander
  * @version 1.0 Aug 16, 2012
  */
-public class JFrameBindingHandler extends AbstractElementBindingHandler {
+public class JFrameBindingHandler extends AbstractElementBindingHandler<JFrame> {
 	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
@@ -56,9 +57,9 @@ public class JFrameBindingHandler extends AbstractElementBindingHandler {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,	Element childElement) throws ElementBindingHandlerException {
+	public void bindChild(Element childElement, JFrame parentObject, Object childObject) throws ElementBindingHandlerException {
 		JFrame frame = (JFrame)parentObject;
 		if (childObject instanceof JMenuBar) {
 			JMenuBar child = (JMenuBar)childObject;
@@ -82,6 +83,19 @@ public class JFrameBindingHandler extends AbstractElementBindingHandler {
 				frame.getContentPane().add(child);
 			} else {
 				frame.getContentPane().add(child,con);
+			}
+		}
+	}
+	
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
+	@Override
+	public void createChilderen(Element parentElement,JFrame parent) throws ElementBindingHandlerException {
+		createChild(parentElement, parent.getMenuBar());
+		for (Component c:parent.getComponents()) {
+			if (c instanceof JComponent) {
+				createChild(parentElement, c);
 			}
 		}
 	}

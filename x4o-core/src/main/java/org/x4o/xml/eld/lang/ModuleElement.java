@@ -50,7 +50,7 @@ public class ModuleElement extends AbstractElement {
 			throw new ElementException("Need to be root tag");
 		}
 		@SuppressWarnings("rawtypes")
-		Map m = (Map)getElementLanguage().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
+		Map m = (Map)getLanguageContext().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
 		if (m==null) {
 			return;
 		}

@@ -83,7 +83,7 @@
                   <target>
                     <property name="coredir" value="${basedir}/../../x4o-core/src/main/resources/META-INF"/>
                     <taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask" classpathref="maven.plugin.classpath"/>
-                    <eldXsdWriter destdir="${coredir}/cel" supportclass="org.x4o.xml.eld.EldParserSupportCore"/>
+                    <eldXsdWriter destdir="${coredir}/cel" language="cel"/>
                   </target>
                 </configuration>
                 <goals>
@@ -118,7 +118,7 @@
                   <target>
                     <property name="coredir" value="${basedir}/../../x4o-core/src/main/resources/META-INF"/>
                     <taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask" classpathref="maven.plugin.classpath"/>
-                    <eldXsdWriter destdir="${coredir}/eld" supportclass="org.x4o.xml.eld.EldParserSupport"/>
+                    <eldXsdWriter destdir="${coredir}/eld" language="eld"/>
                   </target>
                 </configuration>
                 <goals>

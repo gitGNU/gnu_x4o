@@ -54,8 +54,8 @@ public class ELIDAttributeHandler extends AbstractElementAttributeHandler {
 			return;
 		}
 		if(element.getElementObject()==null) { throw new NullPointerException("Can't bind null object to el context"); }
-		ValueExpression ee = element.getElementLanguage().getExpressionLanguageFactory().createValueExpression(element.getElementLanguage().getExpressionLanguageContext(),"${"+attributeValue+"}", element.getElementObject().getClass());
+		ValueExpression ee = element.getLanguageContext().getExpressionLanguageFactory().createValueExpression(element.getLanguageContext().getExpressionLanguageContext(),"${"+attributeValue+"}", element.getElementObject().getClass());
 		Logger.getLogger(ELIDAttributeHandler.class.getName()).finer("Set Variable in ELContext: "+"${"+attributeValue+"}"+" object SET: "+element.getElementObject());
-		ee.setValue(element.getElementLanguage().getExpressionLanguageContext(), element.getElementObject());
+		ee.setValue(element.getLanguageContext().getExpressionLanguageContext(), element.getElementObject());
 	}
 }

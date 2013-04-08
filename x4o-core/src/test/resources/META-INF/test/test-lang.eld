@@ -34,22 +34,22 @@
 	id="test-module"
 	>
 	
-	<eld:classBindingHandler id="Parent-Child"	parentClass="org.x4o.xml.test.models.TestObjectParent" childClass="org.x4o.xml.test.models.TestObjectChild" method="addTestObjectChild">
+	<eld:classBindingHandler id="Parent-Child"	parentClass="org.x4o.xml.test.models.TestObjectParent" childClass="org.x4o.xml.test.models.TestObjectChild" addMethod="addTestObjectChild" getMethod="getTestObjectChilds">
 		<eld:description>Binds the TestObjectChild to the TestObjectParent</eld:description>
 	</eld:classBindingHandler>	
-	<eld:classBindingHandler id="Root-Child"	parentClass="org.x4o.xml.test.models.TestObjectRoot" childClass="org.x4o.xml.test.models.TestObjectChild"  method="addChild">
+	<eld:classBindingHandler id="Root-Child"	parentClass="org.x4o.xml.test.models.TestObjectRoot" childClass="org.x4o.xml.test.models.TestObjectChild"  addMethod="addChild" getMethod="getTestObjectChilds">
 		<eld:description>Binds the TestBean to the TestObjectChild</eld:description>
 	</eld:classBindingHandler>
-	<eld:classBindingHandler id="Root-Parent"	parentClass="org.x4o.xml.test.models.TestObjectRoot" childClass="org.x4o.xml.test.models.TestObjectParent" method="addParent">
+	<eld:classBindingHandler id="Root-Parent"	parentClass="org.x4o.xml.test.models.TestObjectRoot" childClass="org.x4o.xml.test.models.TestObjectParent" addMethod="addParent" getMethod="getTestObjectParents">
 		<eld:description>Binds the TestObjectParent to the TestObjectRoot</eld:description>
 	</eld:classBindingHandler>
-	<eld:classBindingHandler id="Root-Bean"		parentClass="org.x4o.xml.test.models.TestObjectRoot" childClass="org.x4o.xml.test.models.TestBean" method="addTestBean">
+	<eld:classBindingHandler id="Root-Bean"		parentClass="org.x4o.xml.test.models.TestObjectRoot" childClass="org.x4o.xml.test.models.TestBean" addMethod="addTestBean" getMethod="getTestBeans">
 		<eld:description>Binds the TestBean to the TestObjectRoot</eld:description>
 	</eld:classBindingHandler>
-	<eld:classBindingHandler id="JComponent-JComponent"	parentClass="javax.swing.JComponent" childClass="javax.swing.JComponent" method="addComponent">
+	<eld:classBindingHandler id="JComponent-JComponent"	parentClass="javax.swing.JComponent" childClass="javax.swing.JComponent" addMethod="addComponent" getMethod="">
 		<eld:description>Binds j components.</eld:description>
 	</eld:classBindingHandler>
-	<eld:classBindingHandler id="JFrame-JPanel"	parentClass="javax.swing.JFrame" childClass="javax.swing.JPanel" method="add">
+	<eld:classBindingHandler id="JFrame-JPanel"	parentClass="javax.swing.JFrame" childClass="javax.swing.JPanel" addMethod="add" getMethod="getComponents">
 		<eld:description>Binds panel to frame components as unit check.</eld:description>
 	</eld:classBindingHandler>
 	
@@ -67,7 +67,7 @@
 
 	<eld:elementInterface id="JComponent" interfaceClass="javax.swing.JComponent">
 		<eld:description>Configs the JComponent based objects.</eld:description>
-		<eld:classBindingHandler id="JComponent-JComponent" parentClass="javax.swing.JComponent" childClass="javax.swing.JComponent" method="add">
+		<eld:classBindingHandler id="JComponent-JComponent" parentClass="javax.swing.JComponent" childClass="javax.swing.JComponent" addMethod="add" getMethod="getComponents">
 			<eld:description>Binds the JComponent to the JComponent.</eld:description>
 		</eld:classBindingHandler>
 	</eld:elementInterface>

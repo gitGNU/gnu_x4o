@@ -32,7 +32,7 @@ package	org.x4o.xml.lang;
  */
 public class DefaultX4OLanguageContext extends AbstractX4OLanguageContext {
 
-	public DefaultX4OLanguageContext(X4OLanguage language, String languageVersion) {
-		super(language, languageVersion);
+	public DefaultX4OLanguageContext(X4OLanguage language) {
+		super(language);
 	}
 }

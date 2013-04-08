@@ -37,7 +37,7 @@ import org.x4o.xml.element.ElementConfigurator;
  * @author Willem Cazander
  * @version 1.0 Jan 31, 2007
  */
-public class ElementClassBindingHandler extends AbstractElementBindingHandler {
+public class ElementClassBindingHandler extends AbstractElementBindingHandler<ElementClass> {
 
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementClassAttribute.class,
@@ -59,15 +59,23 @@ public class ElementClassBindingHandler extends AbstractElementBindingHandler {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element,java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,Element childElement) throws ElementBindingHandlerException {
-		ElementClass parent = (ElementClass)parentObject;
+	public void bindChild(Element childElement,ElementClass parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ElementClassAttribute) {
 			parent.addElementClassAttribute((ElementClassAttribute)childObject);
 		}
 		if (childObject instanceof ElementConfigurator) { 
 			parent.addElementConfigurators((ElementConfigurator)childObject);
+		}
+	}
+	
+	public void createChilderen(Element parentElement,ElementClass parent) throws ElementBindingHandlerException {
+		for (ElementClassAttribute child:parent.getElementClassAttributes()) {
+			createChild(parentElement, child);
+		}
+		for (ElementConfigurator child:parent.getElementConfigurators()) {
+			createChild(parentElement, child);
 		}
 	}
 }

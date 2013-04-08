@@ -30,8 +30,8 @@ import java.util.List;
 
 import org.x4o.xml.element.Element;
 import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageContextLocal;
 import org.x4o.xml.lang.X4OLanguageProperty;
-
 
 /**
  * X4OPhaseManager stores the X4OPhaseHandler and puts them in the right order.
@@ -44,11 +44,6 @@ public class DefaultX4OPhaseManager implements X4OPhaseManager {
 	
 	/** The X4OPhaseHandler */
 	private List<X4OPhase> x4oPhases = null;
-	//private ElementLanguage elementLanguage = null;
-	//private X4OPhase stopPhase = null;
-	//private boolean skipReleasePhase = false;
-	//private boolean skipRunPhase = false;
-	//private boolean skipSiblingsPhase = false;
 	
 	/**
 	 * Local package constructor.
@@ -56,26 +51,24 @@ public class DefaultX4OPhaseManager implements X4OPhaseManager {
 	 */
 	public DefaultX4OPhaseManager() {
 		x4oPhases = new ArrayList<X4OPhase>(25);
-		/*
-		if (elementLanguage==null) {
-			throw new NullPointerException("Can't manage phases with null elementLanguage in constuctor.");
-		}
-		x4oPhases = new ArrayList<X4OPhaseHandler>(15);
-		this.elementLanguage = elementLanguage;
-		
-		// Manual
-		skipReleasePhase = elementLanguage.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RELEASE);
-		skipRunPhase = elementLanguage.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RUN);
-		skipSiblingsPhase = elementLanguage.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_SIBLINGS);
-		
-		// Check if we need to stop after a certain phase
-		Object stopPhaseObject = elementLanguage.getLanguageProperty(X4OLanguageProperty.PHASE_STOP_AFTER);
-		if (stopPhaseObject instanceof X4OPhase) {
-			stopPhase = (X4OPhase)stopPhaseObject;
-		}
-		*/
 	}
+/*
+
+PHASE_ORDER = {	*startupX4OPhase,
+					*createLanguagePhase,
+					*createLanguageSiblingsPhase,
+					*parseSAXStreamPhase,
+					*configGlobalElBeansPhase,
+				*startX4OPhase,
+					configElementPhase,configElementInterfacePhase,configGlobalElementPhase,
+					configGlobalAttributePhase,runAttributesPhase,fillTemplatingPhase,
+					transformPhase,*runDirtyElementPhase,bindElementPhase,
+					*runPhase,runDirtyElementLastPhase,
+				*releasePhase
+				};	
+* = runOnce
 	
+*/
 	/**
 	 * Adds an X4OPhaseHandler.
 	 * @param phase	The X4OPhaseHandler to add.
@@ -164,7 +157,7 @@ public class DefaultX4OPhaseManager implements X4OPhaseManager {
 			}
 			
 			// debug output
-			languageContext.setCurrentX4OPhase(phase);
+			((X4OLanguageContextLocal)languageContext).setCurrentPhase(phase);
 			 
 			// run listeners
 			for (X4OPhaseListener l:phase.getPhaseListeners()) {
@@ -198,10 +191,9 @@ public class DefaultX4OPhaseManager implements X4OPhaseManager {
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
 	public void runPhasesForElement(Element e,X4OPhaseType type,X4OPhase p) throws X4OPhaseException {
-		X4OLanguageContext languageContext = e.getElementLanguage();
+		X4OLanguageContext languageContext = e.getLanguageContext();
 		boolean skipRunPhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RUN);
 		String stopPhase = languageContext.getLanguagePropertyString(X4OLanguageProperty.PHASE_STOP_AFTER);
-		
 		
 		// sort for the order
 		List<X4OPhase> x4oPhasesOrder = getOrderedPhases(type);
@@ -217,7 +209,7 @@ public class DefaultX4OPhaseManager implements X4OPhaseManager {
 			}
 			
 			// set phase
-			languageContext.setCurrentX4OPhase(phase);
+			((X4OLanguageContextLocal)languageContext).setCurrentPhase(phase);
 			
 			// do the run interface
 			phase.runPhase(languageContext);
@@ -259,7 +251,7 @@ public class DefaultX4OPhaseManager implements X4OPhaseManager {
 		}
 		
 		// set phase
-		languageContext.setCurrentX4OPhase(h);
+		((X4OLanguageContextLocal)languageContext).setCurrentPhase(h);
 		
 		// do the run interface
 		h.runPhase(languageContext);

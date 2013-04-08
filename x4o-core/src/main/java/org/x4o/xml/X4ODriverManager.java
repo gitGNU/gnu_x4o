@@ -35,7 +35,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.x4o.xml.lang.DefaultX4OLanguage;
+import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageConfiguration;
+import org.x4o.xml.lang.phase.DefaultX4OPhaseManager;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageInit;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageRead;
+import org.x4o.xml.lang.phase.X4OPhaseManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -64,6 +72,38 @@ public final class X4ODriverManager {
 	
 	static {
 		instance = new X4ODriverManager();
+	}
+	
+	static protected String getDefaultLanguageVersion(String[] languages) {
+		if (languages==null || languages.length==0) {
+			return X4ODriver.DEFAULT_LANGUAGE_VERSION;
+		}
+		String languageVersion = languages[languages.length-1];
+		return languageVersion;
+	}
+	
+	static protected X4OPhaseManager getDefaultBuildPhaseManager() {
+		DefaultX4OPhaseManager manager = new DefaultX4OPhaseManager();
+		new X4OPhaseLanguageInit().createPhases(manager);
+		new X4OPhaseLanguageRead().createPhases(manager);
+		//new X4OPhaseLanguageWrite().createPhases(manager);
+		return manager;
+	}
+	
+	static protected X4OLanguage getDefaultBuildLanguage(X4ODriver<?> driver,String version) {
+		if (version==null) {
+			version = driver.getLanguageVersionDefault();
+		}
+		return new DefaultX4OLanguage(
+				driver.buildLanguageConfiguration(),
+				driver.buildPhaseManager(),
+				driver.getLanguageName(),
+				version
+			);
+	}
+	
+	static protected X4OLanguageConfiguration getDefaultBuildLanguageConfiguration() {
+		return new DefaultX4OLanguageConfiguration();
 	}
 	
 	static public Collection<String> getGlobalPropertyKeys(X4ODriver<?> driver) {

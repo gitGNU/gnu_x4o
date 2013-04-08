@@ -34,7 +34,11 @@ public class TestObjectParent {
 	public void addTestObjectChild(TestObjectChild c) {
 		testObjectChilds.add(c);
 	}
-
+	
+	public List<TestObjectChild> getTestObjectChilds() {
+		return testObjectChilds;
+	}
+	
 	/**
 	 * @return the name
 	 */

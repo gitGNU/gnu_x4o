@@ -49,7 +49,7 @@ import org.x4o.xml.lang.X4OLanguageProperty;
  * @author Willem Cazander
  * @version 1.0 Jan 19, 2007
  */
-public class ElementModuleBindingHandler  extends AbstractElementBindingHandler {
+public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<X4OLanguageModule> {
 	
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementInterface.class,
@@ -75,34 +75,33 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,Element childElement) throws ElementBindingHandlerException {
+	public void bindChild(Element childElement,X4OLanguageModule languageModule, Object childObject) throws ElementBindingHandlerException {
 		
 		@SuppressWarnings("rawtypes")
-		Map m = (Map)childElement.getElementLanguage().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
+		Map m = (Map)childElement.getLanguageContext().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
 		if (m==null) {
 			return;
 		}
 		X4OLanguage x4oParsingContext = (X4OLanguage)m.get(EldModuleLoader.EL_PARENT_LANGUAGE);
 		//ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.PARENT_ELEMENT_LANGUAGE_MODULE);
-		X4OLanguageModule elementLanguageModule = (X4OLanguageModule)parentObject;
 		if (x4oParsingContext==null) {
 			return;
 		}
-		if (elementLanguageModule==null) {
+		if (languageModule==null) {
 			return;
 		}
 		
 		if (childObject instanceof ElementInterface) {
 			ElementInterface elementInterface = (ElementInterface)childObject;
-			elementLanguageModule.addElementInterface(elementInterface);
+			languageModule.addElementInterface(elementInterface);
 			return;
 		}
 		if (childObject instanceof ElementNamespaceContext) {
 			ElementNamespaceContext elementNamespaceContext = (ElementNamespaceContext)childObject;
 			try {
-				elementNamespaceContext.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getElementLanguage().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
+				elementNamespaceContext.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
 			} catch (Exception e) {
 				throw new ElementBindingHandlerException("Error loading: "+e.getMessage(),e);
 			}
@@ -112,23 +111,41 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler 
 			} catch (ElementNamespaceInstanceProviderException e) {
 				throw new ElementBindingHandlerException("Error starting: "+e.getMessage(),e);
 			}
-			elementLanguageModule.addElementNamespaceContext(elementNamespaceContext);
+			languageModule.addElementNamespaceContext(elementNamespaceContext);
 			return;
 		}
 		if (childObject instanceof ElementBindingHandler) {
 			ElementBindingHandler elementBindingHandler = (ElementBindingHandler)childObject;
-			elementLanguageModule.addElementBindingHandler(elementBindingHandler);
+			languageModule.addElementBindingHandler(elementBindingHandler);
 			return;
 		}
 		if (childObject instanceof ElementAttributeHandler) {
 			ElementAttributeHandler elementAttributeHandler = (ElementAttributeHandler)childObject;
-			elementLanguageModule.addElementAttributeHandler(elementAttributeHandler);
+			languageModule.addElementAttributeHandler(elementAttributeHandler);
 			return;
 		}
 		if (childObject instanceof ElementConfiguratorGlobal) {
 			ElementConfiguratorGlobal elementConfigurator = (ElementConfiguratorGlobal)childObject;
-			elementLanguageModule.addElementConfiguratorGlobal(elementConfigurator);
+			languageModule.addElementConfiguratorGlobal(elementConfigurator);
 			return;
+		}
+	}
+	
+	public void createChilderen(Element parentElement,X4OLanguageModule parent) throws ElementBindingHandlerException {
+		for (ElementInterface child:parent.getElementInterfaces()) {
+			createChild(parentElement, child);
+		}
+		for (ElementNamespaceContext child:parent.getElementNamespaceContexts()) {
+			createChild(parentElement, child);
+		}
+		for (ElementBindingHandler child:parent.getElementBindingHandlers()) {
+			createChild(parentElement, child);
+		}
+		for (ElementAttributeHandler child:parent.getElementAttributeHandlers()) {
+			createChild(parentElement, child);
+		}
+		for (ElementConfiguratorGlobal child:parent.getElementConfiguratorGlobals()) {
+			createChild(parentElement, child);
 		}
 	}
 }

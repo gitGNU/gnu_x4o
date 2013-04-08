@@ -428,7 +428,7 @@ public class X4ODebugWriter {
 		atts.addAttribute ("", "language", "", "", elementLanguage.getLanguage().getLanguageName());
 		atts.addAttribute ("", "languageVersion", "", "", elementLanguage.getLanguage().getLanguageVersion());
 		atts.addAttribute ("", "className", "", "", elementLanguage.getClass().getName()+"");
-		atts.addAttribute ("", "currentX4OPhase", "", "", elementLanguage.getCurrentX4OPhase().getId());
+		atts.addAttribute ("", "currentX4OPhase", "", "", elementLanguage.getCurrentPhase().getId());
 		debugWriter.startElement (DEBUG_URI, "printElementLanguage", "", atts);
 		debugWriter.endElement(DEBUG_URI, "printElementLanguage", "");
 	}

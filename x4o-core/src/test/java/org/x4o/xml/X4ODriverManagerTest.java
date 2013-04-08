@@ -26,8 +26,6 @@ package org.x4o.xml;
 import java.util.List;
 
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.lang.X4OLanguageLoaderException;
-import org.x4o.xml.lang.phase.X4OPhaseException;
 
 import junit.framework.TestCase;
 
@@ -68,13 +66,14 @@ public class X4ODriverManagerTest extends TestCase {
 	public void testLanguageVersionNonExcisting() throws Exception {
 		String language = "test";
 		String version = "99.9";
-		Exception e = null;
+		Throwable e = null;
 		try {
-			X4ODriver driver = X4ODriverManager.getX4ODriver(language);
+			X4ODriver<?> driver = X4ODriverManager.getX4ODriver(language);
 			driver.createLanguageContext(version);
-		} catch (Exception catchE) {
+		} catch (Throwable catchE) {
 			e = catchE;
 		}
+		assertNotNull(e);
 		/* TODO
 		assertNotNull(e);
 		assertNotNull(e.getCause());

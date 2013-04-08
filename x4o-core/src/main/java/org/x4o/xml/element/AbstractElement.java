@@ -122,9 +122,9 @@ public abstract class AbstractElement implements Element {
 	}
 	
 	/**
-	 * @see Element#getElementLanguage()
+	 * @see Element#getLanguageContext()
 	 */
-	public X4OLanguageContext getElementLanguage() {
+	public X4OLanguageContext getLanguageContext() {
 		return elementLanguage;
 	}
 
@@ -133,7 +133,7 @@ public abstract class AbstractElement implements Element {
 	 */
 	public void doCharacters(String characters) throws ElementException {
 		try {
-			Element e = (Element)X4OLanguageClassLoader.newInstance(getElementLanguage().getLanguage().getLanguageConfiguration().getDefaultElementBodyCharacters());
+			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementBodyCharacters());
 			e.setElementObject(characters);
 			addChild(e);
 		} catch (Exception exception) {
@@ -146,7 +146,7 @@ public abstract class AbstractElement implements Element {
 	 */
 	public void doComment(String comment) throws ElementException {
 		try {
-			Element e = (Element)X4OLanguageClassLoader.newInstance(getElementLanguage().getLanguage().getLanguageConfiguration().getDefaultElementBodyComment());
+			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementBodyComment());
 			e.setElementObject(comment);
 			addChild(e);
 		} catch (Exception exception) {
@@ -159,7 +159,7 @@ public abstract class AbstractElement implements Element {
 	 */
 	public void doIgnorableWhitespace(String space) throws ElementException {
 		try {
-			Element e = (Element)X4OLanguageClassLoader.newInstance(getElementLanguage().getLanguage().getLanguageConfiguration().getDefaultElementBodyWhitespace());
+			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementBodyWhitespace());
 			e.setElementObject(space);
 			addChild(e);
 		} catch (Exception exception) {

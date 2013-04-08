@@ -142,7 +142,7 @@ public interface Element {
 	 * Gets the ElementLanguage.
 	 * @return	Returns the ElementLanguage.
 	 */
-	X4OLanguageContext getElementLanguage();
+	X4OLanguageContext getLanguageContext();
 	
 	/**
 	 * Sets the body texts on an event based system.

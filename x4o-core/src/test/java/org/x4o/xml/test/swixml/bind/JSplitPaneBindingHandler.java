@@ -37,7 +37,7 @@ import org.x4o.xml.element.ElementBindingHandlerException;
  * @author Willem Cazander
  * @version 1.0 Aug 16, 2012
  */
-public class JSplitPaneBindingHandler extends AbstractElementBindingHandler {
+public class JSplitPaneBindingHandler extends AbstractElementBindingHandler<JSplitPane> {
 	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
@@ -54,11 +54,10 @@ public class JSplitPaneBindingHandler extends AbstractElementBindingHandler {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object, )
 	 */
-	public void doBind(Object parentObject, Object childObject,	Element childElement) throws ElementBindingHandlerException {
+	public void bindChild(Element childElement, JSplitPane pane, Object childObject) throws ElementBindingHandlerException {
 		JComponent child = (JComponent)childObject;
-		JSplitPane pane = (JSplitPane)parentObject;
 		if (pane.getLeftComponent() instanceof JButton) { // strange swing constructor for splitpane
 			pane.setLeftComponent(child);
 		} else if (pane.getRightComponent() instanceof JButton) {
@@ -66,5 +65,14 @@ public class JSplitPaneBindingHandler extends AbstractElementBindingHandler {
 		} else {
 			throw new ElementBindingHandlerException("SplitPane is full.");
 		}
+	}
+	
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
+	@Override
+	public void createChilderen(Element parentElement,JSplitPane parentObject) throws ElementBindingHandlerException {
+		createChild(parentElement, parentObject.getLeftComponent());
+		createChild(parentElement, parentObject.getRightComponent());
 	}
 }

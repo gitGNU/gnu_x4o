@@ -23,30 +23,48 @@
 
 package org.x4o.xml.io;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Scanner;
+
 import org.x4o.xml.X4ODriver;
+import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.test.TestDriver;
+import org.x4o.xml.test.models.TestObjectRoot;
 
-public class DefaultX4ODriver<T> extends X4ODriver<T> {
+import junit.framework.TestCase;
 
-	private final String languageName;
-	private final String languageVersion;
+/**
+ * X4ODebugWriterTest runs parser with debug output.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Aug 26, 2012
+ */
+public class X4OWriterTest extends TestCase {
 	
-	public DefaultX4ODriver(String languageName) {
-		this(languageName,X4ODriver.DEFAULT_LANGUAGE_VERSION);
+
+	private File createOutputFile() throws IOException {
+		File outputFile = File.createTempFile("test-writer", ".xml");
+		outputFile.deleteOnExit();
+		return outputFile;
 	}
 	
-	public DefaultX4ODriver(String languageName,String languageVersion) {
-		super();
-		this.languageName=languageName;
-		this.languageVersion=languageVersion;
-	}
-	
-	@Override
-	public String getLanguageName() {
-		return languageName;
-	}
-
-	@Override
-	public String[] getLanguageVersions() {
-		return new String[]{languageVersion};
+	public void testWriterOutput() throws Exception {
+		File outputFile = createOutputFile();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		X4OWriter<TestObjectRoot> writer = driver.createWriter();
+		
+		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
+		writer.writeFile(root, outputFile);
+		
+		assertTrue("Debug file does not exists.",outputFile.exists());
+		
+		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
+		
+		outputFile.delete();
 	}
 }

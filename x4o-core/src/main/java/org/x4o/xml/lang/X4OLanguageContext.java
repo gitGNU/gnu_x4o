@@ -70,14 +70,7 @@ public interface X4OLanguageContext {
 	 * Returns the current X4OPhase of the parser.
 	 * @return	Returns the current phase.
 	 */
-	X4OPhase getCurrentX4OPhase();
-	
-	/**
-	 * Sets the phase of the context.
-	 * TODO: Do never call this, methode sould be moved to local interface.
-	 * @param phase	The current phase to set.
-	 */
-	void setCurrentX4OPhase(X4OPhase phase);
+	X4OPhase getCurrentPhase();
 	
 	/**
 	 * Marks an (new) Element as dirty and run the phases from this start phase.

@@ -59,15 +59,9 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	/**
 	 * Creates a new empty ElementLanguage.
 	 */
-	public AbstractX4OLanguageContext(X4OLanguage language,String languageVersion) {
+	public AbstractX4OLanguageContext(X4OLanguage language) {
 		if (language==null) {
 			throw new NullPointerException("language may not be null");
-		}
-		if (languageVersion==null) {
-			throw new NullPointerException("languageVersion may not be null");
-		}
-		if (languageVersion.length()==0) {
-			throw new IllegalArgumentException("languageVersion may not be empty");
 		}
 		logger = Logger.getLogger(AbstractX4OLanguageContext.class.getName());
 		logger.finest("Creating new ParsingContext");
@@ -75,7 +69,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 		dirtyElements = new HashMap<Element, X4OPhase>(40);
 		languageProperties = new HashMap<String,Object>(20);
 		languageProperties.put(X4OLanguageProperty.LANGUAGE_NAME.toUri(), language.getLanguageName());
-		languageProperties.put(X4OLanguageProperty.LANGUAGE_VERSION.toUri(), languageVersion);
+		languageProperties.put(X4OLanguageProperty.LANGUAGE_VERSION.toUri(), language.getLanguageVersion());
 	}
 
 	public X4OLanguage getLanguage() {
@@ -151,16 +145,16 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#getCurrentX4OPhase()
+	 * @see org.x4o.xml.lang.X4OLanguageContext#getCurrentPhase()
 	 */
-	public X4OPhase getCurrentX4OPhase() {
+	public X4OPhase getCurrentPhase() {
 		return currentX4OPhase;
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#setCurrentX4OPhase(org.x4o.xml.lang.phase.X4OPhase)
+	 * @see org.x4o.xml.lang.X4OLanguageContext#setCurrentPhase(org.x4o.xml.lang.phase.X4OPhase)
 	 */
-	public void setCurrentX4OPhase(X4OPhase currentX4OPhase) {
+	public void setCurrentPhase(X4OPhase currentX4OPhase) {
 		this.currentX4OPhase = currentX4OPhase;
 	}
 

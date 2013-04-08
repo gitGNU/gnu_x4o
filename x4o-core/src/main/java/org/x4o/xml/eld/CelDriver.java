@@ -24,15 +24,10 @@
 package	org.x4o.xml.eld;
 
 import org.x4o.xml.X4ODriver;
-import org.x4o.xml.lang.DefaultX4OLanguage;
-import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.phase.X4OPhaseManagerFactory;
-
 
 /**
- * CelDriver is the Core Element Language driver. 
+ * CelDriver is the Core Element Language driver.
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 20, 2005
@@ -51,10 +46,5 @@ public class CelDriver extends X4ODriver<X4OLanguageModule> {
 	@Override
 	public String[] getLanguageVersions() {
 		return null;
-	}
-	
-	@Override
-	public X4OLanguage buildLanguage(String version) {
-		return new DefaultX4OLanguage(new DefaultX4OLanguageConfiguration(),X4OPhaseManagerFactory.createDefaultX4OPhaseManager(),getLanguageName(),getLanguageVersionDefault());
 	}
 }

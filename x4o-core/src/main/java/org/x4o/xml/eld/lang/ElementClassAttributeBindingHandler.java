@@ -35,7 +35,7 @@ import org.x4o.xml.element.ElementClassAttribute;
  * @author Willem Cazander
  * @version 1.0 Aug 21, 2012
  */
-public class ElementClassAttributeBindingHandler extends AbstractElementBindingHandler {
+public class ElementClassAttributeBindingHandler extends AbstractElementBindingHandler<ElementClassAttribute> {
 
 	
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
@@ -56,13 +56,13 @@ public class ElementClassAttributeBindingHandler extends AbstractElementBindingH
 		return CLASSES_CHILD;
 	}
 
-	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
-	 */
-	public void doBind(Object parentObject, Object childObject,Element childElement) throws ElementBindingHandlerException {
-		ElementClassAttribute parent = (ElementClassAttribute)parentObject;
+	public void bindChild(Element childElement,ElementClassAttribute parentObject,Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ObjectConverter) { 
-			parent.setObjectConverter((ObjectConverter)childObject);
+			parentObject.setObjectConverter((ObjectConverter)childObject);
 		}
+	}
+	
+	public void createChilderen(Element parentElement,ElementClassAttribute parentObject) throws ElementBindingHandlerException {
+		createChild(parentElement, parentObject.getObjectConverter());
 	}
 }

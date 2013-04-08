@@ -51,13 +51,13 @@ public interface X4OPhaseManager {
 	 */
 	List<X4OPhase> getOrderedPhases(X4OPhaseType type);
 
-	public void doReleasePhaseManual(X4OLanguageContext languageContext) throws X4OPhaseException;
+	void doReleasePhaseManual(X4OLanguageContext languageContext) throws X4OPhaseException;
 	
 	/**
 	 * Runs all the phases in the right order.
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
-	public void runPhases(X4OLanguageContext elementContext,X4OPhaseType type) throws X4OPhaseException;
+	void runPhases(X4OLanguageContext elementContext,X4OPhaseType type) throws X4OPhaseException;
 
 	/**
 	 * Runs phase on single element.
@@ -65,5 +65,5 @@ public interface X4OPhaseManager {
 	 * @param p	The phase to run.
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
-	public void runPhasesForElement(Element e,X4OPhaseType type,X4OPhase p) throws X4OPhaseException;
+	void runPhasesForElement(Element e,X4OPhaseType type,X4OPhase p) throws X4OPhaseException;
 }

@@ -37,7 +37,7 @@ import org.x4o.xml.element.ElementInterface;
  * @author Willem Cazander
  * @version 1.0 Aug 21, 2012
  */
-public class ElementInterfaceBindingHandler extends AbstractElementBindingHandler {
+public class ElementInterfaceBindingHandler extends AbstractElementBindingHandler<ElementInterface> {
 	
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementClassAttribute.class,
@@ -60,10 +60,9 @@ public class ElementInterfaceBindingHandler extends AbstractElementBindingHandle
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,Element childElement) throws ElementBindingHandlerException {
-		ElementInterface parent = (ElementInterface)parentObject;
+	public void bindChild(Element childElement,ElementInterface parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ElementBindingHandler) { 
 			parent.addElementBindingHandler((ElementBindingHandler)childObject);
 		}
@@ -72,6 +71,18 @@ public class ElementInterfaceBindingHandler extends AbstractElementBindingHandle
 		}
 		if (childObject instanceof ElementConfigurator) { 
 			parent.addElementConfigurators((ElementConfigurator)childObject);
+		}
+	}
+	
+	public void createChilderen(Element parentElement,ElementInterface parent) throws ElementBindingHandlerException {
+		for (ElementBindingHandler child:parent.getElementBindingHandlers()) {
+			createChild(parentElement, child);
+		}
+		for (ElementClassAttribute child:parent.getElementClassAttributes()) {
+			createChild(parentElement, child);
+		}
+		for (ElementConfigurator child:parent.getElementConfigurators()) {
+			createChild(parentElement, child);
 		}
 	}
 }

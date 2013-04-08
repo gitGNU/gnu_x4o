@@ -23,6 +23,7 @@
 
 package	org.x4o.xml.element;
 
+
 /**
  * Bind ElementObjects together.
  * 
@@ -53,5 +54,7 @@ public interface ElementBindingHandler extends ElementMetaBase {
 	 * @param childElement	The child element to bind to the parent.'
 	 * @throws ElementBindingHandlerException When binding could not happen.
 	 */
-	void doBind(Object parentObject,Object childObject,Element childElement) throws ElementBindingHandlerException;
+	void bindChild(Element childElement) throws ElementBindingHandlerException;
+	
+	void createChilderen(Element parentElement) throws ElementBindingHandlerException;
 }

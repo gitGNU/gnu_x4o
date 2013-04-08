@@ -28,9 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.el.ExpressionFactory;
-
-import org.x4o.xml.X4ODriver;
 import org.x4o.xml.el.X4OELContext;
 import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.element.DefaultElement;
@@ -45,9 +42,6 @@ import org.x4o.xml.element.DefaultElementNamespaceContext;
 import org.x4o.xml.element.DefaultElementNamespaceInstanceProvider;
 import org.x4o.xml.element.DefaultElementObjectPropertyValue;
 import org.x4o.xml.element.DefaultGlobalAttributeHandlerComparator;
-import org.x4o.xml.element.ElementAttributeValueParser;
-import org.x4o.xml.element.ElementObjectPropertyValue;
-
 
 /**
  * Provides all implementions of the different parts of the language parser.
@@ -168,73 +162,22 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultX4OLanguageVersionFilter()
 	 */
-	public Class<?> getDefaultX4OLanguageVersionFilter() {
+	public Class<?> getDefaultLanguageVersionFilter() {
 		return DefaultX4OLanguageVersionFilter.class;
 	}
 
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultX4OLanguageLoader()
 	 */
-	public Class<?> getDefaultX4OLanguageLoader() {
+	public Class<?> getDefaultLanguageLoader() {
 		return DefaultX4OLanguageLoader.class;
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#createElementLanguage()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultExpressionLanguageContext()
 	 */
-	public X4OLanguageContext createElementLanguage(X4ODriver<?> driver) {
-		String v = X4ODriver.DEFAULT_LANGUAGE_VERSION; // TODO:fixme
-		return configElementLanguage(new DefaultX4OLanguageContext(driver.createLanguage(v),v),driver);
-	}
-
-	protected X4OLanguageContext configElementLanguage(X4OLanguageContext elementLanguage,X4ODriver<?> driver) {
-		if ((elementLanguage instanceof X4OLanguageContextLocal)==false) { 
-			throw new RuntimeException("Can't init ElementLanguage which has not ElementLanguageLocal interface obj: "+elementLanguage);
-		}
-		X4OLanguageContextLocal contextInit = (X4OLanguageContextLocal)elementLanguage; 
-		//contextInit.setLanguageConfiguration(this);
-		for (String key:driver.getGlobalPropertyKeys()) {
-			Object value = driver.getGlobalProperty(key);
-			contextInit.setLanguageProperty(key, value);
-		}
-		
-		if (contextInit.getExpressionLanguageFactory()==null) {
-			contextInit.setExpressionLanguageFactory(configExpressionFactory(contextInit));
-		}
-		if (contextInit.getExpressionLanguageContext()==null) {
-			contextInit.setExpressionLanguageContext(new X4OELContext());
-		}
-		try {
-			if (contextInit.getElementAttributeValueParser()==null) {
-				contextInit.setElementAttributeValueParser((ElementAttributeValueParser)X4OLanguageClassLoader.newInstance(getDefaultElementAttributeValueParser()));
-			}
-			if (contextInit.getElementObjectPropertyValue()==null) {
-				contextInit.setElementObjectPropertyValue((ElementObjectPropertyValue)X4OLanguageClassLoader.newInstance(getDefaultElementObjectPropertyValue()));
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(),e);
-		}
-		return elementLanguage;
-	}
-
-	protected ExpressionFactory configExpressionFactory(X4OLanguageContext elementContext) {
-		ExpressionFactory factory = (ExpressionFactory)elementContext.getLanguageProperty(X4OLanguageProperty.EL_FACTORY_INSTANCE);
-		if (factory!=null) {
-			return factory;
-		}
-		try {
-			Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass("org.apache.el.ExpressionFactoryImpl");
-			ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
-			return expressionFactory;
-		} catch (Exception e) {
-			try {
-				Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass("de.odysseus.el.ExpressionFactoryImpl");
-				ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
-				return expressionFactory;
-			} catch (Exception ee) {
-				throw new RuntimeException("Could not load ExpressionFactory tried: org.apache.el.ExpressionFactoryImpl and de.odysseus.el.ExpressionFactoryImpl but could not load one of them.");
-			}
-		}
+	public Class<?> getDefaultExpressionLanguageContext() {
+		return X4OELContext.class;
 	}
 
 	/**

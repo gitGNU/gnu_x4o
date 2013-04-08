@@ -35,7 +35,7 @@ import org.x4o.xml.element.ElementBindingHandlerException;
  * @author Willem Cazander
  * @version 1.0 Aug 21, 2012
  */
-public class StringSplitConverterBindingHandler extends AbstractElementBindingHandler {
+public class StringSplitConverterBindingHandler extends AbstractElementBindingHandler<StringSplitConverter> {
 
 	
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
@@ -57,12 +57,21 @@ public class StringSplitConverterBindingHandler extends AbstractElementBindingHa
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,Element childElement) throws ElementBindingHandlerException {
-		StringSplitConverter parent = (StringSplitConverter)parentObject;
+	public void bindChild(Element childElement,StringSplitConverter parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof StringSplitConverterStep) { 
 			parent.addStringSplitConverterStep((StringSplitConverterStep)childObject);
+		}
+	}
+
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
+	@Override
+	public void createChilderen(Element parentElement,StringSplitConverter parentObject) throws ElementBindingHandlerException {
+		for (StringSplitConverterStep child:parentObject.getStringSplitConverterSteps()) {
+			createChild(parentElement, child);
 		}
 	}
 }

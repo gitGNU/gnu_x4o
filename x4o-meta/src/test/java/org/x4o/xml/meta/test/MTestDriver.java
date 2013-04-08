@@ -27,10 +27,6 @@ import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
 import org.x4o.xml.io.X4OReaderContext;
 import org.x4o.xml.io.X4OWriterContext;
-import org.x4o.xml.lang.DefaultX4OLanguage;
-import org.x4o.xml.lang.DefaultX4OLanguageConfiguration;
-import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.phase.X4OPhaseManagerFactory;
 
 public class MTestDriver extends X4ODriver {
 
@@ -45,11 +41,6 @@ public class MTestDriver extends X4ODriver {
 	@Override
 	public String[] getLanguageVersions() {
 		return LANGUAGE_VERSIONS;
-	}
-	
-	@Override
-	public X4OLanguage buildLanguage(String version) {
-		return new DefaultX4OLanguage(new DefaultX4OLanguageConfiguration(),X4OPhaseManagerFactory.createDefaultX4OPhaseManager(),getLanguageName(),getLanguageVersionDefault());
 	}
 	
 	static public MTestDriver getInstance() {

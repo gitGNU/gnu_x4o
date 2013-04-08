@@ -23,7 +23,10 @@
 
 package	org.x4o.xml.eld.lang;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.List;
 
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
@@ -35,11 +38,12 @@ import org.x4o.xml.element.ElementBindingHandlerException;
  * @author Willem Cazander
  * @version 1.0 Nov 21, 2007
  */
-public class ElementRefectionBindingHandler extends AbstractElementBindingHandler {
+public class ElementRefectionBindingHandler extends AbstractElementBindingHandler<Object> {
 
 	private Class<?> parentClass = null;
 	private Class<?> childClass = null;
-	private String method = null;
+	private String addMethod = null;
+	private String getMethod = null;
 	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
@@ -56,12 +60,12 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#doBind(java.lang.Object, java.lang.Object, org.x4o.xml.element.Element)
+	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element,java.lang.Object, java.lang.Object)
 	 */
-	public void doBind(Object parentObject, Object childObject,	Element childElement) throws ElementBindingHandlerException {
+	public void bindChild(Element childElement, Object parentObject, Object childObject) throws ElementBindingHandlerException {
 
-		if (parentClass==null | childClass==null | method==null) {
-			throw new IllegalStateException("Missing property: parentClass="+parentClass+" childClass="+childClass+" method="+method+".");
+		if (parentClass==null | childClass==null | addMethod==null) {
+			throw new IllegalStateException("Missing property: parentClass="+parentClass+" childClass="+childClass+" addMethod="+addMethod+".");
 		}
 		Method[] ms = parentObject.getClass().getMethods();
 		for (Method m:ms) {
@@ -72,7 +76,7 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 			if (types.length > 1) {
 				continue;
 			}
-			if (method.equalsIgnoreCase(m.getName())==false) {
+			if (addMethod.equalsIgnoreCase(m.getName())==false) {
 				continue;
 			}
 			if (types[0].isAssignableFrom(childClass)) {
@@ -84,9 +88,55 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 				return;
 			}
 		}
-		throw new ElementBindingHandlerException("Could not find method: "+method+" on: "+childClass+" id:"+getId());
+		throw new ElementBindingHandlerException("Could not find method: "+addMethod+" on: "+childClass+" id:"+getId());
 	}
 
+	@SuppressWarnings("rawtypes")
+	public void createChilderen(Element parentElement,Object parentObject) throws ElementBindingHandlerException {
+		if (parentClass==null | childClass==null | getMethod==null) {
+			throw new IllegalStateException("Missing property: parentClass="+parentClass+" childClass="+childClass+" getMethod="+getMethod+".");
+		}
+		Method[] ms = parentObject.getClass().getMethods();
+		for (Method m:ms) {
+			Class<?>[] types = m.getParameterTypes();
+			if (types.length != 0) {
+				continue;
+			}
+			if (getMethod.equalsIgnoreCase(m.getName())==false) {
+				continue;
+			}
+			try {
+				Object result = m.invoke(parentObject, new Object[]{});
+				if (result==null) {
+					break;
+				}
+				if (result instanceof List) {
+					for (Object o:(List)result) {
+						createChild(parentElement, o);
+					}
+					return;
+				} else if (result instanceof Collection) {
+					for (Object o:(Collection)result) {
+						createChild(parentElement, o);
+					}
+					return;
+				} else if (result instanceof Array) {
+					for (Object o:(Object[])result) {
+						createChild(parentElement, o);
+					}
+					return;
+				} else {
+					throw new ElementBindingHandlerException("Unsuported return type: "+result.getClass()+" from: "+getMethod+" on: "+parentObject);
+				}
+			} catch (Exception e) {
+				throw new ElementBindingHandlerException("Error invoke binding method of: "+getId()+" error: "+e.getMessage(),e);
+			}
+		}
+		throw new ElementBindingHandlerException("Could not find method: "+getMethod+" on: "+parentObject+" id:"+getId());
+		
+	//	
+	}
+	
 	/**
 	 * @return the parentClass
 	 */
@@ -116,16 +166,30 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 	}
 
 	/**
-	 * @return the method
+	 * @return the addMethod
 	 */
-	public String getMethod() {
-		return method;
+	public String getAddMethod() {
+		return addMethod;
 	}
 
 	/**
-	 * @param method the method to set
+	 * @param addMethod the addMethod to set
 	 */
-	public void setMethod(String method) {
-		this.method = method;
+	public void setAddMethod(String addMethod) {
+		this.addMethod = addMethod;
+	}
+
+	/**
+	 * @return the getMethod
+	 */
+	public String getGetMethod() {
+		return getMethod;
+	}
+
+	/**
+	 * @param getMethod the getMethod to set
+	 */
+	public void setGetMethod(String getMethod) {
+		this.getMethod = getMethod;
 	}
 }

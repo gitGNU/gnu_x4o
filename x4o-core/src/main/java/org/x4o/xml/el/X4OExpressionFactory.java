@@ -21,54 +21,42 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package	org.x4o.xml.lang;
+package org.x4o.xml.el;
 
-import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
-import org.x4o.xml.element.ElementAttributeValueParser;
-import org.x4o.xml.element.ElementObjectPropertyValue;
-import org.x4o.xml.io.sax.X4ODebugWriter;
-import org.x4o.xml.lang.phase.X4OPhase;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageProperty;
 
 /**
- * ElementLanguageLocal is the local set interface for ElementLanguage.
+ * X4OExpressionFactory finds and loads the needed impl. 
  * 
  * @author Willem Cazander
- * @version 1.0 Oct 28, 2009
+ * @version 1.0 Apr 7, 2013
  */
-public interface X4OLanguageContextLocal extends X4OLanguageContext {
+public class X4OExpressionFactory {
 
-	/**
-	 * Sets the EL Context.
-	 * @param context	The ELContext to set.
-	 */
-	void setExpressionLanguageContext(ELContext context);
+	static public final String EL_FACTORY_IMPL_APACHE = "org.apache.el.ExpressionFactoryImpl";
+	static public final String EL_FACTORY_IMPL_ODYSSEUS = "de.odysseus.el.ExpressionFactoryImpl";
 	
-	/**
-	 * Sets the ExpressionFactory.
-	 * @param expressionFactory	The ExpressionFactory to set.
-	 */
-	void setExpressionLanguageFactory(ExpressionFactory expressionFactory);
-	
-	/**
-	 * @param elementAttributeValueParser The elementAttributeValueParser to set.
-	 */
-	void setElementAttributeValueParser(ElementAttributeValueParser elementAttributeValueParser);
-	
-	/**
-	 * @param elementObjectPropertyValue	The elementObjectPropertyValue to set.
-	 */
-	void setElementObjectPropertyValue(ElementObjectPropertyValue elementObjectPropertyValue);
-	
-	/**
-	 * Sets the phase of the context.
-	 * @param phase	The current phase to set.
-	 */
-	void setCurrentPhase(X4OPhase phase);
-	
-	/**
-	 * @param debugWriter	The debug writer to set
-	 */
-	void setX4ODebugWriter(X4ODebugWriter debugWriter);
+	static public ExpressionFactory createExpressionFactory(X4OLanguageContext elementContext) {
+		ExpressionFactory factory = (ExpressionFactory)elementContext.getLanguageProperty(X4OLanguageProperty.EL_FACTORY_INSTANCE);
+		if (factory!=null) {
+			return factory;
+		}
+		try {
+			Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass(EL_FACTORY_IMPL_APACHE);
+			ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
+			return expressionFactory;
+		} catch (Exception e) {
+			try {
+				Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass(EL_FACTORY_IMPL_ODYSSEUS);
+				ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
+				return expressionFactory;
+			} catch (Exception ee) {
+				throw new RuntimeException("Could not load ExpressionFactory tried: "+EL_FACTORY_IMPL_APACHE+" and "+EL_FACTORY_IMPL_ODYSSEUS+" but could not load one of them.");
+			}
+		}
+	}
 }

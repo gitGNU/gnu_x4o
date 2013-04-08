@@ -222,7 +222,7 @@ public final class XMLConstants {
 				result.append("&apos;");
 				continue;
 			}
-			if (isNameChar(c)==false) { 
+			if (/*isNameChar(c)*/true==false) {// TODO: add correct 
 				result.append("#x");
 				result.append(Integer.toHexString(c));
 				result.append(";");

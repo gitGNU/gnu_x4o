@@ -7,7 +7,7 @@
 	ModuleName:		Element Language Definition
 	Namespaces:		3
 	Namespace:		http://eld.x4o.org/xml/ns/eld-lang
-	Created on:		Tue Jan 08 06:03:20 CET 2013
+	Created on:		Mon Apr 08 02:26:14 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
@@ -20,13 +20,13 @@
 			<element name="element" type="this:elementType"/>
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
-		<attribute name="name" type="string"/>
 		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
 		<attribute name="schemaPrefix" type="string"/>
 		<attribute name="languageRoot" type="boolean"/>
 		<attribute name="prefixMapping" type="string"/>
+		<attribute name="name" type="string"/>
 		<attribute name="id" type="string"/>
 		<attribute name="description" type="string"/>
 	</complexType>
@@ -55,10 +55,10 @@
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
 		<attribute name="tag" type="string"/>
+		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
-		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="id" type="string"/>
 		<attribute name="description" type="string"/>
 	</complexType>
@@ -126,13 +126,13 @@
 			<element name="bean" type="this:beanType"/>
 			<element name="description" type="this:descriptionType"/>
 		</choice>
-		<attribute name="name" type="string"/>
-		<attribute name="defaultValue" type="string"/>
-		<attribute name="required" type="boolean"/>
 		<attribute name="objectConverter" type="string"/>
+		<attribute name="defaultValue" type="string"/>
 		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="runConverters" type="boolean"/>
 		<attribute name="runBeanFill" type="boolean"/>
+		<attribute name="name" type="string"/>
+		<attribute name="required" type="boolean"/>
 		<attribute name="id" type="string"/>
 		<attribute name="description" type="string"/>
 	</complexType>
@@ -156,9 +156,10 @@
 			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="id" type="string" use="required"/>
-		<attribute name="childClass" type="string"/>
-		<attribute name="parentClass" type="string"/>
-		<attribute name="method" type="string"/> 
+		<attribute name="childClass" type="string" use="required"/>
+		<attribute name="parentClass" type="string" use="required"/>
+		<attribute name="getMethod" type="string" use="required"/>
+		<attribute name="addMethod" type="string" use="required"/> 
 	</complexType>
 	<complexType name="elementInterfaceType">
 		<choice minOccurs="0" maxOccurs="unbounded">

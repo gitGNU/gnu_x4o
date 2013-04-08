@@ -234,16 +234,19 @@
 			<attribute name="id" required="true">
 				<description>The id for this binding handler.</description>
 			</attribute>
-			<attribute name="parentClass">
+			<attribute name="parentClass" required="true">
 				<description>The parent class.</description>
 				<classConverter/>
 			</attribute>
-			<attribute name="childClass">
+			<attribute name="childClass" required="true">
 				<description>The child class.</description>
 				<classConverter/>
 			</attribute>
-			<attribute name="method">
+			<attribute name="addMethod" required="true">
 				<description>The method name of the method used to add the child to the parent.</description>
+			</attribute>
+			<attribute name="getMethod" required="true">
+				<description>The method name of the method used to get the childeren of the parent.</description>
 			</attribute>
 		</element>
 		
