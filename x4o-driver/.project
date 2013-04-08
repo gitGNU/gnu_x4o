@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>x4o-core</name>
-	<comment>x4o-core</comment>
+	<name>x4o-driver</name>
+	<comment>x4o-driver</comment>
 	<projects>
 	</projects>
 	<buildSpec>

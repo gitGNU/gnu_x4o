@@ -38,10 +38,10 @@ This license uses year range format to list the copyrightable years.
 For testing reasons the following files can't contain there own
 license in the header so they are explicit listed here;
 
-./x4o-core/src/test/resources/tests/empty-xml/empty-real.xml
-./x4o-core/src/test/resources/tests/empty-xml/empty-test.xml
-./x4o-core/src/test/resources/tests/empty-xml/empty-x4o.xml
-./x4o-core/src/test/resources/tests/empty-xml/empty-xml.xml
+./x4o-driver/src/test/resources/tests/empty-xml/empty-real.xml
+./x4o-driver/src/test/resources/tests/empty-xml/empty-test.xml
+./x4o-driver/src/test/resources/tests/empty-xml/empty-x4o.xml
+./x4o-driver/src/test/resources/tests/empty-xml/empty-xml.xml
 
 The text files in the above listing fall all under
 the license terms described in the license.txt file.

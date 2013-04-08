@@ -349,5 +349,5 @@ public class BorderConverter extends AbstractStringObjectConverter {
 
 * Source
 
-  This example is found in the x4o-core source package in the test java and resouces path.
+  This example is found in the x4o-driver source package in the test java and resouces path.
   

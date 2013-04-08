@@ -28,8 +28,8 @@ Downloading
 +--
    <dependency>
    		<groupId>org.x4o</groupId>
-   		<artifactId>x4o-core</artifactId>
-   		<version>0.8.5-SNAPSHOT</version>
+   		<artifactId>x4o-driver</artifactId>
+   		<version>0.8.6-SNAPSHOT</version>
    </dependency>
 +--
 

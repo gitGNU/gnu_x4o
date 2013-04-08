@@ -39,11 +39,10 @@ cd `dirname $0`/../../..;
 
 # Copy to one new dir.
 mkdir -p target/gnu-up/$2;
-cp x4o-core/target/x4o-core-*.jar target/gnu-up/$2;
+cp x4o-driver/target/x4o-driver-*.jar target/gnu-up/$2;
 cp x4o-elddoc/target/x4o-elddoc-*.jar target/gnu-up/$2;
 cp x4o-meta/target/x4o-meta-*.jar target/gnu-up/$2;
-cp x4o-plugin/x4o-plugin-ant-elddoc/target/x4o-plugin-ant-elddoc-*.jar target/gnu-up/$2;
-cp x4o-plugin/x4o-plugin-ant-schema/target/x4o-plugin-ant-schema-*.jar target/gnu-up/$2;
+cp x4o-plugin/x4o-plugin-ant/target/x4o-plugin-ant-*.jar target/gnu-up/$2;
 
 # Sign per file we want to upload.
 for FILE in `ls target/gnu-up/$2/*`; do

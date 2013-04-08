@@ -13,7 +13,7 @@
   <dependencies>
     <dependency>
       <groupId>org.x4o</groupId>
-      <artifactId>x4o-core</artifactId>
+      <artifactId>x4o-driver</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

@@ -9,7 +9,6 @@
 - redo eld/default converters config
 - tag aliases
 - maven plugin
-- code split in api/impl ?
 - lang-el-beans.xml loading
 - Add XML schema tags to ELD  
 - Auto generate schemas from eld
@@ -29,7 +28,7 @@
 - event listeners on all DOM tree element operations
 - custom and merga'ble parse phases for speed
 - make element tree jdom api compatible
-- change phase enum to generic (text) phases. 
+- (DONE) change phase enum to generic (text) phases. 
 - Test if possible to use threadpool for executing phases
 
 -- TODO for version 1.0 --
@@ -39,17 +38,6 @@
 - doc eld and x4o lang files
 - Create xslt eld to html converter
 - split into multiple maven projects
-	- x4o
-	- x4o-api
-	- x4o-core
-	- x4o-meta
-	- x4o-plugin
-	- x4o-plugin-ant-schema
-	- x4o-plugin-ant-elddoc
-	- x4o-plugin-mvn-schema
-	- x4o-plugin-mvn-elddoc
-	- x4o-plugin-ide-eclipse-editor
-	- x4o-plugin-ide-eclipse-catalog
 
 ##CODE
 - Add (super) tag for extending tags of other namespace

@@ -5,10 +5,10 @@
     <groupId>org.x4o</groupId>
     <version>0.8.5-SNAPSHOT</version>
   </parent>
-  <artifactId>x4o-core</artifactId>
+  <artifactId>x4o-driver</artifactId>
   <packaging>jar</packaging>
-  <name>x4o-core</name>
-  <description>x4o-core</description>
+  <name>x4o-driver</name>
+  <description>x4o-driver</description>
   <dependencies>
     <dependency>
       <groupId>org.apache.tomcat</groupId>

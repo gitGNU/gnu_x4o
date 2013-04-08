@@ -26,8 +26,8 @@
 <drivers version="1.0"
 	xmlns="http://language.x4o.org/xml/ns/drivers"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://language.x4o.org/xml/ns/language http://language.x4o.org/xml/ns/drivers-1.0.xsd"
+	xsi:schemaLocation="http://language.x4o.org/xml/ns/drivers http://language.x4o.org/xml/ns/drivers-1.0.xsd"
 	>
-	<driver language="test" className="org.x4o.xml.test.TestDriver"/>
-	<driver language="swixml" className="org.x4o.xml.test.swixml.SwiXmlDriver"/>
+	<driver language="eld" className="org.x4o.xml.eld.EldDriver"/>
+	<driver language="cel" className="org.x4o.xml.eld.CelDriver"/>
 </drivers>

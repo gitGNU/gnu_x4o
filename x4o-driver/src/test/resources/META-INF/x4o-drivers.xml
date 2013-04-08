@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2004-2012, Willem Cazander
@@ -23,24 +23,11 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<schema version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified"
-	xmlns="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://language.x4o.org/xml/ns/drivers"
-	xmlns:this="http://language.x4o.org/xml/ns/drivers"
+<drivers version="1.0"
+	xmlns="http://language.x4o.org/xml/ns/drivers"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://language.x4o.org/xml/ns/drivers http://language.x4o.org/xml/ns/drivers-1.0.xsd"
 	>
-	<complexType name="defaultDriverType">
-		<attribute name="language" type="string" use="required"/>
-	</complexType>
-	<complexType name="driverType">
-		<attribute name="className" type="string" use="required"/>
-	</complexType>
-	<element name="drivers">
-		<complexType>
-			<choice minOccurs="1" maxOccurs="unbounded">
-				<element name="defaultDriver" minOccurs="0" maxOccurs="unbounded" type="this:defaultDriverType" />
-				<element name="driver" minOccurs="0" maxOccurs="unbounded" type="this:driverType"/>
-			</choice>		
-			<attribute name="version" type="decimal" use="required" fixed="1.0"/>
-		</complexType>
-	</element>
-</schema> 
+	<driver language="test" className="org.x4o.xml.test.TestDriver"/>
+	<driver language="swixml" className="org.x4o.xml.test.swixml.SwiXmlDriver"/>
+</drivers>

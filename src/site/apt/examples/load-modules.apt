@@ -28,7 +28,7 @@ Load Modules
   So every extension library has its own modules definition file. 
   All options are allowed in multiple forms and order.
   
-  The xsd file can be found in the x4o-core project classpath 'META-INF/language/modules-1.0.xsd'.
+  The xsd file can be found in the x4o-driver project classpath 'META-INF/language/modules-1.0.xsd'.
   
 +--
 <?xml version="1.0" encoding="UTF-8"?>

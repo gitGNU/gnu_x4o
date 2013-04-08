@@ -23,13 +23,13 @@
 
 Usage
   
-  X4O had multiple modules the one which is most used is x4o-core which implements the full x4o framework.
+  X4O had multiple modules the one which is most used is x4o-driver which implements the full x4o framework.
   
 * X4O maven modules
   
   * x4o = project base.
   
-  * x4o-core = Main x4o library.
+  * x4o-driver = Main x4o library.
   
   * x4o-elddoc = X4O Eld documentation support.
   
@@ -37,7 +37,7 @@ Usage
   
   * x4o-plugin = X4O external plugins.
   
-  * x4o-plugin-ant-elddoc = Ant x4o elddoc task.
+  * x4o-plugin-ant = X4O Ant plugins for schema and documentation task.
   
   * x4o-plugin-ant-schema = Ant x4o schema task.
   
@@ -49,8 +49,8 @@ Usage
 +--
    <dependency>
      <groupId>org.x4o</groupId>
-     <artifactId>x4o-core</artifactId>
-     <version>0.8.5-SNAPSHOT</version>
+     <artifactId>x4o-driver</artifactId>
+     <version>0.8.6-SNAPSHOT</version>
    </dependency>
 +--
 

@@ -46,7 +46,7 @@
     <maven>3.0.1</maven>
   </prerequisites>
   <modules>
-    <module>x4o-core</module>
+    <module>x4o-driver</module>
     <module>x4o-elddoc</module>
     <module>x4o-meta</module>
     <module>x4o-plugin</module>

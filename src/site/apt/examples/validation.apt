@@ -52,17 +52,17 @@ parser.parse(...);
   
   Generate the xsd files while all the language extensions are loaded in the classpath.
   
-  Use the embedded java program in the x4o-core;
+  Use the embedded java program in the x4o-driver;
   
 +--
-java -cp '...jar:x4o-core.jar' org.x4o.xml.eld.xsd.X4OLanguageEldXsdWriter -path /tmp -class org.foo.bar.TestParserSupport
+java -cp '...jar:x4o-driver.jar' org.x4o.xml.eld.xsd.X4OWriteLanguageSchemaExecutor -p /tmp -l test
 +--
   
-  Or use the ant task in the x4o-plugin-ant-schema;
+  Or use the ant task in the x4o-plugin-ant;
   
 +--
-<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
-<eldXsdWriter destdir="/tmp" supportclass="org.foo.bar.TestParserSupport"/>
+<taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
+<writeLanguageSchema destdir="/tmp" language="eld"/>
 +--
   
   Use validating parser

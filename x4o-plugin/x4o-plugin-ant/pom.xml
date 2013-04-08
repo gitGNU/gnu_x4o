@@ -11,7 +11,7 @@
   <dependencies>
     <dependency>
       <groupId>org.x4o</groupId>
-      <artifactId>x4o-core</artifactId>
+      <artifactId>x4o-driver</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -43,7 +43,7 @@
     </dependency>
     <dependency>
       <groupId>org.x4o</groupId>
-      <artifactId>x4o-core</artifactId>
+      <artifactId>x4o-driver</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
@@ -84,7 +84,7 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <target>
-                    <property name="coredir" value="${basedir}/../../x4o-core/src/main/resources/META-INF"/>
+                    <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF"/>
                     <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
                     <writeLanguageSchema destdir="${coredir}/cel" language="cel"/>
                   </target>
@@ -97,7 +97,7 @@
             <dependencies>
               <dependency>
                 <groupId>org.x4o.plugin</groupId>
-                <artifactId>x4o-plugin-ant-schema</artifactId>
+                <artifactId>x4o-plugin-ant</artifactId>
                 <version>${project.version}</version>
               </dependency>
             </dependencies>
@@ -119,9 +119,9 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <target>
-                    <property name="coredir" value="${basedir}/../../x4o-core/src/main/resources/META-INF"/>
+                    <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF"/>
                     <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
-                    <writeLanguageSchema destdir="${coredir}/cel" language="cel"/>
+                    <writeLanguageSchema destdir="${coredir}/cel" language="eld"/>
                   </target>
                 </configuration>
                 <goals>
@@ -132,7 +132,7 @@
             <dependencies>
               <dependency>
                 <groupId>org.x4o.plugin</groupId>
-                <artifactId>x4o-plugin-ant-schema</artifactId>
+                <artifactId>x4o-plugin-ant</artifactId>
                 <version>${project.version}</version>
               </dependency>
             </dependencies>
@@ -181,12 +181,12 @@
               </dependency>
               <dependency>
                 <groupId>org.x4o</groupId>
-                <artifactId>x4o-core</artifactId>
+                <artifactId>x4o-driver</artifactId>
                 <version>${project.version}</version>
               </dependency>
               <dependency>
                 <groupId>org.x4o</groupId>
-                <artifactId>x4o-core</artifactId>
+                <artifactId>x4o-driver</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
               </dependency>
