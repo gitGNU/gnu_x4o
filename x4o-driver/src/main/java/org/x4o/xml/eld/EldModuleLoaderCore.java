@@ -23,11 +23,11 @@
 
 package org.x4o.xml.eld;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
+import org.x4o.xml.conv.ObjectConverter;
 import org.x4o.xml.conv.text.ClassConverter;
+
 import org.x4o.xml.eld.lang.BeanElement;
 import org.x4o.xml.eld.lang.DescriptionElement;
 import org.x4o.xml.eld.lang.ElementClassAddParentElement;
@@ -37,19 +37,20 @@ import org.x4o.xml.eld.lang.ElementInterfaceBindingHandler;
 import org.x4o.xml.eld.lang.ElementModuleBindingHandler;
 import org.x4o.xml.eld.lang.ElementNamespaceContextBindingHandler;
 import org.x4o.xml.eld.lang.ModuleElement;
-import org.x4o.xml.element.DefaultElementClass;
+
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
+
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguageLocal;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageModuleLoader;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
-import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageClassLoader;
-import org.x4o.xml.lang.X4OLanguageLocal;
 
 /** 
  * EldModuleLoaderCore provides a few basic elements for the core eld x4o language.
@@ -85,47 +86,121 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	 * @param elementLanguageModule The module to load it in.
 	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
 		
-		elementLanguageModule.setId("cel-module");
-		elementLanguageModule.setName("Core Element Languag Module");
-		elementLanguageModule.setProviderName(PP_CEL_PROVIDER);
+		// Config module meta data
+		configLanguageModule(languageModule);
 		
-		List<ElementClass> elementClassList = new ArrayList<ElementClass>(10);
-		elementClassList.add(new DefaultElementClass("attribute",language.getLanguageConfiguration().getDefaultElementClassAttribute()));
-		elementClassList.add(new DefaultElementClass("classConverter",ClassConverter.class));
+		// Config language
+		addBindingHandler(languageModule,new ElementClassBindingHandler(),"cel-class-bind","Binds the ElementClass childeren.");
+		addBindingHandler(languageModule,new ElementModuleBindingHandler(),"cel-module-bind","Binds the LanguageModule childeren.");
+		addBindingHandler(languageModule,new ElementClassAttributeBindingHandler(),"cel-class-attr-bind","Binds the ElementClassAttribute childeren.");
+		addBindingHandler(languageModule,new ElementInterfaceBindingHandler(),"cel-interface-bind","Binds the ElementInterface childeren.");
+		addBindingHandler(languageModule,new ElementNamespaceContextBindingHandler(),"cel-namespace-bind","Binds the Namespace childeren.");
 		
-		createElementClasses(elementClassList,language); // adds all meta info
+		// Create cel-lang namespace in language
+		ElementNamespaceContext namespace = createNamespaceContext(language,CEL_CORE,CEL_CORE_URI,CEL_CORE_XSD_URI,CEL_CORE_XSD_FILE,CEL_CORE);
+		configElementClasses(language,namespace);
+		startAndAddNamespace(language,languageModule,namespace);
+
+		// Create cel-root namespace in language for schema support
+		ElementNamespaceContext namespaceRoot = createNamespaceContext(language,CEL_ROOT,CEL_ROOT_URI,CEL_ROOT_XSD_URI,CEL_ROOT_XSD_FILE,CEL_ROOT);
+		namespaceRoot.setLanguageRoot(true); // Only define single language root so xsd is (mostly) not cicle import.
+		ElementClass rootElement = createElementClass(language,"module",language.getLanguageConfiguration().getDefaultElementLanguageModule(),ModuleElement.class,"The module tag is the root xml element for ELD language.");
+		namespaceRoot.addElementClass(rootElement);
+		startAndAddNamespace(language,languageModule,namespaceRoot);
+	}
+	
+	/**
+	 * Adds only Element class beans which need extra meta info for schema.
+	 * 
+	 * @param elementClassList	The list to fill.
+	 * @throws X4OLanguageModuleLoaderException 
+	 */
+	private void configElementClasses(X4OLanguage language,ElementNamespaceContext namespace) throws X4OLanguageModuleLoaderException {
+		ElementClass ec = null;
 		
-		ElementClassAttribute attr;
+		namespace.addElementClass(createElementClass(language,"attribute",language.getLanguageConfiguration().getDefaultElementClassAttribute(),null,"Defines xml element attribute."));
+		namespace.addElementClass(createElementClass(language,"classConverter",ClassConverter.class,null,"Converts string attribute to java class instance."));
 		
-		DefaultElementClass ns = new DefaultElementClass("namespace",language.getLanguageConfiguration().getDefaultElementNamespaceContext());
-		attr = newElementClassAttribute(language);
-		attr.setName("uri");
-		attr.setRequired(true);
-		ns.addElementClassAttribute(attr);
-		elementClassList.add(ns);
+		ec = createElementClass(language,"namespace",language.getLanguageConfiguration().getDefaultElementNamespaceContext(),null,"Defines an xml namespace.");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"uri",true,null));
+		namespace.addElementClass(ec);
 		
-		DefaultElementClass dec = new DefaultElementClass("element",language.getLanguageConfiguration().getDefaultElementClass());
-		attr = newElementClassAttribute(language);
-		attr.setName("objectClass");
-		attr.setObjectConverter(new ClassConverter());
-		dec.addElementClassAttribute(attr);
+		ec = createElementClass(language,"element",language.getLanguageConfiguration().getDefaultElementClass(),null,"Defines xml element tag.");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"objectClass",false,new ClassConverter()));
+		ec.addElementClassAttribute(createElementClassAttribute(language,"elementClass",false,new ClassConverter()));
+		namespace.addElementClass(ec);
 		
-		attr = newElementClassAttribute(language);
-		attr.setName("elementClass");
-		attr.setObjectConverter(new ClassConverter());
-		dec.addElementClassAttribute(attr);
-		elementClassList.add(dec);
+		ec = createElementClass(language,"elementInterface",language.getLanguageConfiguration().getDefaultElementInterface(),null,"Defines element interface class.");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"interfaceClass",false,new ClassConverter()));
+		namespace.addElementClass(ec);
 		
-		DefaultElementClass ec = new DefaultElementClass("elementInterface",language.getLanguageConfiguration().getDefaultElementInterface());
-		attr = newElementClassAttribute(language);
-		attr.setName("interfaceClass");
-		attr.setObjectConverter(new ClassConverter());
-		ec.addElementClassAttribute(attr);
-		elementClassList.add(ec);
+		ec = createElementClass(language,"bindingHandler",null,BeanElement.class,"Defines generic binding handler for languge.");
+		ec.addElementParent(CEL_ROOT_URI, "module");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"id",true,null));
+		ec.addElementClassAttribute(createElementClassAttribute(language,"bean.class",true,null));
+		namespace.addElementClass(ec);
 		
-		logger.finer("Creating eldcore namespace.");
+		ec = createElementClass(language,"attributeHandler",null,BeanElement.class,"Defines generic attribute handler for language.");
+		ec.addElementParent(CEL_ROOT_URI, "module");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"bean.class",true,null));
+		namespace.addElementClass(ec);
+		
+		ec = createElementClass(language,"configurator",null,BeanElement.class,"Define generic configurator for language.");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
+		ec.addElementParent(CEL_CORE_URI, "element");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"bean.class",true,null));
+		ec.addElementClassAttribute(createElementClassAttribute(language,"configAction",false,null));
+		namespace.addElementClass(ec);
+		
+		ec = createElementClass(language,"configuratorGlobal",null,BeanElement.class,"Define generic global configuator for languge.");
+		ec.addElementParent(CEL_ROOT_URI, "module");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"bean.class",true,null));
+		ec.addElementClassAttribute(createElementClassAttribute(language,"configAction",false,null));
+		namespace.addElementClass(ec);
+		
+		ec = createElementClass(language,"description",null,DescriptionElement.class,"Adds description as text on all eld elements.");
+		ec.setSchemaContentBase("string");
+		ec.addElementParent(CEL_ROOT_URI, "module");
+		ec.addElementParent(CEL_CORE_URI, "namespace");
+		ec.addElementParent(CEL_CORE_URI, "attributeHandler");
+		ec.addElementParent(CEL_CORE_URI, "bindingHandler");
+		ec.addElementParent(CEL_CORE_URI, "configurator");
+		ec.addElementParent(CEL_CORE_URI, "configuratorGlobal");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
+		ec.addElementParent(CEL_CORE_URI, "element");
+		ec.addElementParent(CEL_CORE_URI, "attribute");
+		namespace.addElementClass(ec);
+		
+		ec = createElementClass(language,"elementParent",null,ElementClassAddParentElement.class,"Added (meta) element parent.");
+		ec.addElementParent(CEL_CORE_URI, "element");
+		ec.addElementParent(CEL_CORE_URI, "elementInterface");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"tag",true,null));
+		ec.addElementClassAttribute(createElementClassAttribute(language,"uri",false,null));
+		namespace.addElementClass(ec);
+	}
+	
+	private void configLanguageModule(X4OLanguageModule languageModule) {
+		languageModule.setId("cel-module");
+		languageModule.setName("Core Element Languag Module");
+		languageModule.setProviderName(PP_CEL_PROVIDER);
+		languageModule.setDescription("Core Element Language Module Loader");
+		languageModule.setSourceResource(this.getClass().getSimpleName()); // todo check if oke.
+	}
+	
+	private void startAndAddNamespace(X4OLanguageLocal language,X4OLanguageModule languageModule,ElementNamespaceContext namespace) throws X4OLanguageModuleLoaderException {
+		try {
+			namespace.getElementNamespaceInstanceProvider().start(language, namespace);
+		} catch (ElementNamespaceInstanceProviderException e) {
+			throw new X4OLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
+		}
+		languageModule.addElementNamespaceContext(namespace);
+	}
+	
+	private ElementNamespaceContext createNamespaceContext(X4OLanguageLocal language,String id,String uri,String schemaUri,String schemaResource,String schemaPrefix) throws X4OLanguageModuleLoaderException {
+		logger.finer("Creating "+language.getLanguageName()+" namespace.");
 		ElementNamespaceContext namespace;
 		try {
 			namespace = (ElementNamespaceContext)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceContext());
@@ -144,143 +219,27 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} 
 		
-		namespace.setId(CEL_CORE);
-		namespace.setUri(CEL_CORE_URI);
-		namespace.setSchemaUri(CEL_CORE_XSD_URI);
-		namespace.setSchemaResource(CEL_CORE_XSD_FILE);
-		namespace.setSchemaPrefix(CEL_CORE);
-		
-		logger.finer("Loading elementClassList size: "+elementClassList.size());
-		for (ElementClass ecL:elementClassList) {
-			namespace.addElementClass(ecL);
-		}
-		
-		addBindingHandler("cel-class-bind",new ElementClassBindingHandler(),elementLanguageModule);
-		addBindingHandler("cel-module-bind",new ElementModuleBindingHandler(),elementLanguageModule);
-		addBindingHandler("cel-class-attr-bind",new ElementClassAttributeBindingHandler(),elementLanguageModule);
-		addBindingHandler("cel-interface-bind",new ElementInterfaceBindingHandler(),elementLanguageModule);
-		addBindingHandler("cel-namespace-bind",new ElementNamespaceContextBindingHandler(),elementLanguageModule);
-		
-		try {
-			namespace.getElementNamespaceInstanceProvider().start(language, namespace);
-		} catch (ElementNamespaceInstanceProviderException e) {
-			throw new X4OLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
-		}
-		
-		elementLanguageModule.addElementNamespaceContext(namespace);
-		
-		
-		// And define root 
-		try {
-			namespace = (ElementNamespaceContext)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceContext());
-		} catch (InstantiationException e) {
-			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
-		} catch (IllegalAccessException e) {
-			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
-		} 
-		try {
-			namespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)
-				X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider())
-				);
-		} catch (InstantiationException e) {
-			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
-		} catch (IllegalAccessException e) {
-			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
-		} 
-		
-		namespace.setId(CEL_ROOT);
-		namespace.setUri(CEL_ROOT_URI);
-		namespace.setSchemaUri(CEL_ROOT_XSD_URI);
-		namespace.setSchemaResource(CEL_ROOT_XSD_FILE);
-		namespace.setSchemaPrefix(CEL_ROOT);
-		namespace.addElementClass(new DefaultElementClass("module",language.getLanguageConfiguration().getDefaultElementLanguageModule(),ModuleElement.class));
-		namespace.setLanguageRoot(true); // Only define single language root so xsd is (mostly) not cicle import. 
-		try {
-			namespace.getElementNamespaceInstanceProvider().start(language, namespace);
-		} catch (ElementNamespaceInstanceProviderException e) {
-			throw new X4OLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
-		}
-		elementLanguageModule.addElementNamespaceContext(namespace);
+		namespace.setId(id);
+		namespace.setUri(uri);
+		namespace.setSchemaUri(schemaUri);
+		namespace.setSchemaResource(schemaResource);
+		namespace.setSchemaPrefix(schemaPrefix);
+		return namespace;
 	}
 	
-	/**
-	 * Adds only Element class beans which need extra meta info for schema.
-	 * 
-	 * @param elementClassList	The list to fill.
-	 * @throws X4OLanguageModuleLoaderException 
-	 */
-	private void createElementClasses(List<ElementClass> elementClassList,X4OLanguage language) throws X4OLanguageModuleLoaderException {
-		ElementClass ec = null;
-		ElementClassAttribute attr = null;
-		
-		ec = new DefaultElementClass("bindingHandler",null,BeanElement.class);
-		ec.addElementParent(CEL_ROOT_URI, "module");
-		ec.addElementParent(CEL_CORE_URI, "elementInterface");
-		attr = newElementClassAttribute(language);
-		attr.setName("id");
-		attr.setRequired(true);
-		ec.addElementClassAttribute(attr);
-		attr = newElementClassAttribute(language);
-		attr.setName("bean.class");
-		attr.setRequired(true);
-		ec.addElementClassAttribute(attr);
-		elementClassList.add(ec);
-		
-		ec = new DefaultElementClass("attributeHandler",null,BeanElement.class);
-		ec.addElementParent(CEL_ROOT_URI, "module");
-		attr = newElementClassAttribute(language);
-		attr.setName("bean.class");
-		attr.setRequired(true);
-		ec.addElementClassAttribute(attr);
-		elementClassList.add(ec);
-		
-		ec = new DefaultElementClass("configurator",null,BeanElement.class);
-		ec.addElementParent(CEL_CORE_URI, "elementInterface");
-		ec.addElementParent(CEL_CORE_URI, "element");
-		attr = newElementClassAttribute(language);
-		attr.setName("bean.class");
-		attr.setRequired(true);
-		ec.addElementClassAttribute(attr);
-		attr = newElementClassAttribute(language);
-		attr.setName("configAction");
-		ec.addElementClassAttribute(attr);
-		elementClassList.add(ec);
-		
-		ec = new DefaultElementClass("configuratorGlobal",null,BeanElement.class);
-		ec.addElementParent(CEL_ROOT_URI, "module");
-		attr = newElementClassAttribute(language);
-		attr.setName("bean.class");
-		attr.setRequired(true);
-		ec.addElementClassAttribute(attr);
-		attr = newElementClassAttribute(language);
-		attr.setName("configAction");
-		ec.addElementClassAttribute(attr);
-		elementClassList.add(ec);
-		
-		ec = new DefaultElementClass("description",null,DescriptionElement.class);
-		ec.setSchemaContentBase("string");
-		ec.addElementParent(CEL_ROOT_URI, "module");
-		ec.addElementParent(CEL_CORE_URI, "namespace");
-		ec.addElementParent(CEL_CORE_URI, "attributeHandler");
-		ec.addElementParent(CEL_CORE_URI, "bindingHandler");
-		ec.addElementParent(CEL_CORE_URI, "configurator");
-		ec.addElementParent(CEL_CORE_URI, "configuratorGlobal");
-		ec.addElementParent(CEL_CORE_URI, "elementInterface");
-		ec.addElementParent(CEL_CORE_URI, "element");
-		ec.addElementParent(CEL_CORE_URI, "attribute");
-		elementClassList.add(ec);
-		
-		ec = new DefaultElementClass("elementParent",null,ElementClassAddParentElement.class);
-		ec.addElementParent(CEL_CORE_URI, "element");
-		ec.addElementParent(CEL_CORE_URI, "elementInterface");
-		attr = newElementClassAttribute(language);
-		attr.setName("tag");
-		attr.setRequired(true);
-		ec.addElementClassAttribute(attr);
-		attr = newElementClassAttribute(language);
-		attr.setName("uri");
-		ec.addElementClassAttribute(attr);
-		elementClassList.add(ec);
+	private ElementClass createElementClass(X4OLanguage language,String tag,Class<?> objectClass,Class<?> elementClass,String description) throws X4OLanguageModuleLoaderException {
+		try {
+			ElementClass result = (ElementClass)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementClass());
+			result.setTag(tag);
+			result.setObjectClass(objectClass);
+			result.setElementClass(elementClass);
+			result.setDescription(description);
+			return result;
+		} catch (InstantiationException e) {
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
+		} catch (IllegalAccessException e) {
+			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
+		}
 	}
 	
 	/**
@@ -289,9 +248,18 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	 * @return	The new ElementClassAttribute instance.
 	 * @throws X4OLanguageModuleLoaderException	When class could not be created.
 	 */
-	private ElementClassAttribute newElementClassAttribute(X4OLanguage language) throws X4OLanguageModuleLoaderException {
+	private ElementClassAttribute createElementClassAttribute(X4OLanguage language,String name,boolean required,ObjectConverter converter) throws X4OLanguageModuleLoaderException {
 		try {
-			return (ElementClassAttribute)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementClassAttribute());
+			ElementClassAttribute result = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementClassAttribute());
+			result.setId(name); // ??
+			result.setName(name);
+			if (required) {
+				result.setRequired(required);
+			}
+			if (converter!=null) {
+				result.setObjectConverter(converter);
+			}
+			return result;
 		} catch (InstantiationException e) {
 			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} catch (IllegalAccessException e) {
@@ -303,10 +271,11 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	 * Adds binding handler to module.
 	 * @param id The id to set on the handler.
 	 * @param handler The handler to add the the module.
-	 * @param elementLanguageModule	The module to add the handler to.
+	 * @param languageModule	The module to add the handler to.
 	 */
-	private void addBindingHandler(String id,ElementBindingHandler handler,X4OLanguageModule elementLanguageModule) {
+	private void addBindingHandler(X4OLanguageModule languageModule,ElementBindingHandler handler,String id,String description) {
 		handler.setId(id);
-		elementLanguageModule.addElementBindingHandler(handler);
+		handler.setDescription(description);
+		languageModule.addElementBindingHandler(handler);
 	}
 }

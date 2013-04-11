@@ -55,21 +55,21 @@ public class X4OWriteLanguageSchemaExecutorTest extends TestCase {
 	public void testEldSchema() throws Exception {
 		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
 		writer.setBasePath(getTempPath("junit-xsd-eld"));
-		writer.setLanguage(EldDriver.LANGUAGE_NAME);
+		writer.setLanguageName(EldDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	
 	public void testEldCoreSchema() throws Exception {
 		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
 		writer.setBasePath(getTempPath("junit-xsd-cel"));
-		writer.setLanguage(CelDriver.LANGUAGE_NAME);
+		writer.setLanguageName(CelDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	
 	public void testSwiXmlSchema() throws Exception {
 		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
 		writer.setBasePath(getTempPath("junit-xsd-swixml2"));
-		writer.setLanguage(SwiXmlDriver.LANGUAGE_NAME);
+		writer.setLanguageName(SwiXmlDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	

@@ -21,45 +21,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.plugin.ant;
-
-import java.io.File;
-
-import org.apache.tools.ant.BuildException;
-
-import org.x4o.xml.eld.doc.X4OWriteLanguageDocExecutor;
-import org.x4o.xml.element.ElementException;
-
 /**
- * X4OWriteDocTask creates schema for language.
- * 
- * @author Willem Cazander
- * @version 1.0 Aug 24, 2012
+ * The maven plugin mojos.
+ *
+ * @since 1.0
  */
-public class X4OWriteLanguageDocTask extends AbstractX4OLanguageTask {
-	
-	/**
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#getLanguageTaskName()
-	 */
-	@Override
-	String getLanguageTaskName() {
-		return "X4O Write language documentation";
-	}
 
-	/**
-	 * Config and start eld writer
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#executeLanguageTask(java.io.File)
-	 */
-	@Override
-	void executeLanguageTask(File basePath) throws BuildException {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
-		writer.setBasePath(basePath);
-		writer.setLanguageName(getLanguageName());
-		writer.setLanguageVersion(getLanguageVersion());
-		try {
-			writer.execute();
-		} catch (ElementException e) {
-			throw new BuildException(e);
-		}
-	}
-}
+package org.x4o.plugin.maven;

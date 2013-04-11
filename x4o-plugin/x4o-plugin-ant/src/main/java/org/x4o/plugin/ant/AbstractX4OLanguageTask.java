@@ -38,10 +38,16 @@ import org.apache.tools.ant.Task;
  */
 abstract public class AbstractX4OLanguageTask extends Task {
 
-	private String language = null;
+	private String languageName = null;
+	private String languageVersion = null;
 	private String destdir = null;
 	private boolean verbose = false;
 	private boolean failonerror = true;
+	
+	
+	abstract String getLanguageTaskName();
+	
+	abstract void executeLanguageTask(File basePath) throws BuildException;
 	
 	/**
 	 * Executes the x4o eld schema task.
@@ -51,11 +57,12 @@ abstract public class AbstractX4OLanguageTask extends Task {
 	public void execute() throws BuildException {
 		try {
 			if (isVerbose()) {
-				log("Task Location: "+getLocation());
-				log("X4O Language:"+getLanguage());
-				log("Destination Dir:"+getDestdir());
-				log("Verbose:"+isVerbose());
-				log("Fail on error:"+isFailonerror());
+				log("Task location: "+getLocation());
+				log("X4O language name: "+getLanguageName());
+				log("X4O language version: "+getLanguageVersion());
+				log("Destination directory: "+getDestdir());
+				log("Verbose: "+isVerbose());
+				log("Fail on error: "+isFailonerror());
 			}
 			executeLanguageTask();
 		} catch (BuildException e) {
@@ -68,13 +75,13 @@ abstract public class AbstractX4OLanguageTask extends Task {
 	}
 	
 	private void executeLanguageTask() throws BuildException {
-		if (getLanguage()==null) {
+		if (getLanguageName()==null) {
 			throw new BuildException("language attribute is not set.");
 		}
 		if (getDestdir()==null) {
 			throw new BuildException("basePath attribute is not set.");
 		}
-		if (getLanguage().length()==0) {
+		if (getLanguageName().length()==0) {
 			throw new BuildException("language attribute is empty.");
 		}
 		if (getDestdir().length()==0) {
@@ -93,22 +100,32 @@ abstract public class AbstractX4OLanguageTask extends Task {
 		log("Done "+getLanguageTaskName()+" in "+(stopTime-startTime)+" ms.");
 	}
 	
-	abstract String getLanguageTaskName();
-	
-	abstract void executeLanguageTask(File basePath) throws BuildException;
-	
 	/**
-	 * @return the language
+	 * @return the languageName
 	 */
-	public String getLanguage() {
-		return language;
+	public String getLanguageName() {
+		return languageName;
 	}
 
 	/**
-	 * @param language the language to set
+	 * @param languageName the languageName to set
 	 */
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setLanguageName(String languageName) {
+		this.languageName = languageName;
+	}
+
+	/**
+	 * @return the languageVersion
+	 */
+	public String getLanguageVersion() {
+		return languageVersion;
+	}
+
+	/**
+	 * @param languageVersion the languageVersion to set
+	 */
+	public void setLanguageVersion(String languageVersion) {
+		this.languageVersion = languageVersion;
 	}
 
 	/**

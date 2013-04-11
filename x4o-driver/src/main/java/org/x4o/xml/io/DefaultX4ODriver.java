@@ -24,6 +24,7 @@
 package org.x4o.xml.io;
 
 import org.x4o.xml.X4ODriver;
+import org.x4o.xml.X4ODriverManager;
 
 /**
  * DefaultX4ODriver can be used to create language without code and type safty.
@@ -41,9 +42,9 @@ public class DefaultX4ODriver<T> extends X4ODriver<T> {
 	}
 	
 	public DefaultX4ODriver(String languageName,String languageVersion) {
-		super();
 		this.languageName=languageName;
 		this.languageVersion=languageVersion;
+		X4ODriverManager.registerX4ODriver(this);
 	}
 	
 	@Override

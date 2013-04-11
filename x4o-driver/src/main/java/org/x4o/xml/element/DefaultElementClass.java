@@ -25,37 +25,11 @@ package	org.x4o.xml.element;
 
 
 /**
- * The default ElementClass to store the Element information.
+ * DefaultElementClass stores the XML Element information.
  * 
  * @author Willem Cazander
  * @version 1.0 Feb 19, 2007
  */
 public class DefaultElementClass extends AbstractElementClass {
-		
-	/**
-	 * Creates an default DefaultElementClass.
-	 */
-	public DefaultElementClass() {	
-	}
-	
-	/**
-	 * Creates config-ed ElementClass.
-	 * @param tag	The tag of this ElementClass.
-	 * @param objectClass	The objectClass of the ElementClass.
-	 */
-	public DefaultElementClass(String tag,Class<?> objectClass) {
-		this(tag,objectClass,null);
-	}
-	
-	/**
-	 * Creates config-ed ElementClass.
-	 * @param tag	The tag of this ElementClass.
-	 * @param objectClass	The objectClass of the ElementClass.
-	 * @param elementClass	The elementClass of this ElementClass.
-	 */
-	public DefaultElementClass(String tag,Class<?> objectClass,Class<?> elementClass) {
-		setTag(tag);
-		setObjectClass(objectClass);
-		setElementClass(elementClass);
-	}
+
 }

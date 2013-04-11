@@ -23,57 +23,55 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<project name="ant-schema-task" basedir="../../../..">
+<project name="ant-elddoc-task" basedir="../../../..">
 
-	<property name="test.dir" value="${basedir}/target/test-schemas/"/>
+	<property name="test.dir" value="${basedir}/target/test-elddoc/"/>
 
 	<target name="init">
-		<taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask"/>
+		<taskdef name="writeLanguageDoc" classname="org.x4o.plugin.ant.X4OWriteLanguageDocTask"/>
 		<mkdir dir="${test.dir}"/>
 		<mkdir dir="${test.dir}/test"/>
 	</target>
 	
-	<target name="test-cel-schema-full" depends="init">
-		<mkdir dir="${test.dir}/cel-full"/>
-		<writeLanguageSchema
-			destdir="${test.dir}/cel-full"
-			language="eld"
+	<target name="test-elddoc-cel" depends="init">
+		<mkdir dir="${test.dir}/cel"/>
+		<writeLanguageDoc
+			destdir="${test.dir}/cel"
+			languageName="cel"
 			/>
 	</target>
 	
-	<target name="test-cel-schema-single" depends="init">
-		<mkdir dir="${test.dir}/cel-single"/>
-		<writeLanguageSchema
-			destdir="${test.dir}/cel-single"
-			language="cel"
-			nsuri="http://cel.x4o.org/xml/ns/cel-core"
-			/>
-	</target>
-	
-	<target name="test-cel-schema-verbose" depends="init">
-		<mkdir dir="${test.dir}/cel-single"/>
-		<writeLanguageSchema
+	<target name="test-elddoc-cel-verbose" depends="init">
+		<mkdir dir="${test.dir}/cel"/>
+		<writeLanguageDoc
 			verbose="true"
-			destdir="${test.dir}/cel-single"
-			language="cel"
-			nsuri="http://cel.x4o.org/xml/ns/cel-core"
+			destdir="${test.dir}/cel"
+			languageName="cel"
+			/>
+	</target>
+	
+	<target name="test-elddoc-eld" depends="init">
+		<mkdir dir="${test.dir}/eld"/>
+		<writeLanguageDoc
+			destdir="${test.dir}/eld"
+			languageName="cel"
 			/>
 	</target>
 	
 	<target name="test-fail-all" depends="init">
-		<writeLanguageSchema/>
+		<writeLanguageDoc/>
 	</target>
 	<target name="test-fail-destdir" depends="init">
-		<writeLanguageSchema language="cel"/>
+		<writeLanguageDoc languageName="cel"/>
 	</target>
 	<target name="test-fail-destdir-error" depends="init">
-		<writeLanguageSchema language="cel" destdir="${test.dir}/no-dir"/>
+		<writeLanguageDoc languageName="cel" destdir="${test.dir}/no-dir"/>
 	</target>
 	<target name="test-fail-language" depends="init">
-		<writeLanguageSchema destdir="${test.dir}/test"/>
+		<writeLanguageDoc destdir="${test.dir}/test"/>
 	</target>
 	<target name="test-fail-language-error" depends="init">
-		<writeLanguageSchema destdir="${test.dir}/test" language="eld-error"/>
+		<writeLanguageDoc destdir="${test.dir}/test" languageName="cel-error"/>
 	</target>
 	
 </project>

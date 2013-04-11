@@ -146,6 +146,12 @@ public final class X4ODriverManager {
 	}
 	
 	static public void registerX4ODriver(X4ODriver<?> driver) {
+		if (driver.getLanguageName()==null) {
+			throw new NullPointerException("Error in driver impl languageName is null in: "+driver.getClass());
+		}
+		if (driver.getLanguageVersions()==null) {
+			throw new NullPointerException("Error in driver impl languageVersions is null in: "+driver.getClass());
+		}
 		instance.drivers.put(driver.getLanguageName(), driver);
 	}
 	

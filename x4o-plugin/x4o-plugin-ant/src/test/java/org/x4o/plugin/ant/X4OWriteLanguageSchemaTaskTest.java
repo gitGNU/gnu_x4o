@@ -36,7 +36,7 @@ import org.apache.tools.ant.BuildFileTest;
 public class X4OWriteLanguageSchemaTaskTest extends BuildFileTest {
 
 	public void setUp() {
-		configureProject("src/test/resources/tests/test-write-language-schema.xml");
+		configureProject("src/test/resources/junit/test-write-language-schema.xml");
 	}
 	
 	public void testCelSchemaFull() {

@@ -41,7 +41,8 @@ import org.x4o.xml.io.X4OSchemaWriter;
  */
 public class X4OWriteLanguageSchemaExecutor {
 
-	private String language = null;
+	private String languageName = null;
+	private String languageVersion = null;
 	private String languageNamespaceUri = null;
 	private File basePath;
 	
@@ -73,10 +74,19 @@ public class X4OWriteLanguageSchemaExecutor {
 					System.exit(1);
 					return;
 				}
-				languageSchema.setLanguage(arguIterator.next());
+				languageSchema.setLanguageName(arguIterator.next());
 				continue;
 			}
-			if ("-verbose".equals(arg) || "-v".equals(arg)) {
+			if ("-version".equals(arg) || "-v".equals(arg)) {
+				if (arguIterator.hasNext()==false) {
+					System.err.println("No argument for "+arg+" given.");
+					System.exit(1);
+					return;
+				}
+				languageSchema.setLanguageVersion(arguIterator.next());
+				continue;
+			}
+			if ("-verbose".equals(arg) || "-V".equals(arg)) {
 				printStack = true;
 			}
 		}
@@ -100,23 +110,37 @@ public class X4OWriteLanguageSchemaExecutor {
 
 	public void execute() throws ElementException {
 		// Start xsd generator
-		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguage());
-		X4OSchemaWriter xsd = driver.createSchemaWriter(driver.getLanguageVersionDefault());
+		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguageName());
+		X4OSchemaWriter xsd = driver.createSchemaWriter(getLanguageVersion());
 		xsd.writeSchema(getBasePath(), getLanguageNamespaceUri());
 	}
 	
 	/**
-	 * @return the language
+	 * @return the languageName
 	 */
-	public String getLanguage() {
-		return language;
+	public String getLanguageName() {
+		return languageName;
 	}
 
 	/**
-	 * @param language the language to set
+	 * @param languageName the languageName to set
 	 */
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setLanguageName(String languageName) {
+		this.languageName = languageName;
+	}
+	
+	/**
+	 * @return the languageVersion
+	 */
+	public String getLanguageVersion() {
+		return languageVersion;
+	}
+
+	/**
+	 * @param languageVersion the languageVersion to set
+	 */
+	public void setLanguageVersion(String languageVersion) {
+		this.languageVersion = languageVersion;
 	}
 
 	/**

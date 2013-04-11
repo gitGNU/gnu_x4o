@@ -76,3 +76,9 @@ mvn versions:display-plugin-updates;
 mvn versions:display-dependency-updates;
 
 
+-- Run x4o-plugin-maven from cmd --
+
+cd project-root/;
+mvn clean install;
+mvn org.x4o.plugin:x4o-plugin-maven:help
+mvn org.x4o.plugin:x4o-plugin-maven:write-language-doc -Dlanguages=cel -DoutputDirectory=/tmp/dd -Dverbose=true

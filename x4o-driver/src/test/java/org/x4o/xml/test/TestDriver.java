@@ -23,18 +23,25 @@
 
 package org.x4o.xml.test;
 
+import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.io.DefaultX4ODriver;
 import org.x4o.xml.io.X4OReaderContext;
 import org.x4o.xml.io.X4OWriterContext;
 import org.x4o.xml.test.models.TestObjectRoot;
 
-public class TestDriver extends DefaultX4ODriver<TestObjectRoot> {
+public class TestDriver extends X4ODriver<TestObjectRoot> {
 
 	static final public String LANGUAGE_NAME = "test";
+	static final public String[] LANGUAGE_VERSIONS = new String[]{X4ODriver.DEFAULT_LANGUAGE_VERSION};
 	
-	public TestDriver() {
-		super(LANGUAGE_NAME);
+	@Override
+	public String getLanguageName() {
+		return LANGUAGE_NAME;
+	}
+
+	@Override
+	public String[] getLanguageVersions() {
+		return LANGUAGE_VERSIONS;
 	}
 	
 	static public TestDriver getInstance() {

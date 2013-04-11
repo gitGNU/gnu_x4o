@@ -21,45 +21,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.plugin.ant;
+package org.x4o.plugin.maven;
 
 import java.io.File;
 
-import org.apache.tools.ant.BuildException;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import org.x4o.xml.eld.doc.X4OWriteLanguageDocExecutor;
+import org.x4o.xml.eld.xsd.X4OWriteLanguageSchemaExecutor;
 import org.x4o.xml.element.ElementException;
 
 /**
- * X4OWriteDocTask creates schema for language.
+ * X4OWriteLanguageSchemaMojo creates schema for language.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 24, 2012
+ * @version 1.0 Apr 10, 2013
  */
-public class X4OWriteLanguageDocTask extends AbstractX4OLanguageTask {
+@Mojo( name = X4OWriteLanguageSchemaMojo.GOAL,requiresProject=true,requiresDependencyResolution=ResolutionScope.COMPILE)
+public class X4OWriteLanguageSchemaMojo extends AbstractX4OLanguageMojo {
 	
-	/**
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#getLanguageTaskName()
-	 */
-	@Override
+	static public final String GOAL = "write-language-schema"; 
+	
 	String getLanguageTaskName() {
-		return "X4O Write language documentation";
+		return "X4O Write language schema";
 	}
-
-	/**
-	 * Config and start eld writer
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#executeLanguageTask(java.io.File)
-	 */
-	@Override
-	void executeLanguageTask(File basePath) throws BuildException {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
+	
+	void executeLanguageTask(String languageName,String languageVersion,File basePath) throws MojoExecutionException {
+		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
 		writer.setBasePath(basePath);
-		writer.setLanguageName(getLanguageName());
-		writer.setLanguageVersion(getLanguageVersion());
+		writer.setLanguageName(languageName);
+		writer.setLanguageVersion(languageVersion);
 		try {
 			writer.execute();
 		} catch (ElementException e) {
-			throw new BuildException(e);
+			throw new MojoExecutionException(e.getMessage(),e);
 		}
 	}
 }

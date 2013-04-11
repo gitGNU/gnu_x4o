@@ -56,28 +56,28 @@ public class X4OWriteLanguageDocExecutorTest extends TestCase {
 	public void testCelDoc() throws Exception {
 		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
 		writer.setBasePath(getTempPath("junit-cel"));
-		writer.setLanguage(CelDriver.LANGUAGE_NAME);
+		writer.setLanguageName(CelDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	
 	public void testEldDoc() throws Exception {
 		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
 		writer.setBasePath(getTempPath("junit-eld"));
-		writer.setLanguage(EldDriver.LANGUAGE_NAME);
+		writer.setLanguageName(EldDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 	
 	public void testUnitDoc() throws Exception {
 		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
 		writer.setBasePath(getTempPath("junit-test"));
-		writer.setLanguage(TestDriver.LANGUAGE_NAME);
+		writer.setLanguageName(TestDriver.LANGUAGE_NAME);
 		writer.execute();
 	}
 
 	public void testSwiXml2Doc() throws Exception {
 		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
 		writer.setBasePath(getTempPath("junit-swixml2"));
-		writer.setLanguage(SwiXmlDriver.LANGUAGE_NAME);
+		writer.setLanguageName(SwiXmlDriver.LANGUAGE_NAME);
 		writer.setLanguageVersion(SwiXmlDriver.LANGUAGE_VERSION_2);
 		writer.execute();
 	}
@@ -85,7 +85,7 @@ public class X4OWriteLanguageDocExecutorTest extends TestCase {
 	public void testSwiXml3Doc() throws Exception {
 		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
 		writer.setBasePath(getTempPath("junit-swixml3"));
-		writer.setLanguage(SwiXmlDriver.LANGUAGE_NAME);
+		writer.setLanguageName(SwiXmlDriver.LANGUAGE_NAME);
 		writer.setLanguageVersion(SwiXmlDriver.LANGUAGE_VERSION_3);
 		writer.execute();
 	}

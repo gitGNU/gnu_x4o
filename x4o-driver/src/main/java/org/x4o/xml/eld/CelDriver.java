@@ -45,6 +45,6 @@ public class CelDriver extends X4ODriver<X4OLanguageModule> {
 
 	@Override
 	public String[] getLanguageVersions() {
-		return null;
+		return LANGUAGE_VERSIONS;
 	}
 }

@@ -41,7 +41,7 @@ import org.x4o.xml.lang.X4OLanguageContext;
  */
 public class X4OWriteLanguageDocExecutor {
 
-	private String language = null;
+	private String languageName = null;
 	private String languageVersion = null;
 	private File basePath;
 	
@@ -73,7 +73,7 @@ public class X4OWriteLanguageDocExecutor {
 					return;
 				}
 				String languageName = arguIterator.next();
-				languageSchema.setLanguage(languageName);
+				languageSchema.setLanguageName(languageName);
 				continue;
 			}
 		}
@@ -88,7 +88,7 @@ public class X4OWriteLanguageDocExecutor {
 	}
 
 	public void execute() throws ElementException {
-		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguage());
+		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguageName());
 		X4OLanguageContext context = driver.createLanguageContext(getLanguageVersion());
 			
 		// Start doc generator
@@ -111,17 +111,17 @@ public class X4OWriteLanguageDocExecutor {
 	}
 
 	/**
-	 * @return the language
+	 * @return the languageName
 	 */
-	public String getLanguage() {
-		return language;
+	public String getLanguageName() {
+		return languageName;
 	}
 
 	/**
-	 * @param language the language to set
+	 * @param languageName the languageName to set
 	 */
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setLanguageName(String languageName) {
+		this.languageName = languageName;
 	}
 
 	/**

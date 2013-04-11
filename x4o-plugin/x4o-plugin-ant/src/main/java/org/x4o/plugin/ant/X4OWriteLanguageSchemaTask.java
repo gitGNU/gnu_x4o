@@ -58,7 +58,8 @@ public class X4OWriteLanguageSchemaTask extends AbstractX4OLanguageTask {
 		}
 		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
 		writer.setBasePath(basePath);
-		writer.setLanguage(getLanguage());
+		writer.setLanguageName(getLanguageName());
+		writer.setLanguageVersion(getLanguageVersion());
 		writer.setLanguageNamespaceUri(getNsuri()); // null is all namespaces
 		try {
 			writer.execute();

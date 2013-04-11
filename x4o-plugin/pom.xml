@@ -13,6 +13,7 @@
   <description>x4o plugins for other applications</description>
   <modules>
     <module>x4o-plugin-ant</module>
+    <module>x4o-plugin-maven</module>
   </modules>
   <build>
     <pluginManagement>
