@@ -109,4 +109,127 @@ public class X4ODriverManagerTest extends TestCase {
 		long loopTime = System.currentTimeMillis() - startTime;
 		assertEquals("Language list loop is slow;"+loopTime,true, loopTime<500);
 	}
+	
+	public void testRegisterDriverNull() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriverManager.registerX4ODriver(null);
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+	}
+	
+	public void testRegisterDriverNameNull() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriverManager.registerX4ODriver(new X4ODriver<Object>() {
+				@Override public String[] getLanguageVersions() {	return new String[]{"1.0"};	}
+				@Override public String getLanguageName() {			return null;	}
+				
+			});
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+	}
+	
+	public void testRegisterDriverNameEmpty() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriverManager.registerX4ODriver(new X4ODriver<Object>() {
+				@Override public String[] getLanguageVersions() {	return new String[]{"1.0"};	}
+				@Override public String getLanguageName() {			return "";	}
+				
+			});
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("empty"));
+	}
+	
+	public void testRegisterDriverVersionNull() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriverManager.registerX4ODriver(new X4ODriver<Object>() {
+				@Override public String[] getLanguageVersions() {	return null;		}
+				@Override public String getLanguageName() {			return "junit-driver-test";	}
+				
+			});
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+	}
+	
+	public void testRegisterDriverVersionEmpty() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriverManager.registerX4ODriver(new X4ODriver<Object>() {
+				@Override public String[] getLanguageVersions() {	return new String[]{};		}
+				@Override public String getLanguageName() {			return "junit-driver-test";	}
+				
+			});
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("empty"));
+	}
+	
+	public void testDeregisterDriverNull() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriverManager.deregisterX4ODriver(null);
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+	}
+	
+	public void testDeregisterDriverNameNull() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriverManager.deregisterX4ODriver(new X4ODriver<Object>() {
+				@Override public String[] getLanguageVersions() {	return new String[]{"1.0"};	}
+				@Override public String getLanguageName() {			return null;	}
+				
+			});
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+	}
+	
+	public void testDeregisterDriverInstance() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriver<?> driver = new X4ODriver<Object>() {
+				@Override public String[] getLanguageVersions() {	return new String[]{"1.0"};	}
+				@Override public String getLanguageName() {			return "junit-driver-test";	}
+			};
+			X4ODriverManager.registerX4ODriver(driver);
+			assertEquals(driver.hashCode(), X4ODriverManager.getX4ODriver("junit-driver-test").hashCode());
+			X4ODriverManager.deregisterX4ODriver(driver);
+			X4ODriverManager.getX4ODriver("junit-driver-test");
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("junit-driver-test"));
+	}
 }

@@ -82,9 +82,9 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	
 	/**
 	 * Loads the CEL language into the module.
-	 * @param elementLanguage The langauge to load for.
-	 * @param elementLanguageModule The module to load it in.
-	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.lang.X4OLanguageModule)
+	 * @param language The langauge to load for.
+	 * @param languageModule The module to load it in.
+	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageModule)
 	 */
 	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
 		
@@ -113,8 +113,8 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	
 	/**
 	 * Adds only Element class beans which need extra meta info for schema.
-	 * 
-	 * @param elementClassList	The list to fill.
+	 * @param namespace The namespace to config.
+	 * @param language	The language to config for.
 	 * @throws X4OLanguageModuleLoaderException 
 	 */
 	private void configElementClasses(X4OLanguage language,ElementNamespaceContext namespace) throws X4OLanguageModuleLoaderException {
@@ -243,8 +243,11 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	}
 	
 	/**
-	 * Creates new ElementClassAttribute instance.
-	 * @param elementLanguage	The ElementLanguage to create from.
+	 * Creates new configed ElementClassAttribute instance.
+	 * @param language	The X4OLanguage to create from.
+	 * @param name The name of the attribute.
+	 * @param required Is the attribute required.
+	 * @param converter The converter for the attribute.
 	 * @return	The new ElementClassAttribute instance.
 	 * @throws X4OLanguageModuleLoaderException	When class could not be created.
 	 */
@@ -269,9 +272,10 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	
 	/**
 	 * Adds binding handler to module.
-	 * @param id The id to set on the handler.
+	 * @param languageModule The language module.
 	 * @param handler The handler to add the the module.
-	 * @param languageModule	The module to add the handler to.
+	 * @param id	The handler id.
+	 * @param description	The handler descripion.
 	 */
 	private void addBindingHandler(X4OLanguageModule languageModule,ElementBindingHandler handler,String id,String description) {
 		handler.setId(id);

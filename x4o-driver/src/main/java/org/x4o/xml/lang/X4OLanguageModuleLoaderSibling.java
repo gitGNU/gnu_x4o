@@ -37,8 +37,8 @@ public interface X4OLanguageModuleLoaderSibling extends X4OLanguageModuleLoader 
 	/**
 	 * Loads in the sibling language.
 	 * @param languageLocal The ElementLanguage for which we load an sibling.
-	 * @param loader The loader to use to load the x4o languages.
+	 * @param languageLoader The loader to use to load the x4o languages.
 	 * @throws X4OLanguageLoaderException Gets thrown when there is an error loading the sibling language.
 	 */
-	void loadLanguageSibling(X4OLanguageLocal languageLocal,X4OLanguageLoader loader) throws X4OLanguageLoaderException;
+	void loadLanguageSibling(X4OLanguageLocal languageLocal,X4OLanguageLoader languageLoader) throws X4OLanguageLoaderException;
 }

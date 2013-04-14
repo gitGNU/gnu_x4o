@@ -32,11 +32,12 @@ mvn clean install;
 
 
 -- Update schemas in src --
+-- note; rm after auto schema creation
 
 cd project-root/;
 mvn clean install;
-mvn -Pupdate-schema-cel package;
-mvn -Pupdate-schema-eld package;
+mvn -Pant-update-schema-cel package;
+mvn -Pant-update-schema-eld package;
 - Add the license as manual step in xsd files. (todo in ant task)
 
 note: the do 'install' is because of circle plugins.
@@ -54,7 +55,7 @@ src/main/build/gnu-up.sh <scm_username> <version>
 -- Make site --
 
 cd project-root/;
-MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" mvn -Psite-elddoc clean package site site:stage
+MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" mvn -Pbuild-site-x4o-support clean package site site:stage
 
 
 -- Check for code style --
@@ -81,4 +82,5 @@ mvn versions:display-dependency-updates;
 cd project-root/;
 mvn clean install;
 mvn org.x4o.plugin:x4o-plugin-maven:help
-mvn org.x4o.plugin:x4o-plugin-maven:write-language-doc -Dlanguages=cel -DoutputDirectory=/tmp/dd -Dverbose=true
+mvn org.x4o.plugin:x4o-plugin-maven:write-language-doc -DoutputDirectory=/tmp/doc1 
+mvn org.x4o.plugin:x4o-plugin-maven:write-language-doc -DoutputDirectory=/tmp/doc2 -Dlanguages={eld=ALL,swixml=1.0-2.0} -Dverbose=true

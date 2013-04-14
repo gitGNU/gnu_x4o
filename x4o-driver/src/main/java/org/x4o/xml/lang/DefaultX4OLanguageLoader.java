@@ -80,7 +80,7 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageLoader#loadLanguage(org.x4o.xml.element.ElementLanguage, java.lang.String, java.lang.String)
+	 * @see org.x4o.xml.lang.X4OLanguageLoader#loadLanguage(org.x4o.xml.lang.X4OLanguageLocal, java.lang.String, java.lang.String)
 	 */
 	public void loadLanguage(X4OLanguageLocal languageLocal, String language,String languageVersion) throws X4OLanguageLoaderException {
 		try {
@@ -156,7 +156,7 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 
 	/**
 	 * Loads all modules of an language.
-	 * @param elementLanguage	The ElementLanguage to load for.
+	 * @param languageLocal	The ElementLanguage to load for.
 	 * @param language The language to load.
 	 */
 	protected void loadLanguageModules(X4OLanguageLocal languageLocal,String language) throws IOException, SAXException {

@@ -56,7 +56,7 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
 	public void bindChild(Element childElement,ElementNamespaceContext parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ElementClass) {
@@ -64,6 +64,9 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 		}
 	}
 	
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
 	public void createChilderen(Element parentElement,ElementNamespaceContext parent) throws ElementBindingHandlerException {
 		for (ElementClass child:parent.getElementClasses()) {
 			createChild(parentElement, child);

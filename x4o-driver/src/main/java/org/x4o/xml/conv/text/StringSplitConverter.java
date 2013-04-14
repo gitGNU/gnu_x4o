@@ -136,7 +136,7 @@ public class StringSplitConverter extends AbstractStringObjectConverter {
 	 * Converts object into string.
 	 * 
 	 * @see org.x4o.xml.conv.AbstractStringObjectConverter#convertStringBack(java.lang.Object, java.util.Locale)
-	 * @param obj	The object to convert to string.
+	 * @param object	The object to convert to string.
 	 * @param locale The locale to convert the object from.
 	 * @return The string converted from the object.
 	 * @throws ObjectConverterException When conversion fails.

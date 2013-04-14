@@ -33,10 +33,10 @@ public interface X4OLanguageLoader {
 	
 	/**
 	 * Loads the language modules.
-	 * @param elementLanguage	The elementLanguage to load the module in. 
-	 * @param language			The language to load.
+	 * @param languageLocal	The elementLanguage to load the module in. 
+	 * @param languageName		The language name to load.
 	 * @param languageVersion	The language version to load.
 	 * @throws X4OLanguageLoaderException	When there is an error.
 	 */
-	void loadLanguage(X4OLanguageLocal languageLocal,String language,String languageVersion) throws X4OLanguageLoaderException;
+	void loadLanguage(X4OLanguageLocal languageLocal,String languageName,String languageVersion) throws X4OLanguageLoaderException;
 }

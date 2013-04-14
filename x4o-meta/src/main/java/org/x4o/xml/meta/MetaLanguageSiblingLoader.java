@@ -47,27 +47,27 @@ public class MetaLanguageSiblingLoader implements X4OLanguageModuleLoaderSibling
 	/**
 	 * Loads an ElementLanguageModule.
 	 * @param language	The ElementLanguage to load for.
-	 * @param elementLanguageModule	The ElementLanguageModule to load into.
+	 * @param languageModule	The ElementLanguageModule to load into.
 	 * @throws X4OLanguageModuleLoaderException Is thrown when meta language could not be loaded.
-	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.element.ElementLanguage, org.x4o.xml.lang.X4OLanguageModule)
+	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal languageLocal,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
-		elementLanguageModule.setId(META_LANGUAGE);
-		elementLanguageModule.setName(META_LANGUAGE);
-		elementLanguageModule.setProviderName(MetaLanguageSiblingLoader.class.getSimpleName());
-		elementLanguageModule.setDescription("X4O Meta Language");
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
+		languageModule.setId(META_LANGUAGE);
+		languageModule.setName(META_LANGUAGE);
+		languageModule.setProviderName(MetaLanguageSiblingLoader.class.getSimpleName());
+		languageModule.setDescription("X4O Meta Language");
 	}
 
 	/**
 	 * Loads an sibling language.
-	 * @param elementLanguage	The ElementLanguage to load for.
-	 * @param loader	The x4o language loader.
+	 * @param language	The ElementLanguage to load for.
+	 * @param languageLoader	The x4o language loader.
 	 * @throws X4OLanguageLoaderException 
-	 * @see org.x4o.xml.lang.X4OLanguageModuleLoaderSibling#loadLanguageSibling(org.x4o.xml.element.ElementLanguage, org.x4o.xml.lang.X4OLanguageLoader)
+	 * @see org.x4o.xml.lang.X4OLanguageModuleLoaderSibling#loadLanguageSibling(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageLoader)
 	 */
-	public void loadLanguageSibling(X4OLanguageLocal languageLocal,X4OLanguageLoader loader) throws X4OLanguageLoaderException {
+	public void loadLanguageSibling(X4OLanguageLocal language,X4OLanguageLoader languageLoader) throws X4OLanguageLoaderException {
 	
 		// Load the meta language.
-		loader.loadLanguage(languageLocal, META_LANGUAGE, META_LANGUAGE_VERSION);
+		languageLoader.loadLanguage(language, META_LANGUAGE, META_LANGUAGE_VERSION);
 	}
 }

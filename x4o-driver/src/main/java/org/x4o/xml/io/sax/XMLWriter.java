@@ -260,7 +260,7 @@ public class XMLWriter extends DefaultHandler2 {
 	public void endElement(String uri, String localName, String name) throws SAXException {
 		if (startElement!=null) {
 			String tag = startElement.toString();
-			write(tag.substring(0,tag.length()-1));
+			write(tag.substring(0,tag.length()-1));// rm normal close
 			write(XMLConstants.TAG_CLOSE_EMPTY);
 			startElement=null;
 			indent--;

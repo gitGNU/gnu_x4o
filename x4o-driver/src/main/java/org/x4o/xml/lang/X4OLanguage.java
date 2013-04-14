@@ -62,15 +62,16 @@ public interface X4OLanguage {
 	X4OLanguageConfiguration getLanguageConfiguration();
 
 	/**
-	 * Creates and filles the inital element language used to store the language.
+	 * Creates and fills the initial element language used to store the language.
 	 * @return	The newly created ElementLanguage.
 	 */
 	X4OLanguageContext createLanguageContext(X4ODriver<?> driver);
 
 	/**
-	 * Search language for object and create elememt for it.
-	 * @param object The object to search for.
-	 * @return	Returns an new Elememt instance for the object.
+	 * Search language for object and create element for it.
+	 * @param context The X4O language context to create for.
+	 * @param objectClass The object to search for.
+	 * @return	Returns an new Element instance for the object.
 	 */
 	Element createElementInstance(X4OLanguageContext context,Class<?> objectClass);
 	

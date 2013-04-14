@@ -61,7 +61,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws NullPointerException
 	 * @throws SAXException
 	 * @throws IOException
-	 * @see org.x4o.xml.io.AbstractX4OReader#parse(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readFile(String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
 	
@@ -74,7 +74,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws NullPointerException
 	 * @throws SAXException
 	 * @throws IOException
-	 * @see org.x4o.xml.io.AbstractX4OReader#parse(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readFile(File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
 	
@@ -87,6 +87,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws NullPointerException
 	 * @throws SAXException
 	 * @throws IOException
+	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readResource(String resourceName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
 	
@@ -97,7 +98,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws NullPointerException
-	 * @see org.x4o.xml.io.AbstractX4OReader#parse(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readString(String xmlString) throws ParserConfigurationException,SAXException,IOException,NullPointerException;
 	
@@ -108,7 +109,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws SAXException
 	 * @throws IOException
 	 * @throws NullPointerException
-	 * @see org.x4o.xml.io.AbstractX4OReader#parse(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readUrl(URL url) throws ParserConfigurationException,SAXException,IOException,NullPointerException;
 }

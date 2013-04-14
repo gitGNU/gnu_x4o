@@ -160,14 +160,14 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultX4OLanguageVersionFilter()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultLanguageVersionFilter()
 	 */
 	public Class<?> getDefaultLanguageVersionFilter() {
 		return DefaultX4OLanguageVersionFilter.class;
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultX4OLanguageLoader()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultLanguageLoader()
 	 */
 	public Class<?> getDefaultLanguageLoader() {
 		return DefaultX4OLanguageLoader.class;
@@ -181,7 +181,7 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserProperties()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserProperties(org.x4o.xml.lang.X4OLanguageContext)
 	 */
 	public Map<String, Object> getSAXParserProperties(X4OLanguageContext elementContext) {
 		Map<String,Object> saxParserProperties = new HashMap<String,Object>(1);
@@ -189,7 +189,7 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserPropertiesOptional()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserPropertiesOptional(org.x4o.xml.lang.X4OLanguageContext)
 	 */
 	public Map<String, Object> getSAXParserPropertiesOptional(X4OLanguageContext elementContext) {
 		Map<String,Object> saxParserProperties = new HashMap<String,Object>(1);
@@ -198,7 +198,7 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeatures()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeatures(org.x4o.xml.lang.X4OLanguageContext)
 	 */
 	public Map<String, Boolean> getSAXParserFeatures(X4OLanguageContext elementContext) {
 		
@@ -247,7 +247,7 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesOptional()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesOptional(org.x4o.xml.lang.X4OLanguageContext)
 	 */
 	public Map<String, Boolean> getSAXParserFeaturesOptional(X4OLanguageContext elementContext) {
 		Map<String,Boolean> saxParserFeatures = new HashMap<String,Boolean>(20);
@@ -271,7 +271,7 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesRequired()
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesRequired(org.x4o.xml.lang.X4OLanguageContext)
 	 */
 	public List<String> getSAXParserFeaturesRequired(X4OLanguageContext elementContext) {
 		List<String> result = new ArrayList<String>(5);

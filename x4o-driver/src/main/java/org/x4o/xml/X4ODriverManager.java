@@ -146,16 +146,31 @@ public final class X4ODriverManager {
 	}
 	
 	static public void registerX4ODriver(X4ODriver<?> driver) {
+		if (driver==null) {
+			throw new NullPointerException("Can't register null driver.");
+		}
 		if (driver.getLanguageName()==null) {
 			throw new NullPointerException("Error in driver impl languageName is null in: "+driver.getClass());
 		}
+		if (driver.getLanguageName().length()==0) {
+			throw new IllegalArgumentException("Error in driver impl languageName is empty in: "+driver.getClass());
+		}
 		if (driver.getLanguageVersions()==null) {
 			throw new NullPointerException("Error in driver impl languageVersions is null in: "+driver.getClass());
+		}
+		if (driver.getLanguageVersions().length==0) {
+			throw new IllegalArgumentException("Error in driver impl languageVersions is empty in: "+driver.getClass());
 		}
 		instance.drivers.put(driver.getLanguageName(), driver);
 	}
 	
 	static public void deregisterX4ODriver(X4ODriver<?> driver) {
+		if (driver==null) {
+			throw new NullPointerException("Can't deregister null driver.");
+		}
+		if (driver.getLanguageName()==null) {
+			throw new NullPointerException("Error in driver impl languageName is null in: "+driver.getClass());
+		}
 		instance.drivers.remove(driver.getLanguageName());
 	}
 	
@@ -165,6 +180,9 @@ public final class X4ODriverManager {
 		}
 		if (language.isEmpty()) {
 			throw new IllegalArgumentException("Can't provider driver for empty language.");
+		}
+		if (instance.drivers.containsKey(language)) {
+			return instance.drivers.get(language);
 		}
 		try {
 			instance.lazyInit();

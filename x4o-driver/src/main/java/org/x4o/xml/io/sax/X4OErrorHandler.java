@@ -38,31 +38,31 @@ import org.xml.sax.SAXParseException;
  */
 public class X4OErrorHandler implements ErrorHandler {
 	
-	private X4OLanguageContext elementContext = null;
+	private X4OLanguageContext languageContext = null;
 	private ErrorHandler errorHandler = null;
 	
 	/**
 	 * Construct a new SAXErrorPrinter
-	 * @param language	The language to get errors to.
+	 * @param languageContext	The language to get errors to.
 	 */
-	public X4OErrorHandler(X4OLanguageContext elementContext) {
-		if (elementContext==null) {
-			throw new NullPointerException("Can't debug and proxy errors with null elementContext.");
+	public X4OErrorHandler(X4OLanguageContext languageContext) {
+		if (languageContext==null) {
+			throw new NullPointerException("Can't debug and proxy errors with null languageContext.");
 		}
-		this.elementContext=elementContext;
-		this.errorHandler=(ErrorHandler)elementContext.getLanguageProperty(X4OLanguageProperty.CONFIG_ERROR_HANDLER);
+		this.languageContext=languageContext;
+		this.errorHandler=(ErrorHandler)languageContext.getLanguageProperty(X4OLanguageProperty.CONFIG_ERROR_HANDLER);
 	}
 
 	/**
 	 * Prints the error message to debug output.
 	 */
 	private void printError(boolean isError, SAXParseException exception) throws SAXException {
-		if (elementContext.hasX4ODebugWriter()==false) {
+		if (languageContext.hasX4ODebugWriter()==false) {
 			return;
 		}
 		String message = printErrorString(isError,exception);
 		try {
-			elementContext.getX4ODebugWriter().debugPhaseMessage(message, X4OErrorHandler.class);
+			languageContext.getX4ODebugWriter().debugPhaseMessage(message, X4OErrorHandler.class);
 		} catch (ElementException e) {
 			throw new SAXException(e);
 		}

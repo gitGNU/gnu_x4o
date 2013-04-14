@@ -46,8 +46,7 @@ public class DefaultX4OPhaseManager implements X4OPhaseManager {
 	private List<X4OPhase> x4oPhases = null;
 	
 	/**
-	 * Local package constructor.
-	 * @param elementLanguage The ElementLanguage to run the phases on.
+	 * Constructor.
 	 */
 	public DefaultX4OPhaseManager() {
 		x4oPhases = new ArrayList<X4OPhase>(25);

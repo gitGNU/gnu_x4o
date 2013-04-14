@@ -50,7 +50,7 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 	/**
 	 * @param	language	The elementLanguage of this provider.
 	 * @param	elementNamespaceContext	The elementNamespaceContext for this provider.
-	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#start(org.x4o.xml.lang.X4OLanguageContext, org.x4o.xml.element.ElementNamespaceContext)
+	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#start(org.x4o.xml.lang.X4OLanguage, org.x4o.xml.element.ElementNamespaceContext)
 	 */
 	public void start(X4OLanguage language,ElementNamespaceContext elementNamespaceContext) {
 		this.elementNamespaceContext=elementNamespaceContext;
@@ -58,12 +58,13 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 	}
 
 	/**
+	 * @param	languageContext The language context for which we create the Element instance.
 	 * @param	tag	The xml tag to create an Element instance for.
 	 * @return	The Element to handle the given tag.
 	 * @throws ElementNamespaceInstanceProviderException 
-	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#createElementInstance(java.lang.String)
+	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#createElementInstance(org.x4o.xml.lang.X4OLanguageContext,java.lang.String)
 	 */
-	public Element createElementInstance(X4OLanguageContext elementLanguage,String tag) throws ElementNamespaceInstanceProviderException {
+	public Element createElementInstance(X4OLanguageContext languageContext,String tag) throws ElementNamespaceInstanceProviderException {
 		ElementClass	elementClass	= elementNamespaceContext.getElementClass(tag);
 		Element 		element			= null;
 		
@@ -79,7 +80,7 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 				}
 				element = (Element) obj;
 			} else {
-				element = (Element)X4OLanguageClassLoader.newInstance((elementLanguage.getLanguage().getLanguageConfiguration().getDefaultElement()));
+				element = (Element)X4OLanguageClassLoader.newInstance((languageContext.getLanguage().getLanguageConfiguration().getDefaultElement()));
 			}
 			
 			if (elementClass.getObjectClass()!=null) {
@@ -93,7 +94,7 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 			throw new ElementNamespaceInstanceProviderException(this,"Error while providing Element: "+e.getMessage(),e);
 		} */
 		element.setElementClass(elementClass);
-		element.setLanguageContext(elementLanguage);
+		element.setLanguageContext(languageContext);
 		return element;
 	}
 }

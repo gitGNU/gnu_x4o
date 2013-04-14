@@ -73,7 +73,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#addLanguageModule(org.x4o.xml.lang.X4OLanguageModule)
+	 * @see org.x4o.xml.lang.X4OLanguageLocal#addLanguageModule(org.x4o.xml.lang.X4OLanguageModule)
 	 */
 	public void addLanguageModule(X4OLanguageModule elementLanguageModule) {
 		if (elementLanguageModule.getId()==null) {
@@ -83,7 +83,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#getLanguageModules()
+	 * @see org.x4o.xml.lang.X4OLanguage#getLanguageModules()
 	 */
 	public List<X4OLanguageModule> getLanguageModules() {
 		return elementLanguageModules;
@@ -132,7 +132,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguage#createElementInstance(java.lang.Class)
+	 * @see org.x4o.xml.lang.X4OLanguage#createElementInstance(org.x4o.xml.lang.X4OLanguageContext,java.lang.Class)
 	 */
 	public Element createElementInstance(X4OLanguageContext context,Class<?> objectClass) {
 		for (X4OLanguageModule modContext:getLanguageModules()) {
@@ -152,7 +152,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#findElementBindingHandlers(java.lang.Object)
+	 * @see org.x4o.xml.lang.X4OLanguage#findElementBindingHandlers(java.lang.Object)
 	 */
 	public List<ElementBindingHandler> findElementBindingHandlers(Object parent) {
 		List<ElementBindingHandler> result = new ArrayList<ElementBindingHandler>(50);
@@ -167,7 +167,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#findElementBindingHandlers(java.lang.Object,java.lang.Object)
+	 * @see org.x4o.xml.lang.X4OLanguage#findElementBindingHandlers(java.lang.Object,java.lang.Object)
 	 */
 	public List<ElementBindingHandler> findElementBindingHandlers(Object parent,Object child) {
 		List<ElementBindingHandler> result = new ArrayList<ElementBindingHandler>(50);
@@ -213,7 +213,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#findElementInterfaces(java.lang.Object)
+	 * @see org.x4o.xml.lang.X4OLanguage#findElementInterfaces(java.lang.Object)
 	 */
 	public List<ElementInterface> findElementInterfaces(Object elementObject) {
 		if (elementObject==null) {
@@ -238,7 +238,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#findElementNamespaceContext(java.lang.String)
+	 * @see org.x4o.xml.lang.X4OLanguage#findElementNamespaceContext(java.lang.String)
 	 */
 	public ElementNamespaceContext findElementNamespaceContext(String namespaceUri) {
 		

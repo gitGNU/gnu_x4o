@@ -57,7 +57,7 @@ public class StringSplitConverterBindingHandler extends AbstractElementBindingHa
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
 	public void bindChild(Element childElement,StringSplitConverter parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof StringSplitConverterStep) { 

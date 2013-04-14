@@ -56,12 +56,18 @@ public class ElementClassAttributeBindingHandler extends AbstractElementBindingH
 		return CLASSES_CHILD;
 	}
 
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
+	 */
 	public void bindChild(Element childElement,ElementClassAttribute parentObject,Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ObjectConverter) { 
 			parentObject.setObjectConverter((ObjectConverter)childObject);
 		}
 	}
 	
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
 	public void createChilderen(Element parentElement,ElementClassAttribute parentObject) throws ElementBindingHandlerException {
 		createChild(parentElement, parentObject.getObjectConverter());
 	}

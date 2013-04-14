@@ -152,7 +152,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#setCurrentPhase(org.x4o.xml.lang.phase.X4OPhase)
+	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setCurrentPhase(org.x4o.xml.lang.phase.X4OPhase)
 	 */
 	public void setCurrentPhase(X4OPhase currentX4OPhase) {
 		this.currentX4OPhase = currentX4OPhase;
@@ -205,14 +205,14 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getLanguageProperty(org.x4o.xml.lang.X4OLanguageProperty)
+	 * 
 	 */
 	public Object getLanguageProperty(X4OLanguageProperty property) {
 		return getLanguageProperty(property.toUri());
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#setLanguageProperty(org.x4o.xml.lang.X4OLanguageProperty, java.lang.Object)
+	 * 
 	 */
 	public void setLanguageProperty(X4OLanguageProperty property, Object value) {
 		if (property.isValueValid(value)==false) {
@@ -222,7 +222,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getLanguagePropertyBoolean(org.x4o.xml.lang.X4OLanguageProperty)
+	 * 
 	 */
 	public boolean getLanguagePropertyBoolean(X4OLanguageProperty property) {
 		Object value = getLanguageProperty(property);
@@ -233,7 +233,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getLanguagePropertyInteger(org.x4o.xml.lang.X4OLanguageProperty)
+	 * 
 	 */
 	public int getLanguagePropertyInteger(X4OLanguageProperty property) {
 		Object value = getLanguageProperty(property);
@@ -252,21 +252,21 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getX4ODebugWriter()
+	 * @see org.x4o.xml.lang.X4OLanguageContext#getX4ODebugWriter()
 	 */
 	public X4ODebugWriter getX4ODebugWriter() {
 		return debugWriter;
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#hasX4ODebugWriter()
+	 * @see org.x4o.xml.lang.X4OLanguageContext#hasX4ODebugWriter()
 	 */
 	public boolean hasX4ODebugWriter() {
 		return debugWriter!=null;
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#setX4ODebugWriter(org.x4o.xml.io.sax.X4ODebugWriter)
+	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setX4ODebugWriter(org.x4o.xml.io.sax.X4ODebugWriter)
 	 */
 	public void setX4ODebugWriter(X4ODebugWriter debugWriter) {
 		this.debugWriter=debugWriter;

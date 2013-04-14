@@ -61,8 +61,6 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 	/** The EL key to access the parent language element langauge. */
 	public static final String EL_PARENT_LANGUAGE = "parentLanguage";
 	
-	
-	
 	/**
 	 * Creates an ELD/CEL module loader. 
 	 * @param eldResource	The resource to load.
@@ -79,10 +77,10 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 
 	/**
 	 * Loads the ELD language into the module.
-	 * @param elementLanguage The langauge to load for.
+	 * @param language The langauge to load for.
 	 * @param elementLanguageModule The module to load it in.
 	 * @throws X4OLanguageModuleLoaderException When eld language could not be loaded.
-	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageContext, org.x4o.xml.lang.X4OLanguageModule)
+	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageModule)
 	 */
 	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
 		logger.fine("Loading name eld file from resource: "+eldResource);

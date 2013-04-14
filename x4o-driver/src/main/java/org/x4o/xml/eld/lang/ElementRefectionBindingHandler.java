@@ -60,7 +60,7 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element,java.lang.Object, java.lang.Object)
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
 	public void bindChild(Element childElement, Object parentObject, Object childObject) throws ElementBindingHandlerException {
 
@@ -91,6 +91,9 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 		throw new ElementBindingHandlerException("Could not find method: "+addMethod+" on: "+childClass+" id:"+getId());
 	}
 
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
 	@SuppressWarnings("rawtypes")
 	public void createChilderen(Element parentElement,Object parentObject) throws ElementBindingHandlerException {
 		if (parentClass==null | childClass==null | getMethod==null) {

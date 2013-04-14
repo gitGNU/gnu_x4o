@@ -51,13 +51,19 @@
 			<item name="Sample swixml"	href="examples/sample-swixml.html"/>
 			<item name="Sample jr4o"	href="examples/sample-jr4o.html"/>
 		</menu>
-		<menu name="EldDoc">
-			<item name="cel"			href="elddocs/cel-1.0/index.html"/>
-			<item name="eld"			href="elddocs/eld-1.0/index.html"/>
-			<item name="junit-test"		href="elddocs/test-1.0/index.html"/>
-			<item name="junit-swixml2"	href="elddocs/swixml-2.0/index.html"/>
-			<item name="junit-swixml3"	href="elddocs/swixml-3.0/index.html"/>
-			
+		<menu name="Support Doc">
+			<item name="cel"			href="x4o-support/doc-cel-1.0/index.html"/>
+			<item name="eld"			href="x4o-support/doc-eld-1.0/index.html"/>
+			<item name="junit-test"		href="x4o-support/doc-test-1.0/index.html"/>
+			<item name="junit-swixml2"	href="x4o-support/doc-swixml-2.0/index.html"/>
+			<item name="junit-swixml3"	href="x4o-support/doc-swixml-3.0/index.html"/>
+		</menu>
+		<menu name="Support Schema">
+			<item name="cel"			href="x4o-support/xsd-cel-1.0/"/>
+			<item name="eld"			href="x4o-support/xsd-eld-1.0/"/>
+			<item name="junit-test"		href="x4o-support/xsd-test-1.0/"/>
+			<item name="junit-swixml2"	href="x4o-support/xsd-swixml-2.0/"/>
+			<item name="junit-swixml3"	href="x4o-support/xsd-swixml-3.0/"/>
 		</menu>
 		<menu ref="parent"/>
 		<menu ref="modules"/>

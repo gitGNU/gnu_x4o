@@ -109,7 +109,7 @@ public class EldParserTest extends TestCase {
 			assertTrue("No elementConfigurator tag found in core eld.",	resultTags.contains("elementConfigurator"));
 			*/
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 		//	parser.doReleasePhaseManual();
 		}

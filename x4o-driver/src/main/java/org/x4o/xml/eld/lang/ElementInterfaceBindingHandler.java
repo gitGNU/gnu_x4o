@@ -60,7 +60,7 @@ public class ElementInterfaceBindingHandler extends AbstractElementBindingHandle
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
 	public void bindChild(Element childElement,ElementInterface parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ElementBindingHandler) { 
@@ -74,6 +74,9 @@ public class ElementInterfaceBindingHandler extends AbstractElementBindingHandle
 		}
 	}
 	
+	/**
+	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
+	 */
 	public void createChilderen(Element parentElement,ElementInterface parent) throws ElementBindingHandlerException {
 		for (ElementBindingHandler child:parent.getElementBindingHandlers()) {
 			createChild(parentElement, child);

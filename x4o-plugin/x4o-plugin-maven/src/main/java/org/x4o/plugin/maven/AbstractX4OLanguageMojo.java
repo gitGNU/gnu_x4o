@@ -24,8 +24,7 @@
 package org.x4o.plugin.maven;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -35,47 +34,75 @@ import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
 
 /**
- * X4OWriteLanguageDocMojo creates docs for language.
+ * AbstractX4OLanguageMojo can perform a task on languages and versions.
  * 
  * @author Willem Cazander
  * @version 1.0 Apr 9, 2013
  */
 public abstract class AbstractX4OLanguageMojo extends AbstractMojo {
 	
-	@Parameter(property="outputDirectory")
+	private final static String DEFAULT_OUTPUT_DIRECTORY = "target/x4o";
+	
+	@Parameter(property="outputDirectory",defaultValue=DEFAULT_OUTPUT_DIRECTORY)
 	private File outputDirectory;
 	
-	@Parameter(required=true,property="languages")
+	@Parameter
 	private Map<String,String> languages;
 
+	@Parameter(property="languages")
+	private String languageCommandLineString;
+	
 	@Parameter(defaultValue="false",property="verbose")
 	private boolean verbose = false;
 	
 	@Parameter(defaultValue="true",property="failOnError")
 	private boolean failOnError = true;
 	
+	abstract String getLanguageTaskDirectoryLabel();
+	
 	abstract String getLanguageTaskName();
 	
 	abstract void executeLanguageTask(String languageName,String languageVersion,File outputDirectory) throws MojoExecutionException;
 	
 	private void executeLanguageTask() throws MojoExecutionException {
-		if (outputDirectory==null) {
-			throw new MojoExecutionException("outputDirectory attribute is not set.");
-		}
 		if (languages==null) {
-			throw new MojoExecutionException("languages attribute is not set.");
+			languages = new HashMap<String,String>(10); // maven does not support setting map on cmd line ?
 		}
-		if (languages.size()==0) {
-			throw new MojoExecutionException("languages attribute is empty.");
+		if (outputDirectory==null) {
+			outputDirectory = new File(DEFAULT_OUTPUT_DIRECTORY);
 		}
-		long startTime = System.currentTimeMillis();
 		if (verbose) {
-			getLog().info("Starting "+getLanguageTaskName());
+			getLog().info("Output directory: "+outputDirectory);
+			getLog().info("Verbose: "+verbose);
+			getLog().info("Fail on error: "+failOnError);
 		}
 		if (outputDirectory.exists()==false) {
-			outputDirectory.mkdir();
+			outputDirectory.mkdirs(); // incl parents
 			if (verbose) {
 				getLog().info("Created directory: "+outputDirectory);
+			}
+		}
+		if (languageCommandLineString!=null && languageCommandLineString.startsWith("{") && languageCommandLineString.endsWith("}")) {
+			languages.clear();
+			String langString = languageCommandLineString.substring(1,languageCommandLineString.length()-1);
+			String[] lang = langString.split(",");
+			for (String l:lang) {
+				String[] ll = l.split("=");
+				if (ll.length!=2) {
+					getLog().warn("Wrong langauge key split: '"+l+"' of languageString: '"+languageCommandLineString+"'");
+					continue;
+				}
+				String langName = ll[0];
+				String langVersion = ll[1];
+				languages.put(langName,langVersion);
+			}
+		}
+		if (languages.size()==0) {
+			if (verbose) {
+				getLog().info("Defaulting to all languages in classpath.");
+			}
+			for (String lang:X4ODriverManager.getX4OLanguages()) {
+				languages.put(lang, "ALL");
 			}
 		}
 		for (String languageName:languages.keySet()) {
@@ -96,12 +123,22 @@ public abstract class AbstractX4OLanguageMojo extends AbstractMojo {
 				executeLanguageTask(languageName,languageVersions); // only one version
 			}
 		}
-		long stopTime = System.currentTimeMillis();
-		getLog().info("Done "+getLanguageTaskName()+" in "+(stopTime-startTime)+" ms.");
 	}
 	
 	private void executeLanguageTask(String languageName,String languageVersion) throws MojoExecutionException {
-		File outputLanguagPath = new File(outputDirectory.getAbsolutePath()+File.separatorChar+languageName+"-"+languageVersion);
+		long startTime = System.currentTimeMillis();
+		if (verbose) {
+			getLog().info("Starting "+getLanguageTaskName()+" for "+languageName+":"+languageVersion);
+		}
+		StringBuffer buf = new StringBuffer(100);
+		buf.append(outputDirectory.getAbsolutePath());
+		buf.append(File.separatorChar);
+		buf.append(getLanguageTaskDirectoryLabel());
+		buf.append("-");
+		buf.append(languageName);
+		buf.append("-");
+		buf.append(languageVersion);
+		File outputLanguagPath = new File(buf.toString());
 		if (outputLanguagPath.exists()==false) {
 			outputLanguagPath.mkdir();
 			if (verbose) {
@@ -109,18 +146,12 @@ public abstract class AbstractX4OLanguageMojo extends AbstractMojo {
 			}
 		}
 		executeLanguageTask(languageName,languageVersion,outputLanguagPath);
+		long stopTime = System.currentTimeMillis();
+		getLog().info("Done "+getLanguageTaskName()+" for "+languageName+":"+languageVersion+" in "+(stopTime-startTime)+" ms.");
 	}
 	
 	public void execute() throws MojoExecutionException {
 		try {
-			if (verbose) {
-				if (languages!=null) {
-					getLog().info("X4O Languages: "+languages.size());
-				}
-				getLog().info("Output directory: "+outputDirectory);
-				getLog().info("Verbose: "+verbose);
-				getLog().info("Fail on error: "+failOnError);
-			}
 			executeLanguageTask();
 		} catch (MojoExecutionException e) {
 			if (failOnError) {
@@ -153,7 +184,9 @@ public abstract class AbstractX4OLanguageMojo extends AbstractMojo {
 	}
 
 	/**
-	 * @param languages the languages to set
+	 * Adds an language with version.
+	 * @param languageName the languageName to set
+	 * @param languageVersion the languageVersion to set
 	 */
 	public void addLanguage(String languageName,String languageVersion) {
 		languages.put(languageName,languageVersion);

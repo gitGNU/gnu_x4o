@@ -43,6 +43,10 @@ public class X4OWriteLanguageDocMojo extends AbstractX4OLanguageMojo {
 	
 	static public final String GOAL = "write-language-doc"; 
 	
+	String getLanguageTaskDirectoryLabel() {
+		return "doc";
+	}
+	
 	String getLanguageTaskName() {
 		return "X4O Write language documentation";
 	}

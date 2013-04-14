@@ -71,7 +71,7 @@
   </build>
   <profiles>
     <profile>
-      <id>update-schema-cel</id>
+      <id>ant-update-schema-cel</id>
       <build>
         <plugins>
           <plugin>
@@ -106,7 +106,7 @@
       </build>
     </profile>
     <profile>
-      <id>update-schema-eld</id>
+      <id>ant-update-schema-eld</id>
       <build>
         <plugins>
           <plugin>
@@ -141,7 +141,7 @@
       </build>
     </profile>
     <profile>
-      <id>site-elddoc2</id>
+      <id>ant-site-elddoc</id>
       <build>
         <plugins>
           <plugin>

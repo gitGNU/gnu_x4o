@@ -53,13 +53,13 @@ public class X4OWriteLanguageDocExecutor {
 			String arg = arguIterator.next();
 			if ("-path".equals(arg) || "-p".equals(arg)) {
 				if (arguIterator.hasNext()==false) {
-					System.out.println("No argument for "+arg+" given.");
+					System.err.println("No argument for "+arg+" given.");
 					System.exit(1);
 					return;
 				}
 				File schemaBasePath = new File(arguIterator.next());
 				if (schemaBasePath.exists()==false) {
-					System.out.println("path does not exists; "+schemaBasePath);
+					System.err.println("path does not exists; "+schemaBasePath);
 					System.exit(1);
 					return;
 				}
@@ -68,7 +68,7 @@ public class X4OWriteLanguageDocExecutor {
 			}
 			if ("-language".equals(arg) || "-l".equals(arg)) {
 				if (arguIterator.hasNext()==false) {
-					System.out.println("No argument for "+arg+" given.");
+					System.err.println("No argument for "+arg+" given.");
 					System.exit(1);
 					return;
 				}
@@ -80,7 +80,7 @@ public class X4OWriteLanguageDocExecutor {
 		try {
 			languageSchema.execute();
 		} catch (ElementException e) {
-			System.out.println("Error while schema writing: "+e.getMessage());
+			System.err.println("Error while schema writing: "+e.getMessage());
 			e.printStackTrace();
 			System.exit(1);
 			return;

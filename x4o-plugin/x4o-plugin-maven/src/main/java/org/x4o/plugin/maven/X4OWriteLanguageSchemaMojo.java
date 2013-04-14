@@ -43,6 +43,10 @@ public class X4OWriteLanguageSchemaMojo extends AbstractX4OLanguageMojo {
 	
 	static public final String GOAL = "write-language-schema"; 
 	
+	String getLanguageTaskDirectoryLabel() {
+		return "xsd";
+	}
+	
 	String getLanguageTaskName() {
 		return "X4O Write language schema";
 	}
