@@ -365,14 +365,5 @@ public class AttributeMap<K,V> implements Map<K,V> {
 			}
 			return false;
 		}
-
-		/**
-		 * @see java.lang.Object#hashCode()
-		 * @return The hashCode.
-		 */
-		@Override
-		public int hashCode() {
-			return super.hashCode();
-		}
 	}
 }

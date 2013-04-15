@@ -184,28 +184,8 @@ public final class X4ODriverManager {
 		if (instance.drivers.containsKey(language)) {
 			return instance.drivers.get(language);
 		}
-		try {
-			instance.lazyInit();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		X4ODriver<?> result = null;
-		try {
-			result = instance.createX4ODriver(language);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		instance.lazyInit();
+		X4ODriver<?> result = instance.createX4ODriver(language);
 		if (result==null) {
 			throw new IllegalArgumentException("Can't find driver for language: "+language);
 		}
@@ -213,15 +193,7 @@ public final class X4ODriverManager {
 	}
 	
 	static public List<String> getX4OLanguages() {
-		try {
-			instance.lazyInit();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		instance.lazyInit();
 		List<String> result = new ArrayList<String>(10);
 		result.addAll(instance.classdrivers.keySet());
 		result.addAll(instance.defaultDrivers.keySet());
@@ -229,7 +201,7 @@ public final class X4ODriverManager {
 		return result;
 	}
 	
-	private void lazyInit() throws IOException, SAXException {
+	private void lazyInit() {
 		if (reloadDrivers==false) {
 			return;
 		}
@@ -237,38 +209,44 @@ public final class X4ODriverManager {
 		reloadDrivers = false;
 	}
 	
-	private X4ODriver<?> createX4ODriver(String language) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	private X4ODriver<?> createX4ODriver(String language) {
+		String driverClassName = null;
 		if (classdrivers.containsKey(language)) {
-			String driverClassName = classdrivers.get(language);
+			driverClassName = classdrivers.get(language);
+		} else if (defaultDrivers.containsKey(language)) {
+			driverClassName = defaultDrivers.get(language);
+		}
+		if (driverClassName==null) {
+			return null;
+		}
+		try {
 			Class<?> driverClass = X4OLanguageClassLoader.loadClass(driverClassName);
 			X4ODriver<?> driver = (X4ODriver<?>)driverClass.newInstance();
+			registerX4ODriver(driver);
 			return driver;
+		} catch (Exception e) {
+			throw new IllegalStateException(e.getMessage(),e);
 		}
-		if (defaultDrivers.containsKey(language)) {
-			String driverClassName = defaultDrivers.get(language);
-			Class<?> driverClass = X4OLanguageClassLoader.loadClass(driverClassName);
-			X4ODriver<?> driver = (X4ODriver<?>)driverClass.newInstance();
-			return driver;
-		}
-		return null;
 	}
 	
 	/**
 	 * Loads all defined language drivers in classpath.
 	 */
-	private void loadLanguageDrivers() throws IOException, SAXException {
-
+	private void loadLanguageDrivers() {
 		logger.finer("loading x4o drivers from: "+X4O_DRIVERS_RESOURCE);
-		Enumeration<URL> e = Thread.currentThread().getContextClassLoader().getResources(X4O_DRIVERS_RESOURCE);
-		while(e.hasMoreElements()) {
-			URL u = e.nextElement();
-			loadDriversXml(u.openStream());
-		}
-		
-		e = Thread.currentThread().getContextClassLoader().getResources("/"+X4O_DRIVERS_RESOURCE);
-		while(e.hasMoreElements()) {
-			URL u = e.nextElement();
-			loadDriversXml(u.openStream());
+		try {
+			Enumeration<URL> e = Thread.currentThread().getContextClassLoader().getResources(X4O_DRIVERS_RESOURCE);
+			while(e.hasMoreElements()) {
+				URL u = e.nextElement();
+				loadDriversXml(u.openStream());
+			}
+			e = Thread.currentThread().getContextClassLoader().getResources("/"+X4O_DRIVERS_RESOURCE);
+			while(e.hasMoreElements()) {
+				URL u = e.nextElement();
+				loadDriversXml(u.openStream());
+			}
+		} catch (Exception e) {
+			throw new IllegalStateException(e.getMessage(),e);
 		}
 	}
 	

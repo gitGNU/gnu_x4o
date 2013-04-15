@@ -8,11 +8,10 @@
 - meta add more ns and jndi ref/etc'
 - redo eld/default converters config
 - tag aliases
-- maven plugin
 - lang-el-beans.xml loading
 - Add XML schema tags to ELD  
 - Auto generate schemas from eld
-- Basic write support (for editor)
+- Basic write support
 - Basic editor support
 - Make converter config/loading better
 - Single xsd output
@@ -28,7 +27,6 @@
 - event listeners on all DOM tree element operations
 - custom and merga'ble parse phases for speed
 - make element tree jdom api compatible
-- (DONE) change phase enum to generic (text) phases. 
 - Test if possible to use threadpool for executing phases
 
 -- TODO for version 1.0 --
@@ -36,8 +34,6 @@
 ## NON-CODE
 - Add tutorial
 - doc eld and x4o lang files
-- Create xslt eld to html converter
-- split into multiple maven projects
 
 ##CODE
 - Add (super) tag for extending tags of other namespace

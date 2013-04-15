@@ -50,10 +50,9 @@ public abstract class X4ODriver<T> {
 	public final static String DEFAULT_LANGUAGE_VERSION = "1.0";
 	
 	/**
-	 * Force public constructor and register the driver.
+	 * Public constructor.
 	 */
 	public X4ODriver() {
-		X4ODriverManager.registerX4ODriver(this);
 	}
 	
 	/**
@@ -67,7 +66,6 @@ public abstract class X4ODriver<T> {
 	abstract public String[] getLanguageVersions();
 	
 	
-	
 	protected X4OLanguage buildLanguage(String version) {
 		return X4ODriverManager.getDefaultBuildLanguage(this, version);
 	}
@@ -79,7 +77,6 @@ public abstract class X4ODriver<T> {
 	protected X4OLanguageConfiguration buildLanguageConfiguration() {
 		return X4ODriverManager.getDefaultBuildLanguageConfiguration();
 	}
-	
 	
 	
 	public X4OSchemaWriter createSchemaWriter() {

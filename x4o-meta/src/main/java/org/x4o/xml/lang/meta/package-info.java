@@ -21,37 +21,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.xml.meta.test;
+/**
+ * The X4O XML Meta Language.
+ * 
+ *
+ * @since 1.0
+ */
 
-import org.x4o.xml.X4ODriver;
-import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.io.X4OReaderContext;
-import org.x4o.xml.io.X4OWriterContext;
-
-public class MTestDriver extends X4ODriver {
-
-	public static final String LANGUAGE_NAME = "mtest";
-	public static final String[] LANGUAGE_VERSIONS = new String[]{X4ODriver.DEFAULT_LANGUAGE_VERSION};
-	
-	@Override
-	public String getLanguageName() {
-		return LANGUAGE_NAME;
-	}
-	
-	@Override
-	public String[] getLanguageVersions() {
-		return LANGUAGE_VERSIONS;
-	}
-	
-	static public MTestDriver getInstance() {
-		return (MTestDriver)X4ODriverManager.getX4ODriver(LANGUAGE_NAME);
-	}
-	
-	public X4OReaderContext<?> createReaderContext() {
-		return (X4OReaderContext<?>)super.createReader();
-	}
-	
-	public X4OWriterContext<?> createWriterContext() {
-		return (X4OWriterContext<?>)super.createWriter();
-	}
-}
+package org.x4o.xml.lang.meta;

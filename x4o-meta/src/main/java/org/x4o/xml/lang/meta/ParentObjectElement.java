@@ -21,53 +21,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.xml.meta.lang;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+package org.x4o.xml.lang.meta;
 
 import org.x4o.xml.element.AbstractElement;
-import org.x4o.xml.element.ElementException;
-
 
 /**
- * MethodElement invokes an method on a element object.
+ * An ParentObjectElement.<br>
+ * This Element only uses its parent ElementObject.
  * 
- * TODO: add args
- *
  * @author Willem Cazander
- * @version 1.0 Nov 21, 2007
+ * @version 1.0 Feb 14, 2007
  */
-public class MethodElement extends AbstractElement {
+public class ParentObjectElement extends AbstractElement {
 
-	/**
-	 * @see org.x4o.xml.element.AbstractElement#doElementRun()
-	 */
 	@Override
-	public void doElementRun() throws ElementException {
+	public Object getElementObject() {
 		if (getParent()==null) {
-			throw new IllegalStateException("need to have parent.");
+			return null;
 		}
-		Object parent = getParent().getElementObject();
-		if (parent==null) {
-			throw new IllegalStateException("need to have parent ElementObject.");
+		return getParent().getElementObject();
+	}
+
+	@Override
+	public void setElementObject(Object object) {
+		if (getParent()==null) {
+			return;
 		}
-		String methodString = getAttributes().get("method");
-		Method[] ms = parent.getClass().getMethods();
-		try {
-			for (Method m:ms) {
-				if (methodString.equalsIgnoreCase(m.getName())) {
-					m.invoke(parent);
-					return;
-				}
-			}
-		} catch (IllegalArgumentException e) {
-			throw new ElementException(e);
-		} catch (IllegalAccessException e) {
-			throw new ElementException(e);
-		} catch (InvocationTargetException e) {
-			throw new ElementException(e);
-		}
-		throw new ElementException("could not find method on parent element object: "+methodString+" on; "+parent);
+		getParent().setElementObject(object);
 	}
 }

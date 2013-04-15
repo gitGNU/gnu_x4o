@@ -67,9 +67,9 @@ public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 	 * @param message	The message to log to the debug output.
 	 */
 	private void logMessage(X4OLanguage language,String message) {
-		logger.finest(message);
+		logger.finest(message+" from: "+language.getLanguageName());
 		/*
-		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
+TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 			try {
 				language.getLanguageConfiguration().getX4ODebugWriter().debugPhaseMessage(message, this.getClass());
 			} catch (ElementException e) {

@@ -57,7 +57,7 @@ public class TestBean {
 	public Character publicCharObjectField = new Character(' ');
 	
 	public String publicStringObjectField = " ";
-	public Date   publicDateObjectField = new Date(0);
+	//public Date   publicDateObjectField = new Date(0); // TODO add date converters
 	
 	
 	// private
@@ -84,7 +84,7 @@ public class TestBean {
 	private Character privateCharObjectField = new Character(' ');
 	
 	private String privateStringObjectField = " ";
-	private Date   privateDateObjectField = new Date(0);
+	//private Date   privateDateObjectField = new Date(0);
 	
 	
 	// auto gen , get/set-ers
@@ -269,18 +269,18 @@ public class TestBean {
 	public void setPublicStringObjectField(String publicStringObjectField) {
 		this.publicStringObjectField = publicStringObjectField;
 	}
-	/**
+	/*
 	 * @return the publicDateObjectField
-	 */
+	 
 	public Date getPublicDateObjectField() {
 		return publicDateObjectField;
-	}
-	/**
+	}*/
+	/*
 	 * @param publicDateObjectField the publicDateObjectField to set
-	 */
+	 
 	public void setPublicDateObjectField(Date publicDateObjectField) {
 		this.publicDateObjectField = publicDateObjectField;
-	}
+	}*/
 	/**
 	 * @return the privateIntegerTypeField
 	 */
@@ -461,16 +461,16 @@ public class TestBean {
 	public void setPrivateStringObjectField(String privateStringObjectField) {
 		this.privateStringObjectField = privateStringObjectField;
 	}
-	/**
+	/*
 	 * @return the privateDateObjectField
-	 */
+	 
 	public Date getPrivateDateObjectField() {
 		return privateDateObjectField;
-	}
-	/**
+	}*/
+	/*
 	 * @param privateDateObjectField the privateDateObjectField to set
-	 */
+	 
 	public void setPrivateDateObjectField(Date privateDateObjectField) {
 		this.privateDateObjectField = privateDateObjectField;
-	}
+	}*/
 }

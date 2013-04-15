@@ -21,31 +21,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.xml.meta.lang;
+package org.x4o.xml.lang.meta;
 
 import java.util.logging.Logger;
 
 import javax.el.ValueExpression;
 
-import org.x4o.xml.element.AbstractElement;
-import org.x4o.xml.element.ElementException;
+import org.x4o.xml.element.AbstractElementAttributeHandler;
+import org.x4o.xml.element.Element;
+import org.x4o.xml.element.ElementConfiguratorException;
 
 
 /**
- * An ELReferenceElement.<br>
- * Fills the ElementObject with an object from el.
+ * Stores an ElementObject into the EL context.
  * 
  * @author Willem Cazander
- * @version 1.0 Jan 23, 2007
+ * @version 1.0 Aug 23, 2006
  */
-public class ELReferenceElement extends AbstractElement {
-	
-	@Override
-	public void doElementRun() throws ElementException {
-		String attributeValue = getAttributes().get("el.ref");
-		if("".equals(attributeValue) | attributeValue==null) { throw new ElementException("Set the el.ref attribute"); }
-		ValueExpression ee = getLanguageContext().getExpressionLanguageFactory().createValueExpression(getLanguageContext().getExpressionLanguageContext(),"${"+attributeValue+"}",Object.class);
-		Logger.getLogger(ELReferenceElement.class.getName()).finer("Get Variable in ELContext: ${"+attributeValue+"}");
-		setElementObject(ee.getValue(getLanguageContext().getExpressionLanguageContext()));
-	} 
+public class ELIDAttributeHandler extends AbstractElementAttributeHandler {
+
+	/**
+	 * @see org.x4o.xml.element.ElementConfigurator#doConfigElement(org.x4o.xml.element.Element)
+	 */
+	public void doConfigElement(Element element) throws ElementConfiguratorException {
+		String attributeValue = element.getAttributes().get(getAttributeName());
+		if(attributeValue==null) { return; }
+		if(element.getElementObject()==null) {
+			if (this.isConfigAction()) {
+				throw new NullPointerException("Can't bind null object to el context");
+			}
+			this.setConfigAction(true);
+			return;
+		}
+		if(element.getElementObject()==null) { throw new NullPointerException("Can't bind null object to el context"); }
+		ValueExpression ee = element.getLanguageContext().getExpressionLanguageFactory().createValueExpression(element.getLanguageContext().getExpressionLanguageContext(),"${"+attributeValue+"}", element.getElementObject().getClass());
+		Logger.getLogger(ELIDAttributeHandler.class.getName()).finer("Set Variable in ELContext: "+"${"+attributeValue+"}"+" object SET: "+element.getElementObject());
+		ee.setValue(element.getLanguageContext().getExpressionLanguageContext(), element.getElementObject());
+	}
 }

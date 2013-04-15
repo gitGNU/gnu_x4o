@@ -21,7 +21,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.xml.meta.lang;
+package org.x4o.xml.lang.meta;
 
 import java.lang.reflect.Method;
 import java.util.Map;

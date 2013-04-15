@@ -147,10 +147,8 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 		if (childClass.isAssignableFrom(childObject.getClass())==false) {
 			return;
 		}
-		if (skipChilderenClassRegex!=null) {
-			if (childObject.getClass().getName().matches(skipChilderenClassRegex)) {
-				return; // skip
-			}
+		if (skipChilderenClassRegex!=null && childObject.getClass().getName().matches(skipChilderenClassRegex)) {
+			return; // skip
 		}
 		createChild(parentElement,childObject);
 	}

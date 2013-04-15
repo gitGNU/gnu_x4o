@@ -23,12 +23,12 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<drivers version="1.0"
-	xmlns="http://language.x4o.org/xml/ns/drivers"
+<modules version="1.0"
+	xmlns="http://language.x4o.org/xml/ns/modules"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://language.x4o.org/xml/ns/drivers http://language.x4o.org/xml/ns/drivers-1.0.xsd"
+	xsi:schemaLocation="http://language.x4o.org/xml/ns/modules http://language.x4o.org/xml/ns/modules-1.0.xsd"
 	>
-	<driver language="test" className="org.x4o.xml.test.TestDriver"/>
-	<driver language="swixml" className="org.x4o.xml.test.swixml.SwiXmlDriver"/>
-	<defaultDriver language="junit-defp"/>
-</drivers>
+	<language version="1.0">
+		<eld-resource>defd-lang.eld</eld-resource>
+	</language>
+</modules>

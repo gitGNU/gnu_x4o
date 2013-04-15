@@ -21,11 +21,53 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * The X4O XML Meta Language Classes.
- * 
- *
- * @since 1.0
- */
+package org.x4o.xml.lang.meta;
 
-package org.x4o.xml.meta.lang;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.x4o.xml.element.AbstractElement;
+import org.x4o.xml.element.ElementException;
+
+
+/**
+ * MethodElement invokes an method on a element object.
+ * 
+ * TODO: add args
+ *
+ * @author Willem Cazander
+ * @version 1.0 Nov 21, 2007
+ */
+public class MethodElement extends AbstractElement {
+
+	/**
+	 * @see org.x4o.xml.element.AbstractElement#doElementRun()
+	 */
+	@Override
+	public void doElementRun() throws ElementException {
+		if (getParent()==null) {
+			throw new IllegalStateException("need to have parent.");
+		}
+		Object parent = getParent().getElementObject();
+		if (parent==null) {
+			throw new IllegalStateException("need to have parent ElementObject.");
+		}
+		String methodString = getAttributes().get("method");
+		Method[] ms = parent.getClass().getMethods();
+		try {
+			for (Method m:ms) {
+				if (methodString.equalsIgnoreCase(m.getName())) {
+					m.invoke(parent);
+					return;
+				}
+			}
+		} catch (IllegalArgumentException e) {
+			throw new ElementException(e);
+		} catch (IllegalAccessException e) {
+			throw new ElementException(e);
+		} catch (InvocationTargetException e) {
+			throw new ElementException(e);
+		}
+		throw new ElementException("could not find method on parent element object: "+methodString+" on; "+parent);
+	}
+}

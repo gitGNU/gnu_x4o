@@ -23,9 +23,7 @@
 
 package	org.x4o.xml.io;
 
-import	java.io.ByteArrayInputStream;
 import	java.io.File;
-import	java.io.FileInputStream;
 import	java.io.FileNotFoundException;
 import	java.io.IOException;
 import	java.io.InputStream;
@@ -44,6 +42,7 @@ import	javax.xml.parsers.ParserConfigurationException;
  * @author Willem Cazander
  * @version 1.0 Aug 11, 2005
  */
+@SuppressWarnings("unchecked")
 abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> implements X4OReader<T> {
 	
 	public AbstractX4OReader(X4OLanguageContext elementLanguage) {
@@ -56,11 +55,9 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	public String[] getPropertyKeySet() {
 		return X4OLanguagePropertyKeys.DEFAULT_X4O_READER_KEYS;
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	public T read(InputStream input, String systemId, URL basePath) throws ParserConfigurationException, SAXException, IOException {
-		X4OLanguageContext context = readContext(input, systemId, basePath);
-		return (T)context.getRootElement().getElementObject();
+		return (T)readContext(input, systemId, basePath).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -75,10 +72,7 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readFile(String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
-		if (fileName==null) {
-			throw new NullPointerException("Can't convert null fileName to file object.");
-		}		
-		return readFile(new File(fileName));
+		return (T)readFileContext(fileName).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -93,24 +87,7 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readFile(File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
-		if (file==null) {
-			throw new NullPointerException("Can't read null file.");
-		}
-		if (file.exists()==false) {
-			throw new FileNotFoundException("File does not exists; "+file);
-		}
-		if (file.canRead()==false) {
-			throw new IOException("File exists but can't read file: "+file);
-		}
-		URL basePath = new File(file.getAbsolutePath()).toURI().toURL();
-		InputStream inputStream = new FileInputStream(file);
-		try {
-			return read(inputStream,file.getAbsolutePath(),basePath);
-		} finally {
-			if(inputStream!=null) {
-				inputStream.close();
-			}
-		}
+		return (T)readFileContext(file).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -125,29 +102,7 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readResource(String resourceName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
-		if (resourceName==null) {
-			throw new NullPointerException("Can't read null resourceName from classpath.");
-		}
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		if (cl == null) cl = getClass().getClassLoader(); // fallback
-		URL url = cl.getResource(resourceName);
-		if (url==null) {
-			throw new NullPointerException("Could not find resource on classpath: "+resourceName);
-		}
-		String baseUrl = url.toExternalForm();
-		int lastSlash = baseUrl.lastIndexOf('/');
-		if (lastSlash > 0 && (lastSlash+1) < baseUrl.length()) {
-			baseUrl = baseUrl.substring(0,lastSlash+1);
-		}
-		URL basePath = new URL(baseUrl);
-		InputStream inputStream = cl.getResourceAsStream(resourceName);
-		try {
-			return read(inputStream,url.toExternalForm(),basePath);
-		} finally {
-			if(inputStream!=null) {
-				inputStream.close();
-			}
-		}
+		return (T)readResourceContext(resourceName).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -160,11 +115,7 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readString(String xmlString) throws ParserConfigurationException,SAXException,IOException,NullPointerException {
-		if (xmlString==null) {
-			throw new NullPointerException("Can't read null xml string.");
-		}
-		URL basePath = new File(System.getProperty("user.dir")).toURI().toURL();
-		return read(new ByteArrayInputStream(xmlString.getBytes()),"inline-xml",basePath);
+		return (T)readStringContext(xmlString).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -177,10 +128,6 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readUrl(URL url) throws ParserConfigurationException,SAXException,IOException,NullPointerException {
-		if (url==null) {
-			throw new NullPointerException("Can't read null url.");
-		}
-		URL basePath = new URL(url.toExternalForm().substring(0,url.toExternalForm().length()-url.getFile().length()));
-		return read(url.openStream(),url.toExternalForm(),basePath);
+		return (T)readUrlContext(url).getRootElement().getElementObject();
 	}
 }

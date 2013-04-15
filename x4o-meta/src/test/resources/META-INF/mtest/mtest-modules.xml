@@ -30,6 +30,6 @@
 	>
 	<language version="1.0">
 		<eld-resource>mtest-lang.eld</eld-resource>
-		<sibling-loader>org.x4o.xml.meta.MetaLanguageSiblingLoader</sibling-loader>
+		<sibling-loader>org.x4o.xml.lang.meta.MetaLanguageSiblingLoader</sibling-loader>
 	</language>
 </modules>

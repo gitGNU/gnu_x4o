@@ -34,7 +34,7 @@
 	>
 	<eld:description>The x4o meta language lets you do special xml tricks.</eld:description>
 	
-	<eld:attributeHandler id="global-el-id"	attributeName="el.id" bean.class="org.x4o.xml.meta.lang.ELIDAttributeHandler">
+	<eld:attributeHandler id="global-el-id"	attributeName="el.id" bean.class="org.x4o.xml.lang.meta.ELIDAttributeHandler">
 		<eld:description>Lets you bind object into the expression language context.</eld:description>
 	</eld:attributeHandler>
 	<eld:namespace
@@ -54,20 +54,20 @@
 			</eld:description>
 		</eld:element>
 		
-		<eld:element tag="elReference"		elementClass="org.x4o.xml.meta.lang.ELReferenceElement">
+		<eld:element tag="elReference"		elementClass="org.x4o.xml.lang.meta.ELReferenceElement">
 			<eld:description>
 				Used to get a reference of an Object into the Element tree.
 				Mostly used in combination with the el.id tag.
 			</eld:description>
 		</eld:element>
 		
-		<eld:element tag="parentObject"		elementClass="org.x4o.xml.meta.lang.ParentObjectElement">
+		<eld:element tag="parentObject"		elementClass="org.x4o.xml.lang.meta.ParentObjectElement">
 			<eld:description>
 				Hack in ElementTree, fills this Element with the ElementObject of his parent Element.
 			</eld:description>
 		</eld:element>
 		
-		<eld:element tag="property"			elementClass="org.x4o.xml.meta.lang.PropertyElement">
+		<eld:element tag="property"			elementClass="org.x4o.xml.lang.meta.PropertyElement">
 			<eld:description>
 				Set an property value on the object of the parent Element.
 				
@@ -75,7 +75,7 @@
 			</eld:description>
 		</eld:element>
 		
-		<eld:element tag="method"			elementClass="org.x4o.xml.meta.lang.MethodElement">
+		<eld:element tag="method"			elementClass="org.x4o.xml.lang.meta.MethodElement">
 			<eld:description>
 				Executes an Method of an Object.
 			</eld:description>

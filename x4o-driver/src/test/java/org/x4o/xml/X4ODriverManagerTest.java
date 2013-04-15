@@ -37,6 +37,24 @@ import junit.framework.TestCase;
  */
 public class X4ODriverManagerTest extends TestCase {
 
+	public void testDefaultLanguageVersionSelect() throws Exception {
+		String version = X4ODriverManager.getDefaultLanguageVersion(new String[]{"1.0","2.0","3.0"});
+		assertNotNull(version);
+		assertEquals("3.0",version);
+	}
+	
+	public void testDefaultLanguageVersionEmpty() throws Exception {
+		String version = X4ODriverManager.getDefaultLanguageVersion(new String[]{});
+		assertNotNull(version);
+		assertEquals(X4ODriver.DEFAULT_LANGUAGE_VERSION,version);
+	}
+	
+	public void testDefaultLanguageVersionNull() throws Exception {
+		String version = X4ODriverManager.getDefaultLanguageVersion(null);
+		assertNotNull(version);
+		assertEquals(X4ODriver.DEFAULT_LANGUAGE_VERSION,version);
+	}
+	
 	public void testLanguageNull() throws Exception {
 		String language = null;
 		Exception e = null;

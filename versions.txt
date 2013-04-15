@@ -2,14 +2,20 @@
 === X4O versions ===
 
 
+Version 0.8.6:
+- Changed to X4ODriver interface.
+- Added write support
+- Added ant and maven plugins
+
 Version 0.8.5:
 - Made module loading system.
-- Added XSD generator.
+- Added eld to schema generator.
+- Added eld to html generator.
 - Cleaned xml uri nameing.
 - Cleaned language properties.
 - refactored ELD tag names.
 - Made elddoc ~working.
-
+- Changed phase enum to text phases. 
 
 Version 0.8.2:
 - Changed packages to org.x4o
