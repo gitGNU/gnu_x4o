@@ -46,7 +46,7 @@
 	<classBindingHandler id="JRootPane-JComponent"			parentClass="javax.swing.JRootPane"			childClass="javax.swing.JComponent"		addMethod="add"		getMethod="getComponents"/>
 	
 	<elementInterface id="Component" interfaceClass="java.awt.Component">
-		<attribute name="bounds">
+		<attribute id="bounds">
 			<conv:stringSplitConverter classTo="java.awt.Rectangle"  split="," splitSize="4" singleToMethod="setRect" useNativeType="true">
 				<conv:stringSplitConverterStep fromMethod="getX"		fromOrder="1" toOrder="1"><conv:doubleConverter/></conv:stringSplitConverterStep>
 				<conv:stringSplitConverterStep fromMethod="getY"		fromOrder="2" toOrder="2"><conv:doubleConverter/></conv:stringSplitConverterStep>
@@ -54,36 +54,37 @@
 				<conv:stringSplitConverterStep fromMethod="getHeight"	fromOrder="4" toOrder="4"><conv:doubleConverter/></conv:stringSplitConverterStep>
 			</conv:stringSplitConverter>
 		</attribute>
-		<attribute name="size">
+		<attribute id="size">
 			<conv:stringSplitConverter classTo="java.awt.Dimension"  split="," splitSize="2" singleToMethod="setSize" useNativeType="true">
 				<conv:stringSplitConverterStep fromMethod="getHeight"	fromOrder="1" toOrder="1"><conv:integerConverter/></conv:stringSplitConverterStep>
 				<conv:stringSplitConverterStep fromMethod="getWidth"	fromOrder="2" toOrder="2"><conv:integerConverter/></conv:stringSplitConverterStep>
 			</conv:stringSplitConverter>
 		</attribute>
-		<attribute name="icon">
+		<attribute id="icon">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.IconConverter"/>
 		</attribute>
-		<attribute name="background">
+		<attribute id="background">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.ColorConverter"/>
 		</attribute>
-		<attribute name="location">
+		<attribute id="location">
 			<conv:stringSplitConverter classTo="java.awt.Point"  split="," splitSize="2" singleToMethod="setLocation" useNativeType="true">
 				<conv:stringSplitConverterStep fromMethod="getX"	fromOrder="1" toOrder="1"><conv:integerConverter/></conv:stringSplitConverterStep>
 				<conv:stringSplitConverterStep fromMethod="getY"	fromOrder="2" toOrder="2"><conv:integerConverter/></conv:stringSplitConverterStep>
 			</conv:stringSplitConverter>
 		</attribute>
+		<attribute id="locationOnScreen" runBeanValue="false"/>
 	</elementInterface>
 
 	<elementInterface id="JComponent" interfaceClass="javax.swing.JComponent">
-		<attribute name="layout">
+		<attribute id="layout">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.LayoutConverter"/>
 		</attribute>
-		<attribute name="border">
+		<attribute id="border">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.BorderConverter"/>
 		</attribute>
-		<attribute name="toolTipText"><attributeAlias name="ToolTipText"/></attribute>
-		<attribute name="focusPainted"><attributeAlias name="FocusPainted"/></attribute>
-		<attribute name="borderPainted"><attributeAlias name="BorderPainted"/></attribute>
+		<attribute id="toolTipText"><attributeAlias name="ToolTipText"/></attribute>
+		<attribute id="focusPainted"><attributeAlias name="FocusPainted"/></attribute>
+		<attribute id="borderPainted"><attributeAlias name="BorderPainted"/></attribute>
 	</elementInterface>
 		
 		
@@ -111,21 +112,21 @@
 		<element tag="menubar"			objectClass="javax.swing.JMenuBar"/>
 		<element tag="menu"				objectClass="javax.swing.JMenu"/>
 		<element tag="menuitem"			objectClass="javax.swing.JMenuItem">
-			<attribute name="accelerator">
+			<attribute id="accelerator">
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.KeyStrokeConverter"/>
 				<attributeAlias name="Accelerator"/>
 			</attribute>
-			<attribute name="mnemonic" runBeanFill="false"/>
-			<attribute name="Action" runBeanFill="false"/>
+			<attribute id="mnemonic" runBeanValue="false"/>
+			<attribute id="Action" runBeanValue="false"/>
 			<configurator id="menuitem-action" bean.class="org.x4o.xml.test.swixml.SwiXmlActionConfigurator"/>
 		</element>
 		<element tag="separator"	/>
 		<element tag="panel"			objectClass="javax.swing.JPanel"/>
 		<element tag="splitpane"		objectClass="javax.swing.JSplitPane">
-			<attribute name="orientation">
+			<attribute id="orientation">
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.JSplitPaneOrientationConverter"/>
 			</attribute>
-			<attribute name="dividerLocation">
+			<attribute id="dividerLocation">
 				<conv:integerConverter/>
 			</attribute>
 		</element>
@@ -142,11 +143,11 @@
 		<element tag="textfield"		objectClass="javax.swing.JTextField"/>
 		<element tag="desktoppane"		objectClass="javax.swing.JDesktopPane"/>
 		<element tag="internalframe"	objectClass="javax.swing.JInternalFrame">
-			<attribute name="title"><attributeAlias name="Title"/></attribute>
-			<attribute name="bounds"><attributeAlias name="Bounds"/></attribute>
-			<attribute name="layout"><attributeAlias name="Layout"/></attribute>
-			<attribute name="visible"><attributeAlias name="Visible"/></attribute>
-			<attribute name="resizable"><attributeAlias name="Resizable"/></attribute>
+			<attribute id="title"><attributeAlias name="Title"/></attribute>
+			<attribute id="bounds"><attributeAlias name="Bounds"/></attribute>
+			<attribute id="layout"><attributeAlias name="Layout"/></attribute>
+			<attribute id="visible"><attributeAlias name="Visible"/></attribute>
+			<attribute id="resizable"><attributeAlias name="Resizable"/></attribute>
 		</element>
 	</namespace>
 </root:module>

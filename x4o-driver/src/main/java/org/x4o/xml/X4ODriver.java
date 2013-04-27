@@ -29,8 +29,10 @@ import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.DefaultX4OSchemaWriter;
 import org.x4o.xml.io.DefaultX4OWriter;
 import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.io.X4OReaderContext;
 import org.x4o.xml.io.X4OSchemaWriter;
 import org.x4o.xml.io.X4OWriter;
+import org.x4o.xml.io.X4OWriterContext;
 
 import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguageContext;
@@ -66,6 +68,7 @@ public abstract class X4ODriver<T> {
 	abstract public String[] getLanguageVersions();
 	
 	
+	
 	protected X4OLanguage buildLanguage(String version) {
 		return X4ODriverManager.getDefaultBuildLanguage(this, version);
 	}
@@ -79,6 +82,7 @@ public abstract class X4ODriver<T> {
 	}
 	
 	
+	
 	public X4OSchemaWriter createSchemaWriter() {
 		return createSchemaWriter(getLanguageVersionDefault());
 	}
@@ -87,22 +91,42 @@ public abstract class X4ODriver<T> {
 		return new DefaultX4OSchemaWriter(createLanguageContext(version));
 	}
 	
+	
+	
 	public X4OReader<T> createReader() {
-		return createReader(getLanguageVersionDefault());
+		return createReaderContext();
 	}
 	
 	public X4OReader<T> createReader(String version) {
-		return new DefaultX4OReader<T>(createLanguageContext(version));
+		return createReaderContext(version);
 	}
 	
 	public X4OWriter<T> createWriter() {
-		return createWriter(getLanguageVersionDefault());
+		return createWriterContext();
 	}
 	
 	public X4OWriter<T> createWriter(String version) {
+		return createWriterContext(version);
+	}
+	
+	public X4OReaderContext<T> createReaderContext() {
+		return createReaderContext(getLanguageVersionDefault());
+	}
+	
+	public X4OReaderContext<T> createReaderContext(String version) {
+		return new DefaultX4OReader<T>(createLanguageContext(version));
+	}
+	
+	public X4OWriterContext<T> createWriterContext() {
+		return createWriterContext(getLanguageVersionDefault());
+	}
+	
+	public X4OWriterContext<T> createWriterContext(String version) {
 		return new DefaultX4OWriter<T>(createLanguageContext(version));
 	}
-
+	
+	
+	
 	public String getLanguageVersionDefault() {
 		return X4ODriverManager.getDefaultLanguageVersion(getLanguageVersions());
 	}

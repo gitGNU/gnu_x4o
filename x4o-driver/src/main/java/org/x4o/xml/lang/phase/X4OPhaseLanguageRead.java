@@ -82,11 +82,11 @@ public class X4OPhaseLanguageRead {
 		manager.addX4OPhase(new X4OPhaseReadXml());
 		
 		manager.addX4OPhase(new X4OPhaseReadConfigELBeans());
-//		if (elementLanguage.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 		
 		// meta start point
 //		manager.addX4OPhase(factory.startX4OPhase());
-//		if (elementLanguage.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 		
 		// config
 		X4OPhaseReadRunConfigurator runConf = new X4OPhaseReadRunConfigurator();
@@ -97,27 +97,27 @@ public class X4OPhaseLanguageRead {
 		
 		// run all attribute events
 		manager.addX4OPhase(new X4OPhaseReadRunAttribute());
-//		if (elementLanguage.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 		// templating
 		manager.addX4OPhase(new X4OPhaseReadFillTemplate());
-//		if (elementLanguage.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 
 		// transforming
 		manager.addX4OPhase(new X4OPhaseReadTransform());
 		manager.addX4OPhase(new X4OPhaseReadRunDirty(manager));
-//		if (elementLanguage.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 		
 		// binding elements
 		manager.addX4OPhase(new X4OPhaseReadBindElement());
 		
 		// runing and releasing
 		manager.addX4OPhase(new X4OPhaseReadRun());
-//		if (elementLanguage.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 		
 		manager.addX4OPhase(runConf);
 		
 		manager.addX4OPhase(new X4OPhaseReadRunDirtyLast(manager));
-//		if (elementLanguage.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 		
 		
 		manager.addX4OPhase(new X4OPhaseReadEnd());
@@ -126,9 +126,9 @@ public class X4OPhaseLanguageRead {
 		manager.addX4OPhase(releasePhase());
 		
 		// Add debug phase listener to all phases
-//		if (elementLanguage.hasX4ODebugWriter()) {
+//		if (languageContext.hasX4ODebugWriter()) {
 			//for (X4OPhase h:manager.getOrderedPhases()) {
-//				h.addPhaseListener(elementLanguage.getX4ODebugWriter().createDebugX4OPhaseListener());
+//				h.addPhaseListener(languageContext.getX4ODebugWriter().createDebugX4OPhaseListener());
 			//}
 		//}
 		
@@ -166,12 +166,12 @@ public class X4OPhaseLanguageRead {
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			// not used.
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			// print the properties and classes for this language/config
-			if (elementLanguage.hasX4ODebugWriter()) {
+			if (languageContext.hasX4ODebugWriter()) {
 				try {
-					elementLanguage.getX4ODebugWriter().debugLanguageProperties(elementLanguage);
-					elementLanguage.getX4ODebugWriter().debugLanguageDefaultClasses(elementLanguage);
+					languageContext.getX4ODebugWriter().debugLanguageProperties(languageContext);
+					languageContext.getX4ODebugWriter().debugLanguageDefaultClasses(languageContext);
 				} catch (ElementException e) {
 					throw new X4OPhaseException(this,e);
 				}
@@ -197,63 +197,63 @@ public class X4OPhaseLanguageRead {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			try {
 				//XMLParserConfiguration config = new XIncludeAwareParserConfiguration();
 				//config.setProperty("http://apache.org/xml/properties/internal/grammar-pool",myFullGrammarPool);
 				//SAXParser parser = new SAXParser(config);
 				
 				// Create Sax parser with x4o tag handler
-				X4OTagHandler xth = new X4OTagHandler(elementLanguage);
+				X4OTagHandler xth = new X4OTagHandler(languageContext);
 				XMLReader saxParser = XMLReaderFactory.createXMLReader();
-				saxParser.setErrorHandler(new X4OErrorHandler(elementLanguage));
-				saxParser.setEntityResolver(new X4OEntityResolver(elementLanguage));
+				saxParser.setErrorHandler(new X4OErrorHandler(languageContext));
+				saxParser.setEntityResolver(new X4OEntityResolver(languageContext));
 				saxParser.setContentHandler(xth);
 				saxParser.setProperty("http://xml.org/sax/properties/lexical-handler", xth);
 				saxParser.setProperty("http://xml.org/sax/properties/declaration-handler",xth);
 
 				// Set properties and optional 
-				Map<String,Object> saxParserProperties = elementLanguage.getLanguage().getLanguageConfiguration().getSAXParserProperties(elementLanguage);
+				Map<String,Object> saxParserProperties = languageContext.getLanguage().getLanguageConfiguration().getSAXParserProperties(languageContext);
 				for (Map.Entry<String,Object> entry:saxParserProperties.entrySet()) {
 					String name = entry.getKey();
 					Object value= entry.getValue();
 					saxParser.setProperty(name, value);
-					debugPhaseMessage("Set SAX property: "+name+" to: "+value,this,elementLanguage);
+					debugPhaseMessage("Set SAX property: "+name+" to: "+value,this,languageContext);
 				}
-				Map<String,Object> saxParserPropertiesOptional = elementLanguage.getLanguage().getLanguageConfiguration().getSAXParserPropertiesOptional(elementLanguage);
+				Map<String,Object> saxParserPropertiesOptional = languageContext.getLanguage().getLanguageConfiguration().getSAXParserPropertiesOptional(languageContext);
 				for (Map.Entry<String,Object> entry:saxParserPropertiesOptional.entrySet()) {
 					String name = entry.getKey();
 					Object value= entry.getValue();
 					try {
 						saxParser.setProperty(name, value);
-						debugPhaseMessage("Set SAX optional property: "+name+" to: "+value,this,elementLanguage);
+						debugPhaseMessage("Set SAX optional property: "+name+" to: "+value,this,languageContext);
 					} catch (SAXException e) {
-						debugPhaseMessage("Could not set optional SAX property: "+name+" to: "+value+" error: "+e.getMessage(),this,elementLanguage);
+						debugPhaseMessage("Could not set optional SAX property: "+name+" to: "+value+" error: "+e.getMessage(),this,languageContext);
 					}
 				}
 				
 				// Set sax features and optional
-				Map<String, Boolean> features = elementLanguage.getLanguage().getLanguageConfiguration().getSAXParserFeatures(elementLanguage);
+				Map<String, Boolean> features = languageContext.getLanguage().getLanguageConfiguration().getSAXParserFeatures(languageContext);
 				for (String key:features.keySet()) {
 					Boolean value=features.get(key);
 					saxParser.setFeature(key, value);
-					debugPhaseMessage("Set SAX feature: "+key+" to: "+value,this,elementLanguage);
+					debugPhaseMessage("Set SAX feature: "+key+" to: "+value,this,languageContext);
 				}
-				Map<String, Boolean> featuresOptional = elementLanguage.getLanguage().getLanguageConfiguration().getSAXParserFeaturesOptional(elementLanguage);
+				Map<String, Boolean> featuresOptional = languageContext.getLanguage().getLanguageConfiguration().getSAXParserFeaturesOptional(languageContext);
 				for (String key:featuresOptional.keySet()) {
 					Boolean value=featuresOptional.get(key);
 					try {
 						saxParser.setFeature(key, value);
-						debugPhaseMessage("Set SAX optional feature: "+key+" to: "+value,this,elementLanguage);
+						debugPhaseMessage("Set SAX optional feature: "+key+" to: "+value,this,languageContext);
 					} catch (SAXException e) {
-						debugPhaseMessage("Could not set optional SAX feature: "+key+" to: "+value+" error: "+e.getMessage(),this,elementLanguage);
+						debugPhaseMessage("Could not set optional SAX feature: "+key+" to: "+value+" error: "+e.getMessage(),this,languageContext);
 					}
 				}
 				
 				// check for required features
-				List<String> requiredFeatures = elementLanguage.getLanguage().getLanguageConfiguration().getSAXParserFeaturesRequired(elementLanguage);
+				List<String> requiredFeatures = languageContext.getLanguage().getLanguageConfiguration().getSAXParserFeaturesRequired(languageContext);
 				for (String requiredFeature:requiredFeatures) {
-					debugPhaseMessage("Checking required SAX feature: "+requiredFeature,this,elementLanguage);
+					debugPhaseMessage("Checking required SAX feature: "+requiredFeature,this,languageContext);
 					if (saxParser.getFeature(requiredFeature)==false) {
 						Exception e = new IllegalStateException("Missing required feature: "+requiredFeature);
 						throw new X4OPhaseException(this,e);
@@ -261,21 +261,21 @@ public class X4OPhaseLanguageRead {
 				}
 				
 				// Finally start parsing the xml input stream
-				Object requestInputSource = elementLanguage.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_OBJECT);
+				Object requestInputSource = languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_OBJECT);
 				InputSource input = null;
 				InputStream inputStream = null;
 				if (requestInputSource instanceof InputSource) {
 					input = (InputSource)requestInputSource;
 				} else {
-					inputStream = (InputStream)elementLanguage.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_STREAM);
+					inputStream = (InputStream)languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_STREAM);
 					input = new InputSource(inputStream);
 				}
 				
-				Object requestInputEncoding = elementLanguage.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_ENCODING);
+				Object requestInputEncoding = languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_ENCODING);
 				if (requestInputEncoding!=null && requestInputEncoding instanceof String) {
 					input.setEncoding(requestInputEncoding.toString());
 				}
-				Object requestSystemId = elementLanguage.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_SYSTEM_ID);
+				Object requestSystemId = languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_SYSTEM_ID);
 				if (requestSystemId!=null && requestSystemId instanceof String) {
 					input.setSystemId(requestSystemId.toString());
 				}
@@ -313,17 +313,17 @@ public class X4OPhaseLanguageRead {
 			// not used.
 		}
 		@SuppressWarnings("rawtypes")
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			try {
-				Map beanMap = (Map)elementLanguage.getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
+				Map beanMap = (Map)languageContext.getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
 				if (beanMap==null) {
 					return;
 				}
 				for (Object elName:beanMap.keySet()) {
 					Object o = beanMap.get(elName);
-					ValueExpression ve = elementLanguage.getExpressionLanguageFactory().createValueExpression(elementLanguage.getExpressionLanguageContext(),"${"+elName+"}", o.getClass());
-					ve.setValue(elementLanguage.getExpressionLanguageContext(), o);
-					debugPhaseMessage("Setting el bean: ${"+elName+"} to: "+o.getClass().getName(),this,elementLanguage);
+					ValueExpression ve = languageContext.getExpressionLanguageFactory().createValueExpression(languageContext.getExpressionLanguageContext(),"${"+elName+"}", o.getClass());
+					ve.setValue(languageContext.getExpressionLanguageContext(), o);
+					debugPhaseMessage("Setting el bean: ${"+elName+"} to: "+o.getClass().getName(),this,languageContext);
 				}
 			} catch (Exception e) {
 				throw new X4OPhaseException(this,e);
@@ -359,7 +359,7 @@ public class X4OPhaseLanguageRead {
 				for (String alias:aliases) {
 					if (element.getAttributes().containsKey(alias)) {
 						String attributeValue = element.getAttributes().get(alias);
-						element.getAttributes().put(eca.getName(), attributeValue);
+						element.getAttributes().put(eca.getId(), attributeValue);
 						element.getAttributes().remove(alias);		
 					}
 				}
@@ -520,7 +520,7 @@ public class X4OPhaseLanguageRead {
 						if (attrClass.getRunConverters()==null || attrClass.getRunConverters()) {
 							value = attrParser.getConvertedParameterValue(name, value, element);
 						}
-						if (attrClass.getRunBeanFill()==null || attrClass.getRunBeanFill()) {
+						if (attrClass.getRunBeanValue()==null || attrClass.getRunBeanValue()) {
 							element.getLanguageContext().getElementObjectPropertyValue().setProperty(element.getElementObject(), name, value);
 						}
 					} else if (autoAttributes) {
@@ -534,15 +534,15 @@ public class X4OPhaseLanguageRead {
 				}
 				// check for defaults
 				for (ElementClassAttribute attrClass:element.getElementClass().getElementClassAttributes()) {
-					if (attrClass.getDefaultValue()!=null && attr.containsKey(attrClass.getName())==false) {
+					if (attrClass.getDefaultValue()!=null && attr.containsKey(attrClass.getId())==false) {
 						Object value = null;
 						if (attrClass.getDefaultValue() instanceof String) {
-							value = attrParser.getParameterValue(attrClass.getName(),(String)attrClass.getDefaultValue(),element);
+							value = attrParser.getParameterValue(attrClass.getId(),(String)attrClass.getDefaultValue(),element);
 						} else {
 							value = attrClass.getDefaultValue();
 						}
-						if (attrClass.getRunBeanFill()==null || attrClass.getRunBeanFill()) {
-							element.getLanguageContext().getElementObjectPropertyValue().setProperty(element.getElementObject(), attrClass.getName(), value);
+						if (attrClass.getRunBeanValue()==null || attrClass.getRunBeanValue()) {
+							element.getLanguageContext().getElementObjectPropertyValue().setProperty(element.getElementObject(), attrClass.getId(), value);
 						}
 					}
 				}
@@ -752,11 +752,11 @@ public class X4OPhaseLanguageRead {
 		public boolean isElementPhase() {
 			return false;
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			for (RunConfigurator conf:runConf) {
 				try {
-					if (elementLanguage.hasX4ODebugWriter()) {
-						elementLanguage.getX4ODebugWriter().debugElementConfigurator(conf.elementConfigurator,conf.element);
+					if (languageContext.hasX4ODebugWriter()) {
+						languageContext.getX4ODebugWriter().debugElementConfigurator(conf.elementConfigurator,conf.element);
 					}
 					conf.elementConfigurator.doConfigElement(conf.element);
 				} catch (ElementException e) {
@@ -815,12 +815,12 @@ public class X4OPhaseLanguageRead {
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			// not used.
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			// print the properties and classes for this language/config
-			if (elementLanguage.hasX4ODebugWriter()) {
+			if (languageContext.hasX4ODebugWriter()) {
 				try {
-					elementLanguage.getX4ODebugWriter().debugLanguageProperties(elementLanguage);
-					elementLanguage.getX4ODebugWriter().debugLanguageDefaultClasses(elementLanguage);
+					languageContext.getX4ODebugWriter().debugLanguageProperties(languageContext);
+					languageContext.getX4ODebugWriter().debugLanguageDefaultClasses(languageContext);
 				} catch (ElementException e) {
 					throw new X4OPhaseException(this,e);
 				}
@@ -840,21 +840,21 @@ public class X4OPhaseLanguageRead {
 			/**
 			 * @see org.x4o.xml.lang.phase.X4OPhaseListener#preRunPhase(org.x4o.xml.lang.phase.X4OPhase, org.x4o.xml.lang.X4OLanguageContext)
 			 */
-			public void preRunPhase(X4OPhase phase,X4OLanguageContext elementLanguage) throws X4OPhaseException {
+			public void preRunPhase(X4OPhase phase,X4OLanguageContext languageContext) throws X4OPhaseException {
 				elementsReleased=0;
 			}
 			/**
 			 * @see org.x4o.xml.lang.phase.X4OPhaseListener#endRunPhase(org.x4o.xml.lang.phase.X4OPhase, org.x4o.xml.lang.X4OLanguageContext)
 			 */
-			public void endRunPhase(X4OPhase phase,X4OLanguageContext elementLanguage) throws X4OPhaseException {
-				if (elementLanguage.hasX4ODebugWriter()==false) {
+			public void endRunPhase(X4OPhase phase,X4OLanguageContext languageContext) throws X4OPhaseException {
+				if (languageContext.hasX4ODebugWriter()==false) {
 					return;
 				}
 				try {
 					AttributesImpl atts = new AttributesImpl();
 					atts.addAttribute ("", "elements", "", "", elementsReleased+"");
-					elementLanguage.getX4ODebugWriter().getDebugWriter().startElement (X4ODebugWriter.DEBUG_URI, "executeReleases", "", atts);
-					elementLanguage.getX4ODebugWriter().getDebugWriter().endElement (X4ODebugWriter.DEBUG_URI, "executeReleases" , "");
+					languageContext.getX4ODebugWriter().getDebugWriter().startElement (X4ODebugWriter.DEBUG_URI, "executeReleases", "", atts);
+					languageContext.getX4ODebugWriter().getDebugWriter().endElement (X4ODebugWriter.DEBUG_URI, "executeReleases" , "");
 				} catch (SAXException e) {
 					throw new X4OPhaseException(phase,e);
 				}
@@ -876,7 +876,7 @@ public class X4OPhaseLanguageRead {
 			public String[] getPhaseDependencies() {
 				return new String[] {"READ_END"};
 			}
-			public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+			public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			}
 			public void runElementPhase(Element element) throws X4OPhaseException  {
 				try {
@@ -912,23 +912,23 @@ public class X4OPhaseLanguageRead {
 			}
 			public void runElementPhase(Element element) throws X4OPhaseException {
 			}
-			public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+			public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 				// safety check
-				if (elementLanguage.hasX4ODebugWriter()==false) {
+				if (languageContext.hasX4ODebugWriter()==false) {
 					throw new X4OPhaseException(this,"Use debugPhase only when X4OParser.debugWriter is filled.");
 				}
 				try {
 					AttributesImpl atts = new AttributesImpl();
 					//atts.addAttribute ("", key, "", "", value);
 					//atts.addAttribute ("", "verbose", "", "", "true");
-					elementLanguage.getX4ODebugWriter().getDebugWriter().startElement (X4ODebugWriter.DEBUG_URI, "printElementTree", "", atts);
+					languageContext.getX4ODebugWriter().getDebugWriter().startElement (X4ODebugWriter.DEBUG_URI, "printElementTree", "", atts);
 					startedPrefix.clear();
-					printXML(elementLanguage.getRootElement());
+					printXML(languageContext.getRootElement());
 					for (String prefix:startedPrefix) {
-						elementLanguage.getX4ODebugWriter().getDebugWriter().endPrefixMapping(prefix);
+						languageContext.getX4ODebugWriter().getDebugWriter().endPrefixMapping(prefix);
 					}
-					elementLanguage.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "printElementTree", "");
-					elementLanguage.getX4ODebugWriter().debugElementLanguage(elementLanguage);
+					languageContext.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "printElementTree", "");
+					languageContext.getX4ODebugWriter().debugLanguageContext(languageContext);
 				} catch (SAXException e) {
 					throw new X4OPhaseException(this,e);
 				}

@@ -282,9 +282,9 @@ public class EldXsdXmlWriter {
 		
 		List<String> attrNames = new ArrayList<String>(30);
 		for (ElementClassAttribute eca:ec.getElementClassAttributes()) {
-			attrNames.add(eca.getName());
+			attrNames.add(eca.getId());
 			atts = new AttributesImpl();
-			atts.addAttribute ("", "name", "", "", eca.getName());
+			atts.addAttribute ("", "name", "", "", eca.getId());
 			atts.addAttribute ("", "type", "", "", "string");
 			if (eca.getRequired()!=null && eca.getRequired()) {
 				atts.addAttribute ("", "use", "", "", "required");	

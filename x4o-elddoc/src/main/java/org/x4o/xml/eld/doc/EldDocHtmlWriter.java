@@ -807,7 +807,7 @@ public class EldDocHtmlWriter {
 	private void printElementAttributes(PrintWriter pw,Collection<ElementClassAttribute> elementClassAttributes) {
 		printTableStart(pw,"Element Attributes");
 		for (ElementClassAttribute attr:elementClassAttributes) {
-			printTableRowSummary(pw,attr.getName(),attr.getDescription());
+			printTableRowSummary(pw,attr.getId(),attr.getDescription());
 		}
 		printTableEnd(pw);
 	}

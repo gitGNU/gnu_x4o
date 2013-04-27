@@ -7,7 +7,7 @@
 	ModuleName:		Element Language Definition
 	Namespaces:		3
 	Namespace:		http://eld.x4o.org/xml/ns/eld-conv
-	Created on:		Mon Apr 08 02:26:14 CEST 2013
+	Created on:		Sat Apr 27 20:06:33 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://eld.x4o.org/xml/ns/eld-conv"

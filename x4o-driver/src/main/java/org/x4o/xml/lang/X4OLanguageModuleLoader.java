@@ -23,12 +23,9 @@
 
 package org.x4o.xml.lang;
 
-
-
 /**
- * Provides elements from tag.<br>
- * And ElementClass from a tag.<br>
- * 
+ * X4OLanguageModuleLoader Loads all elements and other options
+ * into the X4OLanguageModule for the X4OLanguageLocal language.
  * 
  * @author Willem Cazander
  * @version 1.0 Jul 8, 2006

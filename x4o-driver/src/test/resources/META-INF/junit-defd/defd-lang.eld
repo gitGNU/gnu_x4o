@@ -55,7 +55,7 @@
 	
 	<eld:elementInterface id="Component" interfaceClass="java.awt.Component">
 		<eld:description>Configs the Component based objects.</eld:description>
-		<eld:attribute name="bounds">
+		<eld:attribute id="bounds">
 			<conv:stringSplitConverter classTo="java.awt.Rectangle"  split="," splitSize="4" singleToMethod="setRect" useNativeType="true">
 				<conv:stringSplitConverterStep fromMethod="getX"		fromOrder="1" toOrder="1"><conv:doubleConverter/></conv:stringSplitConverterStep>
 				<conv:stringSplitConverterStep fromMethod="getY"		fromOrder="2" toOrder="2"><conv:doubleConverter/></conv:stringSplitConverterStep>

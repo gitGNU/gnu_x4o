@@ -22,7 +22,7 @@
  */
 
 /**
- * The X4O XML Element interfaces.
+ * The XML Element definitions.
  * 
  *
  * @since 1.0

@@ -43,6 +43,7 @@ import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.phase.DefaultX4OPhaseManager;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageInit;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageRead;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageWrite;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -92,7 +93,7 @@ public final class X4ODriverManager {
 		DefaultX4OPhaseManager manager = new DefaultX4OPhaseManager();
 		new X4OPhaseLanguageInit().createPhases(manager);
 		new X4OPhaseLanguageRead().createPhases(manager);
-		//new X4OPhaseLanguageWrite().createPhases(manager);
+		new X4OPhaseLanguageWrite().createPhases(manager);
 		return manager;
 	}
 	

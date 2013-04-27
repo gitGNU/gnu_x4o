@@ -22,7 +22,7 @@
  */
 
 /**
- * Provides interfaces for two way object converters.
+ * The X4O XML Driver program interface.
  * 
  *
  * @since 1.0

@@ -22,7 +22,7 @@
  */
 
 /**
- * Provides default java text converters.
+ * Provides implementations of object to text converters.
  * 
  *
  * @since 1.0

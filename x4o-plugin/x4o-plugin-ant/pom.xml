@@ -121,7 +121,7 @@
                   <target>
                     <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF"/>
                     <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
-                    <writeLanguageSchema destdir="${coredir}/cel" languageName="eld"/>
+                    <writeLanguageSchema destdir="${coredir}/eld" languageName="eld"/>
                   </target>
                 </configuration>
                 <goals>

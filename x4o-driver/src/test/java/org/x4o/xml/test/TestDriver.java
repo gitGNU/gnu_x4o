@@ -47,12 +47,4 @@ public class TestDriver extends X4ODriver<TestObjectRoot> {
 	static public TestDriver getInstance() {
 		return (TestDriver)X4ODriverManager.getX4ODriver(LANGUAGE_NAME);
 	}
-	
-	public X4OReaderContext<TestObjectRoot> createReaderContext() {
-		return (X4OReaderContext<TestObjectRoot>)super.createReader();
-	}
-	
-	public X4OWriterContext<TestObjectRoot> createWriterContext() {
-		return (X4OWriterContext<TestObjectRoot>)super.createWriter();
-	}
 }

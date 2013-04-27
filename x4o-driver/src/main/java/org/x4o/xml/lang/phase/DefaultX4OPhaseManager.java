@@ -68,6 +68,16 @@ PHASE_ORDER = {	*startupX4OPhase,
 * = runOnce
 	
 */
+	
+	public X4OPhase getPhase(String phaseName) {
+		for (X4OPhase phase:x4oPhases) {
+			if (phase.getId().equals(phaseName)) {
+				return phase;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Adds an X4OPhaseHandler.
 	 * @param phase	The X4OPhaseHandler to add.
@@ -333,7 +343,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 * @throws X4OPhaseException
 	 */
 	private void executePhaseTree(Element element,X4OPhase phase) throws X4OPhaseException {
-		if (element.getElementClass().getSkipPhases().contains(phase.getId())==false) {
+		if (element.getElementClass()!=null && element.getElementClass().getSkipPhases().contains(phase.getId())==false) {
 			phase.runElementPhase(element);	
 		}
 		for (Element e:element.getChilderen()) {

@@ -35,18 +35,6 @@ import org.x4o.xml.conv.ObjectConverter;
  * @version 1.0 Aug 11, 2005
  */
 public interface ElementClassAttribute extends ElementMetaBase {
-		
-	/**
-	 * Gets the attribute name of the ElementClass.
-	 * @return The name.
-	 */
-	String getName();
-	
-	/**
-	 * Sets the attribute name of the ElementClass.
-	 * @param name	The name of the attribute.
-	 */
-	void setName(String name);
 	
 	/**
 	 * Gets the ObjectConverter.
@@ -123,12 +111,22 @@ public interface ElementClassAttribute extends ElementMetaBase {
 	void setRunConverters(Boolean runConverters);
 
 	/**
-	 * @return the runBeanFill.
+	 * @return the runBeanValue.
 	 */
-	Boolean getRunBeanFill();
+	Boolean getRunBeanValue();
 
 	/**
-	 * @param runBeanFill the runBeanFill to set.
+	 * @param runBeanValue the runBeanValue to set.
 	 */
-	void setRunBeanFill(Boolean runBeanFill);
+	void setRunBeanValue(Boolean runBeanValue);
+	
+	/**
+	 * @return the writeOrder
+	 */
+	Integer getWriteOrder();
+
+	/**
+	 * @param writeOrder the writeOrder to set
+	 */
+	void setWriteOrder(Integer writeOrder);
 }

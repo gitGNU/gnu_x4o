@@ -22,7 +22,7 @@
  */
 
 /**
- * The X4O EL Support classes.
+ * The Expression Language classes.
  * 
  *
  * @since 1.0

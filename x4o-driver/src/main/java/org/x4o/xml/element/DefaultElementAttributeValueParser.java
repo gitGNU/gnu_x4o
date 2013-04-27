@@ -86,7 +86,7 @@ public class DefaultElementAttributeValueParser implements ElementAttributeValue
 		for (ElementInterface ei:element.getLanguageContext().getLanguage().findElementInterfaces(element.getElementObject())) {
 			logger.finer("Found interface match executing converter.");
 			for (ElementClassAttribute attrClass:ei.getElementClassAttributes()) {
-				if (name.equals(attrClass.getName())==false) {
+				if (name.equals(attrClass.getId())==false) {
 					continue;
 				}
 				if (attrClass.getObjectConverter()==null) {

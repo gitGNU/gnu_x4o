@@ -22,7 +22,7 @@
  */
 
 /**
- * The X4O ELD Language x4o classes.
+ * The Element Language Definition language elements.
  * 
  *
  * @since 1.0

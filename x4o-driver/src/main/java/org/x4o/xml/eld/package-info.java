@@ -22,7 +22,7 @@
  */
 
 /**
- * The X4O Element Language Definition parser.
+ * The Element Language Definition drivers.
  * 
  *
  * @since 1.0

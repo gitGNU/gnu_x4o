@@ -254,8 +254,7 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	private ElementClassAttribute createElementClassAttribute(X4OLanguage language,String name,boolean required,ObjectConverter converter) throws X4OLanguageModuleLoaderException {
 		try {
 			ElementClassAttribute result = (ElementClassAttribute)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementClassAttribute());
-			result.setId(name); // ??
-			result.setName(name);
+			result.setId(name);
 			if (required) {
 				result.setRequired(required);
 			}

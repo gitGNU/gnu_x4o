@@ -22,7 +22,7 @@
  */
 
 /**
- * The X4O XML Meta Language.
+ * The XML Meta Language.
  * 
  *
  * @since 1.0

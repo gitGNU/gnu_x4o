@@ -22,7 +22,7 @@
  */
 
 /**
- * Sax interface based classes.
+ * The Sax based classes and interfaces.
  *
  * @since 1.0
  */

@@ -44,7 +44,8 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	private Boolean runResolveEL = null;
 	//private Boolean runInterfaces = null;
 	private Boolean runConverters = null;
-	private Boolean runBeanFill = null;
+	private Boolean runBeanValue = null;
+	private Integer writeOrder = null;
 
 	public AbstractElementClassAttribute() {
 		attributeAliases = new ArrayList<String>(3);
@@ -156,16 +157,30 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	}
 
 	/**
-	 * @return the runBeanFill
+	 * @return the runBeanValue
 	 */
-	public Boolean getRunBeanFill() {
-		return runBeanFill;
+	public Boolean getRunBeanValue() {
+		return runBeanValue;
 	}
 
 	/**
-	 * @param runBeanFill the runBeanFill to set
+	 * @param runBeanValue the runBeanValue to set
 	 */
-	public void setRunBeanFill(Boolean runBeanFill) {
-		this.runBeanFill = runBeanFill;
+	public void setRunBeanValue(Boolean runBeanValue) {
+		this.runBeanValue = runBeanValue;
+	}
+
+	/**
+	 * @return the writeOrder
+	 */
+	public Integer getWriteOrder() {
+		return writeOrder;
+	}
+
+	/**
+	 * @param writeOrder the writeOrder to set
+	 */
+	public void setWriteOrder(Integer writeOrder) {
+		this.writeOrder = writeOrder;
 	}
 }

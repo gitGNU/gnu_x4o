@@ -66,7 +66,7 @@ public abstract class AbstractElementClassBase extends AbstractElementMetaBase i
 	 * @param elementClassAttribute The ElementClassAttribute to add.
 	 */
 	public void addElementClassAttribute(ElementClassAttribute elementClassAttribute) {
-		elementClassAttributes.put(elementClassAttribute.getName(),elementClassAttribute);
+		elementClassAttributes.put(elementClassAttribute.getId(),elementClassAttribute);
 	}
 	
 	/**

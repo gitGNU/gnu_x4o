@@ -74,7 +74,7 @@ public class X4OPhaseLanguageInit {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException  {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException  {
 			logger.finest("Run init start phase");
 		}
 	};
@@ -98,14 +98,14 @@ public class X4OPhaseLanguageInit {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException  {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException  {
 			try {
 				//debugPhaseMessage("Loading main language: "+elementLanguage.getLanguage(),this,elementLanguage);
-				X4OLanguageLoader loader = (X4OLanguageLoader)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguage().getLanguageConfiguration().getDefaultLanguageLoader());
-				loader.loadLanguage((X4OLanguageLocal)elementLanguage.getLanguage(),elementLanguage.getLanguage().getLanguageName(),elementLanguage.getLanguage().getLanguageVersion());
+				X4OLanguageLoader loader = (X4OLanguageLoader)X4OLanguageClassLoader.newInstance(languageContext.getLanguage().getLanguageConfiguration().getDefaultLanguageLoader());
+				loader.loadLanguage((X4OLanguageLocal)languageContext.getLanguage(),languageContext.getLanguage().getLanguageName(),languageContext.getLanguage().getLanguageVersion());
 				
-				if (elementLanguage.hasX4ODebugWriter()) {
-					elementLanguage.getX4ODebugWriter().debugElementLanguageModules(elementLanguage);
+				if (languageContext.hasX4ODebugWriter()) {
+					languageContext.getX4ODebugWriter().debugElementLanguageModules(languageContext);
 				}
 			} catch (Exception e) {
 				throw new X4OPhaseException(this,e);
@@ -131,22 +131,22 @@ public class X4OPhaseLanguageInit {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			try {
 				List<X4OLanguageModuleLoaderSibling> siblingLoaders = new ArrayList<X4OLanguageModuleLoaderSibling>(3);
-				for (X4OLanguageModule module:elementLanguage.getLanguage().getLanguageModules()) {	
+				for (X4OLanguageModule module:languageContext.getLanguage().getLanguageModules()) {	
 					if (module.getLanguageModuleLoader() instanceof X4OLanguageModuleLoaderSibling) {
 						siblingLoaders.add((X4OLanguageModuleLoaderSibling)module.getLanguageModuleLoader());
 					}
 				}
 				if (siblingLoaders.isEmpty()==false) {
-					X4OLanguageLoader loader = (X4OLanguageLoader)X4OLanguageClassLoader.newInstance(elementLanguage.getLanguage().getLanguageConfiguration().getDefaultLanguageLoader());
+					X4OLanguageLoader loader = (X4OLanguageLoader)X4OLanguageClassLoader.newInstance(languageContext.getLanguage().getLanguageConfiguration().getDefaultLanguageLoader());
 					for (X4OLanguageModuleLoaderSibling siblingLoader:siblingLoaders) {
 						//debugPhaseMessage("Loading sibling langauge loader: "+siblingLoader,this,elementLanguage);
-						siblingLoader.loadLanguageSibling((X4OLanguageLocal)elementLanguage.getLanguage(), loader);
+						siblingLoader.loadLanguageSibling((X4OLanguageLocal)languageContext.getLanguage(), loader);
 					}
-					if (elementLanguage.hasX4ODebugWriter()) {
-						elementLanguage.getX4ODebugWriter().debugElementLanguageModules(elementLanguage);
+					if (languageContext.hasX4ODebugWriter()) {
+						languageContext.getX4ODebugWriter().debugElementLanguageModules(languageContext);
 					}
 				}
 			} catch (Exception e) {
@@ -173,7 +173,7 @@ public class X4OPhaseLanguageInit {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException  {
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException  {
 			logger.finest("Run init end phase");
 		}
 	};

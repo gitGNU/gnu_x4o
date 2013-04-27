@@ -62,10 +62,17 @@ public class X4OWriterTest extends TestCase {
 		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
 		writer.writeFile(root, outputFile);
 		
-		assertTrue("Debug file does not exists.",outputFile.exists());
-		
 		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
-		System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
+		
+		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+		assertTrue(text.contains("http://test.x4o.org/xml/ns/test-root"));
+		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
+		assertTrue(text.contains("<test-lang:testBean"));
+		assertTrue(text.contains("privateIntegerTypeField=\"123\""));
+		assertTrue(text.contains("privateDoubleObjectField=\"123.45\""));
+		assertTrue(text.contains("privateStringObjectField=\"x4o\""));
+		
+		//System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
 		
 		outputFile.delete();
 	}

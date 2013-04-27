@@ -7,7 +7,7 @@
 	ModuleName:		Core Element Languag Module
 	Namespaces:		2
 	Namespace:		http://cel.x4o.org/xml/ns/cel-core
-	Created on:		Tue Jan 08 06:02:28 CET 2013
+	Created on:		Sat Apr 27 20:01:59 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://cel.x4o.org/xml/ns/cel-core"
@@ -19,12 +19,12 @@
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
 		<attribute name="name" type="string"/>
+		<attribute name="prefixMapping" type="string"/>
+		<attribute name="languageRoot" type="boolean"/>
 		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
 		<attribute name="schemaPrefix" type="string"/>
-		<attribute name="languageRoot" type="boolean"/>
-		<attribute name="prefixMapping" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -44,11 +44,11 @@
 		</choice>
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
-		<attribute name="schemaContentBase" type="string"/>
-		<attribute name="autoAttributes" type="boolean"/>
+		<attribute name="tag" type="string"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
-		<attribute name="tag" type="string"/>
+		<attribute name="schemaContentBase" type="string"/>
+		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -81,12 +81,13 @@
 			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="name" type="string"/>
-		<attribute name="objectConverter" type="string"/>
-		<attribute name="runResolveEL" type="boolean"/>
-		<attribute name="runConverters" type="boolean"/>
-		<attribute name="runBeanFill" type="boolean"/>
 		<attribute name="required" type="boolean"/>
 		<attribute name="defaultValue" type="string"/>
+		<attribute name="runConverters" type="boolean"/>
+		<attribute name="objectConverter" type="string"/>
+		<attribute name="runBeanValue" type="boolean"/>
+		<attribute name="runResolveEL" type="boolean"/>
+		<attribute name="writeOrder" type="integer"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -119,15 +120,70 @@
 		<attribute name="uri" type="string"/>
 		<anyAttribute/>
 	</complexType>
-	<element name="namespace" type="this:namespaceType"/>
-	<element name="description" type="this:descriptionType"/>
-	<element name="element" type="this:elementType"/>
-	<element name="configuratorGlobal" type="this:configuratorGlobalType"/>
-	<element name="configurator" type="this:configuratorType"/>
-	<element name="attributeHandler" type="this:attributeHandlerType"/>
-	<element name="attribute" type="this:attributeType"/>
-	<element name="classConverter" type="this:classConverterType"/>
-	<element name="bindingHandler" type="this:bindingHandlerType"/>
-	<element name="elementInterface" type="this:elementInterfaceType"/>
-	<element name="elementParent" type="this:elementParentType"/>
+	<element name="namespace" type="this:namespaceType">
+		<annotation>
+			<documentation xml:lang="en">Defines an xml namespace.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="description" type="this:descriptionType">
+		<annotation>
+			<documentation xml:lang="en">Adds description as text on all eld elements.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="element" type="this:elementType">
+		<annotation>
+			<documentation xml:lang="en">Defines xml element tag.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="configuratorGlobal" type="this:configuratorGlobalType">
+		<annotation>
+			<documentation xml:lang="en">Define generic global configuator for languge.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="configurator" type="this:configuratorType">
+		<annotation>
+			<documentation xml:lang="en">Define generic configurator for language.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="attributeHandler" type="this:attributeHandlerType">
+		<annotation>
+			<documentation xml:lang="en">Defines generic attribute handler for language.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="attribute" type="this:attributeType">
+		<annotation>
+			<documentation xml:lang="en">Defines xml element attribute.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="classConverter" type="this:classConverterType">
+		<annotation>
+			<documentation xml:lang="en">Converts string attribute to java class instance.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="bindingHandler" type="this:bindingHandlerType">
+		<annotation>
+			<documentation xml:lang="en">Defines generic binding handler for languge.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="elementInterface" type="this:elementInterfaceType">
+		<annotation>
+			<documentation xml:lang="en">Defines element interface class.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="elementParent" type="this:elementParentType">
+		<annotation>
+			<documentation xml:lang="en">Added (meta) element parent.
+			</documentation>
+		</annotation>
+	</element>
 </schema>

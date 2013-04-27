@@ -39,6 +39,8 @@ import org.x4o.xml.lang.X4OLanguageContext;
  */
 public interface X4OPhaseManager {
 	
+	X4OPhase getPhase(String phaseName);
+	
 	/**
 	 * Returns all the X4OPhaseHandlers.
 	 * @return	Returns all X4OPhaseHandlers.

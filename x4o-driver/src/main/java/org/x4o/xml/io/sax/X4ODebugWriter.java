@@ -422,7 +422,7 @@ public class X4ODebugWriter {
 		}
 	}
 	
-	public void debugElementLanguage(X4OLanguageContext elementLanguage) throws SAXException {
+	public void debugLanguageContext(X4OLanguageContext elementLanguage) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		//atts.addAttribute ("", key, "", "", value);
 		atts.addAttribute ("", "language", "", "", elementLanguage.getLanguage().getLanguageName());
@@ -484,11 +484,11 @@ public class X4ODebugWriter {
 	private void debugElementClassAttributes(Collection<ElementClassAttribute> elementClassAttributes) throws SAXException {
 		for (ElementClassAttribute elementClassAttribute:elementClassAttributes) {
 			AttributesImpl atts = new AttributesImpl();
-			atts.addAttribute ("", "attributeName", "", "", elementClassAttribute.getName());
+			atts.addAttribute ("", "id", "", "", elementClassAttribute.getId());
 			atts.addAttribute ("", "description", "", "", elementClassAttribute.getDescription());
 			atts.addAttribute ("", "className", "", "", elementClassAttribute.getClass().getName());
 			atts.addAttribute ("", "defaultValue", "", "", ""+elementClassAttribute.getDefaultValue());
-			atts.addAttribute ("", "runBeanFill", "", "", ""+elementClassAttribute.getRunBeanFill());
+			atts.addAttribute ("", "runBeanValue", "", "", ""+elementClassAttribute.getRunBeanValue());
 			atts.addAttribute ("", "runConverters", "", "", ""+elementClassAttribute.getRunConverters());
 			//atts.addAttribute ("", "runInterfaces", "", "", ""+elementClassAttribute.getRunInterfaces());
 			atts.addAttribute ("", "runResolveEL", "", "", ""+elementClassAttribute.getRunResolveEL());

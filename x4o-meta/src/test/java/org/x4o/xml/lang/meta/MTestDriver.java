@@ -25,8 +25,6 @@ package org.x4o.xml.lang.meta;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.io.X4OReaderContext;
-import org.x4o.xml.io.X4OWriterContext;
 
 public class MTestDriver extends X4ODriver<Object> {
 
@@ -45,13 +43,5 @@ public class MTestDriver extends X4ODriver<Object> {
 	
 	static public MTestDriver getInstance() {
 		return (MTestDriver)X4ODriverManager.getX4ODriver(LANGUAGE_NAME);
-	}
-	
-	public X4OReaderContext<?> createReaderContext() {
-		return (X4OReaderContext<?>)super.createReader();
-	}
-	
-	public X4OWriterContext<?> createWriterContext() {
-		return (X4OWriterContext<?>)super.createWriter();
 	}
 }

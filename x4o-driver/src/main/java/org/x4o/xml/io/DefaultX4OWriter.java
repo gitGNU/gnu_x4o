@@ -36,16 +36,16 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.x4o.xml.element.Element;
-import org.x4o.xml.element.ElementBindingHandler;
-import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
+import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespaceContext;
-import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.element.ElementObjectPropertyValueException;
 import org.x4o.xml.io.sax.XMLWriter;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.phase.X4OPhaseException;
+import org.x4o.xml.lang.phase.X4OPhaseType;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -57,24 +57,20 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 
-	public DefaultX4OWriter(X4OLanguageContext elementLanguage) {
-		super(elementLanguage);
+	public DefaultX4OWriter(X4OLanguageContext languageContext) {
+		super(languageContext);
 	}
 
-	public void writeContext(X4OLanguageContext context,OutputStream out) throws ParserConfigurationException,
+	public void writeContext(X4OLanguageContext languageContext,OutputStream out) throws ParserConfigurationException,
 			FileNotFoundException, SecurityException, NullPointerException,
 			SAXException, IOException {
 		
-		Element root = getLanguageContext().getRootElement();
-		if (root.getElementClass()==null) {
-			try {
-				root = fillElementTree(root.getElementObject());
-			} catch (ElementNamespaceInstanceProviderException e) {
-				throw new SAXException(e);
-			} catch (ElementBindingHandlerException e) {
-				throw new SAXException(e);
-			}
+		try {
+			languageContext.getLanguage().getPhaseManager().runPhases(languageContext, X4OPhaseType.XML_WRITE);
+		} catch (X4OPhaseException e1) {
+			throw new SAXException(e1);
 		}
+		Element root = languageContext.getRootElement();
 		
 		XMLWriter writer = new XMLWriter(out);
 		writer.startDocument();
@@ -120,9 +116,6 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 			if (m.getName().startsWith("get")==false) {
 				continue;
 			}
-			if(m.getName().startsWith("getLocationOnScreen")) {
-				continue; // TODO: rm this
-			}
 			String name = m.getName().substring(3,4).toLowerCase()+m.getName().substring(4);
 			result.add(name);
 			
@@ -135,15 +128,37 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 		
 		if (element.getElementClass().getAutoAttributes()!=null && element.getElementClass().getAutoAttributes()==false) {
 			for (ElementClassAttribute eca:element.getElementClass().getElementClassAttributes()) {
-				Object value = element.getLanguageContext().getElementObjectPropertyValue().getProperty(element.getElementObject(),eca.getName());
+				if (eca.getRunBeanValue()!=null && eca.getRunBeanValue()==false) {
+					continue;
+				}
+				
+				Object value = element.getLanguageContext().getElementObjectPropertyValue().getProperty(element.getElementObject(),eca.getId());
 				if (value==null) {
 					continue;
 				}
-				atts.addAttribute ("", eca.getName(), "", "", ""+value);
+				atts.addAttribute ("", eca.getId(), "", "", ""+value);
 			}
 			
 		} else {
 			for (String p:getProperties(element.getElementObject().getClass())) {
+
+				ElementClassAttribute eca = element.getElementClass().getElementClassAttributeByName(p);
+				if (eca!=null && eca.getRunBeanValue()!=null && eca.getRunBeanValue()) {
+					continue;
+				}
+				boolean writeValue = true;
+				for (ElementInterface ei:element.getLanguageContext().getLanguage().findElementInterfaces(element.getElementObject().getClass())) {
+					eca = ei.getElementClassAttributeByName(p);
+					if (eca!=null && eca.getRunBeanValue()!=null && eca.getRunBeanValue()==false) {
+						writeValue = false;
+						break;
+					}
+				}
+				if (writeValue==false) {
+					continue;
+				}
+				
+				// TODO: check attr see reader
 				Object value = element.getLanguageContext().getElementObjectPropertyValue().getProperty(element.getElementObject(),p);
 				if (value==null) {
 					continue;
@@ -164,7 +179,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	}
 	
 	private String findElementUri(Element e) {
-		for (X4OLanguageModule mod:e.getLanguageContext().getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:getLanguageContext().getLanguage().getLanguageModules()) {
 			for (ElementNamespaceContext c:mod.getElementNamespaceContexts()) {
 				ElementClass ec = c.getElementClass(e.getElementClass().getTag());
 				if (ec!=null) {
@@ -176,57 +191,11 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	}
 	
 	private String findNamespacePrefix(Element e,String uri) {
-		ElementNamespaceContext ns = e.getLanguageContext().getLanguage().findElementNamespaceContext(uri);
+		ElementNamespaceContext ns = getLanguageContext().getLanguage().findElementNamespaceContext(uri);
 		if (ns.getPrefixMapping()!=null) {
 			return ns.getPrefixMapping();
 		}
 		return ns.getId();
 	}
-	
-	private Element fillElementTree(Object object) throws ElementNamespaceInstanceProviderException, ElementBindingHandlerException {
-		Element element = findRootElement(object.getClass());
-		element.setElementObject(object);
-		
-		for (ElementBindingHandler bind:getLanguageContext().getLanguage().findElementBindingHandlers(object)) {
-			bind.createChilderen(element);
-			fillTree(element);
-		}
-		return element;
-	}
-	
-	private void fillTree(Element element) throws ElementNamespaceInstanceProviderException, ElementBindingHandlerException {
-		for (Element e:element.getChilderen()) {
-			Object object = e.getElementObject();
-			for (ElementBindingHandler bind:getLanguageContext().getLanguage().findElementBindingHandlers(object)) {
-				bind.createChilderen(e);
-				fillTree(e);
-			}
-		}
-	}
-	
-	
-	private Element findRootElement(Class<?> objectClass) throws ElementNamespaceInstanceProviderException {
-		// redo this mess, add nice find for root
-		for (X4OLanguageModule modContext:getLanguageContext().getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
-				if (nsContext.getLanguageRoot()!=null && nsContext.getLanguageRoot()) {
-					for (ElementClass ec:nsContext.getElementClasses()) {
-						if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
-							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(getLanguageContext(), ec.getTag());
-						}
-					}
-				}
-			}
-		}
-		for (X4OLanguageModule modContext:getLanguageContext().getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
-				for (ElementClass ec:nsContext.getElementClasses()) {
-					if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
-						return nsContext.getElementNamespaceInstanceProvider().createElementInstance(getLanguageContext(), ec.getTag());
-					}
-				}
-			}
-		}
-		throw new IllegalArgumentException("Could not find ElementClass for: "+objectClass.getName());
-	}
+
 }
