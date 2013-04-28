@@ -29,8 +29,8 @@
 	xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://eld.x4o.org/xml/ns/eld-root http://eld.x4o.org/xml/ns/eld-root-1.0.xsd"
-	providerName="swixml2.test.x4o.org"
-	name="Swixml2 Language"
+	providerHost="swixml2.test.x4o.org"
+	providerName="Swixml2 Language"
 	id="swixml2-module"
 	>
 	
@@ -88,25 +88,12 @@
 	</elementInterface>
 		
 		
-	<namespace
-		uri="http://swixml.x4o.org/xml/ns/swixml-root"
-		schemaUri="http://swixml.x4o.org/xml/ns/swixml-root-2.0.xsd"
-		schemaResource="swixml-root-2.0.xsd"
-		schemaPrefix="sx-root"
-		name="Root element"
-		languageRoot="true"
-		id="sx-root"
-		>
-		<!-- Single element in language root to create nice tree, for imports in xsd namespace aware generated files. -->
-		<element tag="frame"			objectClass="javax.swing.JFrame"/>
+	<namespace id="root" languageRoot="true">
+		<element tag="frame"			objectClass="javax.swing.JFrame">
+			<description>Single element in language root to create nice tree, for imports in xsd namespace aware generated files.</description>
+		</element>
 	</namespace>
-	<namespace
-		uri="http://swixml.x4o.org/xml/ns/swixml-lang"
-		schemaUri="http://swixml.x4o.org/xml/ns/swixml-lang-2.0.xsd"
-		schemaResource="swixml-lang-2.0.xsd"
-		schemaPrefix="sx-lang"
-		id="sx-lang"
-		>
+	<namespace id="lang">
 		<!-- Note frame should not be here(it can but xsd needs root), but else classic xml does not parse without xmlns additions.  -->
 		<element tag="frame"			objectClass="javax.swing.JFrame"/>
 		<element tag="menubar"			objectClass="javax.swing.JMenuBar"/>

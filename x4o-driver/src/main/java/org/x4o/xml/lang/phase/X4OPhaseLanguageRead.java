@@ -981,11 +981,11 @@ public class X4OPhaseLanguageRead {
 					handler.startPrefixMapping(prefix, nameSpace);
 					startedPrefix.add(prefix);
 				}
-				handler.startElement (nameSpace, element.getElementClass().getTag(), "", atts);
+				handler.startElement (nameSpace, element.getElementClass().getId(), "", atts);
 				for (Element e:element.getAllChilderen()) {
 					printXML(e);
 				}
-				handler.endElement (nameSpace, element.getElementClass().getTag(), "");
+				handler.endElement (nameSpace, element.getElementClass().getId(), "");
 			}
 		};
 		return result;

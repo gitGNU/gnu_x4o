@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.x4o.xml.conv.ObjectConverter;
 import org.x4o.xml.conv.text.ClassConverter;
 
+import org.x4o.xml.eld.lang.AttributeAliasElement;
 import org.x4o.xml.eld.lang.BeanElement;
 import org.x4o.xml.eld.lang.DescriptionElement;
 import org.x4o.xml.eld.lang.ElementClassAddParentElement;
@@ -61,8 +62,8 @@ import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
 public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 
 	private Logger logger = null;
-	private static final String PP_CEL_PROVIDER = "cel.x4o.org";
-	private static final String PP_CEL_XMLNS = "http://"+PP_CEL_PROVIDER+"/xml/ns/";
+	private static final String PP_CEL_PROVIDER_HOST = "cel.x4o.org";
+	private static final String PP_CEL_XMLNS = "http://"+PP_CEL_PROVIDER_HOST+"/xml/ns/";
 	private static final String PP_CEL_XSD_FILE = "-1.0.xsd";
 	private static final String CEL_CORE = "cel-core";
 	private static final String CEL_ROOT = "cel-root";
@@ -107,6 +108,8 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		ElementNamespaceContext namespaceRoot = createNamespaceContext(language,CEL_ROOT,CEL_ROOT_URI,CEL_ROOT_XSD_URI,CEL_ROOT_XSD_FILE,CEL_ROOT);
 		namespaceRoot.setLanguageRoot(true); // Only define single language root so xsd is (mostly) not cicle import.
 		ElementClass rootElement = createElementClass(language,"module",language.getLanguageConfiguration().getDefaultElementLanguageModule(),ModuleElement.class,"The module tag is the root xml element for ELD language.");
+		rootElement.addElementClassAttribute(createElementClassAttribute(language,"id",true,null));
+		rootElement.addElementClassAttribute(createElementClassAttribute(language,"providerHost",true,null));
 		namespaceRoot.addElementClass(rootElement);
 		startAndAddNamespace(language,languageModule,namespaceRoot);
 	}
@@ -121,6 +124,12 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		ElementClass ec = null;
 		
 		namespace.addElementClass(createElementClass(language,"attribute",language.getLanguageConfiguration().getDefaultElementClassAttribute(),null,"Defines xml element attribute."));
+		
+		ec = createElementClass(language,"attributeAlias",null,AttributeAliasElement.class,"Adds an attribute alias.");
+		ec.addElementClassAttribute(createElementClassAttribute(language,"name",true,null));
+		ec.addElementParent(CEL_CORE_URI, "attribute");
+		namespace.addElementClass(ec);
+		
 		namespace.addElementClass(createElementClass(language,"classConverter",ClassConverter.class,null,"Converts string attribute to java class instance."));
 		
 		ec = createElementClass(language,"namespace",language.getLanguageConfiguration().getDefaultElementNamespaceContext(),null,"Defines an xml namespace.");
@@ -184,10 +193,10 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	
 	private void configLanguageModule(X4OLanguageModule languageModule) {
 		languageModule.setId("cel-module");
-		languageModule.setName("Core Element Languag Module");
-		languageModule.setProviderName(PP_CEL_PROVIDER);
+		languageModule.setProviderName("Core Element Languag Module");
+		languageModule.setProviderHost(PP_CEL_PROVIDER_HOST);
 		languageModule.setDescription("Core Element Language Module Loader");
-		languageModule.setSourceResource(this.getClass().getSimpleName()); // todo check if oke.
+		languageModule.setSourceResource(this.getClass().getSimpleName()); //TODO: check if oke.
 	}
 	
 	private void startAndAddNamespace(X4OLanguageLocal language,X4OLanguageModule languageModule,ElementNamespaceContext namespace) throws X4OLanguageModuleLoaderException {
@@ -230,7 +239,7 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	private ElementClass createElementClass(X4OLanguage language,String tag,Class<?> objectClass,Class<?> elementClass,String description) throws X4OLanguageModuleLoaderException {
 		try {
 			ElementClass result = (ElementClass)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementClass());
-			result.setTag(tag);
+			result.setId(tag);
 			result.setObjectClass(objectClass);
 			result.setElementClass(elementClass);
 			result.setDescription(description);

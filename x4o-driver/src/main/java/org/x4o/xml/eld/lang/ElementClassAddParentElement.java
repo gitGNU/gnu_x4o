@@ -43,7 +43,7 @@ public class ElementClassAddParentElement extends AbstractElement {
 	public void doElementEnd() throws ElementException {
 		String tag = getAttributes().get("tag");
 		if (tag==null) {
-			throw new ElementException("'tag' attribute is not set on: "+getElementClass().getTag());
+			throw new ElementException("'tag' attribute is not set on: "+getElementClass().getId());
 		}
 		String namespaceUri = getAttributes().get("uri");
 		if (namespaceUri==null) {

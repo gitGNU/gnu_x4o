@@ -171,17 +171,17 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 		}
 		
 		String elementUri = findElementUri(element);
-		writer.startElement(elementUri, element.getElementClass().getTag(), "", atts);
+		writer.startElement(elementUri, element.getElementClass().getId(), "", atts);
 		for (Element e:element.getChilderen()) {
 			writeTree(writer,e);
 		}
-		writer.endElement(elementUri, element.getElementClass().getTag(), "");
+		writer.endElement(elementUri, element.getElementClass().getId(), "");
 	}
 	
 	private String findElementUri(Element e) {
 		for (X4OLanguageModule mod:getLanguageContext().getLanguage().getLanguageModules()) {
 			for (ElementNamespaceContext c:mod.getElementNamespaceContexts()) {
-				ElementClass ec = c.getElementClass(e.getElementClass().getTag());
+				ElementClass ec = c.getElementClass(e.getElementClass().getId());
 				if (ec!=null) {
 					return c.getUri();
 				}

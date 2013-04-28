@@ -140,7 +140,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 				for (ElementClass ec:nsContext.getElementClasses()) {
 					if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
 						try {
-							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(context, ec.getTag());
+							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(context, ec.getId());
 						} catch (ElementNamespaceInstanceProviderException e) {
 							throw new RuntimeException(e.getMessage(),e); // TODO: fix me
 						}

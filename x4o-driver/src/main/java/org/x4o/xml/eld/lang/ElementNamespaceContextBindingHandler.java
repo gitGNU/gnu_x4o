@@ -60,7 +60,11 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 	 */
 	public void bindChild(Element childElement,ElementNamespaceContext parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ElementClass) {
-			parent.addElementClass((ElementClass)childObject);
+			ElementClass elementClass = (ElementClass)childObject;
+			if (elementClass.getId()==null && elementClass.getObjectClass()!=null) {
+				elementClass.setId(elementClass.getObjectClass().getSimpleName()); // TODO: move to defaults layer
+			}
+			parent.addElementClass(elementClass);
 		}
 	}
 	

@@ -40,6 +40,7 @@
 		schemaPrefix="mroot"
 		name="MTest Root Namespace"
 		languageRoot="true"
+		id="mroot"
 		>
 		<!-- Root Element for nice namespace'ing  -->
 		<eld:element tag="root" objectClass="java.lang.Object">
@@ -53,6 +54,7 @@
 		schemaResource="mtest-lang-1.0.xsd"
 		schemaPrefix="mlang"
 		name="MTest Language Namespace"
+		id="mlang"
 		>
 		<eld:element tag="date"					objectClass="java.util.Date"/>
 		<eld:element tag="JFrame"				objectClass="javax.swing.JFrame"/>

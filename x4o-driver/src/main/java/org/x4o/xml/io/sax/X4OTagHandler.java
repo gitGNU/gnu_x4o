@@ -182,7 +182,7 @@ public class X4OTagHandler extends DefaultHandler2 {
 			logger.finest("XMLTAG-END: "+namespaceUri+":"+tag);
 		}
 		if (overrideSaxHandler!=null) {
-			if (overrideSaxElement.getElementClass().getTag().equals(tag)) {
+			if (overrideSaxElement.getElementClass().getId().equals(tag)) {
 				overrideSaxHandler.endDocument();
 				overrideSaxHandler = null;
 				overrideSaxElement = null; // elementStack code make sure doElementEnd is runned on override element.
@@ -229,7 +229,7 @@ public class X4OTagHandler extends DefaultHandler2 {
 		try {
 			e.doCharacters(text);
 		} catch (ElementException ee) {
-			throw new SAXParseException("Error while doCharacters element: '"+e.getElementClass().getTag()+"' "+ee.getMessage(),locator,ee);
+			throw new SAXParseException("Error while doCharacters element: '"+e.getElementClass().getId()+"' "+ee.getMessage(),locator,ee);
 		}
 	}
 
@@ -254,7 +254,7 @@ public class X4OTagHandler extends DefaultHandler2 {
 		try {
 			e.doIgnorableWhitespace(text);
 		} catch (ElementException ee) {
-			throw new SAXParseException("Error while doIgnorableWhitespace element: '"+e.getElementClass().getTag()+"' "+ee.getMessage(),locator,ee);
+			throw new SAXParseException("Error while doIgnorableWhitespace element: '"+e.getElementClass().getId()+"' "+ee.getMessage(),locator,ee);
 		}
 	}
 
@@ -279,7 +279,7 @@ public class X4OTagHandler extends DefaultHandler2 {
 		try {
 			e.doComment(text);
 		} catch (ElementException ee) {
-			throw new SAXParseException("Error while doComment element: '"+e.getElementClass().getTag()+"' "+ee.getMessage(),locator,ee);
+			throw new SAXParseException("Error while doComment element: '"+e.getElementClass().getId()+"' "+ee.getMessage(),locator,ee);
 		}
 	}
 	

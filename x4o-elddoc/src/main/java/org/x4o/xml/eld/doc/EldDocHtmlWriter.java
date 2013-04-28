@@ -191,7 +191,7 @@ public class EldDocHtmlWriter {
 			List<X4OLanguageModule> mods = context.getLanguage().getLanguageModules();
 			Collections.sort(mods,new ElementLanguageModuleComparator());
 			for (X4OLanguageModule mod:mods) {
-				printTableRowOverview(pw,toSafeUri(mod.getId())+"/index.html",mod.getId(),mod.getName());
+				printTableRowOverview(pw,toSafeUri(mod.getId())+"/index.html",mod.getId(),mod.getDescription());
 			}
 			printTableEnd(pw);
 			printBottom(pw,"");
@@ -279,11 +279,11 @@ public class EldDocHtmlWriter {
 		pw.print("/");
 		pw.print(toSafeUri(node.namespace.getId()));
 		pw.print("/");
-		pw.print(toSafeUri(node.elementClass.getTag()));
+		pw.print(toSafeUri(node.elementClass.getId()));
 		pw.print("/index.html\">");
 		pw.print(node.namespace.getId());
 		pw.print(":");
-		pw.print(node.elementClass.getTag());
+		pw.print(node.elementClass.getId());
 		pw.print("</a><br/>\n");
 		
 		List<TreeNode> childs = findChilderen(node);
@@ -303,7 +303,7 @@ public class EldDocHtmlWriter {
 				for (ElementClass ec:ns.getElementClasses()) {
 					TreeNode n=null;
 					List<String> tags = ec.getElementParents(node.namespace.getUri());
-					if (tags!=null && tags.contains(node.elementClass.getTag())) {
+					if (tags!=null && tags.contains(node.elementClass.getId())) {
 						n = new TreeNode();
 						n.context=node.context;
 						n.module=mod;
@@ -318,7 +318,7 @@ public class EldDocHtmlWriter {
 						// Check interfaces of parent , and see if child tag is there.
 						for (ElementInterface ei:node.context.getLanguage().findElementInterfaces(ec.getObjectClass())) {
 							List<String> eiTags = ei.getElementParents(node.namespace.getUri());
-							if (eiTags!=null && eiTags.contains(node.elementClass.getTag())) {
+							if (eiTags!=null && eiTags.contains(node.elementClass.getId())) {
 								n = new TreeNode();
 								n.context=node.context;
 								n.module=mod;
@@ -357,7 +357,7 @@ public class EldDocHtmlWriter {
 	private boolean isInTree(TreeNode node,TreeNode checkNode) {
 		
 		if (	node.namespace.getUri().equals(checkNode.namespace.getUri()) &&
-				node.elementClass.getTag().equals(checkNode.elementClass.getTag())
+				node.elementClass.getId().equals(checkNode.elementClass.getId())
 			) {
 			return true;
 		}
@@ -376,7 +376,7 @@ public class EldDocHtmlWriter {
 				List<String> tags = node.elementClass.getElementParents(ns.getUri());
 				if (tags!=null) {
 					for (ElementClass ec:ns.getElementClasses()) {
-						if (tags.contains(ec.getTag())) {
+						if (tags.contains(ec.getId())) {
 							n = new TreeNode();
 							n.context=node.context;
 							n.module=mod;
@@ -394,7 +394,7 @@ public class EldDocHtmlWriter {
 					if (node.elementClass.getObjectClass()!=null) {
 						for (ElementInterface ei:node.context.getLanguage().findElementInterfaces(node.elementClass.getObjectClass())) {
 							List<String> eiTags = ei.getElementParents(ns.getUri());
-							if (eiTags!=null && eiTags.contains(ec.getTag())) {
+							if (eiTags!=null && eiTags.contains(ec.getId())) {
 								n = new TreeNode();
 								n.context=node.context;
 								n.module=mod;
@@ -439,7 +439,7 @@ public class EldDocHtmlWriter {
 		String pathPrefix = "../";
 		try {
 			printHeader(pw,"Overview ("+mod.getId()+")",pathPrefix);
-			printPageTitle(pw,"Module",mod.getName(),mod.getDescription());
+			printPageTitle(pw,"Module",mod.getProviderName(),mod.getDescription());
 
 			String pathPrefixModule = pathPrefix+toSafeUri(mod.getId())+"/";
 			
@@ -469,7 +469,7 @@ public class EldDocHtmlWriter {
 			List<ElementClass> ecs = ns.getElementClasses();
 			Collections.sort(ecs,new ElementClassComparator());
 			for (ElementClass ec:ecs) {
-				printTableRowOverview(pw,toSafeUri(ec.getTag())+"/index.html",ec.getTag(),ec.getDescription());
+				printTableRowOverview(pw,toSafeUri(ec.getId())+"/index.html",ec.getId(),ec.getDescription());
 			}
 			printTableEnd(pw);
 			printBottom(pw,pathPrefix);
@@ -496,11 +496,11 @@ public class EldDocHtmlWriter {
 	
 	
 	public void writeElement(File basePath,ElementClass ec,ElementNamespaceContext ns,X4OLanguageModule mod,X4OLanguageContext context) throws IOException {
-		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),ec.getTag(),"index.html");
+		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),ec.getId(),"index.html");
 		String pathPrefix = "../../../";
 		try {
-			printHeader(pw,"Tag ("+ec.getTag()+")",pathPrefix);
-			printPageTitle(pw,"Tag",ec.getTag(),ec.getDescription());
+			printHeader(pw,"Tag ("+ec.getId()+")",pathPrefix);
+			printPageTitle(pw,"Tag",ec.getId(),ec.getDescription());
 			
 			TreeNode node = new TreeNode();
 			node.context=context;
@@ -522,11 +522,11 @@ public class EldDocHtmlWriter {
 				pw.print("/");
 				pw.print(toSafeUri(n.namespace.getId()));
 				pw.print("/");
-				pw.print(toSafeUri(n.elementClass.getTag()));
+				pw.print(toSafeUri(n.elementClass.getId()));
 				pw.print("/index.html\">");
 				pw.print(n.namespace.getId());
 				pw.print(":");
-				pw.print(n.elementClass.getTag());
+				pw.print(n.elementClass.getId());
 				pw.print("</a>\n");
 			}
 			pw.print("</td>\n");
@@ -547,11 +547,11 @@ public class EldDocHtmlWriter {
 				pw.print("/");
 				pw.print(toSafeUri(n.namespace.getId()));
 				pw.print("/");
-				pw.print(toSafeUri(n.elementClass.getTag()));
+				pw.print(toSafeUri(n.elementClass.getId()));
 				pw.print("/index.html\">");
 				pw.print(n.namespace.getId());
 				pw.print(":");
-				pw.print(n.elementClass.getTag());
+				pw.print(n.elementClass.getId());
 				pw.print("</a>\n");
 			}
 			pw.print("</td>\n");
@@ -561,7 +561,6 @@ public class EldDocHtmlWriter {
 			
 			printTableStart(pw,"Element Properties");
 			printTableRowSummary(pw,"id",""+ec.getId());
-			printTableRowSummary(pw,"tag",""+ec.getTag());
 			printTableRowSummary(pw,"objectClass",""+ec.getObjectClass());
 			printTableRowSummary(pw,"elementClass",""+ec.getElementClass());
 			printTableRowSummary(pw,"autoAttributes",""+ec.getAutoAttributes());
@@ -640,7 +639,7 @@ public class EldDocHtmlWriter {
 	}
 	
 	public void writeElementConfigurator(File basePath,ElementConfigurator conf,X4OLanguageModule mod,ElementNamespaceContext ns,ElementClass ec) throws IOException {
-		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),ec.getTag(),"conf",conf.getId()+".html");
+		PrintWriter pw = createPrintWriter(basePath,mod.getId(),ns.getId(),ec.getId(),"conf",conf.getId()+".html");
 		String pathPrefix = "../../../../";
 		try {
 			printHeader(pw,"Interface Configurator ("+conf.getId()+")",pathPrefix);
@@ -1036,13 +1035,13 @@ public class EldDocHtmlWriter {
 	
 	class TreeNodeComparator implements Comparator<TreeNode> {
 		public int compare(TreeNode o1,TreeNode o2) {
-			return o1.elementClass.getTag().compareTo(o2.elementClass.getTag());
+			return o1.elementClass.getId().compareTo(o2.elementClass.getId());
 		}
 	}
 	
 	class ElementClassComparator implements Comparator<ElementClass> {
 		public int compare(ElementClass o1,ElementClass o2) {
-			return o1.getTag().compareTo(o2.getTag());
+			return o1.getId().compareTo(o2.getId());
 		}
 	}
 }

@@ -3,11 +3,13 @@
 <!-- =====  Automatic generated schema for language: eld            ===== -->
 <!-- ==================================================================== -->
 <!--
-	ProviderName:	eld.x4o.org
-	ModuleName:		Element Language Definition
+	ID:		eld-module
+	ProviderName:	Element Language Definition
+	ProviderHost:	eld.x4o.org
 	Namespaces:		3
-	Namespace:		http://eld.x4o.org/xml/ns/eld-root
-	Created on:		Sat Apr 27 20:06:33 CEST 2013
+	Uri:			http://eld.x4o.org/xml/ns/eld-root
+	Uri schema:	http://eld.x4o.org/xml/ns/eld-root-1.0.xsd
+	Created on:		Sun Apr 28 11:56:32 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
@@ -27,11 +29,26 @@
 				<element ref="lang:elementInterface"/>
 				<element ref="lang:namespace"/>
 			</choice>
-			<attribute name="id" type="string" use="required"/>
-			<attribute name="name" type="string"/>
-			<attribute name="providerName" type="string"/>
-			<attribute name="sourceResource" type="string"/>
+			<attribute name="id" type="string" use="required">
+				<annotation>
+					<documentation xml:lang="en">The module id.
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="providerName" type="string">
+				<annotation>
+					<documentation xml:lang="en">The provider name in normal en:lang.
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="providerHost" type="string" use="required">
+				<annotation>
+					<documentation xml:lang="en">The provider host like langx.someorg.domain for uri/etc defaults.
+					</documentation>
+				</annotation>
+			</attribute>
 			<attribute name="languageModuleLoader" type="string"/>
+			<attribute name="sourceResource" type="string"/>
 			<attribute name="description" type="string"/>
 		</complexType>
 	</element>

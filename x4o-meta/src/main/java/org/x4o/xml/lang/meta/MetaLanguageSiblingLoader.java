@@ -44,6 +44,12 @@ public class MetaLanguageSiblingLoader implements X4OLanguageModuleLoaderSibling
 	/** Defines the version of the meta x4o language. */
 	public static final String META_LANGUAGE_VERSION = "1.0";
 	
+	/** Defines the identifier of the meta x4o language host. */
+	public static final String META_LANGUAGE_HOST = "meta.x4o.org";
+
+	/** Defines the identifier of the meta x4o language host. */
+	public static final String META_LANGUAGE_DESCRIPTION = "X4O Meta XML Language Module.";
+	
 	/**
 	 * Loads an ElementLanguageModule.
 	 * @param language	The ElementLanguage to load for.
@@ -53,9 +59,9 @@ public class MetaLanguageSiblingLoader implements X4OLanguageModuleLoaderSibling
 	 */
 	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
 		languageModule.setId(META_LANGUAGE);
-		languageModule.setName(META_LANGUAGE);
+		languageModule.setProviderHost(META_LANGUAGE_HOST);
 		languageModule.setProviderName(MetaLanguageSiblingLoader.class.getSimpleName());
-		languageModule.setDescription("X4O Meta Language");
+		languageModule.setDescription(META_LANGUAGE_DESCRIPTION);
 	}
 
 	/**

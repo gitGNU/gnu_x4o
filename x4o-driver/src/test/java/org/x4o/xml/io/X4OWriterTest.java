@@ -63,6 +63,8 @@ public class X4OWriterTest extends TestCase {
 		writer.writeFile(root, outputFile);
 		
 		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		outputFile.delete();
+		//System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
 		
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 		assertTrue(text.contains("http://test.x4o.org/xml/ns/test-root"));
@@ -71,10 +73,6 @@ public class X4OWriterTest extends TestCase {
 		assertTrue(text.contains("privateIntegerTypeField=\"123\""));
 		assertTrue(text.contains("privateDoubleObjectField=\"123.45\""));
 		assertTrue(text.contains("privateStringObjectField=\"x4o\""));
-		
-		//System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
-		
-		outputFile.delete();
 	}
 	
 	public void testWriterSwiXmlOutput() throws Exception {

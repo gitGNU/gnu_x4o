@@ -29,8 +29,8 @@
 	xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://eld.x4o.org/xml/ns/eld-root http://eld.x4o.org/xml/ns/eld-root-1.0.xsd"
-	providerName="test.x4o.org"
-	name="Test Language"
+	providerName="test Language"
+	providerHost="test.x4o.org"
 	id="test-module"
 	>
 	

@@ -29,8 +29,8 @@
 	xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://eld.x4o.org/xml/ns/eld-root http://eld.x4o.org/xml/ns/eld-root-1.0.xsd"
-	providerName="swixml3.test.x4o.org"
-	name="Swixml3 Language"
+	providerHost="swixml.x4o.org"
+	providerName="Swixml3 Language"
 	id="swixml3-module"
 	>
 	
@@ -83,29 +83,14 @@
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.BorderConverter"/>
 		</attribute>
 	</elementInterface>
-		
-		
-	<namespace
-		uri="http://swixml.x4o.org/xml/ns/swixml-root"
-		schemaUri="http://swixml.x4o.org/xml/ns/swixml-root-3.0.xsd"
-		schemaResource="swixml-root-3.0.xsd"
-		schemaPrefix="sx-root"
-		name="Root element"
-		languageRoot="true"
-		id="sx-root"
-		>
-		<element tag="JFrame"			objectClass="javax.swing.JFrame"/>
+	
+	<namespace id="root" languageRoot="true">
+		<element objectClass="javax.swing.JFrame"/>
 	</namespace>
-	<namespace
-		uri="http://swixml.x4o.org/xml/ns/swixml-lang"
-		schemaUri="http://swixml.x4o.org/xml/ns/swixml-lang-3.0.xsd"
-		schemaResource="swixml-lang-3.0.xsd"
-		schemaPrefix="sx-lang"
-		id="sx-lang"
-		>
-		<element tag="JMenubar"			objectClass="javax.swing.JMenuBar"/>
-		<element tag="JMenu"			objectClass="javax.swing.JMenu"/>
-		<element tag="JMenuItem"		objectClass="javax.swing.JMenuItem">
+	<namespace id="lang">
+		<element objectClass="javax.swing.JMenuBar"/>
+		<element objectClass="javax.swing.JMenu"/>
+		<element objectClass="javax.swing.JMenuItem">
 			<attribute id="accelerator">
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.KeyStrokeConverter"/>
 				<attributeAlias name="Accelerator"/>
@@ -114,9 +99,9 @@
 			<attribute id="Action" runBeanValue="false"/>
 			<configurator id="menuitem-action" bean.class="org.x4o.xml.test.swixml.SwiXmlActionConfigurator"/>
 		</element>
-		<element tag="JMenu.Separator"	/>
-		<element tag="JPanel"			objectClass="javax.swing.JPanel"/>
-		<element tag="JSplitPane"		objectClass="javax.swing.JSplitPane">
+		<element id="JMenu.Separator"	description="TODO"/>
+		<element objectClass="javax.swing.JPanel"/>
+		<element objectClass="javax.swing.JSplitPane">
 			<attribute id="orientation">
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.JSplitPaneOrientationConverter"/>
 			</attribute>
@@ -125,16 +110,16 @@
 			</attribute>
 		</element>
 		
-		<element tag="JLayeredPane"		objectClass="javax.swing.JLayeredPane"/>
-		<element tag="JRootPane"		objectClass="javax.swing.JRootPane"/>
-		<element tag="JScrollPane"		objectClass="javax.swing.JScrollPane"/>
-		<element tag="JTree"			objectClass="javax.swing.JTree"/>
-		<element tag="JButton"			objectClass="javax.swing.JButton"/>
-		<element tag="JTable"			objectClass="javax.swing.JTable"/>
-		<element tag="JTextArea"		objectClass="javax.swing.JTextArea"/>
-		<element tag="JLabel"			objectClass="javax.swing.JLabel"/>
-		<element tag="JTextField"		objectClass="javax.swing.JTextField"/>
-		<element tag="JDesktopPane"		objectClass="javax.swing.JDesktopPane"/>
-		<element tag="JInternalFrame"	objectClass="javax.swing.JInternalFrame"/>
+		<element objectClass="javax.swing.JLayeredPane"/>
+		<element objectClass="javax.swing.JRootPane"/>
+		<element objectClass="javax.swing.JScrollPane"/>
+		<element objectClass="javax.swing.JTree"/>
+		<element objectClass="javax.swing.JButton"/>
+		<element objectClass="javax.swing.JTable"/>
+		<element objectClass="javax.swing.JTextArea"/>
+		<element objectClass="javax.swing.JLabel"/>
+		<element objectClass="javax.swing.JTextField"/>
+		<element objectClass="javax.swing.JDesktopPane"/>
+		<element objectClass="javax.swing.JInternalFrame"/>
 	</namespace>
 </root:module>

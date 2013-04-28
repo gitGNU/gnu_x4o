@@ -45,23 +45,15 @@ import org.x4o.xml.element.ElementNamespaceContext;
 public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase implements X4OLanguageModule {
 
 	private Logger logger = null;
-
-	private String name=null;
 	private String providerName=null;
+	private String providerHost=null;
 	private String sourceResource = null;
 	
-	/** The globalAttribute handlers */
 	private List<ElementAttributeHandler> elementAttributeHandlers = null;
-
-	/** The binding rules */
 	private List<ElementBindingHandler> elementBindingHandlers = null;
-
 	private List<ElementConfiguratorGlobal> elementConfiguratorGlobals = null;
-
 	private List<ElementInterface> elementInterfaces = null;
-
 	private Map<String,ElementNamespaceContext> elementNamespaceContexts = null;
-
 	private X4OLanguageModuleLoader elementLanguageModuleLoader = null;
 
 	/**
@@ -76,35 +68,35 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		elementInterfaces = new ArrayList<ElementInterface>(20);
 		elementNamespaceContexts = new HashMap<String,ElementNamespaceContext>(10);
 	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	/**
 	 * @return the providerName
 	 */
 	public String getProviderName() {
 		return providerName;
 	}
-
+	
 	/**
 	 * @param providerName the providerName to set
 	 */
 	public void setProviderName(String providerName) {
 		this.providerName = providerName;
 	}
-
+	
+	/**
+	 * @return the providerHost
+	 */
+	public String getProviderHost() {
+		return providerHost;
+	}
+	
+	/**
+	 * @param providerHost the providerHost to set
+	 */
+	public void setProviderHost(String providerHost) {
+		this.providerHost = providerHost;
+	}
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#addElementAttributeHandler(ElementAttributeHandler)
 	 */
@@ -208,20 +200,6 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		if (elementNamespaceContext.getUri()==null) {
 			throw new NullPointerException("Can add ElementNamespaceContext without uri.");
 		}
-		if (elementNamespaceContext.getId()==null) {
-			StringBuffer buf = new StringBuffer(30);
-			for (char c:elementNamespaceContext.getUri().toLowerCase().toCharArray()) {
-				if (Character.isLetter(c))	{buf.append(c);}
-				if (Character.isDigit(c))	{buf.append(c);}
-			}
-			String id = buf.toString();
-			if (id.startsWith("http"))		{id = id.substring(4);}
-			elementNamespaceContext.setId(id);
-		}
-		// TODO: no language here so move to EL default on eld attribute tag 
-		//if (elementNamespaceContext.getSchemaUri()==null) {
-		//	elementNamespaceContext.setSchemaUri(elementNamespaceContext.getUri()+elementNamespaceContext.)
-		//}
 		logger.fine("Adding namespaceUri: "+elementNamespaceContext.getUri());
 		elementNamespaceContexts.put(elementNamespaceContext.getUri(), elementNamespaceContext);
 	}

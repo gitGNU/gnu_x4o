@@ -81,10 +81,10 @@ public abstract class AbstractElementNamespaceContext extends AbstractElementMet
 	 * @see org.x4o.xml.element.ElementNamespaceContext#addElementClass(org.x4o.xml.element.ElementClass)
 	 */
 	public void addElementClass(ElementClass elementClass) {
-		if (elementClass.getTag()==null) {
-			throw new NullPointerException("ElementClass not correctly configured getTag is null.");
+		if (elementClass.getId()==null) {
+			throw new NullPointerException("ElementClass not correctly configured getId is null.");
 		}
-		elementClasses.put(elementClass.getTag(), elementClass);
+		elementClasses.put(elementClass.getId(), elementClass);
 	}
 
 	/**

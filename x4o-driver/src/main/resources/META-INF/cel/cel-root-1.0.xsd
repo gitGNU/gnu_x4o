@@ -3,11 +3,12 @@
 <!-- =====  Automatic generated schema for language: cel            ===== -->
 <!-- ==================================================================== -->
 <!--
-	ProviderName:	cel.x4o.org
-	ModuleName:		Core Element Languag Module
+	ID:		cel-module
+	ProviderName:	Core Element Languag Module
+	ProviderHost:		cel.x4o.org
 	Namespaces:		2
 	Namespace:		http://cel.x4o.org/xml/ns/cel-root
-	Created on:		Sat Apr 27 20:01:59 CEST 2013
+	Created on:		Sun Apr 28 11:41:33 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:cel-core="http://cel.x4o.org/xml/ns/cel-core"
@@ -23,12 +24,12 @@
 				<element ref="cel-core:elementInterface"/>
 				<element ref="cel-core:namespace"/>
 			</choice>
-			<attribute name="name" type="string"/>
+			<attribute name="id" type="string" use="required"/>
+			<attribute name="providerHost" type="string" use="required"/>
 			<attribute name="sourceResource" type="string"/>
 			<attribute name="languageModuleLoader" type="string"/>
 			<attribute name="providerName" type="string"/>
 			<attribute name="description" type="string"/>
-			<attribute name="id" type="string"/>
 		</complexType>
 	</element>
 </schema>

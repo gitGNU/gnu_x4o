@@ -42,16 +42,6 @@ import org.x4o.xml.element.ElementNamespaceContext;
 public interface X4OLanguageModule extends ElementMetaBase {
 
 	/**
-	 * @return the Name.
-	 */
-	String getName();
-
-	/**
-	 * @param name the module name to set.
-	 */
-	void setName(String name);
-
-	/**
 	 * @return the providerName.
 	 */
 	String getProviderName();
@@ -60,6 +50,16 @@ public interface X4OLanguageModule extends ElementMetaBase {
 	 * @param providerName the providerName to set.
 	 */
 	void setProviderName(String providerName);
+	
+	/**
+	 * @return the providerHost
+	 */
+	public String getProviderHost();
+	
+	/**
+	 * @param providerHost the providerHost to set
+	 */
+	public void setProviderHost(String providerHost);
 	
 	/**
 	 * Adds an ElementAttributeHandler.

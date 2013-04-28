@@ -33,19 +33,7 @@ import java.util.List;
  * @version 1.0 Aug 11, 2005
  */
 public interface ElementClass extends ElementClassBase {
-		
-	/**
-	 * Gets the xml tag the Element should handle.
-	 * @return the tag
-	 */
-	String getTag();
 	
-	/**
-	 * Sets the XML tag the Element should handle.
-	 * @param tag the tag to set
-	 */
-	void setTag(String tag);
-		
 	/**
 	 * Gets the ElementClass.
 	 * @return the elementClass

@@ -144,7 +144,7 @@ public class X4OPhaseLanguageWrite {
 					if (nsContext.getLanguageRoot()!=null && nsContext.getLanguageRoot()) {
 						for (ElementClass ec:nsContext.getElementClasses()) {
 							if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
-								return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageContext, ec.getTag());
+								return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageContext, ec.getId());
 							}
 						}
 					}
@@ -154,7 +154,7 @@ public class X4OPhaseLanguageWrite {
 				for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
 					for (ElementClass ec:nsContext.getElementClasses()) {
 						if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
-							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageContext, ec.getTag());
+							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageContext, ec.getId());
 						}
 					}
 				}

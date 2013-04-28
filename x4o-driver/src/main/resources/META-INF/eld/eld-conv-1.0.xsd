@@ -3,11 +3,13 @@
 <!-- =====  Automatic generated schema for language: eld            ===== -->
 <!-- ==================================================================== -->
 <!--
-	ProviderName:	eld.x4o.org
-	ModuleName:		Element Language Definition
+	ID:		eld-module
+	ProviderName:	Element Language Definition
+	ProviderHost:	eld.x4o.org
 	Namespaces:		3
-	Namespace:		http://eld.x4o.org/xml/ns/eld-conv
-	Created on:		Sat Apr 27 20:06:33 CEST 2013
+	Uri:			http://eld.x4o.org/xml/ns/eld-conv
+	Uri schema:	http://eld.x4o.org/xml/ns/eld-conv-0.8.xsd
+	Created on:		Sun Apr 28 11:56:32 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://eld.x4o.org/xml/ns/eld-conv"
@@ -25,7 +27,12 @@
 	</complexType>
 	<complexType name="beanConverterType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
-		<attribute name="bean.class" type="string"/>
+		<attribute name="bean.class" type="string">
+			<annotation>
+				<documentation xml:lang="en">The class name of the converter to load.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="stringSplitConverterStepType">
@@ -42,10 +49,30 @@
 			<element name="stringSplitConverter" type="this:stringSplitConverterType"/>
 			<element name="urlConverter" type="this:urlConverterType"/>
 		</choice>
-		<attribute name="toMethod" type="string"/>
-		<attribute name="fromOrder" type="string" use="required"/>
-		<attribute name="fromMethod" type="string" use="required"/>
-		<attribute name="toOrder" type="string" use="required"/>
+		<attribute name="toMethod" type="string">
+			<annotation>
+				<documentation xml:lang="en">The convert 'to' method step.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="fromOrder" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The convert 'from' order.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="fromMethod" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The convert 'from' method step.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="toOrder" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The convert 'to' order.
+				</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="objectConverter" type="string"/>
 	</complexType>
 	<complexType name="doubleConverterType">
@@ -61,11 +88,36 @@
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="stringSplitConverterStep" type="this:stringSplitConverterStepType"/>
 		</choice>
-		<attribute name="useNativeType" type="string"/>
-		<attribute name="singleToMethod" type="string"/>
-		<attribute name="splitSize" type="string" use="required"/>
-		<attribute name="split" type="string" use="required"/>
-		<attribute name="classTo" type="string" use="required"/>
+		<attribute name="useNativeType" type="string">
+			<annotation>
+				<documentation xml:lang="en">Set to true to convert to native data type.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="singleToMethod" type="string">
+			<annotation>
+				<documentation xml:lang="en">Shortcut to use only this method for the 'to' convert.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="splitSize" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The split value expected size.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="split" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The split regex.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="classTo" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The class name to convert the string to.
+				</documentation>
+			</annotation>
+		</attribute>
 	</complexType>
 	<complexType name="integerConverterType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>

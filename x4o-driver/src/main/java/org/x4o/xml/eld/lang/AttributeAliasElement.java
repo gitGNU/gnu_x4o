@@ -44,7 +44,7 @@ public class AttributeAliasElement extends AbstractElement {
 	public void doElementEnd() throws ElementException {
 		String alias = getAttributes().get("name");
 		if (alias==null) {
-			throw new ElementException("'name' attribute is not set on: "+getElementClass().getTag());
+			throw new ElementException("'name' attribute is not set on: "+getElementClass().getId());
 		}
 		if (getParent().getElementObject() instanceof ElementClassAttribute) {
 			((ElementClassAttribute)getParent().getElementObject()).addAttributeAlias(alias);

@@ -29,6 +29,34 @@
 	xsi:schemaLocation="http://language.x4o.org/xml/ns/drivers http://language.x4o.org/xml/ns/drivers-1.0.xsd"
 	>
 	<driver language="test" className="org.x4o.xml.test.TestDriver"/>
+		<!-- 
+		<languageResourcePathPrefix>META-INF</languageResourcePathPrefix>
+		<languageResourceModulesFileName>-modules.xml</languageResourceModulesFileName>
+		<defaultElementNamespaceContext>org.x4o.xml.element.DefaultElementNamespaceContext</defaultElementNamespaceContext>
+		<defaultElementInterface>org.x4o.xml.element.DefaultElementInterface</defaultElementInterface>
+		<defaultElement>org.x4o.xml.element.DefaultElement</defaultElement>
+		<defaultElementClass>org.x4o.xml.element.DefaultElementClass</defaultElementClass>
+		<defaultElementClassAttribute></defaultElementClassAttribute>
+		<defaultElementLanguageModule></defaultElementLanguageModule>
+		<defaultElementBodyComment></defaultElementBodyComment>
+		<defaultElementBodyCharacters></defaultElementBodyCharacters>
+		<defaultElementBodyWhitespace></defaultElementBodyWhitespace>
+		<defaultElementNamespaceInstanceProvider></defaultElementNamespaceInstanceProvider>
+		<defaultElementAttributeValueParser></defaultElementAttributeValueParser>
+		<defaultElementObjectPropertyValue></defaultElementObjectPropertyValue>
+		<defaultElementAttributeHandlerComparator></defaultElementAttributeHandlerComparator>
+		
+		<properties>
+			<property key="" value=""/>
+		</properties>
+		
+		<lockLanguage>true</lockLanguage>
+		<secure-resources>
+			<secure-resource resource="META-INF/test/test-modules.xml" hash="887486557" hashType="MD5"/>
+			<secure-resource resource="META-INF/test/test-lang.eld" hash="238758509486557" hashType="MD5"/>
+		</secure-resources>
+	</driver>
+	-->
 	<driver language="swixml" className="org.x4o.xml.test.swixml.SwiXmlDriver"/>
 	<defaultDriver language="junit-defp"/>
 </drivers>

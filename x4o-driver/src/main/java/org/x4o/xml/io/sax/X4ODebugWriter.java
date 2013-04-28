@@ -220,8 +220,9 @@ public class X4ODebugWriter {
 			for (X4OLanguageModule module:elementLanguage.getLanguage().getLanguageModules()) {
 				AttributesImpl atts = new AttributesImpl();
 				atts.addAttribute ("", "className", "", "", module.getClass().getName());
-				atts.addAttribute ("", "name", "", "", module.getName());
+				atts.addAttribute ("", "id", "", "", module.getId());
 				atts.addAttribute ("", "providerName", "", "", module.getProviderName());
+				atts.addAttribute ("", "providerHost", "", "", module.getProviderHost());
 				if (module.getLanguageModuleLoader()==null) {
 					atts.addAttribute ("", "elementLanguageModuleLoaderClassName", "", "", "null");
 				} else {
@@ -366,12 +367,12 @@ public class X4ODebugWriter {
 	private StringBuffer getElementPath(Element element,StringBuffer buff) {
 		if (element.getParent()==null) {
 			buff.append('/'); // root slash
-			buff.append(element.getElementClass().getTag());	
+			buff.append(element.getElementClass().getId());
 			return buff;
 		}
 		buff = getElementPath(element.getParent(),buff);
 		buff.append('/');
-		buff.append(element.getElementClass().getTag());
+		buff.append(element.getElementClass().getId());
 		return buff;
 	}
 	
@@ -435,7 +436,9 @@ public class X4ODebugWriter {
 	
 	private void debugElementClass(ElementClass elementClass) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
-		atts.addAttribute ("", "tag", "", "", elementClass.getTag());
+		atts.addAttribute ("", "id", "", "", elementClass.getId());
+		atts.addAttribute ("", "autoAttributes", "", "", ""+elementClass.getAutoAttributes());
+		//atts.addAttribute ("", "schemaContentBase", "", "", ""+elementClass.getSchemaContentBase());
 		atts.addAttribute ("", "description", "", "", elementClass.getDescription());
 		atts.addAttribute ("", "objectClassName", "", "", ""+elementClass.getObjectClass());
 		atts.addAttribute ("", "className", "", "", elementClass.getClass().getName());

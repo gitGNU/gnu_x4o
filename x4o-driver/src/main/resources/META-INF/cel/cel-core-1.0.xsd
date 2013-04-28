@@ -3,11 +3,12 @@
 <!-- =====  Automatic generated schema for language: cel            ===== -->
 <!-- ==================================================================== -->
 <!--
-	ProviderName:	cel.x4o.org
-	ModuleName:		Core Element Languag Module
+	ID:		cel-module
+	ProviderName:	Core Element Languag Module
+	ProviderHost:		cel.x4o.org
 	Namespaces:		2
 	Namespace:		http://cel.x4o.org/xml/ns/cel-core
-	Created on:		Sat Apr 27 20:01:59 CEST 2013
+	Created on:		Sun Apr 28 11:41:33 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://cel.x4o.org/xml/ns/cel-core"
@@ -19,8 +20,8 @@
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
 		<attribute name="name" type="string"/>
-		<attribute name="prefixMapping" type="string"/>
 		<attribute name="languageRoot" type="boolean"/>
+		<attribute name="prefixMapping" type="string"/>
 		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
@@ -44,7 +45,6 @@
 		</choice>
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
-		<attribute name="tag" type="string"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
 		<attribute name="schemaContentBase" type="string"/>
@@ -58,6 +58,11 @@
 		</choice>
 		<attribute name="bean.class" type="string" use="required"/>
 		<attribute name="configAction" type="string"/>
+		<anyAttribute/>
+	</complexType>
+	<complexType name="attributeAliasType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+		<attribute name="name" type="string" use="required"/>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="configuratorType">
@@ -77,17 +82,18 @@
 	</complexType>
 	<complexType name="attributeType">
 		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="attributeAlias" type="this:attributeAliasType"/>
 			<element name="classConverter" type="this:classConverterType"/>
 			<element name="description" type="this:descriptionType"/>
 		</choice>
 		<attribute name="name" type="string"/>
-		<attribute name="required" type="boolean"/>
-		<attribute name="defaultValue" type="string"/>
-		<attribute name="runConverters" type="boolean"/>
-		<attribute name="objectConverter" type="string"/>
 		<attribute name="runBeanValue" type="boolean"/>
 		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="writeOrder" type="integer"/>
+		<attribute name="objectConverter" type="string"/>
+		<attribute name="runConverters" type="boolean"/>
+		<attribute name="required" type="boolean"/>
+		<attribute name="defaultValue" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -141,6 +147,12 @@
 	<element name="configuratorGlobal" type="this:configuratorGlobalType">
 		<annotation>
 			<documentation xml:lang="en">Define generic global configuator for languge.
+			</documentation>
+		</annotation>
+	</element>
+	<element name="attributeAlias" type="this:attributeAliasType">
+		<annotation>
+			<documentation xml:lang="en">Adds an attribute alias.
 			</documentation>
 		</annotation>
 	</element>

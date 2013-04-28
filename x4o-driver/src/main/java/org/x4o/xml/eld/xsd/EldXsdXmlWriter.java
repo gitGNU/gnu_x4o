@@ -38,7 +38,9 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementInterface;
+import org.x4o.xml.element.ElementMetaBase;
 import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.io.XMLConstants;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
@@ -149,13 +151,11 @@ public class EldXsdXmlWriter {
 	public void startSchema(ElementNamespaceContext ns) throws SAXException {
 		
 		xmlWriter.startDocument();
+		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		writeComment(COMMENT_SEPERATOR);
+		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		
 		// this is a mess;
-		char[] msg;
-		msg = "\n".toCharArray();
-		xmlWriter.ignorableWhitespace(msg,0,msg.length);
-		msg = COMMENT_SEPERATOR.toCharArray();
-		xmlWriter.comment(msg,0,msg.length);
 		String desc = "Automatic generated schema for language: "+language.getLanguageName();
 		int space = COMMENT_SEPERATOR.length()-desc.length()-(2*COMMENT_TEXT.length())-4;
 		StringBuffer b = new StringBuffer(COMMENT_SEPERATOR.length());
@@ -168,17 +168,10 @@ public class EldXsdXmlWriter {
 		}
 		b.append(COMMENT_TEXT);
 		b.append(" ");
-		
-		msg = "\n".toCharArray();
-		xmlWriter.ignorableWhitespace(msg,0,msg.length);
-		msg = b.toString().toCharArray();
-		xmlWriter.comment(msg,0,msg.length);
-		msg = "\n".toCharArray();
-		xmlWriter.ignorableWhitespace(msg,0,msg.length);
-		msg = COMMENT_SEPERATOR.toCharArray();
-		xmlWriter.comment(msg,0,msg.length);
-		msg = "\n".toCharArray();
-		xmlWriter.ignorableWhitespace(msg,0,msg.length);
+		writeComment(b.toString());
+		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		writeComment(COMMENT_SEPERATOR);
+		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		
 		X4OLanguageModule module = null;
 		for (X4OLanguageModule elm:language.getLanguageModules()) {
@@ -190,19 +183,15 @@ public class EldXsdXmlWriter {
 		}
 		
 		b = new StringBuffer(COMMENT_SEPERATOR.length());
-		b.append("\n\tProviderName:\t");
-		b.append(module.getProviderName());
-		b.append("\n\tModuleName:\t\t");
-		b.append(module.getName());
-		b.append("\n\tNamespaces:\t\t");
-		b.append(module.getElementNamespaceContexts().size());
-		b.append("\n\tNamespace:\t\t");
-		b.append(ns.getUri());
-		b.append("\n\tCreated on:\t\t");
-		b.append(new Date());
+		b.append("\n\tID:\t\t");			b.append(module.getId());
+		b.append("\n\tProviderName:\t");	b.append(module.getProviderName());
+		b.append("\n\tProviderHost:\t");	b.append(module.getProviderHost());
+		b.append("\n\tNamespaces:\t\t");	b.append(module.getElementNamespaceContexts().size());
+		b.append("\n\tUri:\t\t\t");			b.append(ns.getUri());
+		b.append("\n\tUri schema:\t");		b.append(ns.getSchemaUri());
+		b.append("\n\tCreated on:\t\t");	b.append(new Date());
 		b.append("\n");
-		msg = b.toString().toCharArray();
-		xmlWriter.comment(msg,0,msg.length);
+		writeComment(b.toString());
 		
 		
 		xmlWriter.startPrefixMapping("", SCHEMA_URI);
@@ -234,6 +223,7 @@ public class EldXsdXmlWriter {
 	
 	public void endSchema() throws SAXException {
 		xmlWriter.endElement (SCHEMA_URI, "schema" , "");
+		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		xmlWriter.endDocument();
 	}
 	
@@ -241,13 +231,13 @@ public class EldXsdXmlWriter {
 		
 		AttributesImpl atts = new AttributesImpl();
 		if (nsWrite.getLanguageRoot()!=null && nsWrite.getLanguageRoot()) {
-			atts.addAttribute ("", "name", "", "", ec.getTag());
+			atts.addAttribute ("", "name", "", "", ec.getId());
 			xmlWriter.startElement (SCHEMA_URI, "element", "", atts);	// Only in the language root xsd there is an element.
 			
 			atts = new AttributesImpl();
 			xmlWriter.startElement (SCHEMA_URI, "complexType", "", atts);
 		} else {
-			atts.addAttribute ("", "name", "", "", ec.getTag()+"Type");
+			atts.addAttribute ("", "name", "", "", ec.getId()+"Type");
 			xmlWriter.startElement (SCHEMA_URI, "complexType", "", atts);
 		}
 		
@@ -289,8 +279,15 @@ public class EldXsdXmlWriter {
 			if (eca.getRequired()!=null && eca.getRequired()) {
 				atts.addAttribute ("", "use", "", "", "required");	
 			}
-			xmlWriter.startElement (SCHEMA_URI, "attribute", "", atts);
-			xmlWriter.endElement(SCHEMA_URI, "attribute", "");	
+			writeElementAttribute(eca,atts);
+			
+			for (String alias:eca.getAttributeAliases()) {
+				attrNames.add(alias);
+				atts = new AttributesImpl();
+				atts.addAttribute ("", "name", "", "", alias);
+				atts.addAttribute ("", "type", "", "", "string");
+				writeElementAttribute(null,atts);
+			}
 		}
 		
 		for (X4OLanguageModule mod:language.getLanguageModules()) {
@@ -299,16 +296,13 @@ public class EldXsdXmlWriter {
 				atts = new AttributesImpl();
 				atts.addAttribute ("", "name", "", "", eah.getAttributeName());
 				atts.addAttribute ("", "type", "", "", "string");
-				xmlWriter.startElement (SCHEMA_URI, "attribute", "", atts);
-				xmlWriter.endElement(SCHEMA_URI, "attribute", "");	
+				writeElementAttribute(eah,atts);	
 			}
 		}
 		
 		if (ec.getAutoAttributes()!=null && ec.getAutoAttributes()==false) {
 			// oke, reverse this if and rm whitespace.
-			char[] msg;
-			msg = " ".toCharArray();
-			xmlWriter.ignorableWhitespace(msg,0,msg.length);
+			writeIgnorableWhitespace(" ");
 			
 		} else {
 			
@@ -374,8 +368,8 @@ public class EldXsdXmlWriter {
 		List<String> refElements = new ArrayList<String>(20);
 		for (ElementClass checkClass:ns.getElementClasses()) {
 			List<String> parents = checkClass.getElementParents(nsWrite.getUri());
-			if (parents!=null && parents.contains(ecWrite.getTag())) {
-				refElements.add(checkClass.getTag());
+			if (parents!=null && parents.contains(ecWrite.getId())) {
+				refElements.add(checkClass.getId());
 				continue;
 			}
 			if (checkClass.getObjectClass()==null) {
@@ -383,8 +377,8 @@ public class EldXsdXmlWriter {
 			}
 			for (ElementInterface ei:language.findElementInterfaces(checkClass.getObjectClass())) {
 				parents = ei.getElementParents(nsWrite.getUri());
-				if (parents!=null && parents.contains(ecWrite.getTag())) {
-					refElements.add(checkClass.getTag());
+				if (parents!=null && parents.contains(ecWrite.getId())) {
+					refElements.add(checkClass.getId());
 					break;
 				}
 			}
@@ -395,7 +389,7 @@ public class EldXsdXmlWriter {
 			Class<?> checkObjectClass = checkClass.getObjectClass();
 			List<ElementBindingHandler> b = language.findElementBindingHandlers(objectClass,checkObjectClass);
 			if (b.isEmpty()==false) {
-				refElements.add(checkClass.getTag());
+				refElements.add(checkClass.getId());
 			}
 		}
 		
@@ -429,23 +423,57 @@ public class EldXsdXmlWriter {
 			return; // is done in writeElementClass
 		}
 		AttributesImpl atts = new AttributesImpl();
-		atts.addAttribute ("", "name", "", "", ec.getTag());
-		atts.addAttribute ("", "type", "", "", "this:"+ec.getTag()+"Type");
-		xmlWriter.startElement(SCHEMA_URI, "element", "", atts);	// Only in the language root xsd there is an element.
-		
-		if (ec.getDescription()!=null) {
-			atts = new AttributesImpl();
-			xmlWriter.startElement(SCHEMA_URI, "annotation", "", atts);
-			atts = new AttributesImpl();
-			atts.addAttribute ("", "xml:lang", "", "", "en");
-			xmlWriter.startElement(SCHEMA_URI, "documentation", "", atts);
-			char[] msg = ec.getDescription().toCharArray();
-			xmlWriter.characters(msg,0,msg.length);
-			xmlWriter.endElement(SCHEMA_URI, "documentation", "");
-			xmlWriter.endElement(SCHEMA_URI, "annotation", "");
-		}
-		
-		
+		atts.addAttribute ("", "name", "", "", ec.getId());
+		atts.addAttribute ("", "type", "", "", "this:"+ec.getId()+"Type");
+		xmlWriter.startElement(SCHEMA_URI, "element", "", atts);
+		writeElementMetaBase(ec);
 		xmlWriter.endElement(SCHEMA_URI, "element", "");
+	}
+	
+	private void writeElementAttribute(ElementMetaBase base,AttributesImpl atts) throws SAXException {
+		xmlWriter.startElement (SCHEMA_URI, "attribute", "", atts);
+		writeElementMetaBase(base);
+		xmlWriter.endElement(SCHEMA_URI, "attribute", "");	
+	}
+	
+	private void  writeElementMetaBase(ElementMetaBase base) throws SAXException {
+		if (base==null) {
+			return;
+		}
+		if (base.getDescription()==null) {
+			return;
+		}
+		AttributesImpl atts = new AttributesImpl();
+		xmlWriter.startElement(SCHEMA_URI, "annotation", "", atts);
+		atts = new AttributesImpl();
+		atts.addAttribute ("", "xml:lang", "", "", "en");
+		xmlWriter.startElement(SCHEMA_URI, "documentation", "", atts);
+		writeCharacters(base.getDescription());
+		xmlWriter.endElement(SCHEMA_URI, "documentation", "");
+		xmlWriter.endElement(SCHEMA_URI, "annotation", "");
+	}
+	
+	private void  writeCharacters(String text) throws SAXException {
+		if (text==null) {
+			return;
+		}
+		char[] msg = text.toCharArray();
+		xmlWriter.characters(msg,0,msg.length);
+	}
+	
+	private void  writeComment(String text) throws SAXException {
+		if (text==null) {
+			return;
+		}
+		char[] msg = text.toCharArray();
+		xmlWriter.comment(msg,0,msg.length);
+	}
+	
+	private void  writeIgnorableWhitespace(String text) throws SAXException {
+		if (text==null) {
+			return;
+		}
+		char[] msg = text.toCharArray();
+		xmlWriter.ignorableWhitespace(msg,0,msg.length);
 	}
 }

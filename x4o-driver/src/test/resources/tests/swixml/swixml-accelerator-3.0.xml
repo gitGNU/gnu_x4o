@@ -30,7 +30,7 @@
 	xsi:schemaLocation="http://test.x4o.org/xml/ns/test-root test-root-1.0.xsd"
 	name="mainframe" size="800,600" title="SWIXML-X4O" plaf="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" defaultCloseOperation="3"
 	>
-	<JMenubar name="menubar">
+	<JMenuBar name="menubar">
 		<JMenu name="filemenu" text="File">
 			<JMenuItem name="mi_new" text="New" icon="icons/new.gif" mnemonic="VK_N" accelerator="control N" Action="newAction"/>
 			<JMenuItem name="mi_open" text="Open" icon="icons/open.gif" mnemonic="VK_O" Accelerator="control O" ActionCommand="open"/>
@@ -45,7 +45,7 @@
 		<JMenu text="Help">
 			<JMenuItem name="mi_about" text="About" enabled="true" icon="icons/info.gif" Accelerator="alt A" Action="aboutAction" />
 		</JMenu>
-	</JMenubar>
+	</JMenuBar>
 	<JDesktopPane>
 		<JInternalFrame title="Flow Layout (right aligned)" bounds="10,10,150,150" layout="FlowLayout(FlowLayout.RIGHT)" visible="true" resizable="true">
 			<JButton text="1"/>

@@ -34,7 +34,6 @@ import java.util.List;
  */
 public abstract class AbstractElementClass extends AbstractElementClassBase implements ElementClass {
 
-	private String tag = null;
 	private Class<?> objectClass = null;
 	private Class<?> elementClass = null;
 	private Boolean autoAttributes = true;
@@ -47,20 +46,6 @@ public abstract class AbstractElementClass extends AbstractElementClassBase impl
 		skipPhases = new ArrayList<String>(3);
 	}
 	
-	/**
-	 * @see ElementClass#getTag()
-	 */
-	public String getTag() {
-		return tag;
-	}
-	
-	/**
-	 * @see ElementClass#setTag(String)
-	 */
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
-
 	/**
 	 * @see ElementClass#getElementClass()
 	 */

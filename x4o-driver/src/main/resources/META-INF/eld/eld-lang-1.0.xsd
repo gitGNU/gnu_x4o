@@ -3,11 +3,13 @@
 <!-- =====  Automatic generated schema for language: eld            ===== -->
 <!-- ==================================================================== -->
 <!--
-	ProviderName:	eld.x4o.org
-	ModuleName:		Element Language Definition
+	ID:		eld-module
+	ProviderName:	Element Language Definition
+	ProviderHost:	eld.x4o.org
 	Namespaces:		3
-	Namespace:		http://eld.x4o.org/xml/ns/eld-lang
-	Created on:		Sat Apr 27 20:06:33 CEST 2013
+	Uri:			http://eld.x4o.org/xml/ns/eld-lang
+	Uri schema:	http://eld.x4o.org/xml/ns/eld-lang-0.8.xsd
+	Created on:		Sun Apr 28 11:56:32 CEST 2013
 -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
@@ -19,15 +21,20 @@
 			<element name="description" type="this:descriptionType"/>
 			<element name="element" type="this:elementType"/>
 		</choice>
-		<attribute name="uri" type="string" use="required"/>
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The namespace id.
+				</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="name" type="string"/>
-		<attribute name="prefixMapping" type="string"/>
-		<attribute name="languageRoot" type="boolean"/>
 		<attribute name="elementNamespaceInstanceProvider" type="string"/>
+		<attribute name="uri" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
 		<attribute name="schemaPrefix" type="string"/>
-		<attribute name="id" type="string"/>
+		<attribute name="prefixMapping" type="string"/>
+		<attribute name="languageRoot" type="boolean"/>
 		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="descriptionType">
@@ -39,7 +46,12 @@
 	</complexType>
 	<complexType name="elementSkipPhaseType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
-		<attribute name="name" type="string" use="required"/>
+		<attribute name="name" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The name of the phase to skip.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="elementType">
@@ -52,60 +64,145 @@
 			<element name="elementParent" type="this:elementParentType"/>
 			<element name="elementSkipPhase" type="this:elementSkipPhaseType"/>
 		</choice>
-		<attribute name="objectClass" type="string"/>
-		<attribute name="elementClass" type="string"/>
+		<attribute name="id" type="string">
+			<annotation>
+				<documentation xml:lang="en">The attribute id. (with tag as alias)
+				</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="tag" type="string"/>
-		<attribute name="schemaContentMixed" type="boolean"/>
+		<attribute name="objectClass" type="string">
+			<annotation>
+				<documentation xml:lang="en">The class of the wrapped object.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="elementClass" type="string">
+			<annotation>
+				<documentation xml:lang="en">An custom element class to config object.
+				</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="autoAttributes" type="boolean"/>
+		<attribute name="schemaContentMixed" type="boolean"/>
 		<attribute name="schemaContentBase" type="string"/>
-		<attribute name="id" type="string"/>
 		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="attributeAliasType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
-		<attribute name="name" type="string" use="required"/>
+		<attribute name="name" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The alias name to add to the attribute.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="configuratorGlobalType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="description" type="this:descriptionType"/>
 		</choice>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="bean.class" type="string" use="required"/>
-		<attribute name="configAction" type="string"/>
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The global element configurator id.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="bean.class" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The class of the element configurator.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="configAction" type="string">
+			<annotation>
+				<documentation xml:lang="en">If set to true then run in config phase.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="configuratorType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="description" type="this:descriptionType"/>
 		</choice>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="bean.class" type="string" use="required"/>
-		<attribute name="configAction" type="string"/>
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The element configurator id.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="bean.class" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The class of the global element configurator.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="configAction" type="string">
+			<annotation>
+				<documentation xml:lang="en">If set to true then run in config phase.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="attributeFromBodyType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="description" type="this:descriptionType"/>
 		</choice>
-		<attribute name="bodyType" type="string"/>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="name" type="string" use="required"/> 
+		<attribute name="bodyType" type="string">
+			<annotation>
+				<documentation xml:lang="en">See org.x4o.xml.element.Element.ElementType for options defaults to 'characters'.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The id for this configurator.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="name" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The attribute name to fill the value.
+				</documentation>
+			</annotation>
+		</attribute> 
 	</complexType>
 	<complexType name="attributeHandlerType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="attributeHandlerNextAttribute" type="this:attributeHandlerNextAttributeType"/>
 			<element name="description" type="this:descriptionType"/>
 		</choice>
-		<attribute name="attributeName" type="string" use="required"/>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="bean.class" type="string" use="required"/>
+		<attribute name="attributeName" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The xml attribute name.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The atttribute handler id.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="bean.class" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The class of the attribute handler.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="attributeHandlerNextAttributeType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
-		<attribute name="attributeName" type="string" use="required"/>
+		<attribute name="attributeName" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The attribute name to run after this attribute.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="attributeType">
@@ -126,41 +223,86 @@
 			<element name="bean" type="this:beanType"/>
 			<element name="description" type="this:descriptionType"/>
 		</choice>
+		<attribute name="id" type="string">
+			<annotation>
+				<documentation xml:lang="en">The attribute id. (with name as alias)
+				</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="name" type="string"/>
-		<attribute name="defaultValue" type="string"/>
 		<attribute name="required" type="boolean"/>
-		<attribute name="writeOrder" type="integer"/>
-		<attribute name="runBeanValue" type="boolean"/>
-		<attribute name="runResolveEL" type="boolean"/>
-		<attribute name="runConverters" type="boolean"/>
+		<attribute name="defaultValue" type="string"/>
 		<attribute name="objectConverter" type="string"/>
-		<attribute name="id" type="string"/>
+		<attribute name="runBeanValue" type="boolean"/>
+		<attribute name="writeOrder" type="integer"/>
+		<attribute name="runConverters" type="boolean"/>
+		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="bindingHandlerType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="description" type="this:descriptionType"/>
 		</choice>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="bean.class" type="string" use="required"/>
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The binding handler id.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="bean.class" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The class of the binding handler.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="beanType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="attributeHandlerNextAttribute" type="this:attributeHandlerNextAttributeType"/>
 		</choice>
-		<attribute name="bean.class" type="string"/>
+		<attribute name="bean.class" type="string">
+			<annotation>
+				<documentation xml:lang="en">The class name of the the class to load.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<complexType name="classBindingHandlerType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="description" type="this:descriptionType"/>
 		</choice>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="childClass" type="string" use="required"/>
-		<attribute name="parentClass" type="string" use="required"/>
-		<attribute name="getMethod" type="string" use="required"/>
-		<attribute name="addMethod" type="string" use="required"/> 
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The id for this binding handler.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="childClass" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The child class.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="parentClass" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The parent class.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="getMethod" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The method name of the method used to get the childeren of the parent.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="addMethod" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The method name of the method used to add the child to the parent.
+				</documentation>
+			</annotation>
+		</attribute> 
 	</complexType>
 	<complexType name="elementInterfaceType">
 		<choice minOccurs="0" maxOccurs="unbounded">
@@ -173,14 +315,34 @@
 			<element name="description" type="this:descriptionType"/>
 			<element name="elementParent" type="this:elementParentType"/>
 		</choice>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="interfaceClass" type="string" use="required"/>
+		<attribute name="id" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The interface id.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="interfaceClass" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The interface class.
+				</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="elementParentType">
 		<choice minOccurs="0" maxOccurs="unbounded"/>
-		<attribute name="tag" type="string"/>
-		<attribute name="uri" type="string"/>
+		<attribute name="tag" type="string">
+			<annotation>
+				<documentation xml:lang="en">The parent tag to have object for.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="uri" type="string">
+			<annotation>
+				<documentation xml:lang="en">The element namespace uri if non local parent.
+				</documentation>
+			</annotation>
+		</attribute>
 		<anyAttribute/>
 	</complexType>
 	<element name="namespace" type="this:namespaceType">

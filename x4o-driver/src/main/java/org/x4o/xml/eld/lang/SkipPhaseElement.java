@@ -43,7 +43,7 @@ public class SkipPhaseElement extends AbstractElement {
 	public void doElementEnd() throws ElementException {
 		String phase = getAttributes().get("name");
 		if (phase==null) {
-			throw new ElementException("'name' attribute is not set on: "+getElementClass().getTag());
+			throw new ElementException("'name' attribute is not set on: "+getElementClass().getId());
 		}
 		if (getParent().getElementObject() instanceof ElementClass) {
 				((ElementClass)getParent().getElementObject()).addSkipPhase(phase);

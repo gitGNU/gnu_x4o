@@ -100,6 +100,48 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 		}
 		if (childObject instanceof ElementNamespaceContext) {
 			ElementNamespaceContext elementNamespaceContext = (ElementNamespaceContext)childObject;
+			
+			if (elementNamespaceContext.getId()==null) {
+				throw new NullPointerException("Can add ElementNamespaceContext without id.");
+			}
+			// TODO: no language here so move to EL default on eld attribute tag
+			if (elementNamespaceContext.getId()!=null) {
+				StringBuffer buf = new StringBuffer(30);
+				for (char c:elementNamespaceContext.getId().toLowerCase().toCharArray()) {
+					if (Character.isLetter(c))	{buf.append(c);}
+					if (Character.isDigit(c))	{buf.append(c);}
+					if ('-'==c)					{buf.append(c);}
+				}
+				String id = buf.toString();
+				elementNamespaceContext.setId(id);
+			}
+			if (elementNamespaceContext.getUri()==null) {
+				elementNamespaceContext.setUri(
+						"http://"+languageModule.getProviderHost()+
+						"/xml/ns/"+x4oParsingContext.getLanguageName()+
+						"-"+elementNamespaceContext.getId());
+			}
+			if (elementNamespaceContext.getSchemaUri()==null) {
+				elementNamespaceContext.setSchemaUri(
+						"http://"+languageModule.getProviderHost()+
+						"/xml/ns/"+x4oParsingContext.getLanguageName()+
+						"-"+elementNamespaceContext.getId()+
+						"-"+x4oParsingContext.getLanguageVersion()+
+						".xsd"
+					);
+			}
+			if (elementNamespaceContext.getSchemaResource()==null) {
+				elementNamespaceContext.setSchemaResource(
+						x4oParsingContext.getLanguageName()+
+						"-"+elementNamespaceContext.getId()+
+						"-"+x4oParsingContext.getLanguageVersion()+
+						".xsd"
+					);
+			}
+			if (elementNamespaceContext.getSchemaPrefix()==null) {
+				elementNamespaceContext.setSchemaPrefix(elementNamespaceContext.getId());
+			}
+			
 			try {
 				elementNamespaceContext.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
 			} catch (Exception e) {
