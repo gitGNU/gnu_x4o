@@ -25,6 +25,7 @@ package org.x4o.plugin.maven;
 
 import java.io.File;
 
+import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 
 /**
@@ -52,6 +53,16 @@ public class X4OWriteLanguageDocMojoTest extends AbstractMojoTestCase {
 		X4OWriteLanguageDocMojo mojo = (X4OWriteLanguageDocMojo) lookupMojo(goal,pom);
 		assertNotNull(mojo);
 		mojo.execute();
+	}
+	
+	public void testHelp() throws Exception {
+		File pom = getTestFile("src/test/resources/junit/test-plugin-defaults.pom");
+		assertNotNull(pom);
+		assertTrue(pom.exists());
+		Mojo mojo =  lookupMojo("help",pom);
+		assertNotNull(mojo);
+		mojo.execute();
+
 	}
 	
 	public void testConfAllWriteDoc() throws Exception {

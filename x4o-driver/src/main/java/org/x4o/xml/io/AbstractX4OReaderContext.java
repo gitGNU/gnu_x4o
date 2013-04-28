@@ -87,9 +87,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 		try {
 			return readContext(inputStream,file.getAbsolutePath(),basePath);
 		} finally {
-			if(inputStream!=null) {
-				inputStream.close();
-			}
+			inputStream.close();
 		}
 	}
 	
@@ -121,9 +119,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 		try {
 			return readContext(inputStream,url.toExternalForm(),basePath);
 		} finally {
-			if(inputStream!=null) {
-				inputStream.close();
-			}
+			inputStream.close();
 		}
 	}
 	

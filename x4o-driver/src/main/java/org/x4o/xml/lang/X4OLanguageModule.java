@@ -54,12 +54,12 @@ public interface X4OLanguageModule extends ElementMetaBase {
 	/**
 	 * @return the providerHost
 	 */
-	public String getProviderHost();
+	String getProviderHost();
 	
 	/**
 	 * @param providerHost the providerHost to set
 	 */
-	public void setProviderHost(String providerHost);
+	void setProviderHost(String providerHost);
 	
 	/**
 	 * Adds an ElementAttributeHandler.

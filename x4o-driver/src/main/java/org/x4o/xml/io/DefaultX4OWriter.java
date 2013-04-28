@@ -52,7 +52,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	 * @see org.x4o.xml.io.X4OWriterContext#writeContext(org.x4o.xml.lang.X4OLanguageContext, java.io.OutputStream)
 	 */
 	public void writeContext(X4OLanguageContext languageContext,OutputStream output) throws X4OConnectionException,SAXException,IOException {
-		setProperty(X4OLanguagePropertyKeys.WRITER_OUTPUT_STREAM, output);
+		languageContext.setLanguageProperty(X4OLanguagePropertyKeys.WRITER_OUTPUT_STREAM, output);
 		try {
 			languageContext.getLanguage().getPhaseManager().runPhases(languageContext, X4OPhaseType.XML_WRITE);
 		} catch (X4OPhaseException e) {

@@ -57,7 +57,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	private Map<String,Object> languageProperties;
 
 	/**
-	 * Creates a new empty ElementLanguage.
+	 * Creates a new empty language context.
 	 */
 	public AbstractX4OLanguageContext(X4OLanguage language) {
 		if (language==null) {

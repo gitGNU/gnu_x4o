@@ -32,6 +32,9 @@ package	org.x4o.xml.lang;
  */
 public class DefaultX4OLanguageContext extends AbstractX4OLanguageContext {
 
+	/**
+	 * Creates a new empty language context.
+	 */
 	public DefaultX4OLanguageContext(X4OLanguage language) {
 		super(language);
 	}

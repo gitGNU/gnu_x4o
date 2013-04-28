@@ -24,13 +24,13 @@
 package org.x4o.xml.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestBean;
 import org.x4o.xml.test.models.TestObjectRoot;
@@ -38,12 +38,12 @@ import org.x4o.xml.test.models.TestObjectRoot;
 import junit.framework.TestCase;
 
 /**
- * X4OAbstractReaderContextTest.
+ * X4OReaderTest.
  * 
  * @author Willem Cazander
  * @version 1.0 Apr 15, 2013
  */
-public class X4OAbstractReaderContextTest extends TestCase {
+public class X4OReaderTest extends TestCase {
 	
 	private File copyResourceToTempFile() throws IOException {
 		File tempFile = File.createTempFile("test-resource", ".xml");
@@ -59,94 +59,37 @@ public class X4OAbstractReaderContextTest extends TestCase {
 		return tempFile;
 	}
 	
-	public void testReadFileName() throws Exception {
+	public void testReadInputStream() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		File xmlFile = copyResourceToTempFile();
-		X4OLanguageContext context = reader.readFileContext(xmlFile.getAbsolutePath());
-		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
+		URL basePath = new File(xmlFile.getAbsolutePath()).toURI().toURL();
+		InputStream inputStream = new FileInputStream(xmlFile);
+		TestObjectRoot root = null;
+		try {
+			root = reader.read(inputStream, xmlFile.getAbsolutePath(), basePath);
+		} finally {
+			inputStream.close();
+		}
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
 		TestBean bean = root.getTestBeans().get(0);
 		assertNotNull(bean);
 	}
-	
-	public void testReadFileNameNull() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		Exception e = null;
-		try {
-			String nullFileName = null;
-			reader.readFileContext(nullFileName);
-		} catch (Exception catchE) {
-			e = catchE;
-		}
-		assertNotNull("No exception",e);
-		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
-		assertTrue("Wrong exception message",e.getMessage().contains("null"));
-		assertTrue("Wrong exception message",e.getMessage().contains("fileName"));
-	}
-	
-	public void testReadFile() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		File xmlFile = copyResourceToTempFile();
-		X4OLanguageContext context = reader.readFileContext(xmlFile);
-		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
-		assertNotNull(root);
-		assertTrue(root.getTestBeans().size()>0);
-		TestBean bean = root.getTestBeans().get(0);
-		assertNotNull(bean);
-	}
-	
-	public void testReadFileNull() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		Exception e = null;
-		try {
-			File nullFile = null;
-			reader.readFileContext(nullFile);
-		} catch (Exception catchE) {
-			e = catchE;
-		}
-		assertNotNull("No exception",e);
-		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
-		assertTrue("Wrong exception message",e.getMessage().contains("null"));
-		assertTrue("Wrong exception message",e.getMessage().contains("file"));
-	}
-	
-	public void testReadFileNotExists() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		Exception e = null;
-		try {
-			File tempFile = File.createTempFile("test-file", ".xml");
-			tempFile.delete();
-			reader.readFileContext(tempFile);
-		} catch (Exception catchE) {
-			e = catchE;
-		}
-		assertNotNull("No exception",e);
-		assertEquals("Wrong exception class",FileNotFoundException.class, e.getClass());
-		assertTrue("Wrong exception message",e.getMessage().contains("exists"));
-		assertTrue("Wrong exception message",e.getMessage().contains("File"));
-	}
-	
 	
 	public void testReadResource() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		X4OLanguageContext context = reader.readResourceContext("tests/attributes/test-bean.xml");
-		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
 		assertNotNull(root);
 	}
 	
 	public void testReadResourceNull() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		Exception e = null;
 		try {
-			reader.readResourceContext(null);
+			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+			X4OReader<TestObjectRoot> reader = driver.createReader();
+			reader.readResource(null);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -157,15 +100,14 @@ public class X4OAbstractReaderContextTest extends TestCase {
 	}
 	
 	public void testReadString() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		X4OLanguageContext context = reader.readStringContext(
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		TestObjectRoot root = reader.readString(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
 				"<root:root xmlns:root=\"http://test.x4o.org/xml/ns/test-root\" xmlns=\"http://test.x4o.org/xml/ns/test-lang\">"+
 				"<testBean privateIntegerTypeField=\"987654321\"/>"+
 				"</root:root>"
 			);
-		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
 		TestBean bean = root.getTestBeans().get(0);
@@ -174,11 +116,11 @@ public class X4OAbstractReaderContextTest extends TestCase {
 	}
 	
 	public void testReadStringNull() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		Exception e = null;
 		try {
-			reader.readStringContext(null);
+			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+			X4OReader<TestObjectRoot> reader = driver.createReader();
+			reader.readString(null);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -189,11 +131,10 @@ public class X4OAbstractReaderContextTest extends TestCase {
 	}
 	
 	public void testReadUrl() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
 		URL xmlUrl = Thread.currentThread().getContextClassLoader().getResource("tests/attributes/test-bean.xml");
-		X4OLanguageContext context = reader.readUrlContext(xmlUrl);
-		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
+		TestObjectRoot root = reader.readUrl(xmlUrl);
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
 		TestBean bean = root.getTestBeans().get(0);
@@ -201,11 +142,11 @@ public class X4OAbstractReaderContextTest extends TestCase {
 	}
 	
 	public void testReadUrlNull() throws Exception {
-		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		Exception e = null;
 		try {
-			reader.readUrlContext(null);
+			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+			X4OReader<TestObjectRoot> reader = driver.createReader();
+			reader.readUrl(null);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -213,5 +154,59 @@ public class X4OAbstractReaderContextTest extends TestCase {
 		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
 		assertTrue("Wrong exception message",e.getMessage().contains("null"));
 		assertTrue("Wrong exception message",e.getMessage().contains("url"));
+	}
+	
+	public void testReadFileName() throws Exception {
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		File xmlFile = copyResourceToTempFile();
+		TestObjectRoot root = reader.readFile(xmlFile.getAbsolutePath());
+		assertNotNull(root);
+		assertTrue(root.getTestBeans().size()>0);
+		TestBean bean = root.getTestBeans().get(0);
+		assertNotNull(bean);
+	}
+	
+	public void testReadFileNameNull() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+			X4OReader<TestObjectRoot> reader = driver.createReader();
+			String nullFileName = null;
+			reader.readFile(nullFileName);
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+		assertTrue("Wrong exception message",e.getMessage().contains("fileName"));
+	}
+	
+	public void testReadFile() throws Exception {
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		File xmlFile = copyResourceToTempFile();
+		TestObjectRoot root = reader.readFile(xmlFile);
+		assertNotNull(root);
+		assertTrue(root.getTestBeans().size()>0);
+		TestBean bean = root.getTestBeans().get(0);
+		assertNotNull(bean);
+	}
+	
+	public void testReadFileNull() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+			X4OReader<TestObjectRoot> reader = driver.createReader();
+			File nullFile = null;
+			reader.readFile(nullFile);
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+		assertTrue("Wrong exception message",e.getMessage().contains("file"));
 	}
 }

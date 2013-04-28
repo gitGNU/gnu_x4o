@@ -156,6 +156,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 					languageContext.getX4ODebugWriter().getDebugWriter().characters(stack, 0, stack.length);
 					languageContext.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "");
 				} catch (Exception ee) {
+					logger.warning(ee.getMessage());
 				}
 			}
 			

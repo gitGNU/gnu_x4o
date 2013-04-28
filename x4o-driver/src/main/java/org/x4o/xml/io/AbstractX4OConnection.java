@@ -36,10 +36,17 @@ public abstract class AbstractX4OConnection implements X4OConnection {
 	
 	private X4OLanguageContext languageContext = null;
 	
+	/**
+	 * Creates a AbstractX4OConnection.
+	 * @param languageContext	The language context of this connection.
+	 */
 	public AbstractX4OConnection(X4OLanguageContext languageContext) {
 		this.languageContext=languageContext;
 	}
 	
+	/**
+	 * @return	Returns the language context.
+	 */
 	protected X4OLanguageContext getLanguageContext() {
 		return languageContext;
 	}
@@ -50,7 +57,7 @@ public abstract class AbstractX4OConnection implements X4OConnection {
 	 * @param value	The vlue of the property to set.
 	 */
 	public void setProperty(String key,Object value) {
-		String keyLimits[] = getPropertyKeySet();
+		String[] keyLimits = getPropertyKeySet();
 		for (int i=0;i<keyLimits.length;i++) {
 			String keyLimit = keyLimits[i];
 			if (keyLimit.equals(key)) {

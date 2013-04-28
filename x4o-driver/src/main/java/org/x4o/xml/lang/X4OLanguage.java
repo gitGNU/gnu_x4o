@@ -63,6 +63,7 @@ public interface X4OLanguage {
 
 	/**
 	 * Creates and fills the initial element language used to store the language.
+	 * @param	driver	The driver to create language context for.
 	 * @return	The newly created ElementLanguage.
 	 */
 	X4OLanguageContext createLanguageContext(X4ODriver<?> driver);

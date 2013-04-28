@@ -58,9 +58,7 @@ public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection 
 		try {
 			writeContext(context,outputStream);
 		} finally {
-			if(outputStream!=null) {
-				outputStream.close();
-			}
+			outputStream.close();
 		}
 	}
 }

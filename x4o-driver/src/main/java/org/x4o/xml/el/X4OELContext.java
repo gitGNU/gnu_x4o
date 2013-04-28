@@ -47,6 +47,9 @@ public class X4OELContext extends ELContext {
 	private FunctionMapper functionMapper = null;
 	private VariableMapper variableMapper = null;
 	
+	/**
+	 * Creates a X4OELContext.
+	 */
 	public X4OELContext(/* X4OLanguageConfiguration x4oParserConfig */) {
 		
 		CompositeELResolver compositeELResolver = new CompositeELResolver();
@@ -62,6 +65,8 @@ public class X4OELContext extends ELContext {
 	}
 
 	/**
+	 * Returns the ELResolver.
+	 * @return The ELResolver.
 	 * @see javax.el.ELContext#getELResolver()
 	 */
 	@Override
@@ -70,6 +75,8 @@ public class X4OELContext extends ELContext {
 	}
 
 	/**
+	 * Returns the FunctionMapper.
+	 * @return The FunctionMapper.
 	 * @see javax.el.ELContext#getFunctionMapper()
 	 */
 	@Override
@@ -78,6 +85,8 @@ public class X4OELContext extends ELContext {
 	}
 
 	/**
+	 * Returns the VariableMapper.
+	 * @return The VariableMapper.
 	 * @see javax.el.ELContext#getVariableMapper()
 	 */
 	@Override

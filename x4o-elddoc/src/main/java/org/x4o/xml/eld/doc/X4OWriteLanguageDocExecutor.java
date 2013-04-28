@@ -45,7 +45,11 @@ public class X4OWriteLanguageDocExecutor {
 	private String languageVersion = null;
 	private File basePath;
 	
-	static public void main(String argu[]) {
+	/**
+	 * Config and executes this language task.
+	 * @param argu	The command line arguments.
+	 */
+	public static void main(String[] argu) {
 		X4OWriteLanguageDocExecutor languageSchema = new X4OWriteLanguageDocExecutor();
 		List<String> arguList = Arrays.asList(argu);
 		Iterator<String> arguIterator = arguList.iterator();
@@ -87,6 +91,9 @@ public class X4OWriteLanguageDocExecutor {
 		}
 	}
 
+	/**
+	 * Executes this language task.
+	 */
 	public void execute() throws ElementException {
 		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguageName());
 		X4OLanguageContext context = driver.createLanguageContext(getLanguageVersion());

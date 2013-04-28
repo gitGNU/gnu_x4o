@@ -125,7 +125,19 @@
 		</eld:element>
 		
 		<eld:element tag="parent" objectClass="org.x4o.xml.test.models.TestObjectParent"/>
-		<eld:element tag="child" objectClass="org.x4o.xml.test.models.TestObjectChild"/>
+		<eld:element tag="child" objectClass="org.x4o.xml.test.models.TestObjectChild">
+			<eld:attributeFromBody name="name" id="child-name"/>
+		</eld:element>
+		<!-- 
+		<eld:element tag="childName">
+			<eld:attributeFromBody name="name" id="child-name" useParent="true"/>
+			<eld:elementParent tag="child"/>
+		</eld:element>
+		<eld:element tag="childSize">
+			<eld:attributeFromBody name="size" id="child-size" useParent="true"/>
+			<eld:elementParent tag="child"/>
+		</eld:element>
+		 -->
 		
 		<eld:element tag="testObjectParent" objectClass="org.x4o.xml.test.models.TestObjectParent"/>
 		<eld:element tag="testObjectChild" objectClass="org.x4o.xml.test.models.TestObjectChild"/>

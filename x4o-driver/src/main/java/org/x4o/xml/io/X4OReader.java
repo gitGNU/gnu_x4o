@@ -39,7 +39,12 @@ import org.xml.sax.SAXException;
  */
 public interface X4OReader<T> extends X4OConnection {
 
-	public void addELBeanInstance(String name,Object bean);
+	/**
+	 * Adds an bean instance to the el context.
+	 * @param name	The el name for the bean.
+	 * @param bean	The bean to add to the el context.
+	 */
+	void addELBeanInstance(String name,Object bean);
 	
 	/**
 	 * Method to parse the xml data.

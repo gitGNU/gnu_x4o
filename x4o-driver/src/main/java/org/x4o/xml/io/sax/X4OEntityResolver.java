@@ -103,6 +103,8 @@ public class X4OEntityResolver implements EntityResolver {
 	 * 
 	 * @param publicId The public id to search for.
 	 * @param systemId The system id to search for.
+	 * @throws IOException When resource could not be read.
+	 * @throws SAXException When exception is thrown.
 	 * @return Returns null or the InputSource of the requested ids.
 	 */
 	public InputSource resolveEntity(String publicId, String systemId) throws IOException,SAXException {

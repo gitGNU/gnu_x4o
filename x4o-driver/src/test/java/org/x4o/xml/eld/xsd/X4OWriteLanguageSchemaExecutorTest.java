@@ -25,9 +25,12 @@ package org.x4o.xml.eld.xsd;
 
 import java.io.File;
 
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.X4ODriverManager;
 import org.x4o.xml.eld.CelDriver;
 import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.eld.xsd.X4OWriteLanguageSchemaExecutor;
+import org.x4o.xml.io.X4OSchemaWriter;
 import org.x4o.xml.test.swixml.SwiXmlDriver;
 
 import junit.framework.TestCase;
@@ -50,6 +53,12 @@ public class X4OWriteLanguageSchemaExecutorTest extends TestCase {
 			result.mkdir();
 		}
 		return result;
+	}
+	
+	public void testSchemaWriterDirect() throws Exception {
+		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(CelDriver.LANGUAGE_NAME);
+		X4OSchemaWriter xsd = driver.createSchemaWriter();
+		xsd.writeSchema(getTempPath("junit-xsd-cel-direct"));
 	}
 	
 	public void testEldSchema() throws Exception {

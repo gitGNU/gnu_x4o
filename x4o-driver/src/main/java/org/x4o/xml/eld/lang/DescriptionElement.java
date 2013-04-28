@@ -28,9 +28,7 @@ import org.x4o.xml.element.ElementMetaBase;
 import org.x4o.xml.element.ElementException;
 
 /**
- * Fills all the ElementDescription which the description 
- * 
- * 
+ * Fills all the ElementDescription which the description.
  * 
  * @author Willem Cazander
  * @version 1.0 Jan 13, 2009
@@ -38,6 +36,8 @@ import org.x4o.xml.element.ElementException;
 public class DescriptionElement extends AbstractElement {
 		
 	/**
+	 * Starts the description element and validates that it is not root and parent is meta base.
+	 * @throws ElementException	When parent element object is not meta base object.
 	 * @see org.x4o.xml.element.AbstractElement#doElementStart()
 	 */
 	@Override
@@ -51,6 +51,9 @@ public class DescriptionElement extends AbstractElement {
 	}
 
 	/**
+	 * The description elememt body characters are stored as element object.
+	 * @param characters	The text of the description.
+	 * @throws ElementException	When super has error.
 	 * @see org.x4o.xml.element.AbstractElement#doCharacters(java.lang.String)
 	 */
 	@Override
@@ -60,6 +63,8 @@ public class DescriptionElement extends AbstractElement {
 	}
 
 	/**
+	 * Ends the description element and sets the description on the parent.
+	 * @throws ElementException	When parent element object is not meta base object.
 	 * @see org.x4o.xml.element.AbstractElement#doElementEnd()
 	 */
 	@Override

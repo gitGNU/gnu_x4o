@@ -23,10 +23,13 @@
 
 package org.x4o.xml.core;
 
+import java.util.List;
+
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestBean;
+import org.x4o.xml.test.models.TestObjectChild;
 import org.x4o.xml.test.models.TestObjectRoot;
 
 import junit.framework.TestCase;
@@ -38,6 +41,20 @@ import junit.framework.TestCase;
  * @version 1.0 Jul 24, 2006
  */
 public class AttributeBeanTest extends TestCase {
+	
+	public void testBeanBody() throws Exception {
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		
+		TestObjectRoot root = reader.readResource("tests/attributes/test-body.xml");
+		assertNotNull(root);
+		List<TestObjectChild> childs = root.getTestObjectChilds();
+		assertEquals(2,childs.size());
+		TestObjectChild child0 = childs.get(0);
+		TestObjectChild child1 = childs.get(1);
+		assertEquals("attr-name",child0.getName());
+		assertEquals("body-name",child1.getName());
+	}
 	
 	public void testBeanProperties() throws Exception {
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();

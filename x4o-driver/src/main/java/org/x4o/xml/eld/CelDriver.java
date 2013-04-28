@@ -36,6 +36,8 @@ public class CelDriver extends X4ODriver<X4OLanguageModule> {
 
 	/** Defines the identifier of the 'Core Element Language' language. */
 	public static final String LANGUAGE_NAME = "cel";
+	
+	/** Defines the versions this langauge knowns. */
 	public static final String[] LANGUAGE_VERSIONS = new String[]{X4ODriver.DEFAULT_LANGUAGE_VERSION};
 
 	@Override

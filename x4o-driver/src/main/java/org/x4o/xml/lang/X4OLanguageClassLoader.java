@@ -29,7 +29,7 @@ package org.x4o.xml.lang;
  * @author Willem Cazander
  * @version 1.0 6 Aug 2012
  */
-public class X4OLanguageClassLoader {
+public final class X4OLanguageClassLoader {
 	
 	/**
 	 * Made X4OLanguageClassLoader have private constructor.

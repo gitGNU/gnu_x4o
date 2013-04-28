@@ -36,7 +36,6 @@ import org.x4o.xml.conv.ObjectConverter;
  */
 public abstract class AbstractElementClassAttribute extends AbstractElementMetaBase implements ElementClassAttribute {
 
-	private String name = null;
 	private ObjectConverter objectConverter = null;
 	private Object defaultValue = null;
 	private List<String> attributeAliases = null;
@@ -46,40 +45,33 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	private Boolean runConverters = null;
 	private Boolean runBeanValue = null;
 	private Integer writeOrder = null;
-
+	
+	/**
+	 * Creates a AbstractElementClassAttribute.
+	 */
 	public AbstractElementClassAttribute() {
 		attributeAliases = new ArrayList<String>(3);
 	}
-	
-	/**
-	 * @see org.x4o.xml.element.ElementClassAttribute#getName()
-	 */
-	public String getName() {
-		return name;
-	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementClassAttribute#setName(java.lang.String)
-	 */
-	public void setName(String name) {
-		this.name=name;
-	}
-
-	/**
-	 * @return the objectConverter
+	 * Returns the objectConverter.
+	 * @return The objectConverter.
 	 */
 	public ObjectConverter getObjectConverter() {
 		return objectConverter;
 	}
 
 	/**
-	 * @param objectConverter the objectConverter to set
+	 * Sets the objectConverter.
+	 * @param objectConverter The objectConverter to set.
 	 */
 	public void setObjectConverter(ObjectConverter objectConverter) {
 		this.objectConverter = objectConverter;
 	}
 
 	/**
+	 * Sets the default value.
+	 * @param	defaultValue	The defaultValue to set.
 	 * @see org.x4o.xml.element.ElementClassAttribute#setDefaultValue(java.lang.Object)
 	 */
 	public void setDefaultValue(Object defaultValue) {
@@ -87,6 +79,8 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	}
 
 	/**
+	 * Returns the default value.
+	 * @return The default value.
 	 * @see org.x4o.xml.element.ElementClassAttribute#getDefaultValue()
 	 */
 	public Object getDefaultValue() {
@@ -94,6 +88,8 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	}
 
 	/**
+	 * Adds an alias of this attribute.
+	 * @param	alias	The alias to add.
 	 * @see org.x4o.xml.element.ElementClassAttribute#addAttributeAlias(java.lang.String)
 	 */
 	public void addAttributeAlias(String alias) {
@@ -101,6 +97,8 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	}
 
 	/**
+	 * Removes an alias of this attribute.
+	 * @param alias	The alias to remove.
 	 * @see org.x4o.xml.element.ElementClassAttribute#removeAttributeAlias(java.lang.String)
 	 */
 	public void removeAttributeAlias(String alias) {
@@ -108,6 +106,8 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	}
 
 	/**
+	 * Returns all aliases of this attribute.
+	 * @return	An list of aliases.
 	 * @see org.x4o.xml.element.ElementClassAttribute#getAttributeAliases()
 	 */
 	public List<String> getAttributeAliases() {
@@ -115,70 +115,70 @@ public abstract class AbstractElementClassAttribute extends AbstractElementMetaB
 	}
 
 	/**
-	 * @return the required
+	 * @return the required.
 	 */
 	public Boolean getRequired() {
 		return required;
 	}
 
 	/**
-	 * @param required the required to set
+	 * @param required the required to set.
 	 */
 	public void setRequired(Boolean required) {
 		this.required = required;
 	}
 
 	/**
-	 * @return the runResolveEL
+	 * @return the runResolveEL.
 	 */
 	public Boolean getRunResolveEL() {
 		return runResolveEL;
 	}
 
 	/**
-	 * @param runResolveEL the runResolveEL to set
+	 * @param runResolveEL the runResolveEL to set.
 	 */
 	public void setRunResolveEL(Boolean runResolveEL) {
 		this.runResolveEL = runResolveEL;
 	}
 
 	/**
-	 * @return the runConverters
+	 * @return the runConverters.
 	 */
 	public Boolean getRunConverters() {
 		return runConverters;
 	}
 
 	/**
-	 * @param runConverters the runConverters to set
+	 * @param runConverters the runConverters to set.
 	 */
 	public void setRunConverters(Boolean runConverters) {
 		this.runConverters = runConverters;
 	}
 
 	/**
-	 * @return the runBeanValue
+	 * @return the runBeanValue.
 	 */
 	public Boolean getRunBeanValue() {
 		return runBeanValue;
 	}
 
 	/**
-	 * @param runBeanValue the runBeanValue to set
+	 * @param runBeanValue the runBeanValue to set.
 	 */
 	public void setRunBeanValue(Boolean runBeanValue) {
 		this.runBeanValue = runBeanValue;
 	}
 
 	/**
-	 * @return the writeOrder
+	 * @return the writeOrder.
 	 */
 	public Integer getWriteOrder() {
 		return writeOrder;
 	}
 
 	/**
-	 * @param writeOrder the writeOrder to set
+	 * @param writeOrder the writeOrder to set.
 	 */
 	public void setWriteOrder(Integer writeOrder) {
 		this.writeOrder = writeOrder;

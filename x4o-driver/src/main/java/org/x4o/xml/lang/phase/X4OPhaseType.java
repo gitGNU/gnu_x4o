@@ -24,16 +24,25 @@
 package	org.x4o.xml.lang.phase;
 
 /**
- * X4OPhaseType
+ * X4OPhaseType defines which phase type there are to put phases in to execute.
  * 
  * @author Willem Cazander
  * @version 1.0 Apr 30, 2013
  */
 public enum X4OPhaseType {
 	
+	/** Language init. */
 	INIT,
+	
+	/** Read/Write xml.(not used)  */
 	XML_RW,
+	
+	/** XML Reading. */
 	XML_READ,
+	
+	/** XML Writing. */
 	XML_WRITE,
+	
+	/** XML Schema writing. */
 	XML_WRITE_SCHEMA
 }

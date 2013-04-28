@@ -42,6 +42,9 @@ public class AttributeFromBodyConfigurator extends AbstractElementConfigurator {
 	private String bodyType = null;
 	
 	/**
+	 * Config an element body as attribute of parent elememt.
+	 * @param element The element to config. 
+	 * @throws ElementConfiguratorException Is thrown when object tree is non valid.
 	 * @see org.x4o.xml.element.ElementConfigurator#doConfigElement(org.x4o.xml.element.Element)
 	 */
 	public void doConfigElement(Element element) throws ElementConfiguratorException {
@@ -64,7 +67,7 @@ public class AttributeFromBodyConfigurator extends AbstractElementConfigurator {
 		} else {
 			throw new ElementConfiguratorException(this,"bodyType attribute value is unknown; "+bodyType);
 		}
-		if (value.length()==0) {
+		if (value.trim().length()==0) {
 			return;
 		}
 		element.getAttributes().put(name, value);

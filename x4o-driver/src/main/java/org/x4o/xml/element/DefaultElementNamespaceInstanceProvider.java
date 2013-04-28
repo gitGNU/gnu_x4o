@@ -75,10 +75,11 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 		try {
 			if (elementClass.getElementClass()!=null) {
 				Object obj = X4OLanguageClassLoader.newInstance(elementClass.getElementClass());
-				if ((obj instanceof Element) == false) {
+				if (obj instanceof Element) {
+					element = (Element) obj;
+				} else {
 					throw new ElementNamespaceInstanceProviderException(this,"Provided elementClassName is not an Element: "+obj.getClass());
 				}
-				element = (Element) obj;
 			} else {
 				element = (Element)X4OLanguageClassLoader.newInstance((languageContext.getLanguage().getLanguageConfiguration().getDefaultElement()));
 			}

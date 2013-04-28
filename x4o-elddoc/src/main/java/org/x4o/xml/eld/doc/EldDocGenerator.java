@@ -24,6 +24,7 @@
 package org.x4o.xml.eld.doc;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
@@ -45,10 +46,19 @@ public class EldDocGenerator {
 	
 	private X4OLanguageContext context = null;
 	
+	/**
+	 * Creates an EldDocGenerator for this langauge context.
+	 * @param context	The language context to generate doc for.
+	 */
 	public EldDocGenerator(X4OLanguageContext context) {
 		this.context=context;
 	}
 	
+	/**
+	 * Writes the language documentation to the base path.
+	 * @param basePath	The path to write to documentation to.
+	 * @throws ElementException	Is thrown when error is done.
+	 */
 	public void writeDoc(File basePath) throws ElementException {
 		EldDocHtmlWriter writer = new EldDocHtmlWriter();
 		try {
@@ -97,8 +107,8 @@ public class EldDocGenerator {
 				}
 			}
 			
-		} catch (Exception e) {
-			throw new ElementException(e); // todo rm 
+		} catch (IOException e) {
+			throw new ElementException(e); 
 		}
 	}
 }

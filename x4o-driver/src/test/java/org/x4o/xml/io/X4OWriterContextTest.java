@@ -23,7 +23,6 @@
 
 package org.x4o.xml.io;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,62 +30,53 @@ import java.io.OutputStream;
 import java.util.Scanner;
 
 import org.x4o.xml.X4ODriver;
+import org.x4o.xml.element.Element;
 import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
-import org.x4o.xml.test.swixml.Accelerator3;
-import org.x4o.xml.test.swixml.SwiXmlDriver;
-import org.x4o.xml.test.swixml.SwingEngine;
+import org.xml.sax.SAXException;
 
 import junit.framework.TestCase;
 
 /**
- * X4OWriterTest runs parser with debug output.
+ * X4OWriterContextTest.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 26, 2012
+ * @version 1.0 Apr 28, 2013
  */
-public class X4OWriterTest extends TestCase {
+public class X4OWriterContextTest extends TestCase {
 	
-
 	private File createOutputFile() throws IOException {
-		File outputFile = File.createTempFile("test-writer", ".xml");
+		File outputFile = File.createTempFile("test-writer-context", ".xml");
 		outputFile.deleteOnExit();
 		return outputFile;
 	}
 	
-	public void testWriterSwiXmlOutput() throws Exception {
-		Accelerator3 ac3 = new Accelerator3(false);
-		SwingEngine engine = new SwingEngine(ac3);
-		
-		File outputFile = createOutputFile();
-		X4ODriver<Component> driver = SwiXmlDriver.getInstance();
-		X4OReader<Component> reader = driver.createReader();
-		X4OWriter<Component> writer = driver.createWriter(SwiXmlDriver.LANGUAGE_VERSION_3);
-		
-		//reader.setProperty(key, value);
-		//writer.setProperty(key, value);
-		
-		reader.addELBeanInstance(SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE, engine);
-		Component root = reader.readResource("tests/swixml/swixml-accelerator-3.0.xml");
-		writer.writeFile(root, outputFile);
-		
-		assertTrue("Debug file does not exists.",outputFile.exists());
-		
-		//String text = new Scanner( outputFile ).useDelimiter("\\A").next();
-		//System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
-		
-		outputFile.delete();
+	private X4OLanguageContext createContext() throws SAXException, X4OConnectionException, IOException {
+		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		X4OReader<TestObjectRoot> reader = driver.createReader();
+		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
+		X4OLanguageContext context = driver.createLanguageContext();
+		Element rootElement = null;
+		try {
+			rootElement = (Element)context.getLanguage().getLanguageConfiguration().getDefaultElement().newInstance();
+		} catch (InstantiationException e) {
+			throw new SAXException(e);
+		} catch (IllegalAccessException e) {
+			throw new SAXException(e);
+		}
+		rootElement.setElementObject(root);
+		context.setRootElement(rootElement);
+		return context;
 	}
 	
 	public void testWriteFile() throws Exception {
 		File outputFile = createOutputFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
-		X4OReader<TestObjectRoot> reader = driver.createReader();
-		X4OWriter<TestObjectRoot> writer = driver.createWriter();
-		
-		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
-		writer.writeFile(root, outputFile);
+		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+
+		writer.writeFileContext(createContext(), outputFile);
 		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
 		outputFile.delete();
 
@@ -94,16 +84,30 @@ public class X4OWriterTest extends TestCase {
 		assertTrue(text.contains("http://test.x4o.org/xml/ns/test-root"));
 		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
 		assertTrue(text.contains("<test-lang:testBean"));
+	}
+	
+	public void testWriteFileNull() throws Exception {
+		TestDriver driver = TestDriver.getInstance();
+		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+		Exception e = null;
+		File nullFile = null;
+		try {
+			writer.writeFileContext(createContext(), nullFile);
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+		assertTrue("Wrong exception message",e.getMessage().contains("file"));
 	}
 	
 	public void testWriteFileName() throws Exception {
 		File outputFile = createOutputFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
-		X4OReader<TestObjectRoot> reader = driver.createReader();
-		X4OWriter<TestObjectRoot> writer = driver.createWriter();
+		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
 		
-		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
-		writer.writeFile(root, outputFile.getAbsolutePath());
+		writer.writeFileContext(createContext(), outputFile.getAbsolutePath());
 		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
 		outputFile.delete();
 
@@ -113,21 +117,33 @@ public class X4OWriterTest extends TestCase {
 		assertTrue(text.contains("<test-lang:testBean"));
 	}
 	
+	public void testWriteFileNameNull() throws Exception {
+		TestDriver driver = TestDriver.getInstance();
+		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+		Exception e = null;
+		String nullFileName = null;
+		try {
+			writer.writeFileContext(createContext(), nullFileName);
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",NullPointerException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("null"));
+		assertTrue("Wrong exception message",e.getMessage().contains("fileName"));
+	}
+	
 	public void testWriteStream() throws Exception {
 		File outputFile = createOutputFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
-		X4OReader<TestObjectRoot> reader = driver.createReader();
-		X4OWriter<TestObjectRoot> writer = driver.createWriter();
+		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
 		
-		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
 		OutputStream outputStream = new FileOutputStream(outputFile);
 		try {
-			writer.write(root,outputStream);
+			writer.writeContext(createContext(),outputStream);
 		} finally {
 			outputStream.close();
 		}
-		
-		writer.writeFile(root, outputFile.getAbsolutePath());
 		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
 		outputFile.delete();
 

@@ -36,17 +36,18 @@ public interface ElementNamespaceInstanceProvider {
 	
 	/**
 	 * Starts the ElementProvider.
-	 * @param elementLanguage The ElementLanguage to start in.
+	 * @param language The X4OLanguage to start in.
 	 * @param elementNamespaceContext The ElementNamespaceContext to start for.
 	 * @throws ElementNamespaceInstanceProviderException	Thrown when error happened in language.
 	 */
-	void start(X4OLanguage elementLanguage,ElementNamespaceContext elementNamespaceContext) throws ElementNamespaceInstanceProviderException;
+	void start(X4OLanguage language,ElementNamespaceContext elementNamespaceContext) throws ElementNamespaceInstanceProviderException;
 	
 	/**
 	 * Provide an Element for an xml tag.
+	 * @param languageContext The languageContext to create element for.
 	 * @param tag   The xml tag to create instance for.
 	 * @return An new Element instance.
 	 * @throws ElementNamespaceInstanceProviderException	Thrown when error happened in language.
 	 */
-	Element createElementInstance(X4OLanguageContext elementLanguage,String tag) throws ElementNamespaceInstanceProviderException;
+	Element createElementInstance(X4OLanguageContext languageContext,String tag) throws ElementNamespaceInstanceProviderException;
 }

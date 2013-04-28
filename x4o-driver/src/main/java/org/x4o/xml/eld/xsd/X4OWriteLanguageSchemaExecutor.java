@@ -46,7 +46,11 @@ public class X4OWriteLanguageSchemaExecutor {
 	private String languageNamespaceUri = null;
 	private File basePath;
 	
-	static public void main(String argu[]) {
+	/**
+	 * Config and executes this language task.
+	 * @param argu	The command line arguments.
+	 */
+	public static void main(String[] argu) {
 		X4OWriteLanguageSchemaExecutor languageSchema = new X4OWriteLanguageSchemaExecutor();
 		List<String> arguList = Arrays.asList(argu);
 		Iterator<String> arguIterator = arguList.iterator();
@@ -107,7 +111,10 @@ public class X4OWriteLanguageSchemaExecutor {
 			return;
 		}
 	}
-
+	
+	/**
+	 * Executes this language task.
+	 */
 	public void execute() throws ElementException {
 		// Start xsd generator
 		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguageName());

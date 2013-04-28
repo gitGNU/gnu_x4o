@@ -272,7 +272,7 @@ public final class X4ODriverManager {
 				if (classdrivers.containsKey(className)==false) {
 					classdrivers.put(language,className);
 				}
-			} else if ("defaultDriver".equals("tab")) {
+			} else if ("defaultDriver".equals(tag)) {
 				String language = attr.getValue("language");
 				logger.finest("DefaultDriver language: "+language);
 				if (defaultDrivers.containsKey(language)==false) {

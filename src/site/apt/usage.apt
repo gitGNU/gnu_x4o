@@ -39,7 +39,7 @@ Usage
   
   * x4o-plugin-ant = X4O Ant plugins for schema and documentation task.
   
-  * x4o-plugin-ant-schema = Ant x4o schema task.
+  * x4o-plugin-maven = X4O Maven plugin task.
   
 
 * Setup as library
@@ -58,17 +58,12 @@ Usage
 
 * Setup build task
 
-  Append one or both of the x4o eld ant tasks;
+  Append the x4o ant tasks;
 
 +--
   <dependency>
     <groupId>org.x4o.plugin</groupId>
-    <artifactId>x4o-plugin-ant-elddoc</artifactId>
-    <version>${project.version}</version>
-  </dependency>
-  <dependency>
-    <groupId>org.x4o.plugin</groupId>
-    <artifactId>x4o-plugin-ant-schema</artifactId>
+    <artifactId>x4o-plugin-ant</artifactId>
     <version>${project.version}</version>
   </dependency>
 +--
@@ -76,21 +71,21 @@ Usage
   Use in ant and set the supportclass from the language you want to run the task for.
   
 +--
-<taskdef name="eldDocWriter" classname="org.x4o.plugin.ant.eld.doc.EldDocWriterTask"/>
-<taskdef name="eldXsdWriter" classname="org.x4o.plugin.ant.eld.xsd.EldXsdWriterTask"/>
+<taskdef name="writeLanguageDoc" classname="org.x4o.plugin.ant.X4OWriteLanguageDocTask"/>
+<taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask"/>
 
 <target name="build-cel-schema" depends="init">
 	<mkdir dir="${test.dir}/cel-schema"/>
-	<eldXsdWriter
+	<writeLanguageSchema
 		destdir="${test.dir}/cel-schema"
-		supportclass="org.x4o.xml.eld.EldParserSupportCore"
+		languageName="cel"
 		/>
 </target>
 <target name="build-cel-elddoc" depends="init">
 	<mkdir dir="${test.dir}/cel-elddoc"/>
-	<eldDocWriter
+	<writeLanguageDoc
 		destdir="${test.dir}/cel-elddoc"
-		supportclass="org.x4o.xml.eld.EldParserSupportCore"
+		languageName="cel"
 		/>
 </target>
 +--

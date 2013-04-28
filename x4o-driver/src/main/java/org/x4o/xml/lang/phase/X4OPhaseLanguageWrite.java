@@ -237,6 +237,7 @@ public class X4OPhaseLanguageWrite {
 					try {
 						out.close();
 					} catch (IOException e) {
+						logger.warning(e.getMessage());
 					}
 				}
 			}

@@ -41,6 +41,9 @@ public abstract class AbstractElementClassBase extends AbstractElementMetaBase i
 	private List<ElementConfigurator> elementConfigurators = null;
 	private Map<String,List<String>> elementParents = null;
 	
+	/**
+	 * Creates a AbstractElementClassBase.
+	 */
 	public AbstractElementClassBase() {
 		elementConfigurators = new ArrayList<ElementConfigurator>(5);
 		elementClassAttributes = new HashMap<String,ElementClassAttribute>(15);
@@ -48,6 +51,8 @@ public abstract class AbstractElementClassBase extends AbstractElementMetaBase i
 	}
 	
 	/**
+	 * Returns a list of ElementConfigurators.
+	 * @return	List of ElementConfigurators.
 	 * @see ElementClass#getElementConfigurators()
 	 */
 	public List<ElementConfigurator> getElementConfigurators() {

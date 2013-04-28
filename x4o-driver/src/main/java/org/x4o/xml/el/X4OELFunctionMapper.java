@@ -39,6 +39,9 @@ import javax.el.FunctionMapper;
 public class X4OELFunctionMapper extends FunctionMapper {
 	private Map<String,Method> functionMap = null;
 	
+	/**
+	 * Creates a X4OELFunctionMapper.
+	 */
 	public X4OELFunctionMapper() {
 		functionMap = new HashMap<String,Method>(50);
 	}
@@ -48,7 +51,13 @@ public class X4OELFunctionMapper extends FunctionMapper {
 		String key = prefix + ":" + localName;
 		return functionMap.get(key);
 	}
-
+	
+	/**
+	 * Add an static method to the function mapper.
+	 * @param prefix		The function prefix.
+	 * @param localName		The local name of function.
+	 * @param method		The method to execute on.
+	 */
 	public void addFunction(String prefix, String localName, Method method) {
 		if(prefix==null || localName==null || method==null) {
 			throw new NullPointerException();
