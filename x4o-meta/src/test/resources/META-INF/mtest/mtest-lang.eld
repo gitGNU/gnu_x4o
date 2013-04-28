@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2004-2012, Willem Cazander
+    Copyright (c) 2004-2013, Willem Cazander
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided

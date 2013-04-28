@@ -69,6 +69,8 @@ mvn checkstyle:checkstyle
 cd project-root/;
 mvn -Pcheck-license license:check
 
+To update all files from check output;
+mvn -Pcheck-license license:format
 
 -- Check for versions-updates --
 
