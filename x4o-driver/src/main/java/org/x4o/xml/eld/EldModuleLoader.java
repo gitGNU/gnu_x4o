@@ -23,15 +23,13 @@
 
 package org.x4o.xml.eld;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
 import org.x4o.xml.io.DefaultX4OReader;
+import org.x4o.xml.io.X4OConnectionException;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
@@ -106,13 +104,7 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 //			}
 			
 			reader.readResource(eldResource);
-		} catch (FileNotFoundException e) {
-			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
-		} catch (SecurityException e) {
-			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
-		} catch (NullPointerException e) {
-			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
-		} catch (ParserConfigurationException e) {
+		} catch (X4OConnectionException e) {
 			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		} catch (SAXException e) {
 			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);

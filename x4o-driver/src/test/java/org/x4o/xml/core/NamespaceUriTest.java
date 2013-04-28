@@ -57,7 +57,7 @@ public class NamespaceUriTest extends TestCase {
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		reader.setProperty(X4OLanguagePropertyKeys.INPUT_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
+		reader.setProperty(X4OLanguagePropertyKeys.READER_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
 		try {
 			context = reader.readResourceContext("tests/namespace/uri-empty.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);

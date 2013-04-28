@@ -261,21 +261,21 @@ public class X4OPhaseLanguageRead {
 				}
 				
 				// Finally start parsing the xml input stream
-				Object requestInputSource = languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_OBJECT);
+				Object requestInputSource = languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_SOURCE);
 				InputSource input = null;
 				InputStream inputStream = null;
 				if (requestInputSource instanceof InputSource) {
 					input = (InputSource)requestInputSource;
 				} else {
-					inputStream = (InputStream)languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_STREAM);
+					inputStream = (InputStream)languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_STREAM);
 					input = new InputSource(inputStream);
 				}
 				
-				Object requestInputEncoding = languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_ENCODING);
+				Object requestInputEncoding = languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_ENCODING);
 				if (requestInputEncoding!=null && requestInputEncoding instanceof String) {
 					input.setEncoding(requestInputEncoding.toString());
 				}
-				Object requestSystemId = languageContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_SYSTEM_ID);
+				Object requestSystemId = languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_SYSTEM_ID);
 				if (requestSystemId!=null && requestSystemId instanceof String) {
 					input.setSystemId(requestSystemId.toString());
 				}

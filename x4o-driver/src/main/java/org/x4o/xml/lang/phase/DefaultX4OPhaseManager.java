@@ -149,7 +149,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 		
 		boolean skipReleasePhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RELEASE);
 		boolean skipRunPhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RUN);
-		boolean skipSiblingsPhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_SIBLINGS);
+		//boolean skipSiblingsPhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_SIBLINGS);
 		String stopPhase = languageContext.getLanguagePropertyString(X4OLanguageProperty.PHASE_STOP_AFTER);
 		
 		// run the phases in ordered order
@@ -161,9 +161,9 @@ PHASE_ORDER = {	*startupX4OPhase,
 			if (skipRunPhase && phase.getId().equals("READ_RUN")) {
 				continue; // skip run phase on request
 			}
-			if (skipSiblingsPhase && phase.getId().equals("INIT_LANG_SIB")) {
-				continue; // skip loading sibling languages
-			}
+	//		if (skipSiblingsPhase && phase.getId().equals("INIT_LANG_SIB")) {
+	//			continue; // skip loading sibling languages
+	//		}
 			
 			// debug output
 			((X4OLanguageContextLocal)languageContext).setCurrentPhase(phase);

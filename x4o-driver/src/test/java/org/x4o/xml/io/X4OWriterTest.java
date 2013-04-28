@@ -30,6 +30,7 @@ import java.util.Scanner;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 import org.x4o.xml.test.swixml.Accelerator3;
@@ -59,12 +60,15 @@ public class X4OWriterTest extends TestCase {
 		X4OReader<TestObjectRoot> reader = driver.createReader();
 		X4OWriter<TestObjectRoot> writer = driver.createWriter();
 		
+		writer.setProperty(X4OLanguagePropertyKeys.WRITER_OUTPUT_CHAR_TAB, "  ");
+		writer.setProperty(X4OLanguagePropertyKeys.WRITER_SCHEMA_URI_PRINT, false);
+		
 		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
 		writer.writeFile(root, outputFile);
 		
 		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
 		outputFile.delete();
-		//System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
+		System.out.println("Output: '\n"+text+"\n' end in "+outputFile.getAbsolutePath());
 		
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 		assertTrue(text.contains("http://test.x4o.org/xml/ns/test-root"));
@@ -83,6 +87,9 @@ public class X4OWriterTest extends TestCase {
 		X4ODriver<Component> driver = SwiXmlDriver.getInstance();
 		X4OReader<Component> reader = driver.createReader();
 		X4OWriter<Component> writer = driver.createWriter();
+		
+		//reader.setProperty(key, value);
+		//writer.setProperty(key, value);
 		
 		reader.addELBeanInstance(SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE, engine);
 		Component root = reader.readResource("tests/swixml/swixml-accelerator-3.0.xml");

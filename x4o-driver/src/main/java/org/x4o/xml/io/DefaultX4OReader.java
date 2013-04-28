@@ -64,10 +64,10 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		logger = Logger.getLogger(DefaultX4OReader.class.getName());
 	}
 	
-	public X4OLanguageContext readContext(InputStream input, String systemId, URL basePath) throws ParserConfigurationException, SAXException, IOException {
-		setProperty(X4OLanguagePropertyKeys.INPUT_SOURCE_STREAM, input);
-		setProperty(X4OLanguagePropertyKeys.INPUT_SOURCE_SYSTEM_ID, systemId);
-		setProperty(X4OLanguagePropertyKeys.INPUT_SOURCE_BASE_PATH, basePath);
+	public X4OLanguageContext readContext(InputStream input, String systemId, URL basePath) throws X4OConnectionException, SAXException, IOException {
+		setProperty(X4OLanguagePropertyKeys.READER_INPUT_STREAM, input);
+		setProperty(X4OLanguagePropertyKeys.READER_INPUT_SYSTEM_ID, systemId);
+		setProperty(X4OLanguagePropertyKeys.READER_INPUT_BASE_PATH, basePath);
 		read();
 		return getLanguageContext();
 	}
@@ -95,17 +95,17 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	/**
 	 * Parses the input stream as a X4O document.
 	 */
-	protected void read() throws ParserConfigurationException,SAXException,IOException {
-		X4OLanguageContext elementLanguage = getLanguageContext();
-		if (elementLanguage.getLanguage()==null) {
-			throw new ParserConfigurationException("parserConfig is broken getLanguage() returns null."); 
+	protected void read() throws X4OConnectionException,SAXException,IOException {
+		X4OLanguageContext languageContext = getLanguageContext();
+		if (languageContext.getLanguage()==null) {
+			throw new X4OConnectionException("languageContext is broken getLanguage() returns null."); 
 		}
 		
 		// init debugWriter if enabled
 		boolean startedDebugWriter = false;
-		Object debugOutputHandler = elementLanguage.getLanguageProperty(X4OLanguageProperty.DEBUG_OUTPUT_HANDLER);
-		Object debugOutputStream = elementLanguage.getLanguageProperty(X4OLanguageProperty.DEBUG_OUTPUT_STREAM);
-		if (elementLanguage.getX4ODebugWriter()==null) {
+		Object debugOutputHandler = languageContext.getLanguageProperty(X4OLanguageProperty.DEBUG_OUTPUT_HANDLER);
+		Object debugOutputStream = languageContext.getLanguageProperty(X4OLanguageProperty.DEBUG_OUTPUT_STREAM);
+		if (languageContext.getX4ODebugWriter()==null) {
 			DefaultHandler2 xmlDebugWriter = null;
 			if (debugOutputHandler instanceof DefaultHandler2) {
 				xmlDebugWriter = (DefaultHandler2)debugOutputHandler;
@@ -116,18 +116,18 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				xmlDebugWriter.startDocument();
 				xmlDebugWriter.startPrefixMapping("debug", X4ODebugWriter.DEBUG_URI);
 				X4ODebugWriter debugWriter = new X4ODebugWriter(xmlDebugWriter);
-				X4OLanguageContextLocal local = (X4OLanguageContextLocal)elementLanguage;
+				X4OLanguageContextLocal local = (X4OLanguageContextLocal)languageContext;
 				local.setX4ODebugWriter(debugWriter);
 				startedDebugWriter = true;
 			}
 		}
 		
 		// debug language
-		if (elementLanguage.hasX4ODebugWriter()) {
+		if (languageContext.hasX4ODebugWriter()) {
 			AttributesImpl atts = new AttributesImpl();
-			atts.addAttribute ("", "language", "", "", elementLanguage.getLanguage().getLanguageName());
+			atts.addAttribute ("", "language", "", "", languageContext.getLanguage().getLanguageName());
 			atts.addAttribute ("", "currentTimeMillis", "", "", System.currentTimeMillis()+"");
-			elementLanguage.getX4ODebugWriter().getDebugWriter().startElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "", atts);
+			languageContext.getX4ODebugWriter().getDebugWriter().startElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "", atts);
 		}
 		
 		// start parsing language
@@ -136,33 +136,32 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		} catch (Exception e) {
 
 			// also debug exceptions
-			if (elementLanguage.hasX4ODebugWriter()) {
+			if (languageContext.hasX4ODebugWriter()) {
 				try {
-				AttributesImpl atts = new AttributesImpl();
-				atts.addAttribute ("", "message", "", "", e.getMessage());
-				if (e instanceof X4OPhaseException) {
-					atts.addAttribute ("", "phase", "", "", ((X4OPhaseException)e).getX4OPhaseHandler().getId());
-				}
-				elementLanguage.getX4ODebugWriter().getDebugWriter().startElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "", atts);
-				StringWriter writer = new StringWriter();
-				PrintWriter printer = new PrintWriter(writer);
-				printer.append('\n');
-				if (e.getCause()==null) {
-					e.printStackTrace(printer);
-				} else {
-					e.getCause().printStackTrace(printer);
-				}
-				char[] stack = writer.getBuffer().toString().toCharArray();
-				elementLanguage.getX4ODebugWriter().getDebugWriter().characters(stack, 0, stack.length);
-				elementLanguage.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "");
+					AttributesImpl atts = new AttributesImpl();
+					atts.addAttribute ("", "message", "", "", e.getMessage());
+					if (e instanceof X4OPhaseException) {
+						atts.addAttribute ("", "phase", "", "", ((X4OPhaseException)e).getX4OPhaseHandler().getId());
+					}
+					languageContext.getX4ODebugWriter().getDebugWriter().startElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "", atts);
+					StringWriter writer = new StringWriter();
+					PrintWriter printer = new PrintWriter(writer);
+					printer.append('\n');
+					if (e.getCause()==null) {
+						e.printStackTrace(printer);
+					} else {
+						e.getCause().printStackTrace(printer);
+					}
+					char[] stack = writer.getBuffer().toString().toCharArray();
+					languageContext.getX4ODebugWriter().getDebugWriter().characters(stack, 0, stack.length);
+					languageContext.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "");
 				} catch (Exception ee) {
-					ee.printStackTrace();
 				}
 			}
 			
 			// unwrap exception
 			if (e.getCause() instanceof ParserConfigurationException) {
-				throw (ParserConfigurationException)e.getCause();
+				throw new X4OConnectionException((ParserConfigurationException)e.getCause());
 			}
 			if (e.getCause() instanceof SAXException) {
 				throw (SAXException)e.getCause();
@@ -176,16 +175,12 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				throw new SAXException((Exception)e.getCause());
 			}
 		} finally {
-			// close all our resources.
-			//if (inputStream!=null) {
-			//	inputStream.close();
-			//}
-			if (elementLanguage.hasX4ODebugWriter()) {
-				elementLanguage.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "");
+			if (languageContext.hasX4ODebugWriter()) {
+				languageContext.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "");
 			}
-			if (startedDebugWriter && elementLanguage.hasX4ODebugWriter()) {
-				elementLanguage.getX4ODebugWriter().getDebugWriter().endPrefixMapping("debug");
-				elementLanguage.getX4ODebugWriter().getDebugWriter().endDocument();
+			if (startedDebugWriter && languageContext.hasX4ODebugWriter()) {
+				languageContext.getX4ODebugWriter().getDebugWriter().endPrefixMapping("debug");
+				languageContext.getX4ODebugWriter().getDebugWriter().endDocument();
 				if (debugOutputStream instanceof OutputStream) {
 					OutputStream outputStream = (OutputStream)debugOutputStream;
 					outputStream.flush();

@@ -66,7 +66,7 @@ public class X4ODebugWriterTest extends TestCase {
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
 		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
-		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true);
+		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true);
 		reader.readResource("tests/attributes/test-bean.xml");
 		
 		assertTrue("Debug file does not exists.",debugFile.exists());

@@ -29,8 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.xml.sax.SAXException;
@@ -48,70 +46,61 @@ public interface X4OReaderContext<T> extends X4OReader<T> {
 	/**
 	 * Method to parse the xml data.
 	 * @param input	The inputStream to parse.
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
+	 * @throws X4OConnectionException	Is thrown after x4o exception.
+	 * @throws SAXException	Is thrown after sax xml exception.
+	 * @throws IOException	Is thrown after io exception.
 	 */
-	X4OLanguageContext readContext(InputStream input,String systemId,URL basePath) throws ParserConfigurationException,SAXException,IOException;
+	X4OLanguageContext readContext(InputStream input,String systemId,URL basePath) throws X4OConnectionException,SAXException,IOException;
 	
 	/**
 	 * Reads the file fileName and parses it as an InputStream.
 	 * @param fileName	The file name to parse.
-	 * @throws ParserConfigurationException
-	 * @throws FileNotFoundException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws SAXException
-	 * @throws IOException
+	 * @throws FileNotFoundException	Is thrown is file is not found.
+	 * @throws X4OConnectionException	Is thrown after x4o exception.
+	 * @throws SAXException	Is thrown after sax xml exception.
+	 * @throws IOException	Is thrown after io exception. 
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readFileContext(String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	X4OLanguageContext readFileContext(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
 	
 	/**
 	 * Reads the file and parses it as an InputStream.
 	 * @param file	The file to parse.
-	 * @throws ParserConfigurationException
-	 * @throws FileNotFoundException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws SAXException
-	 * @throws IOException
+	 * @throws FileNotFoundException	Is thrown is file is not found.
+	 * @throws X4OConnectionException	Is thrown after x4o exception.
+	 * @throws SAXException	Is thrown after sax xml exception.
+	 * @throws IOException	Is thrown after io exception. 
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readFileContext(File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	X4OLanguageContext readFileContext(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
 	
 	/**
 	 * Parses an resource locaction.
 	 * @param resourceName	The resource to parser.
-	 * @throws ParserConfigurationException
-	 * @throws FileNotFoundException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws SAXException
-	 * @throws IOException
+	 * @throws X4OConnectionException	Is thrown after x4o exception.
+	 * @throws SAXException	Is thrown after sax xml exception.
+	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readResourceContext(String resourceName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	X4OLanguageContext readResourceContext(String resourceName) throws X4OConnectionException,SAXException,IOException;
 	
 	/**
 	 * Converts a String to a InputStream to is can me parsed by SAX.
 	 * @param xmlString	The xml as String to parse.
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws NullPointerException
+	 * @throws X4OConnectionException	Is thrown after x4o exception.
+	 * @throws SAXException	Is thrown after sax xml exception.
+	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readStringContext(String xmlString) throws ParserConfigurationException,SAXException,IOException,NullPointerException;
+	X4OLanguageContext readStringContext(String xmlString) throws X4OConnectionException,SAXException,IOException;
 	
 	/**
 	 * Fetched the data direct from remote url to a InputStream to is can me parsed by SAX.
 	 * @param url	The url to parse.
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws NullPointerException
+	 * @throws X4OConnectionException	Is thrown after x4o exception.
+	 * @throws SAXException	Is thrown after sax xml exception.
+	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readUrlContext(URL url) throws ParserConfigurationException,SAXException,IOException,NullPointerException;
+	X4OLanguageContext readUrlContext(URL url) throws X4OConnectionException,SAXException,IOException;
 }

@@ -21,26 +21,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.xml.io;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.xml.sax.SAXException;
+package org.x4o.xml.lang;
 
 /**
- * X4OWriterContext is writer with language context.
+ * X4OLanguageConfigurationLocal is for safe dynamic configuration.
  * 
  * @author Willem Cazander
- * @version 1.0 Apr 6, 2013
+ * @version 1.0 28 Apr 2013
  */
-public interface X4OWriterContext<T> extends X4OWriter<T> {
+public interface X4OLanguageConfigurationLocal extends X4OLanguageConfiguration {
 
-	void writeContext(X4OLanguageContext context,OutputStream out) throws X4OConnectionException,SAXException,IOException;
+	X4OLanguageConfiguration createProxy();
 	
-	void writeFileContext(X4OLanguageContext context,String fileName) throws X4OConnectionException,SAXException,IOException;
+	void setLanguageResourcePathPrefix(String value);
+	void setLanguageResourceModulesFileName(String value);
 	
-	void writeFileContext(X4OLanguageContext context,File file) throws X4OConnectionException,SAXException,IOException;
+	void setDefaultElementNamespaceContext(Class<?> value);
+	void setDefaultElementInterface(Class<?> value);
+	void setDefaultElement(Class<?> value);
+	void setDefaultElementClass(Class<?> value);
+	void setDefaultElementClassAttribute(Class<?> value);
+	
+	void setDefaultElementLanguageModule(Class<?> value);
+	void setDefaultElementBodyComment(Class<?> value);
+	void setDefaultElementBodyCharacters(Class<?> value);
+	void setDefaultElementBodyWhitespace(Class<?> value);
+	void setDefaultElementNamespaceInstanceProvider(Class<?> value);
+	void setDefaultElementAttributeValueParser(Class<?> value);
+	void setDefaultElementObjectPropertyValue(Class<?> value);
+	void setDefaultElementAttributeHandlerComparator(Class<?> value);
+	
+	void setDefaultLanguageVersionFilter(Class<?> value);
+	void setDefaultLanguageLoader(Class<?> value);
+	void setDefaultExpressionLanguageContext(Class<?> value);
+
+	void setGlobalProperty(String key,Object value);
 }

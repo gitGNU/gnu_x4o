@@ -23,6 +23,9 @@
 
 package org.x4o.xml.lang;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,135 +52,57 @@ import org.x4o.xml.element.DefaultGlobalAttributeHandlerComparator;
  * @author Willem Cazander
  * @version 1.0 27 Oct 2009
  */
-public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration {
+public class DefaultX4OLanguageConfiguration extends AbstractX4OLanguageConfiguration {
 	
+	/**
+	 * Default constructor.
+	 */
 	public DefaultX4OLanguageConfiguration() {
 	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getLanguageResourcePathPrefix()
-	 */
-	public String getLanguageResourcePathPrefix() {
-		return X4OLanguageConfiguration.DEFAULT_LANG_PATH_PREFIX;
+	
+	public void fillDefaults() {
+		if (getLanguageResourcePathPrefix()==null) {				setLanguageResourcePathPrefix(					X4OLanguageConfiguration.DEFAULT_LANG_PATH_PREFIX);	}
+		if (getLanguageResourceModulesFileName()==null) {			setLanguageResourceModulesFileName(				X4OLanguageConfiguration.DEFAULT_LANG_MODULES_FILE);}
+		if (getDefaultElementNamespaceContext()==null) {			setDefaultElementNamespaceContext(				DefaultElementNamespaceContext.class);				}
+		if (getDefaultElementInterface()==null) {					setDefaultElementInterface(						DefaultElementInterface.class);						}
+		if (getDefaultElement()==null) {							setDefaultElement(								DefaultElement.class);								}
+		if (getDefaultElementClass()==null) {						setDefaultElementClass(							DefaultElementClass.class);							}
+		if (getDefaultElementClassAttribute()==null) {				setDefaultElementClassAttribute(				DefaultElementClassAttribute.class);				}
+		if (getDefaultElementLanguageModule()==null) {				setDefaultElementLanguageModule(				DefaultX4OLanguageModule.class);					}
+		if (getDefaultElementBodyComment()==null) {					setDefaultElementBodyComment(					DefaultElementBodyComment.class);					}
+		if (getDefaultElementBodyCharacters()==null) {				setDefaultElementBodyCharacters(				DefaultElementBodyCharacters.class);				}
+		if (getDefaultElementBodyWhitespace()==null) {				setDefaultElementBodyWhitespace(				DefaultElementBodyWhitespace.class);				}
+		if (getDefaultElementNamespaceInstanceProvider()==null) {	setDefaultElementNamespaceInstanceProvider(		DefaultElementNamespaceInstanceProvider.class);		}
+		if (getDefaultElementAttributeValueParser()==null) {		setDefaultElementAttributeValueParser(			DefaultElementAttributeValueParser.class);			}
+		if (getDefaultElementObjectPropertyValue()==null) {			setDefaultElementObjectPropertyValue(			DefaultElementObjectPropertyValue.class);			}
+		if (getDefaultElementAttributeHandlerComparator()==null) {	setDefaultElementAttributeHandlerComparator(	DefaultGlobalAttributeHandlerComparator.class);		}
+		if (getDefaultLanguageVersionFilter()==null) {				setDefaultLanguageVersionFilter(				DefaultX4OLanguageVersionFilter.class);				}
+		if (getDefaultLanguageLoader()==null) {						setDefaultLanguageLoader(						DefaultX4OLanguageLoader.class);					}
+		if (getDefaultExpressionLanguageContext()==null) {			setDefaultExpressionLanguageContext(			X4OELContext.class);								}
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getLanguageResourceModulesFileName()
+	 * @see org.x4o.xml.lang.X4OLanguageConfigurationLocal#createProxy()
 	 */
-	public String getLanguageResourceModulesFileName() {
-		return X4OLanguageConfiguration.DEFAULT_LANG_MODULES_FILE;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementNamespaceContext()
-	 */
-	public Class<?> getDefaultElementNamespaceContext() {
-		return DefaultElementNamespaceContext.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementInterface()
-	 */
-	public Class<?> getDefaultElementInterface() {
-		return DefaultElementInterface.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElement()
-	 */
-	public Class<?> getDefaultElement() {
-		return DefaultElement.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementClass()
-	 */
-	public Class<?> getDefaultElementClass() {
-		return DefaultElementClass.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementClassAttribute()
-	 */
-	public Class<?> getDefaultElementClassAttribute() {
-		return DefaultElementClassAttribute.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementLanguageModule()
-	 */
-	public Class<?> getDefaultElementLanguageModule() {
-		return DefaultX4OLanguageModule.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementBodyComment()
-	 */
-	public Class<?> getDefaultElementBodyComment() {
-		return DefaultElementBodyComment.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementBodyCharacters()
-	 */
-	public Class<?> getDefaultElementBodyCharacters() {
-		return DefaultElementBodyCharacters.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementBodyWhitespace()
-	 */
-	public Class<?> getDefaultElementBodyWhitespace() {
-		return DefaultElementBodyWhitespace.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementNamespaceInstanceProvider()
-	 */
-	public Class<?> getDefaultElementNamespaceInstanceProvider() {
-		return DefaultElementNamespaceInstanceProvider.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementAttributeValueParser()
-	 */
-	public Class<?> getDefaultElementAttributeValueParser() {
-		return DefaultElementAttributeValueParser.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementObjectPropertyValue()
-	 */
-	public Class<?> getDefaultElementObjectPropertyValue() {
-		return DefaultElementObjectPropertyValue.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultElementAttributeHandlerComparator()
-	 */
-	public Class<?> getDefaultElementAttributeHandlerComparator() {
-		return DefaultGlobalAttributeHandlerComparator.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultLanguageVersionFilter()
-	 */
-	public Class<?> getDefaultLanguageVersionFilter() {
-		return DefaultX4OLanguageVersionFilter.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultLanguageLoader()
-	 */
-	public Class<?> getDefaultLanguageLoader() {
-		return DefaultX4OLanguageLoader.class;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getDefaultExpressionLanguageContext()
-	 */
-	public Class<?> getDefaultExpressionLanguageContext() {
-		return X4OELContext.class;
+	public X4OLanguageConfiguration createProxy() {
+		Object proxy = Proxy.newProxyInstance(X4OLanguageClassLoader.getClassLoader(), new Class[]{X4OLanguageConfiguration.class}, new InvocationHandler() {
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+				X4OLanguageConfigurationLocal local = DefaultX4OLanguageConfiguration.this;
+				int argsLength = 0;
+				if (args!=null) {
+					argsLength = args.length;
+				}
+				Class<?>[] invokeArgs = new Class[argsLength];
+				for (int i=0;i<argsLength;i++) {
+					//Object o = args[i];
+					invokeArgs[i] = X4OLanguageContext.class; //o.getClass(); todo fix
+				}
+				Method localMethod = local.getClass().getMethod(method.getName(), invokeArgs);
+				Object result = localMethod.invoke(local, args);
+				return result; // result is reflection safe interface hiding.
+			}
+		});
+		return (X4OLanguageConfiguration)proxy;
 	}
 
 	/**
@@ -193,7 +118,7 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 	 */
 	public Map<String, Object> getSAXParserPropertiesOptional(X4OLanguageContext elementContext) {
 		Map<String,Object> saxParserProperties = new HashMap<String,Object>(1);
-		saxParserProperties.put("http://apache.org/xml/properties/input-buffer-size",elementContext.getLanguagePropertyInteger(X4OLanguageProperty.INPUT_BUFFER_SIZE));	// Increase buffer to 8KB
+		saxParserProperties.put("http://apache.org/xml/properties/input-buffer-size",elementContext.getLanguagePropertyInteger(X4OLanguageProperty.READER_BUFFER_SIZE));	// Increase buffer to 8KB
 		return saxParserProperties;
 	}
 
@@ -223,11 +148,11 @@ public class DefaultX4OLanguageConfiguration implements X4OLanguageConfiguration
 		boolean validation = false;
 		boolean validationXsd = false;
 		if (EldDriver.LANGUAGE_NAME.equals(elementContext.getLanguage().getLanguageName())) {
-			validation = elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.VALIDATION_ELD);
-			validationXsd = elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.VALIDATION_ELD_XSD);
+			validation = false; //TODO: elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.VALIDATION_ELD);
+			validationXsd = false; //elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.VALIDATION_ELD_XSD);
 		} else {
-			validation = elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.VALIDATION_INPUT);
-			validationXsd = elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.VALIDATION_INPUT_XSD);
+			validation = elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.READER_VALIDATION_INPUT);
+			validationXsd = elementContext.getLanguagePropertyBoolean(X4OLanguageProperty.READER_VALIDATION_INPUT_XSD);
 		}
 		if (validation) {
 			saxParserFeatures.put("http://xml.org/sax/features/validation", 							true);	// Validate the document and report validity errors.

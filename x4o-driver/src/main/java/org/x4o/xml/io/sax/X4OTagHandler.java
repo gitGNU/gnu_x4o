@@ -124,7 +124,7 @@ public class X4OTagHandler extends DefaultHandler2 {
 		ElementNamespaceContext enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
 		if (enc==null) {
 			if ("".equals(namespaceUri)) {
-				String configEmptryUri = (String)elementLanguage.getLanguageProperty(X4OLanguageProperty.INPUT_EMPTY_NAMESPACE_URI);
+				String configEmptryUri = (String)elementLanguage.getLanguageProperty(X4OLanguageProperty.READER_EMPTY_NAMESPACE_URI);
 				if (configEmptryUri!=null) {
 					namespaceUri = configEmptryUri;
 					enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);

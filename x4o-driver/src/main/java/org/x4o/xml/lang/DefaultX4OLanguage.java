@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.el.ELContext;
-
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.el.X4OExpressionFactory;
 import org.x4o.xml.element.Element;
@@ -20,6 +18,12 @@ import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 import org.x4o.xml.lang.phase.X4OPhaseType;
 
+/**
+ * DefaultX4OLanguage holds all information about the x4o xml language.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 30 apr 2013
+ */
 public class DefaultX4OLanguage implements X4OLanguageLocal {
 
 	private Logger logger = null;
@@ -108,8 +112,8 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 			throw new RuntimeException("Can't init X4OLanguageContext which has not X4OLanguageContextLocal interface obj: "+languageContext);
 		}
 		X4OLanguageContextLocal contextInit = (X4OLanguageContextLocal)languageContext; 
-		for (String key:driver.getGlobalPropertyKeys()) {
-			Object value = driver.getGlobalProperty(key);
+		for (String key:languageContext.getLanguage().getLanguageConfiguration().getGlobalPropertyKeys()) {
+			Object value = languageContext.getLanguage().getLanguageConfiguration().getGlobalProperty(key);
 			contextInit.setLanguageProperty(key, value);
 		}
 		try {
@@ -117,7 +121,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 				contextInit.setExpressionLanguageFactory(X4OExpressionFactory.createExpressionFactory(contextInit));
 			}
 			if (contextInit.getExpressionLanguageContext()==null) {
-				contextInit.setExpressionLanguageContext((ELContext)X4OLanguageClassLoader.newInstance(getLanguageConfiguration().getDefaultExpressionLanguageContext()));
+				contextInit.setExpressionLanguageContext(X4OExpressionFactory.createELContext(contextInit));
 			}
 			if (contextInit.getElementAttributeValueParser()==null) {
 				contextInit.setElementAttributeValueParser((ElementAttributeValueParser)X4OLanguageClassLoader.newInstance(getLanguageConfiguration().getDefaultElementAttributeValueParser()));

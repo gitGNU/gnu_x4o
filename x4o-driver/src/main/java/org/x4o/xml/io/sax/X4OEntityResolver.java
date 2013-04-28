@@ -70,7 +70,7 @@ public class X4OEntityResolver implements EntityResolver {
 		}
 		this.logger=Logger.getLogger(X4OEntityResolver.class.getName());
 		this.elementContext=elementContext;
-		this.basePath=(URL)elementContext.getLanguageProperty(X4OLanguageProperty.INPUT_SOURCE_BASE_PATH);
+		this.basePath=(URL)elementContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_BASE_PATH);
 		this.schemaResources=new HashMap<String,String>(20);
 		this.schemaPathResources=new HashMap<String,String>(20);
 		for (X4OLanguageModule mod:elementContext.getLanguage().getLanguageModules()) {
@@ -110,7 +110,7 @@ public class X4OEntityResolver implements EntityResolver {
 		logger.finer("Fetch sysId: "+systemId+" pubId: "+publicId);
 		
 		// Check if other resolver has resource
-		EntityResolver resolver = (EntityResolver)elementContext.getLanguageProperty(X4OLanguageProperty.CONFIG_ENTITY_RESOLVER);
+		EntityResolver resolver = (EntityResolver)elementContext.getLanguageProperty(X4OLanguageProperty.READER_ENTITY_RESOLVER);
 		if (resolver!=null) {
 			InputSource result = resolver.resolveEntity(publicId, systemId);
 			if (result!=null) {
@@ -120,7 +120,7 @@ public class X4OEntityResolver implements EntityResolver {
 		
 		// Check if we have it on user defined schema base path
 		if (schemaPathResources.containsKey(systemId)) {
-			File schemaBasePath = (File)elementContext.getLanguageProperty(X4OLanguageProperty.VALIDATION_SCHEMA_PATH);
+			File schemaBasePath = (File)elementContext.getLanguageProperty(X4OLanguageProperty.READER_VALIDATION_SCHEMA_PATH);
 			if (schemaBasePath!=null && schemaBasePath.exists()) {
 				String schemeResource = schemaResources.get(systemId);
 				File schemaFile = new File(schemaBasePath.getAbsolutePath()+File.separatorChar+schemeResource);

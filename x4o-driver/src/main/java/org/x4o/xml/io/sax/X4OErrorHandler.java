@@ -50,7 +50,7 @@ public class X4OErrorHandler implements ErrorHandler {
 			throw new NullPointerException("Can't debug and proxy errors with null languageContext.");
 		}
 		this.languageContext=languageContext;
-		this.errorHandler=(ErrorHandler)languageContext.getLanguageProperty(X4OLanguageProperty.CONFIG_ERROR_HANDLER);
+		this.errorHandler=(ErrorHandler)languageContext.getLanguageProperty(X4OLanguageProperty.READER_ERROR_HANDLER);
 	}
 
 	/**

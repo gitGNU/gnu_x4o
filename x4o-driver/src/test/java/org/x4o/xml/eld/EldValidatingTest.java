@@ -44,7 +44,7 @@ public class EldValidatingTest extends TestCase {
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
 		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		reader.setProperty(X4OLanguagePropertyKeys.VALIDATION_INPUT, true);
+		reader.setProperty(X4OLanguagePropertyKeys.READER_VALIDATION_INPUT, true);
 		//parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_SCHEMA_PATH, "/tmp");
 		try {
 			// TODO: reader.readResource("META-INF/eld/eld-lang.eld");

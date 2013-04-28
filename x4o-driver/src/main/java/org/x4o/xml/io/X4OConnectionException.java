@@ -21,26 +21,48 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.x4o.xml.io;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.xml.sax.SAXException;
+package	org.x4o.xml.io;
 
 /**
- * X4OWriterContext is writer with language context.
+ * X4OConnectionException is top level exception for io connections.
  * 
  * @author Willem Cazander
- * @version 1.0 Apr 6, 2013
+ * @version 1.0 28 Apr, 2013
  */
-public interface X4OWriterContext<T> extends X4OWriter<T> {
+public class X4OConnectionException extends Exception {
+	
+	/** The serial version uid */
+	static final long serialVersionUID = 10L;
 
-	void writeContext(X4OLanguageContext context,OutputStream out) throws X4OConnectionException,SAXException,IOException;
+	/**
+	 * Constructs an X4OConnectionException without a detail message.
+	 */
+	public X4OConnectionException() {
+		super();
+	}
+
+	/**
+	 * Constructs an X4OConnectionException with a detail message.
+	 * @param	message	The message of this Exception
+	 */
+	public X4OConnectionException(String message) {
+		super(message);
+	}
 	
-	void writeFileContext(X4OLanguageContext context,String fileName) throws X4OConnectionException,SAXException,IOException;
+	/**
+	 * Creates an X4OConnectionException from a parent exception.
+	 * @param e	The error exception.
+	 */
+	public X4OConnectionException(Exception e) {
+		super(e);
+	}
 	
-	void writeFileContext(X4OLanguageContext context,File file) throws X4OConnectionException,SAXException,IOException;
+	/**
+	 * Constructs an X4OConnectionException with a detail message.
+	 * @param	message	The message of this Exception
+	 * @param e	The error exception.
+	 */
+	public X4OConnectionException(String message,Exception e) {
+		super(message,e);
+	}
 }

@@ -52,7 +52,7 @@ public class SwingTests extends TestCase {
 		File f = File.createTempFile("test-swing", ".xml");
 		//f.deleteOnExit();
 		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(f));
-		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true);
+		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true);
 		//reader.readResource("tests/test-swing.xml");
 		//Thread.sleep(30000);
 	}

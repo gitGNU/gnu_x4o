@@ -60,8 +60,8 @@ public class DefaultX4OSchemaWriter extends AbstractX4OConnection implements X4O
 	 * @see org.x4o.xml.io.X4OSchemaWriter#writeSchema(java.io.File, java.lang.String)
 	 */
 	public void writeSchema(File basePath, String namespace) throws ElementException {
-		// Start xsd generator
-		EldXsdXmlGenerator xsd = new EldXsdXmlGenerator(getLanguageContext().getLanguage());
-		xsd.writeSchema(basePath, namespace);
+		setProperty(X4OLanguagePropertyKeys.SCHEMA_WRITER_OUTPUT_PATH, basePath);
+		EldXsdXmlGenerator xsd = new EldXsdXmlGenerator(getLanguageContext());
+		xsd.writeSchema(namespace);		// Start xsd generator
 	}
 }

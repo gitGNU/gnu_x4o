@@ -82,7 +82,7 @@ public class X4OEntityResolverTest extends TestCase {
 	public void testResolveProperty() throws Exception {
 		X4ODriver<TestObjectRoot> driver = new TestDriver();
 		X4OLanguageContext language = driver.createLanguageContext();
-		language.setLanguageProperty(X4OLanguageProperty.CONFIG_ENTITY_RESOLVER, new TestEntityResolver());
+		language.setLanguageProperty(X4OLanguageProperty.READER_ENTITY_RESOLVER, new TestEntityResolver());
 		X4OEntityResolver resolver = new X4OEntityResolver(language);
 		Exception e = null;
 		InputSource input = null;
@@ -98,7 +98,7 @@ public class X4OEntityResolverTest extends TestCase {
 	public void testResolvePropertyNull() throws Exception {
 		X4ODriver<TestObjectRoot> driver = new TestDriver();
 		X4OLanguageContext language = driver.createLanguageContext();
-		language.setLanguageProperty(X4OLanguageProperty.CONFIG_ENTITY_RESOLVER, new TestEntityResolver());
+		language.setLanguageProperty(X4OLanguageProperty.READER_ENTITY_RESOLVER, new TestEntityResolver());
 		X4OEntityResolver resolver = new X4OEntityResolver(language);
 		Exception e = null;
 		try {

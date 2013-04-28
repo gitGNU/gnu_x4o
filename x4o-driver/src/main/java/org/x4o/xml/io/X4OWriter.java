@@ -24,11 +24,8 @@
 package org.x4o.xml.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
@@ -40,9 +37,9 @@ import org.xml.sax.SAXException;
  */
 public interface X4OWriter<T> extends X4OConnection {
 
-	void write(T object,OutputStream out) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	void write(T object,OutputStream out) throws X4OConnectionException,SAXException,IOException;
 	
-	void writeFile(T object,String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	void writeFile(T object,String fileName) throws X4OConnectionException,SAXException,IOException;
 	
-	void writeFile(T object,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException;
+	void writeFile(T object,File file) throws X4OConnectionException,SAXException,IOException;
 }

@@ -23,8 +23,6 @@
 
 package org.x4o.xml;
 
-import java.util.Collection;
-
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.DefaultX4OSchemaWriter;
 import org.x4o.xml.io.DefaultX4OWriter;
@@ -37,7 +35,6 @@ import org.x4o.xml.io.X4OWriterContext;
 import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 
 /**
@@ -69,6 +66,8 @@ public abstract class X4ODriver<T> {
 	
 	
 	
+	// =============== build methods to override
+	
 	protected X4OLanguage buildLanguage(String version) {
 		return X4ODriverManager.getDefaultBuildLanguage(this, version);
 	}
@@ -83,6 +82,8 @@ public abstract class X4ODriver<T> {
 	
 	
 	
+	// =============== SchemaWriter
+	
 	public X4OSchemaWriter createSchemaWriter() {
 		return createSchemaWriter(getLanguageVersionDefault());
 	}
@@ -93,6 +94,8 @@ public abstract class X4ODriver<T> {
 	
 	
 	
+	// =============== Reader
+	
 	public X4OReader<T> createReader() {
 		return createReaderContext();
 	}
@@ -101,20 +104,24 @@ public abstract class X4ODriver<T> {
 		return createReaderContext(version);
 	}
 	
-	public X4OWriter<T> createWriter() {
-		return createWriterContext();
-	}
-	
-	public X4OWriter<T> createWriter(String version) {
-		return createWriterContext(version);
-	}
-	
 	public X4OReaderContext<T> createReaderContext() {
 		return createReaderContext(getLanguageVersionDefault());
 	}
 	
 	public X4OReaderContext<T> createReaderContext(String version) {
 		return new DefaultX4OReader<T>(createLanguageContext(version));
+	}
+	
+	
+	
+	// =============== Writer
+	
+	public X4OWriter<T> createWriter() {
+		return createWriterContext();
+	}
+	
+	public X4OWriter<T> createWriter(String version) {
+		return createWriterContext(version);
 	}
 	
 	public X4OWriterContext<T> createWriterContext() {
@@ -127,15 +134,11 @@ public abstract class X4ODriver<T> {
 	
 	
 	
-	public String getLanguageVersionDefault() {
+	// =============== Language
+	
+	final public String getLanguageVersionDefault() {
 		return X4ODriverManager.getDefaultLanguageVersion(getLanguageVersions());
-	}
-	
-	public String[] getGlobalPropertyKeySet() {
-		return X4OLanguagePropertyKeys.DEFAULT_X4O_GLOBAL_KEYS;
-	}
-	
-	
+	}	
 	
 	final public X4OLanguage createLanguage(String version) {
 		return buildLanguage(version);
@@ -147,17 +150,5 @@ public abstract class X4ODriver<T> {
 	
 	final public X4OLanguageContext createLanguageContext(String version) {
 		return createLanguage(version).createLanguageContext(this);
-	}
-	
-	final public Collection<String> getGlobalPropertyKeys() {
-		return X4ODriverManager.getGlobalPropertyKeys(this);
-	}
-	
-	final public Object getGlobalProperty(String key) {
-		return X4ODriverManager.getGlobalProperty(this, key);
-	}
-	
-	final public void setGlobalProperty(String key,Object value) {
-		X4ODriverManager.setGlobalProperty(this, key, value);
 	}
 }

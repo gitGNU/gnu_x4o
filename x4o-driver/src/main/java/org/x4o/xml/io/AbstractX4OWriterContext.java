@@ -24,12 +24,9 @@
 package org.x4o.xml.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.xml.sax.SAXException;
@@ -46,22 +43,16 @@ public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection 
 		super(elementLanguage);
 	}
 	
-	public void writeFileContext(X4OLanguageContext context,String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
+	public void writeFileContext(X4OLanguageContext context,String fileName) throws X4OConnectionException,SAXException,IOException {
 		if (fileName==null) {
 			throw new NullPointerException("Can't convert null fileName to file object.");
 		}		
 		writeFileContext(context,new File(fileName));
 	}
 	
-	public void writeFileContext(X4OLanguageContext context,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
+	public void writeFileContext(X4OLanguageContext context,File file) throws X4OConnectionException,SAXException,IOException {
 		if (file==null) {
 			throw new NullPointerException("Can't read null file.");
-		}
-		if (file.exists()) {
-			throw new FileNotFoundException("File does already exists; "+file);
-		}
-		if (file.canWrite()==false) {
-			throw new IOException("Can't write file: "+file);
 		}
 		OutputStream outputStream = new FileOutputStream(file);
 		try {

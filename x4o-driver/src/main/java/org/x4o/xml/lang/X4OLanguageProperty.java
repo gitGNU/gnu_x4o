@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
 import org.xml.sax.EntityResolver;
@@ -46,132 +47,175 @@ import org.xml.sax.ext.DefaultHandler2;
  */
 public enum X4OLanguageProperty {
 	
-	/* TODO: refactor all keys ?
-	private final static String ENCODING = "http://writer.x4o.org/xml/properties/encoding";
-	private final static String CHAR_NEWLINE = "http://writer.x4o.org/xml/properties/char/newline";
-	private final static String CHAR_TAB = "http://writer.x4o.org/xml/properties/char/tab";
-	private final static String URI_PREFX = "http://writer.x4o.org/xml/properties/char/";
-	*/
-	
 	/** Read-Only property returning the language we are working with. */
 	LANGUAGE_NAME(IO.GLOBAL,"language/name"),
 	
 	/** Read-Only property returning the version of the language. */
 	LANGUAGE_VERSION(IO.GLOBAL,"language/version"),
-		
 	
 	
-	/** When set to OutputStream xml debug is written to it. note: when output-handler is set this property is ignored. */
-	DEBUG_OUTPUT_STREAM(IO.GLOBAL,"debug/output-stream",OutputStream.class),
-
-	/** When set to DefaultHandler2 xml debug events are fired to the object. */
-	DEBUG_OUTPUT_HANDLER(IO.GLOBAL,"debug/output-handler",DefaultHandler2.class),
-
-	/** When set to true print also phases for parsing eld files. */
-	DEBUG_OUTPUT_ELD_PARSER(IO.GLOBAL,"debug/output-eld-parser",Boolean.class,false),
-	
-	/** When set to true print full element tree per phase. */
-	//DEBUG_OUTPUT_TREE_PER_PHASE("debug/output-tree-per-phase",Boolean.class),
-	
-	
-	/** SAX parser input buffer size: 512-16k defaults to 8k. */
-	INPUT_BUFFER_SIZE(IO.READER,"input/buffer-size",Integer.class,4096*2),
-
-	/** When set it allows parsing of non-namespace aware documents. */
-	INPUT_EMPTY_NAMESPACE_URI(IO.READER,"input/empty-namespace-uri"),
 	
 	
 	
 	/** The input stream to parse, note is skipped when object is set. */
-	INPUT_SOURCE_STREAM(IO.READER,"input/source/stream",InputStream.class),
+	READER_INPUT_STREAM(IO.READER,"reader/input/stream",InputStream.class),
 	
 	/** When set it overrides automatic encoding detection of sax parser. */
-	INPUT_SOURCE_ENCODING(IO.READER,"input/source/encoding"),
+	READER_INPUT_ENCODING(IO.READER,"reader/input/encoding",String.class),
 	
 	/** When set use this InputSource instance for parsing. */
-	INPUT_SOURCE_OBJECT(IO.READER,"input/source/object",InputSource.class),
+	READER_INPUT_SOURCE(IO.READER,"reader/input/source",InputSource.class),
 	
 	/** Sets the system-id to the input source. */
-	INPUT_SOURCE_SYSTEM_ID(IO.READER,"input/source/system-id",String.class),
+	READER_INPUT_SYSTEM_ID(IO.READER,"reader/input/system-id",String.class),
 	
 	/** Sets the base path to resolve external input sources. */
-	INPUT_SOURCE_BASE_PATH(IO.READER,"input/source/base-path",URL.class),
+	READER_INPUT_BASE_PATH(IO.READER,"reader/input/base-path",URL.class),
+	
+	
+	
+	/** SAX parser input buffer size: 512-16k defaults to 8k. */
+	READER_BUFFER_SIZE(IO.READER,"reader/buffer-size",Integer.class,4096*2),
+
+	/** When set it allows parsing of non-namespace aware documents. */
+	READER_EMPTY_NAMESPACE_URI(IO.READER,"reader/empty-namespace-uri"),
 	
 	/** Set for custom handling of validation errors. */
-	CONFIG_ERROR_HANDLER(IO.GLOBAL,"config/error-handler",ErrorHandler.class),
+	READER_ERROR_HANDLER(IO.READER,"reader/error-handler",ErrorHandler.class),
 	
 	/** Resolve more entities from local sources. */
-	CONFIG_ENTITY_RESOLVER(IO.GLOBAL,"config/entity-resolver",EntityResolver.class),
+	READER_ENTITY_RESOLVER(IO.READER,"reader/entity-resolver",EntityResolver.class),
 	
-	//CONFIG_CACHE_HANDLER("config/cache-handler"),
-	//CONFIG_MODULE_PROVIDER("config/module-provider"),
-	//CONFIG_LOCK_PROPERTIES("config/lock-properties"),
+	
+	
+	/** When set to true then input xml is validated. */
+	READER_VALIDATION_SCHEMA_AUTO_WRITE(IO.READER,"reader/validation/schema-auto-write",Boolean.class,true),
+	
+	/** When set this path is searched for xsd schema files in the language sub directory. */
+	READER_VALIDATION_SCHEMA_PATH(IO.READER,"reader/validation/schema-path",File.class),
+	
+	/** When set to true then input xml is validated. */
+	READER_VALIDATION_INPUT(IO.READER,"reader/validation/input",Boolean.class,false),
+	
+	/** When set to true then input xsd xml grammer is validated. */
+	READER_VALIDATION_INPUT_XSD(IO.READER,"reader/validation/input/xsd",Boolean.class,false),
+	
+	
+	
+	
+	
+	/** The writer output stream to write to. */
+	WRITER_OUTPUT_STREAM(IO.WRITER,"writer/output/stream",OutputStream.class),
+	
+	/** The writer output encoding. */
+	WRITER_OUTPUT_ENCODING(IO.WRITER,"writer/output/encoding",String.class),
+	
+	/** The writer output newline. */
+	WRITER_OUTPUT_CHAR_NEWLINE(IO.WRITER,"writer/output/char/newline",String.class),
+	
+	/** The writer output tab char. */
+	WRITER_OUTPUT_CHAR_TAB(IO.WRITER,"writer/output/char/tab",String.class),
+	
+	/** When writing print schema uri. */
+	WRITER_SCHEMA_URI_PRINT(IO.WRITER,"writer/schema/uri-print",Boolean.class,true),
+	
+	/** Override eld root schema uri. */
+	WRITER_SCHEMA_URI_ROOT(IO.WRITER,"writer/schema/uri-root",String.class),
+	
+	
+	
+	
+	
+	/** The schema writer output path to write to. */
+	SCHEMA_WRITER_OUTPUT_PATH(IO.SCHEMA_WRITER,"schema-writer/output/path",File.class),
+	
+	/** The schema writer output encoding. */
+	SCHEMA_WRITER_OUTPUT_ENCODING(IO.SCHEMA_WRITER,"schema-writer/output/encoding",String.class),
+	
+	/** The schema writer output newline. */
+	SCHEMA_WRITER_OUTPUT_CHAR_NEWLINE(IO.SCHEMA_WRITER,"schema-writer/output/char/newline",String.class),
+	
+	/** The schema writer output tab char. */
+	SCHEMA_WRITER_OUTPUT_CHAR_TAB(IO.SCHEMA_WRITER,"schema-writer/output/char/tab",String.class),
+	
+	
+	
+	
+	
+	/** When set to OutputStream xml debug is written to it. note: when output-handler is set this property is ignored. */
+	DEBUG_OUTPUT_STREAM(IO.READER_WRITER,"debug/output-stream",OutputStream.class),
+
+	/** When set to DefaultHandler2 xml debug events are fired to the object. */
+	DEBUG_OUTPUT_HANDLER(IO.READER_WRITER,"debug/output-handler",DefaultHandler2.class),
+
+	/* When set to true print also phases for parsing eld files. */
+	//DEBUG_OUTPUT_ELD_PARSER(IO.READER_WRITER,"debug/output-eld-parser",Boolean.class,false),
+	
+	/* When set to true print full element tree per phase. */
+	//DEBUG_OUTPUT_TREE_PER_PHASE("debug/output-tree-per-phase",Boolean.class),
+	
+	
+	
 	
 	
 	/** The beans in this map are set into the EL context for reference. */
-	EL_BEAN_INSTANCE_MAP(IO.READER,"el/bean-instance-map",Map.class),
-	//EL_CONTEXT_INSTANCE("el/context-instance"),
+	EL_BEAN_INSTANCE_MAP(IO.READER_WRITER,"el/bean-instance-map",Map.class),
 	
-	/** When set this instance is used in ElementLanguage. */
-	EL_FACTORY_INSTANCE(IO.READER,"el/factory-instance",ExpressionFactory.class),
+	/** When set use this instance for the ELContext. */
+	EL_CONTEXT_INSTANCE(IO.READER_WRITER,"el/context-instance",ELContext.class),
 	
-	//EL_INSTANCE_FACTORY("phase/skip-elb-init",Boolean.class),
+	/** When set use this instance as the ExpressionFactory. */
+	EL_FACTORY_INSTANCE(IO.READER_WRITER,"el/factory-instance",ExpressionFactory.class),
+	
+	
+	
+	
 	
 	/** When set to an X4OPhase then parsing stops after completing the set phase. */
-	PHASE_STOP_AFTER(IO.READER,"phase/stop-after",String.class),
+	PHASE_STOP_AFTER(IO.READER_WRITER,"phase/stop-after",String.class),
 	
 	/** When set to true skip the release phase. */
-	PHASE_SKIP_RELEASE(IO.READER,"phase/skip-release",Boolean.class,false),
+	PHASE_SKIP_RELEASE(IO.READER_WRITER,"phase/skip-release",Boolean.class,false),
 	
 	/** When set to true skip the run phase. */
-	PHASE_SKIP_RUN(IO.READER,"phase/skip-run",Boolean.class,false),
-	
-	/** When set to true skip the load siblings language phase. */
-	PHASE_SKIP_SIBLINGS(IO.READER,"phase/skip-siblings",Boolean.class,false),
+	PHASE_SKIP_RUN(IO.READER_WRITER,"phase/skip-run",Boolean.class,false);
 	
 	
-	/** When set this path is searched for xsd schema files in the language sub directory. */
-	VALIDATION_SCHEMA_PATH(IO.READER,"validation/schema-path",File.class),
 	
-	/** When set to true then input xml is validated. */
-	VALIDATION_INPUT(IO.READER,"validation/input",Boolean.class,false),
 	
-	/** When set to true then input xsd xml grammer is validated. */
-	VALIDATION_INPUT_XSD(IO.READER,"validation/input/xsd",Boolean.class,false),
 	
-	/** When set to true then eld xml is validated. */
-	VALIDATION_ELD(IO.READER,"validation/eld",Boolean.class,false),
+	// (temp) removed because init is now in driver manager
 	
-	/** When set to true than eld xsd xml grammer is also validated. */
-	VALIDATION_ELD_XSD(IO.GLOBAL, "validation/eld/xsd",Boolean.class,false);
+	/* When set to true skip the load siblings language phase. */
+	//PHASE_SKIP_SIBLINGS(IO.READER,"phase/skip-siblings",Boolean.class,false);
 	
-	public final static X4OLanguageProperty[] DEFAULT_X4O_GLOBAL_KEYS;
+	/* When set to true then eld xml is validated. */
+	//VALIDATION_ELD(IO.INIT,"validation/eld",Boolean.class,false),
+	
+	/* When set to true than eld xsd xml grammer is also validated. */
+	//VALIDATION_ELD_XSD(IO.INIT, "validation/eld/xsd",Boolean.class,false);
+	
 	public final static X4OLanguageProperty[] DEFAULT_X4O_READER_KEYS;
 	public final static X4OLanguageProperty[] DEFAULT_X4O_WRITER_KEYS;
 	public final static X4OLanguageProperty[] DEFAULT_X4O_SCHEMA_WRITER_KEYS;
 	
 	static {
-		List<X4OLanguageProperty> globalResultKeys = new ArrayList<X4OLanguageProperty>();
 		List<X4OLanguageProperty> readerResultKeys = new ArrayList<X4OLanguageProperty>();
 		List<X4OLanguageProperty> writerResultKeys = new ArrayList<X4OLanguageProperty>();
 		List<X4OLanguageProperty> schemaWriterResultKeys = new ArrayList<X4OLanguageProperty>();
 		X4OLanguageProperty[] keys = X4OLanguageProperty.values();
 		for (int i=0;i<keys.length;i++) {
 			X4OLanguageProperty key = keys[i];
-			if (IO.GLOBAL.equals(key.type)) {
-				globalResultKeys.add(key);
+			if (IO.GLOBAL.equals(key.type) || IO.READER.equals(key.type) || IO.READER_WRITER.equals(key.type)) {
 				readerResultKeys.add(key);
+			}
+			if (IO.GLOBAL.equals(key.type) || IO.WRITER.equals(key.type) || IO.READER_WRITER.equals(key.type)) {
 				writerResultKeys.add(key);
+			}
+			if (IO.GLOBAL.equals(key.type) || IO.SCHEMA_WRITER.equals(key.type)) {
 				schemaWriterResultKeys.add(key);
 			}
-			if (IO.READER.equals(key.type)) {
-				readerResultKeys.add(key);
-			}
-			if (IO.WRITER.equals(key.type)) {
-				writerResultKeys.add(key);
-			}
 		}
-		DEFAULT_X4O_GLOBAL_KEYS = globalResultKeys.toArray(new X4OLanguageProperty[globalResultKeys.size()]);
 		DEFAULT_X4O_READER_KEYS = readerResultKeys.toArray(new X4OLanguageProperty[readerResultKeys.size()]);
 		DEFAULT_X4O_WRITER_KEYS = writerResultKeys.toArray(new X4OLanguageProperty[writerResultKeys.size()]); 
 		DEFAULT_X4O_SCHEMA_WRITER_KEYS = schemaWriterResultKeys.toArray(new X4OLanguageProperty[schemaWriterResultKeys.size()]);
@@ -181,6 +225,7 @@ public enum X4OLanguageProperty {
 		GLOBAL,
 		READER,
 		WRITER,
+		READER_WRITER,
 		SCHEMA_WRITER
 	};
 	

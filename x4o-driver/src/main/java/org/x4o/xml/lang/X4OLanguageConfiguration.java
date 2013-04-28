@@ -23,11 +23,12 @@
 
 package org.x4o.xml.lang;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /**
- * X4OLanguageConfiguration first used interface in x4o parser which does the hard config of the x4o xml parsing.
+ * X4OLanguageConfiguration is base configuration of language used iin x4o parser.
  * 
  * @author Willem Cazander
  * @version 1.0 27 Oct 2009
@@ -82,6 +83,10 @@ public interface X4OLanguageConfiguration {
 	 */
 	Class<?> getDefaultExpressionLanguageContext();
 
+	Collection<String> getGlobalPropertyKeys();
+	Object getGlobalProperty(String key);
+	void setGlobalProperty(String key,Object value);
+	
 	/**
 	 * @return	Returns Map of SAX properties which are set.
 	 */

@@ -23,6 +23,7 @@
 
 package org.x4o.xml.el;
 
+import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
 import org.x4o.xml.lang.X4OLanguageClassLoader;
@@ -40,23 +41,35 @@ public class X4OExpressionFactory {
 	static public final String EL_FACTORY_IMPL_APACHE = "org.apache.el.ExpressionFactoryImpl";
 	static public final String EL_FACTORY_IMPL_ODYSSEUS = "de.odysseus.el.ExpressionFactoryImpl";
 	
-	static public ExpressionFactory createExpressionFactory(X4OLanguageContext elementContext) {
-		ExpressionFactory factory = (ExpressionFactory)elementContext.getLanguageProperty(X4OLanguageProperty.EL_FACTORY_INSTANCE);
-		if (factory!=null) {
-			return factory;
+	static public ExpressionFactory createExpressionFactory(X4OLanguageContext languageContext) {
+		ExpressionFactory result = (ExpressionFactory)languageContext.getLanguageProperty(X4OLanguageProperty.EL_FACTORY_INSTANCE);
+		if (result!=null) {
+			return result;
 		}
 		try {
 			Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass(EL_FACTORY_IMPL_APACHE);
-			ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
-			return expressionFactory;
+			result = (ExpressionFactory) expressionFactoryClass.newInstance();
 		} catch (Exception e) {
 			try {
 				Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass(EL_FACTORY_IMPL_ODYSSEUS);
-				ExpressionFactory expressionFactory = (ExpressionFactory) expressionFactoryClass.newInstance();
-				return expressionFactory;
+				result = (ExpressionFactory) expressionFactoryClass.newInstance();
 			} catch (Exception ee) {
 				throw new RuntimeException("Could not load ExpressionFactory tried: "+EL_FACTORY_IMPL_APACHE+" and "+EL_FACTORY_IMPL_ODYSSEUS+" but could not load one of them.");
 			}
 		}
+		return result;
+	}
+	
+	static public ELContext createELContext(X4OLanguageContext languageContext) {
+		ELContext result = (ELContext)languageContext.getLanguageProperty(X4OLanguageProperty.EL_CONTEXT_INSTANCE); 
+		if (result!=null) {
+			return result;
+		}
+		try {
+			result = (ELContext)X4OLanguageClassLoader.newInstance(languageContext.getLanguage().getLanguageConfiguration().getDefaultExpressionLanguageContext());
+		} catch (Exception e) {
+			throw new RuntimeException("Could not create instance of ELContext: "+e.getMessage(),e);
+		}
+		return result;
 	}
 }

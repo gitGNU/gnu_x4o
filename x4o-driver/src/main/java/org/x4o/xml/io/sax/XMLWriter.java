@@ -117,6 +117,18 @@ public class XMLWriter extends DefaultHandler2 {
 	public XMLWriter(OutputStream out) throws UnsupportedEncodingException {
 		this(new OutputStreamWriter(out, XMLConstants.XML_DEFAULT_ENCODING),XMLConstants.XML_DEFAULT_ENCODING);
 	}
+
+	/**
+	 * Creates XmlWriter which prints to the OutputStream interface.
+	 * @param out	The OutputStream to write to.
+	 * @param encoding	The OutputStream encoding.
+	 * @param charNewLine	The newline char.
+	 * @param charTab	The tab char.
+	 * @throws UnsupportedEncodingException	Is thrown when UTF-8 can't we printed.
+	 */
+	public XMLWriter(OutputStream out,String encoding,String charNewLine,String charTab) throws UnsupportedEncodingException {
+		this(new OutputStreamWriter(out, encoding),encoding,charNewLine,charTab);
+	}
 	
 	/**
 	 * @see org.xml.sax.ContentHandler#startDocument()

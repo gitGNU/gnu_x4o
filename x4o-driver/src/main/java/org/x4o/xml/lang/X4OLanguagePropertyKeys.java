@@ -31,52 +31,51 @@ package org.x4o.xml.lang;
  */
 public class X4OLanguagePropertyKeys {
 	
-	public static final String LANGUAGE_NAME				= X4OLanguageProperty.LANGUAGE_NAME.toUri();
-	public static final String LANGUAGE_VERSION				= X4OLanguageProperty.LANGUAGE_VERSION.toUri();
-		
-	public static final String DEBUG_OUTPUT_STREAM			= X4OLanguageProperty.DEBUG_OUTPUT_STREAM.toUri();
-	public static final String DEBUG_OUTPUT_HANDLER			= X4OLanguageProperty.DEBUG_OUTPUT_HANDLER.toUri();
-	public static final String DEBUG_OUTPUT_ELD_PARSER		= X4OLanguageProperty.DEBUG_OUTPUT_ELD_PARSER.toUri();
+	public static final String LANGUAGE_NAME						= X4OLanguageProperty.LANGUAGE_NAME.toUri();
+	public static final String LANGUAGE_VERSION						= X4OLanguageProperty.LANGUAGE_VERSION.toUri();
 	
-	public static final String INPUT_BUFFER_SIZE			= X4OLanguageProperty.INPUT_BUFFER_SIZE.toUri();
-	public static final String INPUT_EMPTY_NAMESPACE_URI	= X4OLanguageProperty.INPUT_EMPTY_NAMESPACE_URI.toUri();
+	public static final String READER_INPUT_STREAM					= X4OLanguageProperty.READER_INPUT_STREAM.toUri();
+	public static final String READER_INPUT_ENCODING				= X4OLanguageProperty.READER_INPUT_ENCODING.toUri();
+	public static final String READER_INPUT_SOURCE					= X4OLanguageProperty.READER_INPUT_SOURCE.toUri();
+	public static final String READER_INPUT_SYSTEM_ID				= X4OLanguageProperty.READER_INPUT_SYSTEM_ID.toUri();
+	public static final String READER_INPUT_BASE_PATH				= X4OLanguageProperty.READER_INPUT_BASE_PATH.toUri();
+	public static final String READER_BUFFER_SIZE					= X4OLanguageProperty.READER_BUFFER_SIZE.toUri();
+	public static final String READER_EMPTY_NAMESPACE_URI			= X4OLanguageProperty.READER_EMPTY_NAMESPACE_URI.toUri();
+	public static final String READER_ERROR_HANDLER					= X4OLanguageProperty.READER_ERROR_HANDLER.toUri();
+	public static final String READER_ENTITY_RESOLVER				= X4OLanguageProperty.READER_ENTITY_RESOLVER.toUri();
+	public static final String READER_VALIDATION_SCHEMA_AUTO_WRITE	= X4OLanguageProperty.READER_VALIDATION_SCHEMA_AUTO_WRITE.toUri();
+	public static final String READER_VALIDATION_SCHEMA_PATH		= X4OLanguageProperty.READER_VALIDATION_SCHEMA_PATH.toUri();
+	public static final String READER_VALIDATION_INPUT				= X4OLanguageProperty.READER_VALIDATION_INPUT.toUri();
+	public static final String READER_VALIDATION_INPUT_XSD			= X4OLanguageProperty.READER_VALIDATION_INPUT_XSD.toUri();
 	
-	public static final String INPUT_SOURCE_STREAM			= X4OLanguageProperty.INPUT_SOURCE_STREAM.toUri();
-	public static final String INPUT_SOURCE_ENCODING		= X4OLanguageProperty.INPUT_SOURCE_ENCODING.toUri();
-	public static final String INPUT_SOURCE_OBJECT			= X4OLanguageProperty.INPUT_SOURCE_OBJECT.toUri();
-	public static final String INPUT_SOURCE_SYSTEM_ID		= X4OLanguageProperty.INPUT_SOURCE_SYSTEM_ID.toUri();
-	public static final String INPUT_SOURCE_BASE_PATH		= X4OLanguageProperty.INPUT_SOURCE_BASE_PATH.toUri();
+	public static final String WRITER_OUTPUT_STREAM					= X4OLanguageProperty.WRITER_OUTPUT_STREAM.toUri();
+	public static final String WRITER_OUTPUT_ENCODING				= X4OLanguageProperty.WRITER_OUTPUT_ENCODING.toUri();
+	public static final String WRITER_OUTPUT_CHAR_NEWLINE			= X4OLanguageProperty.WRITER_OUTPUT_CHAR_NEWLINE.toUri();
+	public static final String WRITER_OUTPUT_CHAR_TAB				= X4OLanguageProperty.WRITER_OUTPUT_CHAR_TAB.toUri();
+	public static final String WRITER_SCHEMA_URI_PRINT				= X4OLanguageProperty.WRITER_SCHEMA_URI_PRINT.toUri();
+	public static final String WRITER_SCHEMA_URI_ROOT				= X4OLanguageProperty.WRITER_SCHEMA_URI_ROOT.toUri();
 	
-	public static final String CONFIG_ERROR_HANDLER			= X4OLanguageProperty.CONFIG_ERROR_HANDLER.toUri();
-	public static final String CONFIG_ENTITY_RESOLVER		= X4OLanguageProperty.CONFIG_ENTITY_RESOLVER.toUri();
+	public static final String SCHEMA_WRITER_OUTPUT_PATH			= X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_PATH.toUri();
+	public static final String SCHEMA_WRITER_OUTPUT_ENCODING		= X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_ENCODING.toUri();
+	public static final String SCHEMA_WRITER_OUTPUT_CHAR_NEWLINE	= X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_CHAR_NEWLINE.toUri();
+	public static final String SCHEMA_WRITER_OUTPUT_CHAR_TAB		= X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_CHAR_TAB.toUri();
 	
-	public static final String EL_BEAN_INSTANCE_MAP			= X4OLanguageProperty.EL_BEAN_INSTANCE_MAP.toUri();
-	public static final String EL_FACTORY_INSTANCE			= X4OLanguageProperty.EL_FACTORY_INSTANCE.toUri();
+	public static final String DEBUG_OUTPUT_STREAM					= X4OLanguageProperty.DEBUG_OUTPUT_STREAM.toUri();
+	public static final String DEBUG_OUTPUT_HANDLER					= X4OLanguageProperty.DEBUG_OUTPUT_HANDLER.toUri();
 	
-	public static final String PHASE_STOP_AFTER				= X4OLanguageProperty.PHASE_STOP_AFTER.toUri();
-	public static final String PHASE_SKIP_RELEASE			= X4OLanguageProperty.PHASE_SKIP_RELEASE.toUri();
-	public static final String PHASE_SKIP_RUN				= X4OLanguageProperty.PHASE_SKIP_RUN.toUri();
-	public static final String PHASE_SKIP_SIBLINGS			= X4OLanguageProperty.PHASE_SKIP_SIBLINGS.toUri();
+	public static final String EL_BEAN_INSTANCE_MAP					= X4OLanguageProperty.EL_BEAN_INSTANCE_MAP.toUri();
+	public static final String EL_FACTORY_INSTANCE					= X4OLanguageProperty.EL_FACTORY_INSTANCE.toUri();
 	
-	public static final String VALIDATION_SCHEMA_PATH		= X4OLanguageProperty.VALIDATION_SCHEMA_PATH.toUri();
-	public static final String VALIDATION_INPUT				= X4OLanguageProperty.VALIDATION_INPUT.toUri();
-	public static final String VALIDATION_INPUT_XSD			= X4OLanguageProperty.VALIDATION_INPUT_XSD.toUri();
-	public static final String VALIDATION_ELD				= X4OLanguageProperty.VALIDATION_ELD.toUri();
-	public static final String VALIDATION_ELD_XSD			= X4OLanguageProperty.VALIDATION_ELD_XSD.toUri();
+	public static final String PHASE_STOP_AFTER						= X4OLanguageProperty.PHASE_STOP_AFTER.toUri();
+	public static final String PHASE_SKIP_RELEASE					= X4OLanguageProperty.PHASE_SKIP_RELEASE.toUri();
+	public static final String PHASE_SKIP_RUN						= X4OLanguageProperty.PHASE_SKIP_RUN.toUri();
+
 	
-	public final static String[] DEFAULT_X4O_GLOBAL_KEYS;
 	public final static String[] DEFAULT_X4O_READER_KEYS;
 	public final static String[] DEFAULT_X4O_WRITER_KEYS;
 	public final static String[] DEFAULT_X4O_SCHEMA_WRITER_KEYS;
 	
 	static {
-		X4OLanguageProperty[] globalKeys = X4OLanguageProperty.DEFAULT_X4O_GLOBAL_KEYS;
-		String[] globalResultKeys = new String[globalKeys.length];
-		for (int i=0;i<globalResultKeys.length;i++) {
-			globalResultKeys[i] = globalKeys[i].toUri();
-		}
-		DEFAULT_X4O_GLOBAL_KEYS = globalResultKeys;
-		
 		X4OLanguageProperty[] readerKeys = X4OLanguageProperty.DEFAULT_X4O_READER_KEYS;
 		String[] readerResultKeys = new String[readerKeys.length];
 		for (int i=0;i<readerResultKeys.length;i++) {

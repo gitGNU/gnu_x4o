@@ -29,9 +29,12 @@ import java.io.FileOutputStream;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.io.XMLConstants;
 import org.x4o.xml.io.sax.XMLWriter;
+import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
 
@@ -44,10 +47,11 @@ import org.xml.sax.ext.DefaultHandler2;
 public class EldXsdXmlGenerator {
 
 	private X4OLanguage language = null;
+	private X4OLanguageContext languageContext = null;
 	
-	public EldXsdXmlGenerator(X4OLanguage language) {
-		this.language=language;
-		
+	public EldXsdXmlGenerator(X4OLanguageContext languageContext) {
+		this.languageContext=languageContext;
+		this.language=languageContext.getLanguage();
 	}
 	
 	private void checkNamespace(ElementNamespaceContext ns) {
@@ -59,8 +63,20 @@ public class EldXsdXmlGenerator {
 		}
 	}
 	
-	public void writeSchema(File basePath,String namespace) throws ElementException {
+	public void writeSchema(String namespace) throws ElementException {
+		File basePath = (File)languageContext.getLanguageProperty(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_PATH);
+		String encoding = languageContext.getLanguagePropertyString(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_ENCODING);
+		String charNew = languageContext.getLanguagePropertyString(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_CHAR_NEWLINE);
+		String charTab = languageContext.getLanguagePropertyString(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_CHAR_TAB);
+		if (basePath==null) {
+			throw new ElementException("Can't write schema to null output path.");
+		}
+		if (encoding==null) { encoding = XMLConstants.XML_DEFAULT_ENCODING; }
+		if (charNew==null)  { charNew = XMLConstants.CHAR_NEWLINE;			}
+		if (charTab==null)  { charTab = XMLConstants.CHAR_TAB;				}
 		try {
+			
+			
 			if (namespace!=null) {
 				ElementNamespaceContext ns = language.findElementNamespaceContext(namespace);
 				if (ns==null) {
@@ -69,7 +85,7 @@ public class EldXsdXmlGenerator {
 				checkNamespace(ns);
 				FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));
 				try {
-					XMLWriter out = new XMLWriter(fio);
+					XMLWriter out = new XMLWriter(fio,encoding,charNew,charTab);
 					generateSchema(ns.getUri(), out);
 				} finally {
 					fio.close();
@@ -81,7 +97,7 @@ public class EldXsdXmlGenerator {
 					checkNamespace(ns);
 					FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));
 					try {
-						XMLWriter out = new XMLWriter(fio);
+						XMLWriter out = new XMLWriter(fio,encoding,charNew,charTab);
 						generateSchema(ns.getUri(), out);
 					} finally {
 						fio.close();
@@ -90,7 +106,7 @@ public class EldXsdXmlGenerator {
 			}
 			
 		} catch (Exception e) {
-			throw new ElementException(e); // todo rm 
+			throw new ElementException(e); // TODO: rm 
 		}
 	}
 	

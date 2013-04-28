@@ -25,11 +25,8 @@ package org.x4o.xml.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.x4o.xml.element.Element;
 import org.x4o.xml.lang.X4OLanguageContext;
@@ -55,7 +52,7 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 		return X4OLanguagePropertyKeys.DEFAULT_X4O_WRITER_KEYS;
 	}
 	
-	public void write(T object,OutputStream output) throws ParserConfigurationException, SAXException, IOException {
+	private X4OLanguageContext toObjectContext(T object) throws SAXException {
 		X4OLanguageContext context = getLanguageContext();
 		Element rootElement = null;
 		try {
@@ -67,30 +64,18 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 		}
 		rootElement.setElementObject(object);
 		context.setRootElement(rootElement);
-		writeContext(context,output);
+		return context;
 	}
 	
-	public void writeFile(T object,String fileName) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
-		if (fileName==null) {
-			throw new NullPointerException("Can't convert null fileName to file object.");
-		}		
-		writeFile(object,new File(fileName));
+	public void write(T object,OutputStream output) throws X4OConnectionException,SAXException,IOException {
+		writeContext(toObjectContext(object), output);
 	}
 	
-	public void writeFile(T object,File file) throws ParserConfigurationException,FileNotFoundException,SecurityException,NullPointerException,SAXException,IOException {
-		if (file==null) {
-			throw new NullPointerException("Can't read null file.");
-		}
-		if (file.canWrite()==false) {
-			throw new IOException("Can't write file: "+file);
-		}
-		OutputStream outputStream = new FileOutputStream(file);
-		try {
-			write(object,outputStream);
-		} finally {
-			if(outputStream!=null) {
-				outputStream.close();
-			}
-		}
+	public void writeFile(T object,String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
+		writeFileContext(toObjectContext(object), fileName);
+	}
+	
+	public void writeFile(T object,File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
+		writeFileContext(toObjectContext(object), file);
 	}
 }

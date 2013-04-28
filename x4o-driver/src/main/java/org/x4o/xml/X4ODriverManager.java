@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -67,14 +66,12 @@ public final class X4ODriverManager {
 	private Map<String,String> classdrivers = null;
 	private Map<String,String> defaultDrivers = null;
 	private Map<String,X4ODriver<?>> drivers = null;
-	private Map<String,Map<String,Object>> globalProperties = null;
 	
 	private X4ODriverManager() {
 		logger = Logger.getLogger(X4ODriverManager.class.getName());
 		classdrivers = new HashMap<String,String>(10);
 		defaultDrivers = new HashMap<String,String>(10);
 		drivers = new HashMap<String,X4ODriver<?>>(10);
-		globalProperties = new HashMap<String,Map<String,Object>>(20);
 	}
 	
 	static {
@@ -110,25 +107,13 @@ public final class X4ODriverManager {
 	}
 	
 	static protected X4OLanguageConfiguration getDefaultBuildLanguageConfiguration() {
-		return new DefaultX4OLanguageConfiguration();
+		DefaultX4OLanguageConfiguration config = new DefaultX4OLanguageConfiguration();
+		config.fillDefaults();
+		X4OLanguageConfiguration result = config.createProxy();
+		return result;
 	}
 	
-	static public Collection<String> getGlobalPropertyKeys(X4ODriver<?> driver) {
-		Map<String,Object> driverProperties = instance.globalProperties.get(driver.getLanguageName());
-		if (driverProperties==null) {
-			return Collections.emptySet();
-		}
-		return driverProperties.keySet();
-	}
-	
-	static public Object getGlobalProperty(X4ODriver<?> driver,String key) {
-		Map<String,Object> driverProperties = instance.globalProperties.get(driver.getLanguageName());
-		if (driverProperties==null) {
-			return null;
-		}
-		return driverProperties.get(key);
-	}
-	
+	/*
 	static public void setGlobalProperty(X4ODriver<?> driver,String key,Object value) {
 		Map<String,Object> driverProperties = instance.globalProperties.get(driver.getLanguageName());
 		if (driverProperties==null) {
@@ -145,6 +130,7 @@ public final class X4ODriverManager {
 		}
 		throw new IllegalArgumentException("Property with key: "+key+" is protected by key limit.");
 	}
+	*/
 	
 	static public void registerX4ODriver(X4ODriver<?> driver) {
 		if (driver==null) {
