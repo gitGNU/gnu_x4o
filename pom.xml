@@ -64,19 +64,19 @@
     <!-- Build plugin versions -->
     <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
     <maven-source-plugin.version>2.1.2</maven-source-plugin.version>
-    <maven-javadoc-plugin.version>2.8.1</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>2.9</maven-javadoc-plugin.version>
     <maven-assembly-plugin.version>2.3</maven-assembly-plugin.version>
     <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-    <maven-site-plugin.version>3.0</maven-site-plugin.version>
-    <maven-pmd-plugin.version>2.7.1</maven-pmd-plugin.version>
-    <maven-surefire-plugin.version>2.12</maven-surefire-plugin.version>
-    <maven-surefire-report-plugin.version>2.12.2</maven-surefire-report-plugin.version>
+    <maven-site-plugin.version>3.2</maven-site-plugin.version>
+    <maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
+    <maven-surefire-plugin.version>2.13</maven-surefire-plugin.version>
+    <maven-surefire-report-plugin.version>2.14.1</maven-surefire-report-plugin.version>
     <maven-checkstyle-plugin.version>2.9.1</maven-checkstyle-plugin.version>
     <maven-enforcer-plugin.version>1.0-beta-1</maven-enforcer-plugin.version>
-    <maven-project-info-reports-plugin.version>2.5</maven-project-info-reports-plugin.version>
+    <maven-project-info-reports-plugin.version>2.6</maven-project-info-reports-plugin.version>
     <maven-release-plugin.version>2.2.2</maven-release-plugin.version>
     <maven-changelog-plugin.version>2.2</maven-changelog-plugin.version>
-    <maven-jar-plugin.version>2.2</maven-jar-plugin.version>
+    <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
     <maven-license-plugin.version>1.10.b1</maven-license-plugin.version>
     
     <!-- Build non-maven plugin versions -->
@@ -89,14 +89,14 @@
     <!-- Build lib versions -->
     <ant-contrib.version>1.0b3</ant-contrib.version>
     <ant-nodeps.version>1.8.1</ant-nodeps.version>
-    <ant.version>1.8.4</ant.version>
-    <ant-testutil.version>1.8.4</ant-testutil.version>
+    <ant.version>1.9.0</ant.version>
+    <ant-testutil.version>1.9.0</ant-testutil.version>
     
     <!-- Build test lib versions -->
     <mockito-all.version>1.9.0</mockito-all.version>
     <testng.version>6.3.1</testng.version>
-    <junit.version>4.10</junit.version>
-    <xerces.version>2.10.0</xerces.version><!-- Only needed in jdk1.5 -->
+    <junit.version>4.11</junit.version>
+    <xerces.version>2.11.0</xerces.version><!-- Only needed in jdk1.5 -->
     
     <!-- Application lib versions -->
     <jasper-el.version>6.0.20</jasper-el.version>
@@ -402,6 +402,7 @@
             <xsd>XML_STYLE</xsd>
             <apt>DOUBLETILDE_STYLE</apt>
             <properties>SCRIPT_STYLE</properties>
+            <sh>SCRIPT_STYLE</sh>
           </mapping>
         </configuration>
         <executions>
