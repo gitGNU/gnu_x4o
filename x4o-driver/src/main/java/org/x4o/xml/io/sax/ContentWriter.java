@@ -20,46 +20,35 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.xml.test.element;
+package	org.x4o.xml.io.sax;
 
-import java.io.StringWriter;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
-import org.x4o.xml.element.AbstractElement;
-import org.x4o.xml.element.ElementException;
-import org.x4o.xml.io.sax.ContentWriterXml;
 
 /**
- * InlinePropertiesElement to test 
+ * ContentWriter is ContentHandler for writing sax events.
  * 
  * @author Willem Cazander
- * @version 1.0 Jan 23, 2012
+ * @version 1.0 Apr 30, 2013
  */
-public class InlinePropertiesElement extends AbstractElement {
-
-	StringWriter xmlString = null;
+public interface ContentWriter extends ContentHandler,LexicalHandler {
 	
 	/**
-	 * @see org.x4o.xml.element.AbstractElement#doElementStart()
+	 * Starts and ends an element in one call.
+	 * @param uri	The uri of the element.
+	 * @param localName	The localName of the element.
+	 * @param name	The name of the element.
+	 * @param atts	The attributes of the element.
+	 * @throws SAXException	When IOException is thrown.
 	 */
-	@Override
-	public void doElementStart() throws ElementException {
-		StringWriter xmlString = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(xmlString);
-		setElementObject(writer);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.AbstractElement#doElementEnd()
-	 */
-	@Override
-	public void doElementEnd() throws ElementException {
-	}
-
-	/**
-	 * @see org.x4o.xml.element.AbstractElement#getElementType()
-	 */
-	@Override
-	public ElementType getElementType() {
-		return ElementType.overrideSax;
-	}
+	void startElementEnd(String uri, String localName, String name,Attributes atts) throws SAXException;
+	
+	void comment(String text) throws SAXException;
+	
+	void ignorableWhitespace(String text) throws SAXException;
+		
+	void characters(String text) throws SAXException;
 }

@@ -34,6 +34,7 @@ import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
+import org.xml.sax.SAXException;
 
 /**
  * EldDocGenerator writes documentation.
@@ -61,51 +62,60 @@ public class EldDocGenerator {
 	public void writeDoc(File basePath) throws ElementException {
 		EldDocHtmlWriter writer = new EldDocHtmlWriter();
 		try {
+			
+			writer.writeTheme(basePath);
 			writer.writeIndex(basePath, context);
-			writer.writeStylesheet(basePath);
-			writer.writeOverviewModule(basePath, context);
-			writer.writeOverviewNamespace(basePath, context);
+			writer.writeIndexAll(basePath, context);
+			writer.writeDocHelp(basePath, context);
+			writer.writeAllElementsFrame(basePath, context, true);
+			writer.writeAllElementsFrame(basePath, context, false);
+			writer.writeOverviewFrame(basePath, context);
+			writer.writeOverviewLanguage(basePath, context);
 			writer.writeOverviewTree(basePath, context);
 			
 			for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
 				
-				writer.writeOverviewModule(basePath, mod);
+				writer.writeOverviewModule(basePath, mod, context);
 				
 				
 				for (ElementBindingHandler bind:mod.getElementBindingHandlers()) {
-					writer.writeBindingHandler(basePath,bind,mod);
+					writer.writeBindingHandler(basePath,bind,mod,context);
 				}
 				for (ElementAttributeHandler attr:mod.getElementAttributeHandlers()) {
-					writer.writeAttributeHandler(basePath,attr,mod);
+					writer.writeAttributeHandler(basePath,attr,mod,context);
 				}
 				for (ElementConfigurator conf:mod.getElementConfiguratorGlobals()) {
-					writer.writeElementConfigurator(basePath,conf,mod);
+					writer.writeElementConfigurator(basePath,conf,mod,context);
 				}
 				for (ElementInterface iface:mod.getElementInterfaces()) {
-					writer.writeElementInterface(basePath,iface,mod);
+					writer.writeElementInterface(basePath,iface,mod,context);
 					
 					for (ElementBindingHandler bind:iface.getElementBindingHandlers()) {
-						writer.writeBindingHandler(basePath,bind,mod,iface);
+						writer.writeBindingHandler(basePath,bind,mod,iface,context);
 					}
 					//for (ElementAttributeHandler attr:iface.getElementClassAttributes()) {
 					//	writer.writeAttributeHandler(basePath,attr,mod,true);
 					//}
 					for (ElementConfigurator conf:iface.getElementConfigurators()) {
-						writer.writeElementConfigurator(basePath,conf,mod,iface);
+						writer.writeElementConfigurator(basePath,conf,mod,iface,context);
 					}
 				}
 				
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
-					writer.writeOverviewElement(basePath, ns,mod);
+					
+					writer.writeOverviewElement(basePath,ns,mod,context);
+					writer.writeNamespaceElementsFrame(basePath,ns,mod,context);
+					
 					for (ElementClass ec:ns.getElementClasses()) {
 						writer.writeElement(basePath, ec, ns, mod,context);
 						for (ElementConfigurator conf:ec.getElementConfigurators()) {
-							writer.writeElementConfigurator(basePath,conf,mod,ns,ec);
+							writer.writeElementConfigurator(basePath,conf,mod,ns,ec,context);
 						}
 					}
 				}
 			}
-			
+		} catch (SAXException e) {
+			throw new ElementException(e); 
 		} catch (IOException e) {
 			throw new ElementException(e); 
 		}

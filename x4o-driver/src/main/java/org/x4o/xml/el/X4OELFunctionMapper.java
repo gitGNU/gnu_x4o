@@ -36,6 +36,10 @@ import javax.el.FunctionMapper;
  * @version 1.0 Sep 14, 2010
  */
 public class X4OELFunctionMapper extends FunctionMapper {
+	
+	/**
+	 * Stores the el to method function mapping.
+	 */
 	private Map<String,Method> functionMap = null;
 	
 	/**
@@ -45,6 +49,12 @@ public class X4OELFunctionMapper extends FunctionMapper {
 		functionMap = new HashMap<String,Method>(50);
 	}
 	
+	/**
+	 * Resolves method el functions.
+	 * @param prefix		The function prefix.
+	 * @param localName		The local name of function.
+	 * @return	The resolved function or null is not found.
+	 */
 	@Override
 	public Method resolveFunction(String prefix, String localName) {
 		String key = prefix + ":" + localName;

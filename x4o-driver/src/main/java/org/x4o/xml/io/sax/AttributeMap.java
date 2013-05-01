@@ -33,7 +33,7 @@ import java.util.Set;
  * Maps an SAX attributes set to an Map interface.
  * 
  * @author Willem Cazander
- * @version 1.0 17/04/2005
+ * @version 1.0 Apr 17, 2005
  * @param <K> The key class.
  * @param <V> The value class.
  */

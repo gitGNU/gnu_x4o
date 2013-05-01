@@ -39,7 +39,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.ext.DefaultHandler2;
 
 /**
- * X4OLanguageProperty holds the language parser properties keys
+ * X4OLanguageProperty holds the language connection properties keys
  * 
  * @author Willem Cazander
  * @version 1.0 6 Aug 2012
@@ -56,7 +56,7 @@ public enum X4OLanguageProperty {
 	
 	
 	
-	/** The input stream to parse, note is skipped when object is set. */
+	/** The input stream to parse, note is skipped when source is set. */
 	READER_INPUT_STREAM(IO.READER,"reader/input/stream",InputStream.class),
 	
 	/** When set it overrides automatic encoding detection of sax parser. */
@@ -257,7 +257,7 @@ public enum X4OLanguageProperty {
 	 * Returns the uri defined by this property.
 	 * @return The uri defined by this property.
 	 */
-	public String toUri() {
+	public final String toUri() {
 		return uriName;
 	}
 	
@@ -265,7 +265,7 @@ public enum X4OLanguageProperty {
 	 * Returns the default value for this property. 
 	 * @return	The default value for this property.
 	 */
-	public Object getDefaultValue() {
+	public final Object getDefaultValue() {
 		return defaultValue;
 	}
 	
@@ -275,7 +275,7 @@ public enum X4OLanguageProperty {
 	 * @param value	The	object to check.
 	 * @return	Returns true when Object value is allowed to be set.
 	 */
-	public boolean isValueValid(Object value) {
+	public final boolean isValueValid(Object value) {
 		if (LANGUAGE_NAME.equals(this) | LANGUAGE_VERSION.equals(this)) {
 			return false; // read only are not valid to set.
 		}
@@ -297,7 +297,7 @@ public enum X4OLanguageProperty {
 	 * @return	Return the property for the given uri.
 	 * @throws IllegalArgumentException when uri is not found.
 	 */
-	static public X4OLanguageProperty valueByUri(String uri) {
+	public static final X4OLanguageProperty valueByUri(String uri) {
 		if (uri==null) {
 			throw new NullPointerException("Can't search null uri.");
 		}

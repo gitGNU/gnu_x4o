@@ -37,7 +37,7 @@ import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 
 /**
- * This is the starting point of the XML X4O Language Driver.
+ * X4ODriver Is the x4o language driver to interact with xml.
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 11, 2005
@@ -83,10 +83,19 @@ public abstract class X4ODriver<T> {
 	
 	// =============== SchemaWriter
 	
+	/**
+	 * Creates a schema writer for the default language version.
+	 * @return	The schema writer for this language.
+	 */
 	public X4OSchemaWriter createSchemaWriter() {
 		return createSchemaWriter(getLanguageVersionDefault());
 	}
 	
+	/**
+	 * Creates a schema writer for a version of the language.
+	 * @param version	The version of the language.
+	 * @return	The schema writer for this language.
+	 */
 	public X4OSchemaWriter createSchemaWriter(String version) {
 		return new DefaultX4OSchemaWriter(createLanguageContext(version));
 	}
@@ -135,18 +144,36 @@ public abstract class X4ODriver<T> {
 	
 	// =============== Language
 	
+	/**
+	 * Returns the default language which is the latest version.
+	 * @return	The default language version.
+	 */
 	final public String getLanguageVersionDefault() {
 		return X4ODriverManager.getDefaultLanguageVersion(getLanguageVersions());
 	}	
 	
+	/**
+	 * Creates the X4OLanguage for the specified version.
+	 * @param version	The language version to create.
+	 * @return	The created X4OLanguage.
+	 */
 	final public X4OLanguage createLanguage(String version) {
 		return buildLanguage(version);
 	}
 	
+	/**
+	 * Creates the X4OLanguageContext for the default language version.
+	 * @return	The created X4OLanguageContext.
+	 */
 	final public X4OLanguageContext createLanguageContext() {
 		return createLanguageContext(getLanguageVersionDefault());
 	}
 	
+	/**
+	 * Creates the X4OLanguageContext for the specified version.
+	 * @param version	The language version to create the context for.
+	 * @return	The created X4OLanguageContext.
+	 */
 	final public X4OLanguageContext createLanguageContext(String version) {
 		return createLanguage(version).createLanguageContext(this);
 	}

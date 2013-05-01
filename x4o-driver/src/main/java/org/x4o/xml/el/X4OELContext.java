@@ -49,7 +49,7 @@ public class X4OELContext extends ELContext {
 	/**
 	 * Creates a X4OELContext.
 	 */
-	public X4OELContext(/* X4OLanguageConfiguration x4oParserConfig */) {
+	public X4OELContext() {
 		
 		CompositeELResolver compositeELResolver = new CompositeELResolver();
 		compositeELResolver.add(new X4OELResolver(new HashMap<Object, Object>(100)));

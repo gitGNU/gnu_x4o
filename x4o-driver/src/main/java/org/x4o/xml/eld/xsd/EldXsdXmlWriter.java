@@ -40,10 +40,10 @@ import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementMetaBase;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.io.XMLConstants;
+import org.x4o.xml.io.sax.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -60,11 +60,11 @@ public class EldXsdXmlWriter {
 	static public final String SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
 
 	protected X4OLanguage language = null;
-	protected DefaultHandler2 xmlWriter = null;
+	protected ContentWriter xmlWriter = null;
 	protected String writeNamespace = null;
 	protected Map<String, String> namespaces = null;
 	
-	public EldXsdXmlWriter(DefaultHandler2 xmlWriter,X4OLanguage language) {
+	public EldXsdXmlWriter(ContentWriter xmlWriter,X4OLanguage language) {
 		this.xmlWriter=xmlWriter;
 		this.language=language;
 		this.namespaces=new HashMap<String,String>(10);

@@ -45,6 +45,7 @@ import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.io.sax.ContentWriter;
 import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.io.sax.X4OEntityResolver;
 import org.x4o.xml.io.sax.X4OErrorHandler;
@@ -57,7 +58,6 @@ import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -852,8 +852,8 @@ public class X4OPhaseLanguageRead {
 				try {
 					AttributesImpl atts = new AttributesImpl();
 					atts.addAttribute ("", "elements", "", "", elementsReleased+"");
-					languageContext.getX4ODebugWriter().getDebugWriter().startElement (X4ODebugWriter.DEBUG_URI, "executeReleases", "", atts);
-					languageContext.getX4ODebugWriter().getDebugWriter().endElement (X4ODebugWriter.DEBUG_URI, "executeReleases" , "");
+					languageContext.getX4ODebugWriter().getContentWriter().startElement (X4ODebugWriter.DEBUG_URI, "executeReleases", "", atts);
+					languageContext.getX4ODebugWriter().getContentWriter().endElement (X4ODebugWriter.DEBUG_URI, "executeReleases" , "");
 				} catch (SAXException e) {
 					throw new X4OPhaseException(phase,e);
 				}
@@ -920,13 +920,13 @@ public class X4OPhaseLanguageRead {
 					AttributesImpl atts = new AttributesImpl();
 					//atts.addAttribute ("", key, "", "", value);
 					//atts.addAttribute ("", "verbose", "", "", "true");
-					languageContext.getX4ODebugWriter().getDebugWriter().startElement (X4ODebugWriter.DEBUG_URI, "printElementTree", "", atts);
+					languageContext.getX4ODebugWriter().getContentWriter().startElement (X4ODebugWriter.DEBUG_URI, "printElementTree", "", atts);
 					startedPrefix.clear();
 					printXML(languageContext.getRootElement());
 					for (String prefix:startedPrefix) {
-						languageContext.getX4ODebugWriter().getDebugWriter().endPrefixMapping(prefix);
+						languageContext.getX4ODebugWriter().getContentWriter().endPrefixMapping(prefix);
 					}
-					languageContext.getX4ODebugWriter().getDebugWriter().endElement(X4ODebugWriter.DEBUG_URI, "printElementTree", "");
+					languageContext.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "printElementTree", "");
 					languageContext.getX4ODebugWriter().debugLanguageContext(languageContext);
 				} catch (SAXException e) {
 					throw new X4OPhaseException(this,e);
@@ -951,15 +951,13 @@ public class X4OPhaseLanguageRead {
 				if (element==null) {
 					throw new SAXException("Can't print debug xml of null element.");
 				}
-				DefaultHandler2 handler = element.getLanguageContext().getX4ODebugWriter().getDebugWriter();
+				ContentWriter handler = element.getLanguageContext().getX4ODebugWriter().getContentWriter();
 				if (element.getElementType().equals(Element.ElementType.comment)) {
-					char[] msg = ((String)element.getElementObject()).toCharArray();
-					handler.comment(msg,0,msg.length);
+					handler.comment((String)element.getElementObject());
 					return;
 				}
 				if (element.getElementType().equals(Element.ElementType.characters)) {
-					char[] msg = ((String)element.getElementObject()).toCharArray();
-					handler.characters(msg,0,msg.length);
+					handler.characters((String)element.getElementObject());
 					return;
 				}
 				if (element.getElementClass()==null) {

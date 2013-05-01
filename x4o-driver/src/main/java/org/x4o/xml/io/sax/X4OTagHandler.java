@@ -41,7 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class handels all the X4O tags.
+ * X4OTagHandler Gets all SAX content handler events and converts to x4o element tree.
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 20, 2005

@@ -42,7 +42,7 @@ import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.element.ElementObjectPropertyValueException;
 import org.x4o.xml.io.XMLConstants;
-import org.x4o.xml.io.sax.XMLWriter;
+import org.x4o.xml.io.sax.ContentWriterXml;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageProperty;
@@ -212,7 +212,7 @@ public class X4OPhaseLanguageWrite {
 					}
 				}
 				
-				XMLWriter writer = new XMLWriter(out,encoding,charNew,charTab);
+				ContentWriterXml writer = new ContentWriterXml(out,encoding,charNew,charTab);
 				writer.startDocument();
 				
 				Map<String,String> prefixes = new HashMap<String,String>();
@@ -273,7 +273,7 @@ public class X4OPhaseLanguageWrite {
 			return result;
 		}
 		
-		private void writeTree(XMLWriter writer,Element element,boolean isRoot) throws SAXException, ElementObjectPropertyValueException {
+		private void writeTree(ContentWriterXml writer,Element element,boolean isRoot) throws SAXException, ElementObjectPropertyValueException {
 			AttributesImpl atts = new AttributesImpl();
 			
 			if (isRoot && schemaUriPrint) {

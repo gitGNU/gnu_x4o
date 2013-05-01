@@ -20,46 +20,19 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.xml.test.element;
-
-import java.io.StringWriter;
-
-import org.x4o.xml.element.AbstractElement;
-import org.x4o.xml.element.ElementException;
-import org.x4o.xml.io.sax.ContentWriterXml;
+package	org.x4o.xml.io.sax;
 
 /**
- * InlinePropertiesElement to test 
+ * ContentWriterConfig Defines config options for ContentWriter.
  * 
  * @author Willem Cazander
- * @version 1.0 Jan 23, 2012
+ * @version 1.0 May 1, 2013
  */
-public class InlinePropertiesElement extends AbstractElement {
-
-	StringWriter xmlString = null;
+public interface ContentWriterConfig {
 	
-	/**
-	 * @see org.x4o.xml.element.AbstractElement#doElementStart()
-	 */
-	@Override
-	public void doElementStart() throws ElementException {
-		StringWriter xmlString = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(xmlString);
-		setElementObject(writer);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.AbstractElement#doElementEnd()
-	 */
-	@Override
-	public void doElementEnd() throws ElementException {
-	}
-
-	/**
-	 * @see org.x4o.xml.element.AbstractElement#getElementType()
-	 */
-	@Override
-	public ElementType getElementType() {
-		return ElementType.overrideSax;
-	}
+	String getCharNewLine();
+	String getCharTab();
+	
+	String getReplaceCdataStart();
+	String getReplaceCdataEnd();
 }

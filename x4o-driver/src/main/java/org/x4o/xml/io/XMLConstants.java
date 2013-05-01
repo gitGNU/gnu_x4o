@@ -72,6 +72,11 @@ public final class XMLConstants {
 	public static final String NULL_NS_URI = "";
 	
 	/**
+	 * (Start) Definition of DTD doctype.
+	 */
+	public static final String XML_DOCTYPE = "<!DOCTYPE";
+	
+	/**
 	 * Opens xml element tag.
 	 */
 	public static final String TAG_OPEN = "<";
@@ -112,6 +117,26 @@ public final class XMLConstants {
 	public static final String PROCESS_END = "?>";
 	
 	/**
+	 * Starts a cdata section.
+	 */
+	public static final String CDATA_START = "<![CDATA[";
+	
+	/**
+	 * Ends a cdata section.
+	 */
+	public static final String CDATA_END = "]]>";
+	
+	/**
+	 * The regex expression of a cdata start section.
+	 */
+	public static final String CDATA_START_REGEX = "<!\\x"+Integer.toHexString('[')+"CDATA\\x"+Integer.toHexString('[');
+	
+	/**
+	 * The regex expression of a cdata end section.
+	 */
+	public static final String CDATA_END_REGEX = "\\x"+Integer.toHexString(']')+"\\x"+Integer.toHexString(']')+">";
+	
+	/**
 	 * Tab char
 	 */
 	public static final String CHAR_TAB = "\t";
@@ -119,7 +144,7 @@ public final class XMLConstants {
 	/**
 	 * Newline char
 	 */
-	public static final String CHAR_NEWLINE = "\r\n";
+	public static final String CHAR_NEWLINE = "\n";
 	
 	
 	
@@ -207,29 +232,59 @@ public final class XMLConstants {
 		return true;
 	}
 	
-	static public String escapeAttributeValue(String value) {
-		int l = value.length();
-		StringBuffer result = new StringBuffer(l);
-		for (int i=0;i<l;i++) {
+	//static public boolean isCharRef(String c) {
+		//	&#' [0-9]+ ';' | '&#x' [0-9a-fA-F]+ ';'
+	//}
+	
+	static private boolean escapeXMLValue(char c,StringBuffer result) {
+		if (c=='<') {
+			result.append("&lt;");
+			return true;
+		}
+		if (c=='>') {
+			result.append("&gt;");
+			return true;
+		}
+		if (c=='&') {
+			result.append("&amp;");
+			return true;
+		}
+		if (c=='\"') {
+			result.append("&quote;");
+			return true;
+		}
+		if (c=='\'') {
+			result.append("&apos;");
+			return true;
+		}
+		return false;
+	}
+	
+	static public String escapeAttributeName(String value) {
+		// Attribute	   ::=   	Name Eq AttValue
+		int length = value.length();
+		StringBuffer result = new StringBuffer(length);
+		for (int i=0;i<length;i++) {
 			char c = value.charAt(i);
-			if (c=='<') {
-				result.append("&lt;");
-				continue;
+			if (isNameChar(c)) {
+				result.append(c);
+			} else { 
+				result.append("#x");
+				result.append(Integer.toHexString(c));
+				result.append(";");
 			}
-			if (c=='>') {
-				result.append("&gt;");
-				continue;
-			}
-			if (c=='&') {
-				result.append("&amp;");
-				continue;
-			}
-			if (c=='\"') {
-				result.append("&quote;");
-				continue;
-			}
-			if (c=='\'') {
-				result.append("&apos;");
+		}
+		return result.toString();
+	}
+	
+	static public String escapeAttributeValue(String value) {
+		// Reference   ::=   	EntityRef | CharRef
+		// AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
+		int length = value.length();
+		StringBuffer result = new StringBuffer(length);
+		for (int i=0;i<length;i++) {
+			char c = value.charAt(i);
+			if (escapeXMLValue(c,result)) {
 				continue;
 			}
 			if (/*isNameChar(c)*/true==false) {// TODO: add correct 
@@ -240,6 +295,45 @@ public final class XMLConstants {
 			} else {
 				result.append(c);
 			}
+		}
+		return result.toString();
+	}
+	
+	static public String escapeCharacters(String value) {
+		int length = value.length();
+		StringBuffer result = new StringBuffer(length);
+		for (int i=0;i<length;i++) {
+			char c = value.charAt(i);
+			if (escapeXMLValue(c,result)) {
+				continue;
+			}
+			result.append(c);
+		}
+		return result.toString();
+	}
+	
+	static public String escapeCharactersCdata(String value,String replaceCdataStart,String replaceCdataEnd) {
+		value = value.replaceAll(CDATA_START_REGEX, replaceCdataStart);
+		value = value.replaceAll(CDATA_END_REGEX,   replaceCdataEnd);
+		return value;
+	}
+	
+	static public String escapeCharactersComment(String value,String charTab,int indent) {
+		value = value.replaceAll(COMMENT_START, "");
+		value = value.replaceAll(COMMENT_END,   "");
+		int length = value.length();
+		StringBuffer result = new StringBuffer(length);
+		for (int i=0;i<length;i++) {
+			char c = value.charAt(i);
+			if (c=='\n') {
+				result.append(c);
+				for (int ii = 0; ii < indent; ii++) {
+					result.append(charTab);
+				}
+				
+				continue;
+			}
+			result.append(c);
 		}
 		return result.toString();
 	}

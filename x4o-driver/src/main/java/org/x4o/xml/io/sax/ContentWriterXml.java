@@ -32,23 +32,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.x4o.xml.io.XMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.DefaultHandler2;
-
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * Writes SAX event to XML.
+ * ContentWriterXml writes SAX content handler events to XML.
  * 
  * @author Willem Cazander
- * @version 1.0 17/04/2005
+ * @version 1.0 Apr 17, 2005
  */
-public class XMLWriter extends DefaultHandler2 {
+public class ContentWriterXml implements ContentWriter { 
 	
-	private String encoding = null;
+	public final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
+	protected String encoding = null;
 	private String charNewline = null;
 	private String charTab = null;
 	private Writer out = null;
@@ -56,13 +57,16 @@ public class XMLWriter extends DefaultHandler2 {
 	private Map<String,String> prefixMapping = null;
 	private List<String> printedMappings = null;
 	private StringBuffer startElement = null;
-	private boolean printedReturn = false;
+	private boolean printReturn = false;
+	private String lastElement = null;
+	private boolean printCDATA = false;
+	private Stack<String> elements = null;
 
 	/**
 	 * Creates XmlWriter which prints to the Writer interface.
 	 * @param out	The writer to print the xml to.
 	 */
-	public XMLWriter(Writer out,String encoding,String charNewLine,String charTab) {
+	public ContentWriterXml(Writer out,String encoding,String charNewLine,String charTab) {
 		if (out==null) {
 			throw new NullPointerException("Can't write on null writer.");
 		}
@@ -81,13 +85,14 @@ public class XMLWriter extends DefaultHandler2 {
 		this.charTab = charTab;
 		prefixMapping = new HashMap<String,String>(15);
 		printedMappings = new ArrayList<String>(15);
+		elements = new Stack<String>();
 	}
 
 	/**
 	 * Creates XmlWriter which prints to the Writer interface.
 	 * @param out	The writer to print the xml to.
 	 */
-	public XMLWriter(Writer out,String encoding) {
+	public ContentWriterXml(Writer out,String encoding) {
 		this(out,encoding,null,null);
 	}
 	
@@ -96,7 +101,7 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param out	The OutputStream to write to.
 	 * @throws UnsupportedEncodingException	Is thrown when UTF-8 can't we printed.
 	 */
-	public XMLWriter(OutputStream out,String encoding) throws UnsupportedEncodingException {
+	public ContentWriterXml(OutputStream out,String encoding) throws UnsupportedEncodingException {
 		this(new OutputStreamWriter(out, encoding),encoding);
 	}
 	
@@ -104,7 +109,7 @@ public class XMLWriter extends DefaultHandler2 {
 	 * Creates XmlWriter which prints to the Writer interface.
 	 * @param out	The writer to print the xml to.
 	 */
-	public XMLWriter(Writer out) {
+	public ContentWriterXml(Writer out) {
 		this(out,null);
 	}
 
@@ -113,7 +118,7 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param out	The OutputStream to write to.
 	 * @throws UnsupportedEncodingException	Is thrown when UTF-8 can't we printed.
 	 */
-	public XMLWriter(OutputStream out) throws UnsupportedEncodingException {
+	public ContentWriterXml(OutputStream out) throws UnsupportedEncodingException {
 		this(new OutputStreamWriter(out, XMLConstants.XML_DEFAULT_ENCODING),XMLConstants.XML_DEFAULT_ENCODING);
 	}
 
@@ -125,14 +130,29 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param charTab	The tab char.
 	 * @throws UnsupportedEncodingException	Is thrown when UTF-8 can't we printed.
 	 */
-	public XMLWriter(OutputStream out,String encoding,String charNewLine,String charTab) throws UnsupportedEncodingException {
+	public ContentWriterXml(OutputStream out,String encoding,String charNewLine,String charTab) throws UnsupportedEncodingException {
 		this(new OutputStreamWriter(out, encoding),encoding,charNewLine,charTab);
+	}
+	
+	// TODO: check location of this. (add to api?)
+	public void closeWriter() throws IOException {
+		if (out==null) {
+			return;
+		}
+		out.close();
+	}
+	
+	public void closeWriterSafe() {
+		try {
+			closeWriter();
+		} catch (IOException e) {
+			e.getMessage(); // discard exception
+		}
 	}
 	
 	/**
 	 * @see org.xml.sax.ContentHandler#startDocument()
 	 */
-	@Override
 	public void startDocument() throws SAXException {
 		indent = 0;
 		write(XMLConstants.getDocumentDeclaration(encoding));
@@ -141,9 +161,20 @@ public class XMLWriter extends DefaultHandler2 {
 	/**
 	 * @see org.xml.sax.ContentHandler#endDocument()
 	 */
-	@Override
 	public void endDocument() throws SAXException {
 		writeFlush();
+		if (elements.size()>0) {
+			throw new SAXException("Invalid xml still have "+elements.size()+" elements open.");
+		}
+	}
+	
+	/**
+	 * Starts and end then element.
+	 * @see org.x4o.xml.io.sax.ContentWriter#startElementEnd(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 */
+	public void startElementEnd(String uri, String localName, String name,Attributes atts) throws SAXException {
+		startElement(uri,localName,name,atts);
+		endElement(uri, localName, name);
 	}
 
 	/**
@@ -153,31 +184,31 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param atts The attributes of the xml tag. 
 	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
-	@Override
 	public void startElement(String uri, String localName, String name,Attributes atts) throws SAXException {
-		if (startElement!=null) {
-			write(startElement.toString());
-			startElement=null;
+		if (localName==null) {
+			localName = "null"; // mmm rm ?
 		}
+		if (XMLConstants.isNameString(localName)==false) {
+			throw new SAXException("LocalName of element is not valid in xml; '"+localName+"'");
+		}
+		autoCloseStartElement();
 		startElement = new StringBuffer(200);
-		
-		if (printedReturn==false) {
-			startElement.append(charNewline);
-		}
-		printedReturn=false;
-		
+		startElement.append(charNewline);
 		for (int i = 0; i < indent; i++) {
 			startElement.append(charTab);
 		}
 		startElement.append(XMLConstants.TAG_OPEN);
 		
-		if (localName==null) {
-			localName = "null";
-		}
-		if (XMLConstants.isNameString(localName)==false) {
-			throw new SAXException("LocalName of element is not valid in xml; '"+localName+"'");
-		}
-		
+		startElementTag(uri,localName);
+		startElementNamespace(uri);
+		startElementAttributes(atts);
+		startElement.append(XMLConstants.TAG_CLOSE);
+		indent++;
+		lastElement = localName;
+		elements.push(localName);
+	}
+	
+	public void startElementTag(String uri,String localName) throws SAXException {
 		if (XMLConstants.NULL_NS_URI.equals(uri) | uri==null) {
 			startElement.append(localName);
 		} else {
@@ -191,7 +222,9 @@ public class XMLWriter extends DefaultHandler2 {
 			}
 			startElement.append(localName);
 		}
-		
+	}
+	
+	public void startElementNamespace(String uri) throws SAXException {
 		if ((uri!=null & XMLConstants.NULL_NS_URI.equals(uri)==false) && printedMappings.contains(uri)==false) {
 			String prefix = prefixMapping.get(uri);
 			if (prefix==null) {
@@ -209,42 +242,50 @@ public class XMLWriter extends DefaultHandler2 {
 			startElement.append(uri);
 			startElement.append('"');
 			
-			boolean first = true;
-			for (String uri2:prefixMapping.keySet()) {
-				if (printedMappings.contains(uri2)==false) {
-					prefix = prefixMapping.get(uri2);
-					if (prefix==null) {
-						throw new SAXException("preFixUri: "+uri+" is not started.");
-					}
-					printedMappings.add(uri2);
-					
-					if (first) {
-						startElement.append(charNewline);
-						first = false;
-					}
-					
-					startElement.append(' ');
-					startElement.append(XMLConstants.XMLNS_ATTRIBUTE);
-					if ("".equals(prefix)==false) {
-						startElement.append(XMLConstants.XMLNS_ASSIGN);
-						startElement.append(prefix);
-					}
-					startElement.append("=\"");
-					startElement.append(uri2);
-					startElement.append('"');
-					startElement.append(charNewline);
+			startElementNamespaceAll(uri);
+		}
+	}
+	
+	public void startElementNamespaceAll(String uri) throws SAXException {
+		String prefix = null;
+		boolean first = true;
+		for (String uri2:prefixMapping.keySet()) {
+			if (printedMappings.contains(uri2)==false) {
+				prefix = prefixMapping.get(uri2);
+				if (prefix==null) {
+					throw new SAXException("preFixUri: "+uri+" is not started.");
 				}
+				printedMappings.add(uri2);
+				
+				if (first) {
+					startElement.append(charNewline);
+					first = false;
+				}
+				
+				startElement.append(' ');
+				startElement.append(XMLConstants.XMLNS_ATTRIBUTE);
+				if ("".equals(prefix)==false) {
+					startElement.append(XMLConstants.XMLNS_ASSIGN);
+					startElement.append(prefix);
+				}
+				startElement.append("=\"");
+				startElement.append(uri2);
+				startElement.append('"');
+				startElement.append(charNewline);
 			}
 		}
-		
+	}
+	
+	private void startElementAttributes(Attributes atts) throws SAXException {
 		for (int i=0;i<atts.getLength();i++) {
 			String attributeUri = atts.getURI(i);
-			String attributeName = atts.getLocalName(i);
+			String attributeName = XMLConstants.escapeAttributeName(atts.getLocalName(i));
 			String attributeValue = atts.getValue(i);
 			if (attributeValue==null) {
 				attributeValue = "null";
 			}
 			startElement.append(' ');
+			
 			if (XMLConstants.NULL_NS_URI.equals(attributeUri) | attributeUri ==null) {
 				startElement.append(attributeName);
 			} else {
@@ -257,8 +298,6 @@ public class XMLWriter extends DefaultHandler2 {
 			startElement.append(XMLConstants.escapeAttributeValue(attributeValue));
 			startElement.append('"');
 		}
-		startElement.append(XMLConstants.TAG_CLOSE);
-		indent++;
 	}
 	
 	/**
@@ -267,8 +306,13 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param name The (full) name of the xml tag.
 	 * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
-	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
+		
+		if (elements.size()>0 && elements.peek().equals((localName))==false) {
+			throw new SAXException("Unexpected end tag: "+localName+" should be: "+elements.peek());
+		}
+		elements.pop();
+		
 		if (startElement!=null) {
 			String tag = startElement.toString();
 			write(tag.substring(0,tag.length()-1));// rm normal close
@@ -278,13 +322,13 @@ public class XMLWriter extends DefaultHandler2 {
 			return;
 		}
 		
-		if (printedReturn==false) {
-			write(charNewline);
-		}
-		printedReturn=false;
 		indent--;
-		writeIndent();
-		
+		if (printReturn || !localName.equals(lastElement)) {
+			write(charNewline);
+			writeIndent();
+		} else {
+			printReturn = true;
+		}
 		if (localName==null) {
 			localName = "null";
 		}
@@ -312,7 +356,6 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param uri	The xml namespace uri to add the prefix for.
 	 * @see org.xml.sax.ContentHandler#startPrefixMapping(java.lang.String, java.lang.String)
 	 */
-	@Override
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {
 		prefixMapping.put(uri, prefix);
 	}
@@ -321,7 +364,6 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param prefix	The xml prefix of this xml namespace uri to be ended.
 	 * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
 	 */
-	@Override
 	public void endPrefixMapping(String prefix) throws SAXException {
 		Set<Map.Entry<String,String>> s = prefixMapping.entrySet();
 		String uri = null;
@@ -348,19 +390,35 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @throws SAXException When IOException has happend while printing.
 	 * @see org.xml.sax.ContentHandler#characters(char[], int, int)
 	 */
-	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
-		if (startElement!=null) {
-			write(startElement.toString());
-			startElement=null;
+		characters(new String(ch,start,length));
+	}
+	
+	/**
+	 * @see org.x4o.xml.io.sax.ContentWriter#characters(java.lang.String)
+	 */
+	public void characters(String text) throws SAXException {
+		if (text==null) {
+			return;
 		}
-		for (int i=start;i<(start+length);i++) {
-			char c = ch[i];
-			write(c);
-			if (c=='\n') {
-				printedReturn=true;
-			}
+		autoCloseStartElement();
+		checkPrintedReturn(text);
+		if (printCDATA) {
+			text = XMLConstants.escapeCharactersCdata(text,"","");
+		} else {
+			text = XMLConstants.escapeCharacters(text);
 		}
+		write(text);
+	}
+	
+	// move or remove ?
+	public void charactersRaw(String text) throws SAXException {
+		if (text==null) {
+			return;
+		}
+		autoCloseStartElement();
+		checkPrintedReturn(text);
+		write(text);
 	}
 	
 	/**
@@ -372,13 +430,19 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @throws SAXException When IOException has happend while printing.
 	 * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
 	 */
-	@Override
 	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-		if (startElement!=null) {
-			write(startElement.toString());
-			startElement=null;
+		ignorableWhitespace(new String(ch,start,length));
+	}
+	
+	/**
+	 * @see org.x4o.xml.io.sax.ContentWriter#ignorableWhitespace(java.lang.String)
+	 */
+	public void ignorableWhitespace(String text) throws SAXException {
+		if (text==null) {
+			return;
 		}
-		write(ch, start, length);
+		autoCloseStartElement();
+		write(text); // TODO: check chars
 	}
 
 	/**
@@ -388,7 +452,6 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @param target The target.
 	 * @param data The data. 
 	 */
-	@Override
 	public void processingInstruction(String target, String data) throws SAXException {
 		writeIndent();
 		write(XMLConstants.PROCESS_START);
@@ -406,7 +469,6 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
 	 * @param locator The DocumentLocator to set.
 	 */
-	@Override
 	public void setDocumentLocator(Locator locator) {
 	}
 
@@ -416,7 +478,6 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @see org.xml.sax.ContentHandler#skippedEntity(java.lang.String)
 	 * @param name The name of the skipped entity.
 	 */
-	@Override
 	public void skippedEntity(String name) throws SAXException {
 		// is for validating parser support, so not needed in xml writing.
 	}
@@ -430,24 +491,106 @@ public class XMLWriter extends DefaultHandler2 {
 	 * @throws SAXException When IOException has happend while printing.
 	 * @see org.xml.sax.ext.DefaultHandler2#comment(char[], int, int)
 	 */
-	@Override
 	public void comment(char[] ch, int start, int length) throws SAXException {
+		comment(new String(ch,start,length));
+	}
+	
+	/**
+	 * @see org.x4o.xml.io.sax.ContentWriter#comment(java.lang.String)
+	 */
+	public void comment(String text) throws SAXException {
+		if (text==null) {
+			return;
+		}
+		autoCloseStartElement();
+		checkPrintedReturn(text);
+		write(charNewline);
 		writeIndent();
 		write(XMLConstants.COMMENT_START);
-				
-		/// mmm todo improve a bit
-		for (int i=start;i<(start+length);i++) {
-			char c = ch[i];
-			if (c=='\n') {
-				write(c);
-				writeIndent();
-				continue;
-			}
-			write(c);
-		}
+		write(" ");
+		write(XMLConstants.escapeCharactersComment(text,charTab,indent));
+		write(" ");
 		write(XMLConstants.COMMENT_END);
+		printReturn = true;
+	}
+	
+	/**
+	 * @see org.xml.sax.ext.LexicalHandler#startCDATA()
+	 */
+	public void startCDATA() throws SAXException {
+		autoCloseStartElement();
+		write(XMLConstants.CDATA_START);
+		printCDATA = true;
+	}
+	
+	/**
+	 * @see org.xml.sax.ext.LexicalHandler#endCDATA()
+	 */
+	public void endCDATA() throws SAXException {
+		write(XMLConstants.CDATA_END);
+		printCDATA = false;
 	}
 
+	/**
+	 * @see org.xml.sax.ext.LexicalHandler#startDTD(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public void startDTD(String name, String publicId, String systemId) throws SAXException {
+		write(XMLConstants.XML_DOCTYPE);
+		write(" ");
+		write(name);
+		if (publicId!=null) {
+			write(" ");
+			write(publicId);
+		}
+		if (systemId!=null) {
+			write(" \"");
+			write(systemId);
+			write("\"");
+		}
+		write(XMLConstants.TAG_CLOSE);
+	}
+	
+	/**
+	 * @see org.xml.sax.ext.LexicalHandler#endDTD()
+	 */
+	public void endDTD() throws SAXException {
+		writeFlush();
+	}
+
+	/**
+	 * @see org.xml.sax.ext.LexicalHandler#startEntity(java.lang.String)
+	 */
+	public void startEntity(String arg0) throws SAXException {
+	}
+	
+	/**
+	 * @see org.xml.sax.ext.LexicalHandler#endEntity(java.lang.String)
+	 */
+	public void endEntity(String arg0) throws SAXException {	
+	}
+	
+	
+	
+	private void checkPrintedReturn(String value) {
+		if (value.indexOf('\n')>0) {
+			printReturn = true;
+		} else {
+			printReturn = false;
+		}
+	}
+	
+	/**
+	 * Auto close the start element if working in printing event.
+	 * @throws IOException	When prints gives exception.
+	 */
+	private void autoCloseStartElement() throws SAXException {
+		if (startElement==null) {
+			return;
+		}
+		write(startElement.toString());
+		startElement=null;
+	}
+	
 	/**
 	 * Indent the output writer with tabs by indent count.
 	 * @throws IOException	When prints gives exception.
@@ -469,14 +612,6 @@ public class XMLWriter extends DefaultHandler2 {
 	private void write(String text) throws SAXException {
 		try {
 			out.write(text);
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
-	}
-	
-	private void write(char[] ch, int start, int length) throws SAXException {
-		try {
-			out.write(ch,start,length);
 		} catch (IOException e) {
 			throw new SAXException(e);
 		}

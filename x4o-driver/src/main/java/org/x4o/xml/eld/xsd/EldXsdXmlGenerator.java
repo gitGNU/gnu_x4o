@@ -29,13 +29,13 @@ import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.io.XMLConstants;
-import org.x4o.xml.io.sax.XMLWriter;
+import org.x4o.xml.io.sax.ContentWriter;
+import org.x4o.xml.io.sax.ContentWriterXml;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.DefaultHandler2;
 
 /**
  * EldSchemaGenerator Creates XML Schema for a namespace uri from a x4o language driver. 
@@ -84,7 +84,7 @@ public class EldXsdXmlGenerator {
 				checkNamespace(ns);
 				FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));
 				try {
-					XMLWriter out = new XMLWriter(fio,encoding,charNew,charTab);
+					ContentWriterXml out = new ContentWriterXml(fio,encoding,charNew,charTab);
 					generateSchema(ns.getUri(), out);
 				} finally {
 					fio.close();
@@ -96,7 +96,7 @@ public class EldXsdXmlGenerator {
 					checkNamespace(ns);
 					FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));
 					try {
-						XMLWriter out = new XMLWriter(fio,encoding,charNew,charTab);
+						ContentWriterXml out = new ContentWriterXml(fio,encoding,charNew,charTab);
 						generateSchema(ns.getUri(), out);
 					} finally {
 						fio.close();
@@ -109,7 +109,7 @@ public class EldXsdXmlGenerator {
 		}
 	}
 	
-	public void generateSchema(String namespaceUri,DefaultHandler2 xmlWriter) throws SAXException  {
+	public void generateSchema(String namespaceUri,ContentWriter xmlWriter) throws SAXException  {
 		
 		ElementNamespaceContext ns = language.findElementNamespaceContext(namespaceUri);
 		if (ns==null) {
