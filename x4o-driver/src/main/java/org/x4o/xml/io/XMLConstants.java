@@ -139,12 +139,12 @@ public final class XMLConstants {
 	/**
 	 * Tab char
 	 */
-	public static final String CHAR_TAB = "\t";
+	public static final char CHAR_TAB = '\t';
 	
 	/**
 	 * Newline char
 	 */
-	public static final String CHAR_NEWLINE = "\n";
+	public static final char CHAR_NEWLINE = '\n';
 	
 	
 	
@@ -218,6 +218,16 @@ public final class XMLConstants {
 		if (c>=0x0300 & c<=0x036F) {	return true;	}
 		if (c>=0x203F & c<=0x2040) {	return true;	}
 		return false;
+	}
+	
+	static public boolean isCharString(String value) {
+		for (int i=0;i<value.length();i++) {
+			char c = value.charAt(i);
+			if (isNameChar(c)==false) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	static public boolean isNameString(String value) {

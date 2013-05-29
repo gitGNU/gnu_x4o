@@ -1,0 +1,92 @@
+
+body {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:76%;
+}
+pre {
+	font-size:1.3em;
+}
+h1 {
+	font-size:1.8em;
+}
+h2 {
+	font-size:1.5em;
+}
+h3 {
+	font-size:1.4em;
+}
+h4 {
+	font-size:1.3em;
+}
+h5 {
+	font-size:1.2em;
+}
+h6 {
+	font-size:1.1em;
+}
+code, tt {
+	font-size:1.2em;
+}
+dt code {
+	font-size:1.2em;
+}
+table tr td dt code {
+	font-size:1.2em;
+	vertical-align:top;
+}
+sup {
+	font-size:0.6em;
+}
+.aboutLanguage {
+	font-size:0.8em;
+}
+.tab {
+	font-weight:bold;
+}
+.bar {
+	font-size:1.0em;
+}
+ul.subNavList li{
+	font-size:90%;
+}
+.indexHeader h1 {
+	font-size:1.3em;
+}
+.header ul li, .footer ul li {
+	font-size:1.2em;
+}
+.indexContainer {
+	font-size:1.0em;
+}
+.indexContainer h2 {
+	font-size:1.1em;
+}
+.contentContainer .description dl dt, .contentContainer .details dl dt, .serializedFormContainer dl dt {
+	font-size:1.1em;
+	font-weight:bold;
+}
+.serializedFormContainer dl.nameValue dt {
+	font-size:1.1em;
+	font-weight:bold;
+}
+.serializedFormContainer dl.nameValue dd {
+	font-size:1.1em;
+}
+ul.horizontal li {
+	font-size:0.9em;
+}
+.overviewSummary caption, .packageSummary caption, .contentContainer ul.blockList li.blockList caption, .summary caption, .classUseContainer caption, .constantValuesContainer caption {
+	font-weight:bold;
+}
+td.colOne a:link, td.colOne a:active, td.colOne a:visited, td.colOne a:hover, td.colFirst a:link, td.colFirst a:active, td.colFirst a:visited, td.colFirst a:hover, td.colLast a:link, td.colLast a:active, td.colLast a:visited, td.colLast a:hover, .constantValuesContainer td a:link, .constantValuesContainer td a:active, .constantValuesContainer td a:visited, .constantValuesContainer td a:hover {
+	font-weight:bold;
+}
+h1.hidden {
+	font-size:0.9em;
+}
+.strong {
+	font-weight:bold;
+}
+
+
+

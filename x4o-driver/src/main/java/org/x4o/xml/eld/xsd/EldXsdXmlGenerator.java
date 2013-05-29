@@ -24,13 +24,14 @@ package org.x4o.xml.eld.xsd;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.io.XMLConstants;
-import org.x4o.xml.io.sax.ContentWriter;
-import org.x4o.xml.io.sax.ContentWriterXml;
+import org.x4o.xml.io.sax.ext.ContentWriterXsd;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
@@ -70,9 +71,9 @@ public class EldXsdXmlGenerator {
 		if (basePath==null) {
 			throw new ElementException("Can't write schema to null output path.");
 		}
-		if (encoding==null) { encoding = XMLConstants.XML_DEFAULT_ENCODING; }
-		if (charNew==null)  { charNew = XMLConstants.CHAR_NEWLINE;			}
-		if (charTab==null)  { charTab = XMLConstants.CHAR_TAB;				}
+		if (encoding==null) { encoding = XMLConstants.XML_DEFAULT_ENCODING;		}
+		if (charNew==null)  { charNew = XMLConstants.CHAR_NEWLINE+"";	}
+		if (charTab==null)  { charTab = XMLConstants.CHAR_TAB+"";		}
 		try {
 			
 			
@@ -82,24 +83,26 @@ public class EldXsdXmlGenerator {
 					throw new NullPointerException("Could not find namespace: "+namespace);
 				}
 				checkNamespace(ns);
-				FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));
+				File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
+				Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
 				try {
-					ContentWriterXml out = new ContentWriterXml(fio,encoding,charNew,charTab);
+					ContentWriterXsd out = new ContentWriterXsd(wr,encoding,charNew,charTab);
 					generateSchema(ns.getUri(), out);
 				} finally {
-					fio.close();
+					wr.close();
 				}	
 				return;
 			}
 			for (X4OLanguageModule mod:language.getLanguageModules()) {
 				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
 					checkNamespace(ns);
-					FileOutputStream fio = new FileOutputStream(new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource()));
+					File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
+					Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
 					try {
-						ContentWriterXml out = new ContentWriterXml(fio,encoding,charNew,charTab);
+						ContentWriterXsd out = new ContentWriterXsd(wr,encoding,charNew,charTab);
 						generateSchema(ns.getUri(), out);
 					} finally {
-						fio.close();
+						wr.close();
 					}
 				}
 			}
@@ -109,7 +112,7 @@ public class EldXsdXmlGenerator {
 		}
 	}
 	
-	public void generateSchema(String namespaceUri,ContentWriter xmlWriter) throws SAXException  {
+	public void generateSchema(String namespaceUri,ContentWriterXsd xmlWriter) throws SAXException  {
 		
 		ElementNamespaceContext ns = language.findElementNamespaceContext(namespaceUri);
 		if (ns==null) {

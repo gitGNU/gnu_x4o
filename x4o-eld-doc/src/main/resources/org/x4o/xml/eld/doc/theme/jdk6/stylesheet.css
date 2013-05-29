@@ -1,0 +1,106 @@
+
+body {
+	padding:10px;
+	font-family:none;
+}
+
+.topNav,
+.bottomNav {
+	height:auto;
+}
+
+.tab {
+	background-color:#00CCFF;
+}
+
+.bar,
+.topNav,
+.bottomNav {
+	background-color: #EEEEFF;
+	border-top: 2px solid #000;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.subNav {
+	background-color: #FFF;
+	border-bottom: 2px solid #000;
+	font-size:0.8em;
+}
+
+.topNav a:link,
+.topNav a:active,
+.topNav a:visited,
+.bottomNav a:link,
+.bottomNav a:active,
+.bottomNav a:visited {
+	color:#000;
+	text-decoration: underline;
+	font-weight:bold;
+	font-size:1.2em;
+}
+
+.aboutLanguage {
+	position:absolute;
+	right:10px;
+	text-align:right;
+	width:250px;
+	font-size: 0.9em;
+	color:#000;
+	margin:0px;
+	background-color: #FFF;
+	padding:1px;
+}
+
+li {
+	color: #000;
+}
+
+.topNav ul li,
+.bottomNav ul li {
+	margin-top:3px;
+}
+
+.navBarCell1Rev {
+	color:#FFF;
+	background-color:#00008B;
+	font-weight:bold;
+	border:none;
+	margin-top:3px;
+	margin-bottom:3px;
+}
+
+.overviewSummary caption span, .packageSummary caption span, .contentContainer ul.blockList li.blockList caption span, .summary caption span, .classUseContainer caption span, .constantValuesContainer caption span {
+	background-color: #EEEEFF;
+}
+
+.overviewSummary .tabEnd, .packageSummary .tabEnd, .contentContainer ul.blockList li.blockList .tabEnd, .summary .tabEnd, .classUseContainer .tabEnd, .constantValuesContainer .tabEnd {
+	background-color: #EEEEFF;
+}
+
+th.colFirst,
+th.colLast,
+th.colOne,
+.constantValuesContainer th {
+	background-color:#CCCCFF;
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
+}
+
+.altColor {
+	background-color: #FFF;
+}
+
+.contentContainer			table tbody tr td,
+.classUseContainer			table tbody tr td,
+.constantValuesContainer	table tbody tr td {
+	border-bottom: 1px solid #000;
+}
+
+td.colFirst,
+th.colFirst {
+	border-right: 1px solid #000;
+}
+
+
+

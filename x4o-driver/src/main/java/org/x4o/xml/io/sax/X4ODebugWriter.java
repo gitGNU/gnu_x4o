@@ -40,6 +40,7 @@ import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
+import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageConfiguration;

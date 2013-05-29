@@ -47,7 +47,7 @@
   </prerequisites>
   <modules>
     <module>x4o-driver</module>
-    <module>x4o-elddoc</module>
+    <module>x4o-eld-doc</module>
     <module>x4o-meta</module>
     <module>x4o-plugin</module>
   </modules>

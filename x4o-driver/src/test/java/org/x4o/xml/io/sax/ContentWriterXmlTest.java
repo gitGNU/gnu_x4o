@@ -24,6 +24,7 @@ package org.x4o.xml.io.sax;
 
 import java.io.StringWriter;
 
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -291,5 +292,122 @@ public class ContentWriterXmlTest extends TestCase {
 		assertTrue(e.getMessage().contains("Invalid"));
 		assertTrue(e.getMessage().contains("2"));
 		assertTrue(e.getMessage().contains("open"));
+	}
+	
+	public void testProcessingInstruction() throws Exception {
+		StringWriter outputWriter = new StringWriter();
+		ContentWriterXml writer = new ContentWriterXml(outputWriter);
+		AttributesImpl atts = new AttributesImpl();
+		
+		Exception e = null;
+		try {
+			writer.startDocument();
+			writer.processingInstruction("target", "data");
+			writer.startElement("", "test", "", atts);
+			writer.endElement("", "test", "");
+			writer.endDocument();	
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		String output = outputWriter.toString();
+		assertNull(e);
+		assertNotNull(output);
+		assertTrue(output.length()>0);
+		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?target data?>\n<test/>"));
+	}
+	
+	public void testProcessingInstructionInline() throws Exception {
+		StringWriter outputWriter = new StringWriter();
+		ContentWriterXml writer = new ContentWriterXml(outputWriter);
+		AttributesImpl atts = new AttributesImpl();
+		
+		Exception e = null;
+		try {
+			writer.startDocument();
+			writer.processingInstruction("target", "data");
+			writer.startElement("", "test", "", atts);
+			writer.processingInstruction("target-doc", "data-doc");
+			writer.endElement("", "test", "");
+			writer.endDocument();	
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		String output = outputWriter.toString();
+		assertNull(e);
+		assertNotNull(output);
+		assertTrue(output.length()>0);
+		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?target data?>\n<test>\n\t<?target-doc data-doc?>\n</test>"));
+	}
+	
+	public void testProcessingInstructionTargetXmlPrefix() throws Exception {
+		StringWriter outputWriter = new StringWriter();
+		ContentWriterXml writer = new ContentWriterXml(outputWriter);
+		Exception e = null;
+		try {
+			writer.startDocument();
+			writer.processingInstruction("xmlPrefix", "isInvalid");
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull(e);
+		assertEquals(SAXException.class, e.getClass());
+		assertTrue(e.getMessage().contains("instruction"));
+		assertTrue(e.getMessage().contains("start with xml"));
+	}
+	
+	public void testProcessingInstructionTargetNoneNameChar() throws Exception {
+		StringWriter outputWriter = new StringWriter();
+		ContentWriterXml writer = new ContentWriterXml(outputWriter);
+		Exception e = null;
+		try {
+			writer.startDocument();
+			writer.processingInstruction("4Prefix", "isInvalid");
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull(e);
+		assertEquals(SAXException.class, e.getClass());
+		assertTrue(e.getMessage().contains("instruction"));
+		assertTrue(e.getMessage().contains("invalid name"));
+		assertTrue(e.getMessage().contains("4Prefix"));
+	}
+	
+	public void testProcessingInstructionDataNoneChar() throws Exception {
+		StringWriter outputWriter = new StringWriter();
+		ContentWriterXml writer = new ContentWriterXml(outputWriter);
+		Exception e = null;
+		try {
+			writer.startDocument();
+			writer.processingInstruction("target", "isInvalidChar="+0xD800);
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull(e);
+		assertEquals(SAXException.class, e.getClass());
+		assertTrue(e.getMessage().contains("instruction"));
+		assertTrue(e.getMessage().contains("invalid char"));
+		assertTrue(e.getMessage().contains("isInvalidChar=55296"));
+	}
+	
+	public void testAttributeValueLongData() throws Exception {
+		StringWriter outputWriter = new StringWriter();
+		ContentWriterXml writer = new ContentWriterXml(outputWriter);
+
+		AttributesImpl atts = new AttributesImpl();
+		String data = "_FOR_FOO_BAR";
+		String dataValue = "LOOP";
+		for (int i=0;i<15;i++) {
+			atts.addAttribute("", "attr"+i, "", "", dataValue+=data);
+		}
+		writer.startDocument();
+		writer.startElement("", "test", "", atts);
+		writer.startElement("", "testNode", "", new AttributesImpl());
+		writer.endElement("", "testNode", "");
+		writer.endElement("", "test", "");
+		writer.endDocument();
+		
+		String output = outputWriter.toString();
+		assertNotNull(output);
+		assertTrue(output.split("\n").length==13);
 	}
 }

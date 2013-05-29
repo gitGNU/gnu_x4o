@@ -23,61 +23,43 @@
 
 Sample SwiXml
 
-  Lets create an xml example from swixml language.
+  Lets create an xml example from the swixml language.
 
-* Create parser
+* Create language driver
 
 +--
-public class SwiXmlParser extends X4OParser {
+public class SwiXmlDriver extends X4ODriver<Component> {
 
-	public static final String LANGUAGE = "swixml";
-	public static final String VERSION_2_NS_URI = "http://swixml.x4o.org/xml/ns/swixml-lang";
-	public static final String SWING_ENGINE_EL_NAME = "swingEngine";
+	public static final String   LANGUAGE_NAME = "swixml";
+	public static final String   LANGUAGE_VERSION_2 = "2.0";
+	public static final String   LANGUAGE_VERSION_2_NSURI = "http://swixml.x4o.org/xml/ns/swixml-lang"; // todo
+	public static final String   LANGUAGE_VERSION_3 = "3.0";
+	public static final String[] LANGUAGE_VERSIONS = new String[]{LANGUAGE_VERSION_2,LANGUAGE_VERSION_3};
+	public static final String   LANGUAGE_EL_SWING_ENGINE = "swingEngine";
 	
 	/**
-	 * Protected constructor for language support
+	 * Helper for while parsing to get the SwingEngine.
+	 * @param elementLanguage	The elementLanguage to get the swingEngine out.
+	 * @return	Returns the SwingEngine for this elementLanguage.
 	 */
-	protected SwiXmlParser() {
-		super(LANGUAGE);
-	}
-	
-	public SwiXmlParser(SwingEngine engine) {
-		
-		// Create language by version  
-		super(LANGUAGE);
-		
-		// Check engine
-		if (engine==null) {
-			throw new NullPointerException("Can't parse with null SwingEngine.");
-		}
-		
-		// Add engine for callback
-		addELBeanInstance(SWING_ENGINE_EL_NAME,engine);
-		
-		// Set empty ns for v2 documents
-		setProperty(X4OLanguagePropertyKeys.INPUT_EMPTY_NAMESPACE_URI, VERSION_2_NS_URI);
-	}
-	
-	public Component getRootComponent() {
-		return (Component)getDriver().getElementLanguage().getRootElement().getElementObject();
-	}
-	
-	static public SwingEngine getSwingEngine(ElementLanguage elementLanguage) {
-		ValueExpression ee = elementLanguage.getExpressionFactory().createValueExpression(elementLanguage.getELContext(),"${"+SwiXmlParser.SWING_ENGINE_EL_NAME+"}",Object.class);    	
-		SwingEngine se = (SwingEngine)ee.getValue(elementLanguage.getELContext());
+	static public SwingEngine getSwingEngine(X4OLanguageContext elementLanguage) {
+		ValueExpression ee = elementLanguage.getExpressionLanguageFactory().createValueExpression(elementLanguage.getExpressionLanguageContext(),"${"+SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE+"}",Object.class);    	
+		SwingEngine se = (SwingEngine)ee.getValue(elementLanguage.getExpressionLanguageContext());
 		return se;
 	}
-}
-+--
-
-* Create parser support
-
-+--
-public class SwiXmlParserSupport2 implements X4OParserSupport {
-
-	public ElementLanguage loadElementLanguageSupport() throws X4OParserSupportException {
-		SwiXmlParser parser = new SwiXmlParser();
-		return parser.loadElementLanguageSupport();
+	
+	static public SwiXmlDriver getInstance() {
+		return (SwiXmlDriver)X4ODriverManager.getX4ODriver(LANGUAGE_NAME);
+	}
+	
+	@Override
+	public String getLanguageName() {
+		return LANGUAGE_NAME;
+	}
+	
+	@Override
+	public String[] getLanguageVersions() {
+		return LANGUAGE_VERSIONS;
 	}
 }
 +--
@@ -103,27 +85,30 @@ public class SwiXmlParserSupport2 implements X4OParserSupport {
 * Define the element language
 
 +--
-<?xml version="1.0" encoding="UTF-8"?>
 <root:module
 	xmlns:root="http://eld.x4o.org/xml/ns/eld-root"
 	xmlns="http://eld.x4o.org/xml/ns/eld-lang"
 	xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://eld.x4o.org/xml/ns/eld-root http://eld.x4o.org/xml/ns/eld-root-1.0.xsd"
-	providerName="swixml.test.x4o.org"
-	name="Swixml Language"
-	id="swixml-lang"
+	providerHost="swixml2.test.x4o.org"
+	providerName="Swixml2 Language"
+	id="swixml2-module"
 	>
 	
-	<bindingHandler id="JComponentBindingHandler"	bean.class="org.x4o.xml.test.swixml.bind.JComponentBindingHandler"/>
-	<bindingHandler id="JMenuBarBindingHandler" 	bean.class="org.x4o.xml.test.swixml.bind.JMenuBarBindingHandler"/>
-	<classBindingHandler id="JDesktopPane-JInternalFrame"	parentClass="javax.swing.JDesktopPane"		childClass="javax.swing.JInternalFrame"	method="add"/>
-	<classBindingHandler id="JFrame-JDesktopPane"			parentClass="javax.swing.JFrame"			childClass="javax.swing.JDesktopPane"	method="setContentPane"/>
-	<classBindingHandler id="JMenuBar-JMenu"				parentClass="javax.swing.JMenuBar"			childClass="javax.swing.JMenu"			method="add"/>
-	<classBindingHandler id="JMenu-JMenuItem"				parentClass="javax.swing.JMenu"			childClass="javax.swing.JMenuItem"		method="add"/>
+	<bindingHandler id="JFrameBindingHandler"			bean.class="org.x4o.xml.test.swixml.bind.JFrameBindingHandler"/>
+	<bindingHandler id="JInternalFrameBindingHandler" 	bean.class="org.x4o.xml.test.swixml.bind.JInternalFrameBindingHandler"/>
+	<bindingHandler id="JPanelBindingHandler"			bean.class="org.x4o.xml.test.swixml.bind.JPanelBindingHandler"/>
+	<bindingHandler id="JSplitPaneBindingHandler" 		bean.class="org.x4o.xml.test.swixml.bind.JSplitPaneBindingHandler"/>
+	<classBindingHandler id="JScrollPane-JComponent"		parentClass="javax.swing.JScrollPane"		childClass="javax.swing.JComponent"		addMethod="setViewportView"		getMethod="getViewport"/>
+	<classBindingHandler id="JDesktopPane-JInternalFrame"	parentClass="javax.swing.JDesktopPane"		childClass="javax.swing.JInternalFrame"	addMethod="add"		getMethod="getComponents"/>
+	<classBindingHandler id="JFrame-JDesktopPane"			parentClass="javax.swing.JFrame"			childClass="javax.swing.JDesktopPane"	addMethod="setContentPane"		getMethod="getContentPane"/>
+	<classBindingHandler id="JMenuBar-JMenu"				parentClass="javax.swing.JMenuBar"			childClass="javax.swing.JMenu"			addMethod="add"		getMethod="getComponents"/>
+	<classBindingHandler id="JMenu-JMenuItem"				parentClass="javax.swing.JMenu"				childClass="javax.swing.JMenuItem"		addMethod="add"		getMethod="getComponents"/>
+	<classBindingHandler id="JRootPane-JComponent"			parentClass="javax.swing.JRootPane"			childClass="javax.swing.JComponent"		addMethod="add"		getMethod="getComponents"/>
 	
 	<elementInterface id="Component" interfaceClass="java.awt.Component">
-		<attribute name="bounds">
+		<attribute id="bounds">
 			<conv:stringSplitConverter classTo="java.awt.Rectangle"  split="," splitSize="4" singleToMethod="setRect" useNativeType="true">
 				<conv:stringSplitConverterStep fromMethod="getX"		fromOrder="1" toOrder="1"><conv:doubleConverter/></conv:stringSplitConverterStep>
 				<conv:stringSplitConverterStep fromMethod="getY"		fromOrder="2" toOrder="2"><conv:doubleConverter/></conv:stringSplitConverterStep>
@@ -131,76 +116,75 @@ public class SwiXmlParserSupport2 implements X4OParserSupport {
 				<conv:stringSplitConverterStep fromMethod="getHeight"	fromOrder="4" toOrder="4"><conv:doubleConverter/></conv:stringSplitConverterStep>
 			</conv:stringSplitConverter>
 		</attribute>
-		<attribute name="size">
+		<attribute id="size">
 			<conv:stringSplitConverter classTo="java.awt.Dimension"  split="," splitSize="2" singleToMethod="setSize" useNativeType="true">
 				<conv:stringSplitConverterStep fromMethod="getHeight"	fromOrder="1" toOrder="1"><conv:integerConverter/></conv:stringSplitConverterStep>
 				<conv:stringSplitConverterStep fromMethod="getWidth"	fromOrder="2" toOrder="2"><conv:integerConverter/></conv:stringSplitConverterStep>
 			</conv:stringSplitConverter>
 		</attribute>
-		<attribute name="icon">
+		<attribute id="icon">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.IconConverter"/>
 		</attribute>
-		<attribute name="background">
+		<attribute id="background">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.ColorConverter"/>
 		</attribute>
-		<attribute name="location">
+		<attribute id="location">
 			<conv:stringSplitConverter classTo="java.awt.Point"  split="," splitSize="2" singleToMethod="setLocation" useNativeType="true">
 				<conv:stringSplitConverterStep fromMethod="getX"	fromOrder="1" toOrder="1"><conv:integerConverter/></conv:stringSplitConverterStep>
 				<conv:stringSplitConverterStep fromMethod="getY"	fromOrder="2" toOrder="2"><conv:integerConverter/></conv:stringSplitConverterStep>
 			</conv:stringSplitConverter>
 		</attribute>
+		<attribute id="locationOnScreen" runBeanValue="false"/>
 	</elementInterface>
 
 	<elementInterface id="JComponent" interfaceClass="javax.swing.JComponent">
-		<attribute name="layout">
+		<attribute id="layout">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.LayoutConverter"/>
 		</attribute>
-		<attribute name="border">
+		<attribute id="border">
 			<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.BorderConverter"/>
 		</attribute>
+		<attribute id="toolTipText"><attributeAlias name="ToolTipText"/></attribute>
+		<attribute id="focusPainted"><attributeAlias name="FocusPainted"/></attribute>
+		<attribute id="borderPainted"><attributeAlias name="BorderPainted"/></attribute>
 	</elementInterface>
 		
 		
-	<namespace
-		uri="http://swixml.x4o.org/xml/ns/swixml-root"
-		schemaUri="http://swixml.x4o.org/xml/ns/swixml-root-2.0.xsd"
-		schemaResource="swixml-root-2.0.xsd"
-		schemaPrefix="root"
-		name="Root element"
-		languageRoot="true"
-		>
-		<!-- Single element in language root to create nice tree, for imports in xsd namespace aware generated files. -->
-		<element tag="frame"			objectClass="javax.swing.JFrame"/>
+	<namespace id="root" languageRoot="true">
+		<element tag="frame"			objectClass="javax.swing.JFrame">
+			<description>Single element in language root to create nice tree, for imports in xsd namespace aware generated files.</description>
+		</element>
 	</namespace>
-	<namespace
-		uri="http://swixml.x4o.org/xml/ns/swixml-lang"
-		schemaUri="http://swixml.x4o.org/xml/ns/swixml-lang-2.0.xsd"
-		schemaResource="swixml-lang-2.0.xsd"
-		schemaPrefix="sx-lang"
-		>
+	<namespace id="lang">
 		<!-- Note frame should not be here(it can but xsd needs root), but else classic xml does not parse without xmlns additions.  -->
 		<element tag="frame"			objectClass="javax.swing.JFrame"/>
 		<element tag="menubar"			objectClass="javax.swing.JMenuBar"/>
 		<element tag="menu"				objectClass="javax.swing.JMenu"/>
 		<element tag="menuitem"			objectClass="javax.swing.JMenuItem">
-			<attribute name="accelerator">
+			<attribute id="accelerator">
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.KeyStrokeConverter"/>
 				<attributeAlias name="Accelerator"/>
 			</attribute>
-			<attribute name="Action" runBeanFill="false"/>
+			<attribute id="mnemonic" runBeanValue="false"/>
+			<attribute id="Action" runBeanValue="false"/>
 			<configurator id="menuitem-action" bean.class="org.x4o.xml.test.swixml.SwiXmlActionConfigurator"/>
 		</element>
 		<element tag="separator"	/>
 		<element tag="panel"			objectClass="javax.swing.JPanel"/>
 		<element tag="splitpane"		objectClass="javax.swing.JSplitPane">
-			<attribute name="orientation">
+			<attribute id="orientation">
 				<conv:beanConverter bean.class="org.x4o.xml.test.swixml.conv.JSplitPaneOrientationConverter"/>
 			</attribute>
+			<attribute id="dividerLocation">
+				<conv:integerConverter/>
+			</attribute>
 		</element>
+		<element tag="layeredPane"		objectClass="javax.swing.JLayeredPane"/>
+		<element tag="rootPane"			objectClass="javax.swing.JRootPane"/>
 		<element tag="scrollPane"		objectClass="javax.swing.JScrollPane"/>
 		<element tag="tree"				objectClass="javax.swing.JTree"/>
 		<element tag="button"			objectClass="javax.swing.JButton">
-			<attributeFromBody name="text"/>
+			<attributeFromBody id="button-text" name="text"/>
 		</element>
 		<element tag="table"			objectClass="javax.swing.JTable"/>
 		<element tag="textarea"			objectClass="javax.swing.JTextArea"/>
@@ -208,33 +192,57 @@ public class SwiXmlParserSupport2 implements X4OParserSupport {
 		<element tag="textfield"		objectClass="javax.swing.JTextField"/>
 		<element tag="desktoppane"		objectClass="javax.swing.JDesktopPane"/>
 		<element tag="internalframe"	objectClass="javax.swing.JInternalFrame">
-			<attribute name="title"><attributeAlias name="Title"/></attribute>
-			<attribute name="bounds"><attributeAlias name="Bounds"/></attribute>
-			<attribute name="layout"><attributeAlias name="Layout"/></attribute>
-			<attribute name="visible"><attributeAlias name="Visible"/></attribute>
-			<attribute name="resizable"><attributeAlias name="Resizable"/></attribute>
+			<attribute id="title"><attributeAlias name="Title"/></attribute>
+			<attribute id="bounds"><attributeAlias name="Bounds"/></attribute>
+			<attribute id="layout"><attributeAlias name="Layout"/></attribute>
+			<attribute id="visible"><attributeAlias name="Visible"/></attribute>
+			<attribute id="resizable"><attributeAlias name="Resizable"/></attribute>
 		</element>
 	</namespace>
 </root:module>
 +--
 
-* JMenuBarBindingHandler
+* Example of hard coded binding handlers
 
 +--
-public class JMenuBarBindingHandler extends AbstractElementBindingHandler {
+public class JPanelBindingHandler extends AbstractElementBindingHandler<JPanel> {
 
 	public Class<?> getBindParentClass() {
-		return JFrame.class;
+		return JPanel.class;
 	}
-
+	
 	public Class<?>[] getBindChildClasses() {
-		return new Class[] {JMenuBar.class};
+		return new Class[] {JComponent.class};
 	}
-
-	public void doBind(Object parentObject, Object childObject,	Element childElement) throws ElementBindingHandlerException {
-		JMenuBar child = (JMenuBar)childObject;
-		JFrame frame = (JFrame)parentObject;
-		frame.getRootPane().setJMenuBar(child);
+	
+	public void bindChild(Element childElement, JPanel parent, Object childObject) throws ElementBindingHandlerException {
+		JComponent child = (JComponent)childObject;
+		
+		String c = childElement.getAttributes().get("constraints");
+		Object con = null;
+		if ("BorderLayout.CENTER".equals(c)) {
+			con = BorderLayout.CENTER;
+		} else if ("BorderLayout.NORTH".equals(c)) {
+			con = BorderLayout.NORTH;
+		} else if ("BorderLayout.CENTER".equals(c)) {
+			con = BorderLayout.CENTER;
+		} else if ("BorderLayout.SOUTH".equals(c)) {
+			con = BorderLayout.SOUTH;
+		}
+		if (con==null) {
+			parent.add(child);
+		} else {
+			parent.add(child,con);
+		}
+	}
+	
+	@Override
+	public void createChilderen(Element parentElement,JPanel parent) throws ElementBindingHandlerException {
+		for (Component c:parent.getComponents()) {
+			if (c instanceof JComponent) {
+				createChild(parentElement, c);
+			}
+		}
 	}
 }
 +--

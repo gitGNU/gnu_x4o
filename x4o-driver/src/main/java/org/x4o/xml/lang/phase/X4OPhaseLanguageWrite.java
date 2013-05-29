@@ -27,6 +27,8 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.element.ElementObjectPropertyValueException;
 import org.x4o.xml.io.XMLConstants;
-import org.x4o.xml.io.sax.ContentWriterXml;
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageProperty;
@@ -189,8 +191,11 @@ public class X4OPhaseLanguageWrite {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		boolean schemaUriPrint;
-		String schemaUriRoot;
+		
+		private AttributeEntryComparator attributeEntryComparator = new AttributeEntryComparator();
+		private boolean schemaUriPrint;
+		private String schemaUriRoot;
+		
 		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			OutputStream out = (OutputStream)languageContext.getLanguageProperty(X4OLanguageProperty.WRITER_OUTPUT_STREAM);
 			try {
@@ -200,8 +205,8 @@ public class X4OPhaseLanguageWrite {
 				schemaUriPrint = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.WRITER_SCHEMA_URI_PRINT);
 				schemaUriRoot = languageContext.getLanguagePropertyString(X4OLanguageProperty.WRITER_SCHEMA_URI_ROOT);
 				if (encoding==null) { encoding = XMLConstants.XML_DEFAULT_ENCODING; }
-				if (charNew==null)  { charNew = XMLConstants.CHAR_NEWLINE;			}
-				if (charTab==null)  { charTab = XMLConstants.CHAR_TAB;				}
+				if (charNew==null)  { charNew = XMLConstants.CHAR_NEWLINE+"";		}
+				if (charTab==null)  { charTab = XMLConstants.CHAR_TAB+"";			}
 				
 				Element root = languageContext.getRootElement();
 				if (schemaUriRoot==null) {
@@ -272,15 +277,18 @@ public class X4OPhaseLanguageWrite {
 			}
 			return result;
 		}
-		
-		private void writeTree(ContentWriterXml writer,Element element,boolean isRoot) throws SAXException, ElementObjectPropertyValueException {
-			AttributesImpl atts = new AttributesImpl();
-			
-			if (isRoot && schemaUriPrint) {
-				String rootUri = findElementUri(element);
-				writer.startPrefixMapping("xsi", XMLConstants.XML_SCHEMA_INSTANCE_NS_URI);
-				atts.addAttribute ("xsi", "schemaLocation", "", "", rootUri+" "+schemaUriRoot);
+		class AttributeEntry {
+			String id;
+			String value;
+			Integer writeOrder;
+		}
+		class AttributeEntryComparator implements Comparator<AttributeEntry> {
+			public int compare(AttributeEntry o1, AttributeEntry o2) {
+				return o1.writeOrder.compareTo(o2.writeOrder);
 			}
+		}
+		private void writeTree(ContentWriterXml writer,Element element,boolean isRoot) throws SAXException, ElementObjectPropertyValueException {
+			List<AttributeEntry> attr = new ArrayList<AttributeEntry>(20);
 			if (element.getElementClass().getAutoAttributes()!=null && element.getElementClass().getAutoAttributes()==false) {
 				for (ElementClassAttribute eca:element.getElementClass().getElementClassAttributes()) {
 					if (eca.getRunBeanValue()!=null && eca.getRunBeanValue()==false) {
@@ -291,19 +299,29 @@ public class X4OPhaseLanguageWrite {
 					if (value==null) {
 						continue;
 					}
-					atts.addAttribute ("", eca.getId(), "", "", ""+value);
+					AttributeEntry e = new AttributeEntry();
+					e.id = eca.getId();
+					e.value = ""+value;
+					e.writeOrder = calcOrderNumber(e.id,eca.getWriteOrder());
+					attr.add(e);
 				}
 				
 			} else {
 				for (String p:getProperties(element.getElementObject().getClass())) {
-
+					Integer writeOrder = null;
 					ElementClassAttribute eca = element.getElementClass().getElementClassAttributeByName(p);
+					if (eca!=null) {
+						writeOrder = eca.getWriteOrder();
+					}
 					if (eca!=null && eca.getRunBeanValue()!=null && eca.getRunBeanValue()) {
 						continue;
 					}
 					boolean writeValue = true;
 					for (ElementInterface ei:element.getLanguageContext().getLanguage().findElementInterfaces(element.getElementObject().getClass())) {
 						eca = ei.getElementClassAttributeByName(p);
+						if (eca!=null && writeOrder==null) {
+							writeOrder = eca.getWriteOrder(); // add interface but allow override local
+						}
 						if (eca!=null && eca.getRunBeanValue()!=null && eca.getRunBeanValue()==false) {
 							writeValue = false;
 							break;
@@ -321,16 +339,60 @@ public class X4OPhaseLanguageWrite {
 					if (value instanceof List || value instanceof Collection) {
 						continue; // TODO; filter on type of childeren
 					}
-					atts.addAttribute ("", p, "", "", ""+value);
+					AttributeEntry e = new AttributeEntry();
+					e.id = p;
+					e.value = ""+value;
+					e.writeOrder = calcOrderNumber(e.id,writeOrder);
+					attr.add(e);
 				}
 			}
 			
+			// Create atts to write and append schema first.
+			AttributesImpl atts = new AttributesImpl();
+			if (isRoot && schemaUriPrint) {
+				String rootUri = findElementUri(element);
+				writer.startPrefixMapping("xsi", XMLConstants.XML_SCHEMA_INSTANCE_NS_URI);
+				atts.addAttribute ("xsi", "schemaLocation", "", "", rootUri+" "+schemaUriRoot);
+			}
+			
+			// Sort attributes in natural order of localName and add to attributes
+			Collections.sort(attr, attributeEntryComparator);
+			for (int i=0;i<attr.size();i++) {
+				AttributeEntry a = attr.get(i);
+				atts.addAttribute ("", a.id, "", "", a.value);
+			}
+			
+			// Write Element tree recursive.
 			String elementUri = findElementUri(element);
 			writer.startElement(elementUri, element.getElementClass().getId(), "", atts);
 			for (Element e:element.getChilderen()) {
 				writeTree(writer,e,false);
 			}
 			writer.endElement(elementUri, element.getElementClass().getId(), "");
+		}
+		
+		// TODO: move to defaults layer so visible in docs.
+		private Integer calcOrderNumber(String name,Integer orderNumberOverride) {
+			if (orderNumberOverride!=null) {
+				return orderNumberOverride;
+			}
+			if (name==null) {
+				throw new NullPointerException("Can't calculate order of null name.");
+			}
+			int nameSize = name.length();
+			if (nameSize==1) {
+				return (name.charAt(0) * 1000);
+			}
+			if (nameSize==2) {
+				return (name.charAt(0) * 1000) + (name.charAt(1) * 100);
+			}
+			if (nameSize==3) {
+				return (name.charAt(0) * 1000) + (name.charAt(1) * 100) + (name.charAt(2) * 10);
+			}
+			if (nameSize>3) {
+				return (name.charAt(0) * 1000) + (name.charAt(1) * 100) + (name.charAt(2) * 10) + (name.charAt(3) * 1);
+			}
+			throw new IllegalArgumentException("Can't calculate order of empty name.");
 		}
 		
 		private String findElementUri(Element e) {

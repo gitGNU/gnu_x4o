@@ -22,8 +22,6 @@
  */
 package org.x4o.xml.test.models;
 
-import java.util.Date;
-
 /**
  * Bean for property testing. 
  * 

@@ -26,47 +26,57 @@ Start Language
   To integrate x4o as parser for your language there needs to be a few minimal steps
   be te taken, to have a working language.
   
-  * Create parser and support classes.
+  * Create driver class.
+  
+  * Create driver config file.
   
   * Create language modules files.
   
-  * Create eld files. 
+  * Create element language definition files. 
 
 
 * Create your parser
 
 +--
-public class FooBarParser extends X4OParser {
-	
-	static public String FOOBAR_LANGUAGE = "foobar";
+public class TestFooBarDriver extends X4ODriver<TestFooBar> {
 
-	public FooBarParser() throws Exception {
-		super(FOOBAR_LANGUAGE);
+	static final public String LANGUAGE_NAME = "test-foo-bar";
+	static final public String[] LANGUAGE_VERSIONS = new String[]{X4ODriver.DEFAULT_LANGUAGE_VERSION};
+	
+	@Override
+	public String getLanguageName() {
+		return LANGUAGE_NAME;
+	}
+
+	@Override
+	public String[] getLanguageVersions() {
+		return LANGUAGE_VERSIONS;
+	}
+	
+	static public TestFooBarDriver getInstance() {
+		return (TestFooBarDriver)X4ODriverManager.getX4ODriver(LANGUAGE_NAME);
 	}
 }
 +--
 
-* Create parser support
+* Create driver config
+
+  In the file "META-INF/x4o-drivers.xml"
 
 +--
-public class FooBarParserSupport implements X4OParserSupport {
+<drivers version="1.0"
+	xmlns="http://language.x4o.org/xml/ns/drivers"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://language.x4o.org/xml/ns/drivers http://language.x4o.org/xml/ns/drivers-1.0.xsd"
+	>
+	<driver language="test-foo-bar" className="org.x4o.xml.test.TestFooBarDriver"/>
+</drivers>
 
-	public ElementLanguage loadElementLanguageSupport() throws X4OParserSupportException {
-		FooBarParser parser = new FooBarParser();
-		return parser.loadElementLanguageSupport();
-	}
-	
-	public TestBeanRoot getRoot() {
-		// Simple way to return single root object.
-		// note; element tree is cleared after parsing only root element is there. 
-		return (TestBeanRoot)getDriver().getElementLanguage().getRootElement().getElementObject();
-	}
-}
 +--
 
 * Create modules
 
-  Create the file "META-INF/foobar/foobar-modules.xml" with:
+  Create the file "META-INF/test-foo-bar/test-foo-bar-modules.xml" with:
   
 +--
 <?xml version="1.0" encoding="UTF-8"?>
@@ -83,7 +93,7 @@ public class FooBarParserSupport implements X4OParserSupport {
 
 * Create ELD file
 
-  Create the file "META-INF/foobar/foobar-lang.eld" with:
+  Create the file "META-INF/test-foo-bar/foobar-lang.eld" with:
   
 +--
 <?xml version="1.0" encoding="UTF-8"?>
@@ -93,8 +103,6 @@ public class FooBarParserSupport implements X4OParserSupport {
 	xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://eld.x4o.org/xml/ns/eld-root http://eld.x4o.org/xml/ns/eld-root-1.0.xsd"
-	providerName="foobar.test.x4o.org"
-	name="FooBar Language"
 	id="foobar"
 	>
 	
@@ -112,8 +120,9 @@ public class FooBarParserSupport implements X4OParserSupport {
 		schemaPrefix="root"
 		name="FooBar Root Namespace"
 		languageRoot="true"
+		id="root"
 		>
-		<eld:element tag="root" objectClass="org.foo.bar.TestBeanRoot">
+		<eld:element tag="foobar" objectClass="org.foo.bar.TestFooBar">
 			<eld:description>The root element.</eld:description>
 		</eld:element>
 	</eld:namespace>
@@ -124,6 +133,7 @@ public class FooBarParserSupport implements X4OParserSupport {
 		schemaResource="foobar-lang-1.0.xsd"
 		schemaPrefix="lang"
 		name="FooBar Language Namespace"
+		id="lang"
 		>		
 		<eld:element tag="testBean" objectClass="org.foo.bar.TestBean"/>
 		
@@ -138,19 +148,39 @@ public class FooBarParserSupport implements X4OParserSupport {
   
 +--
 <?xml version="1.0" encoding="UTF-8"?>
-<r:root
-	xmlns:l="http://foobar.test.x4o.org/xml/ns/foobar-lang"
-	xmlns:r="http://foobar.test.x4o.org/xml/ns/foobar-root""
+<root:foobar
+	xmlns="http://foobar.test.x4o.org/xml/ns/foobar-lang"
+	xmlns:root="http://foobar.test.x4o.org/xml/ns/foobar-root"
 	>
-	<l:testBean value="testing xml"/>
-</r:root>
+	<testBean value="testing foo bar language."/>
+</root:foobar>
 +--
   
 * Parse the xml
   
 +--
-FooBarParser p = new FooBarParser();
-p.parseFile("foobar/example.xml");
-TestBeanRoot root = p.getRoot();
+TestFooBarDriver driver = TestFooBarDriver.getInstance();
+
+X4OReader<TestFooBar> reader = driver.createReader();
+TestFooBar result = reader.readResource("junit/test-foo-bar/test-bean.xml");
+
+result.addTestBean(new TestBean("test-bean"));
+result.addTestBean(new TestBean("test-bean-extra"));
+
+X4OWriter<TestFooBar> writer = driver.createReader();
+writer.writeFile(result, new File("/tmp/test-bean.xml");
 +--
 
+  And writer gives output like;
+
++--
+<?xml version="1.0" encoding="UTF-8"?>
+<root:foobar
+	xmlns:lang="http://foobar.test.x4o.org/xml/ns/foobar-lang"
+	xmlns:root="http://foobar.test.x4o.org/xml/ns/foobar-root"
+	>
+	<lang:testBean value="testing foo bar language."/>
+	<lang:testBean value="test-bean"/>
+	<lang:testBean value="test-bean-extra"/>
+</root:foobar>
++--

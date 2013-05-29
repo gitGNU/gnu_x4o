@@ -40,7 +40,7 @@ import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementMetaBase;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.io.XMLConstants;
-import org.x4o.xml.io.sax.ContentWriter;
+import org.x4o.xml.io.sax.ext.ContentWriterXsd;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
@@ -57,14 +57,14 @@ import org.xml.sax.helpers.AttributesImpl;
 public class EldXsdXmlWriter {
 	
 	
-	static public final String SCHEMA_URI = "http://www.w3.org/2001/XMLSchema";
+	static public final String SCHEMA_URI = XMLConstants.XML_SCHEMA_NS_URI;
 
 	protected X4OLanguage language = null;
-	protected ContentWriter xmlWriter = null;
+	protected ContentWriterXsd xmlWriter = null;
 	protected String writeNamespace = null;
 	protected Map<String, String> namespaces = null;
 	
-	public EldXsdXmlWriter(ContentWriter xmlWriter,X4OLanguage language) {
+	public EldXsdXmlWriter(ContentWriterXsd xmlWriter,X4OLanguage language) {
 		this.xmlWriter=xmlWriter;
 		this.language=language;
 		this.namespaces=new HashMap<String,String>(10);
@@ -150,9 +150,9 @@ public class EldXsdXmlWriter {
 	public void startSchema(ElementNamespaceContext ns) throws SAXException {
 		
 		xmlWriter.startDocument();
-		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
-		writeComment(COMMENT_SEPERATOR);
-		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		xmlWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		xmlWriter.comment(COMMENT_SEPERATOR);
+		xmlWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		
 		// this is a mess;
 		String desc = "Automatic generated schema for language: "+language.getLanguageName();
@@ -167,10 +167,10 @@ public class EldXsdXmlWriter {
 		}
 		b.append(COMMENT_TEXT);
 		b.append(" ");
-		writeComment(b.toString());
-		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
-		writeComment(COMMENT_SEPERATOR);
-		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		xmlWriter.comment(b.toString());
+		xmlWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		xmlWriter.comment(COMMENT_SEPERATOR);
+		xmlWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		
 		X4OLanguageModule module = null;
 		for (X4OLanguageModule elm:language.getLanguageModules()) {
@@ -190,7 +190,7 @@ public class EldXsdXmlWriter {
 		b.append("\n\tUri schema:\t");		b.append(ns.getSchemaUri());
 		b.append("\n\tCreated on:\t\t");	b.append(new Date());
 		b.append("\n");
-		writeComment(b.toString());
+		xmlWriter.comment(b.toString());
 		
 		
 		xmlWriter.startPrefixMapping("", SCHEMA_URI);
@@ -222,7 +222,7 @@ public class EldXsdXmlWriter {
 	
 	public void endSchema() throws SAXException {
 		xmlWriter.endElement (SCHEMA_URI, "schema" , "");
-		writeIgnorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		xmlWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		xmlWriter.endDocument();
 	}
 	
@@ -301,7 +301,7 @@ public class EldXsdXmlWriter {
 		
 		if (ec.getAutoAttributes()!=null && ec.getAutoAttributes()==false) {
 			// oke, reverse this if and rm whitespace.
-			writeIgnorableWhitespace(" ");
+			xmlWriter.ignorableWhitespace(' ');
 			
 		} else {
 			
@@ -447,32 +447,8 @@ public class EldXsdXmlWriter {
 		atts = new AttributesImpl();
 		atts.addAttribute ("", "xml:lang", "", "", "en");
 		xmlWriter.startElement(SCHEMA_URI, "documentation", "", atts);
-		writeCharacters(base.getDescription());
+		xmlWriter.characters(base.getDescription());
 		xmlWriter.endElement(SCHEMA_URI, "documentation", "");
 		xmlWriter.endElement(SCHEMA_URI, "annotation", "");
-	}
-	
-	private void  writeCharacters(String text) throws SAXException {
-		if (text==null) {
-			return;
-		}
-		char[] msg = text.toCharArray();
-		xmlWriter.characters(msg,0,msg.length);
-	}
-	
-	private void  writeComment(String text) throws SAXException {
-		if (text==null) {
-			return;
-		}
-		char[] msg = text.toCharArray();
-		xmlWriter.comment(msg,0,msg.length);
-	}
-	
-	private void  writeIgnorableWhitespace(String text) throws SAXException {
-		if (text==null) {
-			return;
-		}
-		char[] msg = text.toCharArray();
-		xmlWriter.ignorableWhitespace(msg,0,msg.length);
 	}
 }

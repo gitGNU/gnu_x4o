@@ -40,10 +40,10 @@ import org.x4o.xml.test.swixml.SwingEngine;
 import junit.framework.TestCase;
 
 /**
- * X4OWriterTest runs parser with debug output.
+ * X4OWriterTest test xml writer output.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 26, 2012
+ * @version 1.0 Apr 28, 2013
  */
 public class X4OWriterTest extends TestCase {
 	

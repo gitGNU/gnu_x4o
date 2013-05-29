@@ -34,9 +34,9 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.x4o.xml.io.sax.ContentWriter;
 import org.x4o.xml.io.sax.X4ODebugWriter;
-import org.x4o.xml.io.sax.ContentWriterXml;
+import org.x4o.xml.io.sax.ext.ContentWriter;
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageContextLocal;
 import org.x4o.xml.lang.X4OLanguageProperty;

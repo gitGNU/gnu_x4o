@@ -45,41 +45,6 @@ public class SwiXmlDriver extends X4ODriver<Component> {
 	public static final String[] LANGUAGE_VERSIONS = new String[]{LANGUAGE_VERSION_2,LANGUAGE_VERSION_3};
 	public static final String   LANGUAGE_EL_SWING_ENGINE = "swingEngine";
 	
-	/*
-	 * Protected constructor for write schema api.
-	 * @param xmlVersion	The xml version.
-	 
-	protected SwiXmlDriver(SwiXmlVersion xmlVersion) {
-		
-		// Create language by version  
-		super(LANGUAGE_NAME,xmlVersion.getLanguageVersion());
-		
-		// Sets empty namespace uri for version 2 xml documents 
-		if (SwiXmlVersion.VERSION_2.equals(xmlVersion)) {
-			setProperty(X4OLanguagePropertyKeys.INPUT_EMPTY_NAMESPACE_URI, VERSION_2_NS_URI);
-		}
-	}*/
-	
-	/*
-	 * Creates an SwiXmlParser with an SwingEngine and a xml version.
-	 * @param engine		The SwingEngine to parse for.
-	 * @param xmlVersion	The xml language version to parse.
-	 
-	public SwiXmlDriver(SwingEngine engine,SwiXmlVersion xmlVersion) {
-		
-		// Create language
-		this(xmlVersion);
-		
-		// Check engine
-		if (engine==null) {
-			throw new NullPointerException("Can't parse with null SwingEngine.");
-		}
-		
-		// Add engine for callback
-		addELBeanInstance(SWING_ENGINE_EL_NAME,engine);
-	}*/
-	
-	
 	/**
 	 * Helper for while parsing to get the SwingEngine.
 	 * @param elementLanguage	The elementLanguage to get the swingEngine out.
@@ -91,7 +56,6 @@ public class SwiXmlDriver extends X4ODriver<Component> {
 		return se;
 	}
 	
-
 	static public SwiXmlDriver getInstance() {
 		return (SwiXmlDriver)X4ODriverManager.getX4ODriver(LANGUAGE_NAME);
 	}

@@ -142,13 +142,28 @@
 		<eld:element tag="testObjectParent" objectClass="org.x4o.xml.test.models.TestObjectParent"/>
 		<eld:element tag="testObjectChild" objectClass="org.x4o.xml.test.models.TestObjectChild"/>
 		<eld:element tag="testBeanObjectChild" objectClass="org.x4o.xml.test.models.TestObjectChild">
-		<!--
-		<eld:element tag="testBeanObjectChild" objectClass="org.x4o.xml.models.TestObjectChild" parentNamespace="http://test.x4o.org/eld/iets.eld" elementTag="superObject"/>
-			<eld:elementClass tag="JTextArea" objectClassName="javax.swing.JTextArea"/>  
-			<eld:elementClassParentElementClass namespace="http://test.x4o.org/eld/iets.eld" elementTag="superObject"/>
-			<eld:elementClassParentElementClass namespace="http://test.x4o.org/eld/iets.eld" elementTag="superObject2"/>
-			-->
+			<!--
+			<eld:element tag="testBeanObjectChild" objectClass="org.x4o.xml.models.TestObjectChild" parentNamespace="http://test.x4o.org/eld/iets.eld" elementTag="superObject"/>
+				<eld:elementClass tag="JTextArea" objectClassName="javax.swing.JTextArea"/>  
+				<eld:elementClassParentElementClass namespace="http://test.x4o.org/eld/iets.eld" elementTag="superObject"/>
+				<eld:elementClassParentElementClass namespace="http://test.x4o.org/eld/iets.eld" elementTag="superObject2"/>
+				-->
 		</eld:element>
+		
+		<eld:element objectClass="org.x4o.xml.test.models.TestAttributeOrderChildNatural"/>
+		
+		<eld:element id="custom-ordered-child" objectClass="org.x4o.xml.test.models.TestAttributeOrderChild">
+			<eld:attribute id="aaaName" writeOrder="5000"/>
+			<eld:attribute id="aabName" writeOrder="5010"/>
+			<eld:attribute id="aacName" writeOrder="5020"/>
+			<eld:attribute id="abaName" writeOrder="3002"/>
+			<eld:attribute id="abbName" writeOrder="3001"/>
+			<eld:attribute id="abcName" writeOrder="3000"/>
+			<eld:attribute id="caaName" writeOrder="1003"/>
+			<eld:attribute id="cabName" writeOrder="1002"/>
+			<eld:attribute id="cacName" writeOrder="1000"/>
+		</eld:element>
+		
 			
 		<eld:element tag="JFrame"				objectClass="javax.swing.JFrame">
 			<eld:elementParent tag="root" uri="http://test.x4o.org/xml/ns/test-root"/> 

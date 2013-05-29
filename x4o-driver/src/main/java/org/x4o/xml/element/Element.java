@@ -36,7 +36,7 @@ import org.x4o.xml.lang.X4OLanguageContext;
  * from the attibutes or parent (object)element.
  * 
  * @author Willem Cazander
- * @version 1.0 01/02/2005
+ * @version 1.0 Feb 01, 2005
  */
 public interface Element {
 	
@@ -89,7 +89,7 @@ public interface Element {
 	 * @throws ElementException Can be thrown when structure is not correct.
 	 */
 	void doElementStart() throws ElementException;
-
+	
 	/**
 	 * This method is fired only once in the run phase.
 	 * @throws ElementException Can be thrown when structure is not correct.

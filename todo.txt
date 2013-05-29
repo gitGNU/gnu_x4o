@@ -1,17 +1,31 @@
 
 -- x4o TODO list --
 
+-- RM function methods from Element interface.
+-- Change global attr to namespace attributes.
+- finish eld doc-output content.
+- Make generic/safe? config bean.
+	- Make language config done by driver xml parser.
+	- Add langauge task api + reg via driver conf or service
+	- Convert ant/mvn plugin to single task executor.
+- change x4o language to "x4o-" prefix so; x4o-cel,x4o-eld,x4o-meta 
+- Add language locking, and lock eld/cel and add <lang>-eld wrap language for eld extentions per language. 
+
+- Add doc version upgrade handler;
+	- per version step xslt doc upgrade (check dyna sax piplining hooking)
+	- per version eld + support code + backing objects
+	- per version eld for dyna tree convert to new backing objects.
+- Add *Local layer for X4OLanguage* classes.
+- Add default define (EL) layer
+- Bring back xml read+write streaming language support.
 - static field constant converter
+- add default list and map converter/handler
 - full Xinclude test
-- compleet eld doc html/css.
 - move loading back into sax phase so version can readout on root tag.
-- meta add more ns and jndi ref/etc'
-- redo eld/default converters config
 - tag aliases
-- lang-el-beans.xml loading
+- <lang>-el-beans.xml loading
 - Add XML schema tags to ELD  
 - Auto generate schemas from eld
-- Basic write support
 - Basic editor support
 - Make converter config/loading better
 - Single xsd output
@@ -22,6 +36,7 @@
 
 -- IDEAS --
 
+- add mini xslt parse on top of streaming api. 
 - add support javax.xml.xpath for xpath support
 - add java.script support
 - event listeners on all DOM tree element operations

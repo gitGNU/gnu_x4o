@@ -1,0 +1,183 @@
+
+
+body {
+	margin:0px;
+	padding:0px;
+}
+.aboutLanguage {
+	padding:0px 21px;
+	margin-top:-7px;
+}
+.legalCopy {
+	margin-left:0.5em;
+}
+.tab {
+	padding:8px;
+}
+.bar {
+	padding:0.8em 0.5em 0.4em 0.8em;
+	margin:0px;
+}
+.topNav {
+	padding:0px;
+	padding-top:10px;
+}
+.bottomNav {
+	margin-top:10px;
+	padding:0px;
+	padding-top:10px;
+}
+.subNav div {
+	padding:0px 0px 5px 6px;
+}
+ul.navList, ul.subNavList {
+	margin:0px 25px 0px 0px;
+	padding:0px;
+}
+ul.navList li{
+	padding:3px 6px;
+}
+.navBarCell1Rev {
+	margin: auto 5px;
+}
+.header, .footer {
+	margin:0px 20px;
+	padding:5px 0px 0px 0px;
+}
+.indexHeader {
+	margin:10px;
+}
+.title {
+	margin:10px 0px;
+}
+.subTitle {
+	margin:5px 0px 0px 0px;
+}
+.header ul {
+	margin:0px 0px 25px 0px;
+	padding:0px;
+}
+.footer ul {
+	margin:20px 0 5px 0;
+}
+div.details ul.blockList ul.blockList ul.blockList li.blockList h4, div.details ul.blockList ul.blockList ul.blockListLast li.blockList h4 {
+	margin:0px 0px 6px -8px;
+	padding:2px 5px;
+}
+ul.blockList ul.blockList ul.blockList li.blockList h3 {
+	margin:0px 0px 6px -8px;
+	padding:2px 5px;
+}
+ul.blockList ul.blockList li.blockList h3 {
+	padding:0px;
+	margin:15px 0px;
+}
+ul.blockList li.blockList h2 {
+	padding:0px 0px 20px 0px;
+}
+.contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constantValuesContainer {
+	padding:10px 20px;
+}
+.indexContainer {
+	margin:10px;
+}
+.indexContainer h2 {
+	padding:0px 0px 3px 0px;
+}
+.indexContainer ul {
+	margin:0px;
+	padding:0px;
+}
+.contentContainer .description dl dt, .contentContainer .details dl dt, .serializedFormContainer dl dt {
+	margin:10px 0px 0px 0px;
+}
+.contentContainer .description dl dd, .contentContainer .details dl dd, .serializedFormContainer dl dd {
+	margin:10px 0px 10px 20px;
+}
+.serializedFormContainer dl.nameValue dt {
+	margin-left:1px;
+}
+.serializedFormContainer dl.nameValue dd {
+	margin:0px 0px 0px 1px;
+}
+ul.inheritance {
+	margin:0px;
+	padding:0px;
+}
+ul.inheritance li ul.inheritance {
+	margin-left:15px;
+	padding-left:15px;
+	padding-top:1px;
+}
+ul.blockList, ul.blockListLast {
+	margin:10px 0px 10px 0px;
+	padding:0px;
+}
+ul.blockList li.blockList, ul.blockListLast li.blockList {
+	margin-bottom:25px;
+}
+ul.blockList ul.blockList li.blockList, ul.blockList ul.blockListLast li.blockList {
+	padding:0px 20px 5px 10px;
+}
+ul.blockList ul.blockList ul.blockList li.blockList, ul.blockList ul.blockList ul.blockListLast li.blockList {
+	padding:0px 0px 5px 8px;
+}
+ul.blockList ul.blockList ul.blockList ul.blockList li.blockList {
+	margin-left:0px;
+	padding-left:0px;
+	padding-bottom:15px;
+}
+ul.blockList ul.blockList ul.blockList ul.blockList li.blockListLast {
+	padding-bottom:0;
+}
+table tr td dl, table tr td dl dt, table tr td dl dd {
+	margin-top:0px;
+	margin-bottom:1px;
+}
+.contentContainer ul li table th.colOne, .contentContainer ul li table th.colFirst, .contentContainer ul li table th.colLast, .classUseContainer ul li table th, .constantValuesContainer ul li table th, .contentContainer ul li table td.colOne, .contentContainer ul li table td.colFirst, .contentContainer ul li table td.colLast, .classUseContainer ul li table td, .constantValuesContainer ul li table td{
+    padding-right:20px;
+}
+.contentContainer ul li table th.colLast, .classUseContainer ul li table th.colLast,.constantValuesContainer ul li table th.colLast,
+.contentContainer ul li table td.colLast, .classUseContainer ul li table td.colLast,.constantValuesContainer ul li table td.colLast,
+.contentContainer ul li table th.colOne, .classUseContainer ul li table th.colOne,
+.contentContainer ul li table td.colOne, .classUseContainer ul li table td.colOne {
+    padding-right:3px;
+}
+.overviewSummary caption, .packageSummary caption, .contentContainer ul.blockList li.blockList caption, .summary caption, .classUseContainer caption, .constantValuesContainer caption {
+	padding:0px;
+	margin:0px;
+}
+.overviewSummary caption span, .packageSummary caption span, .contentContainer ul.blockList li.blockList caption span, .summary caption span, .classUseContainer caption span, .constantValuesContainer caption span {
+	padding-top:8px;
+	padding-left:8px;
+}
+ul.blockList ul.blockList li.blockList table {
+	margin:0px 0px 12px 0px;
+}
+.overviewSummary td, .packageSummary td, .contentContainer ul.blockList li.blockList td, .summary td, .classUseContainer td, .constantValuesContainer td {
+	padding:3px 3px 3px 7px;
+}
+th.colFirst, th.colLast, th.colOne, .constantValuesContainer th {
+	padding:3px 3px 3px 7px;
+}
+table.overviewSummary  {
+	padding:0px;
+	margin-left:0px;
+}
+.description pre {
+	margin-top:0px;
+}
+.deprecatedContent {
+	margin:0px;
+	padding:10px 0px;
+}
+.docSummary {
+	padding:0px;
+}
+.sourceLineNo {
+	padding:0px 30px 0px 0px;
+}
+.block {
+	margin:3px 0px 0px 0px;
+}
+

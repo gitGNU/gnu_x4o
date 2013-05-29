@@ -22,7 +22,6 @@
  */
 package	org.x4o.xml.lang.phase;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,21 +44,16 @@ import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespaceContext;
-import org.x4o.xml.io.sax.ContentWriter;
+import org.x4o.xml.io.sax.X4OContentParser;
 import org.x4o.xml.io.sax.X4ODebugWriter;
-import org.x4o.xml.io.sax.X4OEntityResolver;
-import org.x4o.xml.io.sax.X4OErrorHandler;
-import org.x4o.xml.io.sax.X4OTagHandler;
+import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.x4o.xml.lang.X4OLanguageProperty;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Factory which can create X4OPhaseHandlers for all the predefined phases used in default x4o language parsing.
@@ -144,8 +138,6 @@ public class X4OPhaseLanguageRead {
 		}
 	}
 	
-
-	
 	/**
 	 * Creates the startX4OPhase which is a empty meta phase.
 	 */
@@ -198,94 +190,8 @@ public class X4OPhaseLanguageRead {
 		}
 		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			try {
-				//XMLParserConfiguration config = new XIncludeAwareParserConfiguration();
-				//config.setProperty("http://apache.org/xml/properties/internal/grammar-pool",myFullGrammarPool);
-				//SAXParser parser = new SAXParser(config);
-				
-				// Create Sax parser with x4o tag handler
-				X4OTagHandler xth = new X4OTagHandler(languageContext);
-				XMLReader saxParser = XMLReaderFactory.createXMLReader();
-				saxParser.setErrorHandler(new X4OErrorHandler(languageContext));
-				saxParser.setEntityResolver(new X4OEntityResolver(languageContext));
-				saxParser.setContentHandler(xth);
-				saxParser.setProperty("http://xml.org/sax/properties/lexical-handler", xth);
-				saxParser.setProperty("http://xml.org/sax/properties/declaration-handler",xth);
-
-				// Set properties and optional 
-				Map<String,Object> saxParserProperties = languageContext.getLanguage().getLanguageConfiguration().getSAXParserProperties(languageContext);
-				for (Map.Entry<String,Object> entry:saxParserProperties.entrySet()) {
-					String name = entry.getKey();
-					Object value= entry.getValue();
-					saxParser.setProperty(name, value);
-					debugPhaseMessage("Set SAX property: "+name+" to: "+value,this,languageContext);
-				}
-				Map<String,Object> saxParserPropertiesOptional = languageContext.getLanguage().getLanguageConfiguration().getSAXParserPropertiesOptional(languageContext);
-				for (Map.Entry<String,Object> entry:saxParserPropertiesOptional.entrySet()) {
-					String name = entry.getKey();
-					Object value= entry.getValue();
-					try {
-						saxParser.setProperty(name, value);
-						debugPhaseMessage("Set SAX optional property: "+name+" to: "+value,this,languageContext);
-					} catch (SAXException e) {
-						debugPhaseMessage("Could not set optional SAX property: "+name+" to: "+value+" error: "+e.getMessage(),this,languageContext);
-					}
-				}
-				
-				// Set sax features and optional
-				Map<String, Boolean> features = languageContext.getLanguage().getLanguageConfiguration().getSAXParserFeatures(languageContext);
-				for (String key:features.keySet()) {
-					Boolean value=features.get(key);
-					saxParser.setFeature(key, value);
-					debugPhaseMessage("Set SAX feature: "+key+" to: "+value,this,languageContext);
-				}
-				Map<String, Boolean> featuresOptional = languageContext.getLanguage().getLanguageConfiguration().getSAXParserFeaturesOptional(languageContext);
-				for (String key:featuresOptional.keySet()) {
-					Boolean value=featuresOptional.get(key);
-					try {
-						saxParser.setFeature(key, value);
-						debugPhaseMessage("Set SAX optional feature: "+key+" to: "+value,this,languageContext);
-					} catch (SAXException e) {
-						debugPhaseMessage("Could not set optional SAX feature: "+key+" to: "+value+" error: "+e.getMessage(),this,languageContext);
-					}
-				}
-				
-				// check for required features
-				List<String> requiredFeatures = languageContext.getLanguage().getLanguageConfiguration().getSAXParserFeaturesRequired(languageContext);
-				for (String requiredFeature:requiredFeatures) {
-					debugPhaseMessage("Checking required SAX feature: "+requiredFeature,this,languageContext);
-					if (saxParser.getFeature(requiredFeature)==false) {
-						Exception e = new IllegalStateException("Missing required feature: "+requiredFeature);
-						throw new X4OPhaseException(this,e);
-					}	
-				}
-				
-				// Finally start parsing the xml input stream
-				Object requestInputSource = languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_SOURCE);
-				InputSource input = null;
-				InputStream inputStream = null;
-				if (requestInputSource instanceof InputSource) {
-					input = (InputSource)requestInputSource;
-				} else {
-					inputStream = (InputStream)languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_STREAM);
-					input = new InputSource(inputStream);
-				}
-				
-				Object requestInputEncoding = languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_ENCODING);
-				if (requestInputEncoding!=null && requestInputEncoding instanceof String) {
-					input.setEncoding(requestInputEncoding.toString());
-				}
-				Object requestSystemId = languageContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_SYSTEM_ID);
-				if (requestSystemId!=null && requestSystemId instanceof String) {
-					input.setSystemId(requestSystemId.toString());
-				}
-				
-				try {
-					saxParser.parse(input);
-				} finally {
-					if (inputStream!=null) {
-						inputStream.close();
-					}
-				}
+				X4OContentParser parser = new X4OContentParser();
+				parser.parse(languageContext);
 			} catch (Exception e) {
 				throw new X4OPhaseException(this,e);
 			}

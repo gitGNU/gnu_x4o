@@ -22,12 +22,8 @@
  */
 package org.x4o.xml.test;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.models.TestObjectRoot;
 
 

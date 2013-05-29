@@ -1,0 +1,22 @@
+
+.tab {
+	background-image:url(titlebar.png);
+	background-position:left top;
+	background-repeat:no-repeat;
+}
+.bar,.topNav,.bottomNav {
+	background-image:url(background.png);
+	background-repeat:repeat-x;
+}
+.navBarCell1Rev {
+	background-image:url(tab.png);
+}
+.overviewSummary caption span, .packageSummary caption span, .contentContainer ul.blockList li.blockList caption span, .summary caption span, .classUseContainer caption span, .constantValuesContainer caption span {
+	background-image:url(titlebar.png);
+}
+.overviewSummary .tabEnd, .packageSummary .tabEnd, .contentContainer ul.blockList li.blockList .tabEnd, .summary .tabEnd, .classUseContainer .tabEnd, .constantValuesContainer .tabEnd {
+	background-image:url(titlebar_end.png);
+	background-repeat:no-repeat;
+	background-position:top right;
+}
+
