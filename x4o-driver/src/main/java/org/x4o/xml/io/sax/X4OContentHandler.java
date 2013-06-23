@@ -172,7 +172,7 @@ public class X4OContentHandler extends DefaultHandler2 {
 			overrideSaxHandler = (DefaultHandler2)element.getElementObject();
 		}
 	}
-
+	
 	/**
 	 * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -201,7 +201,7 @@ public class X4OContentHandler extends DefaultHandler2 {
 			throw new SAXParseException("Error while configing element: '"+tag+"' "+ee.getMessage(),locator,ee);
 		}
 	}
-
+	
 	/**
 	 * Gets called to pass the text between XML-tags and converts it to a String.
 	 * When this string is 0 length then nothing is done.

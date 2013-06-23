@@ -65,3 +65,7 @@ nbproject
 Thumbs.db
 Desktop.ini
 
+# Ignore kde dolphin files
+.directory
+
+

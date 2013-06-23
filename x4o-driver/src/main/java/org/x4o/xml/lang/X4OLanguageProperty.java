@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
+import org.x4o.xml.io.XMLConstants;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -60,7 +61,7 @@ public enum X4OLanguageProperty {
 	READER_INPUT_STREAM(IO.READER,"reader/input/stream",InputStream.class),
 	
 	/** When set it overrides automatic encoding detection of sax parser. */
-	READER_INPUT_ENCODING(IO.READER,"reader/input/encoding",String.class),
+	READER_INPUT_ENCODING(IO.READER,"reader/input/encoding",String.class,XMLConstants.XML_DEFAULT_ENCODING),
 	
 	/** When set use this InputSource instance for parsing. */
 	READER_INPUT_SOURCE(IO.READER,"reader/input/source",InputSource.class),
@@ -107,7 +108,7 @@ public enum X4OLanguageProperty {
 	WRITER_OUTPUT_STREAM(IO.WRITER,"writer/output/stream",OutputStream.class),
 	
 	/** The writer output encoding. */
-	WRITER_OUTPUT_ENCODING(IO.WRITER,"writer/output/encoding",String.class),
+	WRITER_OUTPUT_ENCODING(IO.WRITER,"writer/output/encoding",String.class,XMLConstants.XML_DEFAULT_ENCODING),
 	
 	/** The writer output newline. */
 	WRITER_OUTPUT_CHAR_NEWLINE(IO.WRITER,"writer/output/char/newline",String.class),
@@ -129,7 +130,7 @@ public enum X4OLanguageProperty {
 	SCHEMA_WRITER_OUTPUT_PATH(IO.SCHEMA_WRITER,"schema-writer/output/path",File.class),
 	
 	/** The schema writer output encoding. */
-	SCHEMA_WRITER_OUTPUT_ENCODING(IO.SCHEMA_WRITER,"schema-writer/output/encoding",String.class),
+	SCHEMA_WRITER_OUTPUT_ENCODING(IO.SCHEMA_WRITER,"schema-writer/output/encoding",String.class,XMLConstants.XML_DEFAULT_ENCODING),
 	
 	/** The schema writer output newline. */
 	SCHEMA_WRITER_OUTPUT_CHAR_NEWLINE(IO.SCHEMA_WRITER,"schema-writer/output/char/newline",String.class),

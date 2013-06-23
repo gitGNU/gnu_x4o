@@ -41,4 +41,6 @@ public interface X4OWriter<T> extends X4OConnection {
 	void writeFile(T object,String fileName) throws X4OConnectionException,SAXException,IOException;
 	
 	void writeFile(T object,File file) throws X4OConnectionException,SAXException,IOException;
+	
+	String writeString(T object) throws X4OConnectionException,SAXException,IOException;
 }

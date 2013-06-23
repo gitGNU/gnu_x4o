@@ -244,6 +244,7 @@ public class ApiDocWriter {
 		if (concept.getParent()!=null && !concept.getParent().getId().equals(doc.getRootNode().getId())) {
 			ApiDocConcept conceptParent = concept.getParent();
 			conf.navLinks.put(conceptParent.getId(), ApiDocContentWriter.toSafeUri(pathClean)+prefix+"/index.html");
+			conf.navTitles.put(conceptParent.getId(), conceptParent.getDescriptionName());
 			configActiveNavConceptLinks(conf,node,concept.getParent(),prefix+"/..");
 		}
 	}

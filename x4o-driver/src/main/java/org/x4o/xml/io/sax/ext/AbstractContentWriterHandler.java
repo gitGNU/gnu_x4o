@@ -83,6 +83,14 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		prefixMapping = new HashMap<String,String>(15);
 		printedMappings = new ArrayList<String>(15);
 		elements = new Stack<String>();
+		/*
+		ContentConfig conf = new ContentConfig(
+				new ContentConfigItem("writer/output/encoding",String.class,XMLConstants.XML_DEFAULT_ENCODING),
+				new ContentConfigItem("content/writer/output/charTab",String.class)
+				);
+		conf.getPropertyString("");
+		*/
+		
 	}
 	
 	// TODO: check location of this. (add to api?)
@@ -227,12 +235,8 @@ public class AbstractContentWriterHandler implements ContentHandler {
 				attributeValue = "null"; // TODO: Add null value key to config.
 			}
 			String attributeValueSafe = XMLConstants.escapeAttributeValue(attributeValue);
-			boolean printNewLine = attributeValueSafe.length()>80; // TODO add config
-			if (i==0) {
-				startElement.append(' ');
-			} else if (!printNewLine) {
-				startElement.append(' ');
-			}
+			
+			startElement.append(' ');
 			if (XMLConstants.NULL_NS_URI.equals(attributeUri) | attributeUri ==null) {
 				startElement.append(attributeName);
 			} else {
@@ -243,6 +247,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 			startElement.append("=\"");
 			startElement.append(attributeValueSafe);
 			startElement.append('"');
+			boolean printNewLine = attributeValueSafe.length()>80; // TODO add config
 			if (printNewLine) {
 				startElement.append(XMLConstants.CHAR_NEWLINE);
 				for (int ii = 0; ii < indent+1; ii++) {
@@ -385,6 +390,10 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	}
 	
 	/**
+	 * Prints xml ignorable whitespace.
+	 * 
+	 * @param text	The text to print.
+	 * @throws SAXException When IOException has happend while printing.
 	 * @see org.x4o.xml.io.sax.ext.ContentWriter#ignorableWhitespace(java.lang.String)
 	 */
 	public void ignorableWhitespace(String text) throws SAXException {
@@ -395,6 +404,12 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		write(text); // TODO: check chars
 	}
 	
+	/**
+	 * Prints xml ignorable whitespace character.
+	 * 
+	 * @param c	The character to print.
+	 * @throws SAXException When IOException has happend while printing.
+	 */
 	public void ignorableWhitespace(char c) throws SAXException {
 		ignorableWhitespace(new char[]{c},0,1);
 	}
@@ -462,6 +477,8 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	}
 	
 	/**
+	 * Prints xml comment.
+	 * 
 	 * @see org.x4o.xml.io.sax.ext.ContentWriter#comment(java.lang.String)
 	 */
 	public void comment(String text) throws SAXException {
@@ -480,6 +497,11 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		printReturn = true;
 	}
 	
+	/**
+	 * Checks if the value contains any new lines and sets the printReturn field.
+	 * 
+	 * @param value	The value to check.
+	 */
 	private void checkPrintedReturn(String value) {
 		if (value.indexOf(XMLConstants.CHAR_NEWLINE)>0) {
 			printReturn = true;

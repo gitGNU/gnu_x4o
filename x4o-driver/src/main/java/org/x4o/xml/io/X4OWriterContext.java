@@ -42,4 +42,6 @@ public interface X4OWriterContext<T> extends X4OWriter<T> {
 	void writeFileContext(X4OLanguageContext context,String fileName) throws X4OConnectionException,SAXException,IOException;
 	
 	void writeFileContext(X4OLanguageContext context,File file) throws X4OConnectionException,SAXException,IOException;
+	
+	String writeStringContext(X4OLanguageContext context) throws X4OConnectionException,SAXException,IOException;
 }

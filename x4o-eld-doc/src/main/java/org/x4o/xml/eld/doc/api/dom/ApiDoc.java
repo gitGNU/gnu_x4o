@@ -60,11 +60,6 @@ public class ApiDoc {
 		treeNodeClassExcludes = new ArrayList<Class<?>>(5);
 	}
 	
-	public ApiDoc(ApiDocNode rootNode) {
-		this();
-		setRootNode(rootNode);
-	}
-	
 	public void checkModel() throws NullPointerException,IllegalArgumentException {
 		checkNull(name,"name");
 		checkNull(description,"description");
@@ -79,16 +74,16 @@ public class ApiDoc {
 			throw new IllegalStateException("Can't work with empty nodeBodyWriters");
 		}
 		if (frameNavOverviewPrintParent==null) {
-			frameNavOverviewPrintParent=false;
+			setFrameNavOverviewPrintParent(false);
 		}
 		if (frameNavPrintParent==null) {
-			frameNavPrintParent=false;
+			setFrameNavPrintParent(false);
 		}
 		if (frameNavPrintParentParent==null) {
-			frameNavPrintParentParent=false;
+			setFrameNavPrintParentParent(false);
 		}
 		if (frameNavPrintParentId==null) {
-			frameNavPrintParentId=false;
+			setFrameNavPrintParentId(false);
 		}
 	}
 	

@@ -77,4 +77,8 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 	public void writeFile(T object,File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
 		writeFileContext(toObjectContext(object), file);
 	}
+	
+	public String writeString(T object) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
+		return writeStringContext(toObjectContext(object));
+	}
 }

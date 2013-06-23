@@ -22,6 +22,9 @@
  */
 package org.x4o.xml.lang;
 
+import java.io.InputStream;
+import java.net.URL;
+
 /**
  * X4OLanguageClassLoader is short hand for safe class loading.
  * 
@@ -81,5 +84,25 @@ public final class X4OLanguageClassLoader {
 	 */
 	public static Object newInstance(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		return newInstance(loadClass(className));
+	}
+	
+	/**
+	 * Gets a resource from the classloader to an url.
+	 * @param resourceName	The resource to get from the classloader.
+	 * @return	The url to the resource or null if not found.
+	 * @see java.lang.ClassLoader#getResource(String)
+	 */
+	public static URL getResource(String resourceName) {
+		return getClassLoader().getResource(resourceName);
+	}
+	
+	/**
+	 * Gets a resource from the classloader to an inputstream.
+	 * @param resourceName	The resource to get from the classloader.
+	 * @return	The inputstream to the resource or null if not found.
+	 * @see java.lang.ClassLoader#getResourceAsStream(String)
+	 */
+	public static InputStream getResourceAsStream(String resourceName) {
+		return getClassLoader().getResourceAsStream(resourceName);
 	}
 }

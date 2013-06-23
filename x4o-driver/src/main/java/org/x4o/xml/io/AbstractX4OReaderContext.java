@@ -30,7 +30,9 @@ import	java.io.IOException;
 import	java.io.InputStream;
 import	java.net.URL;
 
+import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageProperty;
 import	org.xml.sax.SAXException;
 
 /**
@@ -102,9 +104,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 		if (resourceName==null) {
 			throw new NullPointerException("Can't read null resourceName from classpath.");
 		}
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		if (cl == null) cl = getClass().getClassLoader(); // fallback
-		URL url = cl.getResource(resourceName);
+		URL url = X4OLanguageClassLoader.getResource(resourceName);
 		if (url==null) {
 			throw new NullPointerException("Could not find resource on classpath: "+resourceName);
 		}
@@ -114,7 +114,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 			baseUrl = baseUrl.substring(0,lastSlash+1);
 		}
 		URL basePath = new URL(baseUrl);
-		InputStream inputStream = cl.getResourceAsStream(resourceName);
+		InputStream inputStream = X4OLanguageClassLoader.getResourceAsStream(resourceName);
 		try {
 			return readContext(inputStream,url.toExternalForm(),basePath);
 		} finally {
@@ -123,8 +123,8 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	}
 	
 	/**
-	 * Converts a String to a InputStream to is can me readd by SAX.
-	 * @param xmlString	The xml as String to read.
+	 * Converts a String to a InputStream to is can me read by SAX.
+	 * @param xmlString	The xml as (UTF-8) String to read.
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception.
@@ -135,7 +135,8 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 			throw new NullPointerException("Can't read null xml string.");
 		}
 		URL basePath = new File(System.getProperty("user.dir")).toURI().toURL();
-		return readContext(new ByteArrayInputStream(xmlString.getBytes()),"inline-xml",basePath);
+		String encoding = getLanguageContext().getLanguagePropertyString(X4OLanguageProperty.READER_INPUT_ENCODING);
+		return readContext(new ByteArrayInputStream(xmlString.getBytes(encoding)),"inline-xml",basePath);
 	}
 	
 	/**

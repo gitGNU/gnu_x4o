@@ -101,6 +101,7 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 		List<String> navList = new ArrayList<String>(10);
 		Map<String,String> navLinks = new HashMap<String,String>(10);
 		Map<String,String> navNames = new HashMap<String,String>(10);
+		Map<String,String> navTitles = new HashMap<String,String>(10);
 		String pathPrefix;
 		String prev;
 		String next;
@@ -169,15 +170,19 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 			for (String navKey:conf.navList) {
 				String navName = conf.navNames.get(navKey);
 				String navLink = conf.navLinks.get(navKey);
+				String navTitle = conf.navTitles.get(navKey);
 				String selectedCss = null;
 				if (navKey.equals(conf.navSelected)) {
 					selectedCss = "navBarCell1Rev";
 					navLink = null; // disables link
 				}
+				if (navTitle==null) {
+					navTitle = navName;
+				}
 				if (navLink==null) {
 					printTagCharacters(Tag.li, navName, selectedCss);
 				} else {
-					docNavBarListItemHref(pathPrefix+navLink,navName,selectedCss);
+					docNavBarListItemHref(pathPrefix+navLink,navName,navTitle,selectedCss,null,null);
 				}
 			}
 			endElement("", "ul", "");
@@ -203,12 +208,12 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 				if (conf.prev==null) {
 					printTagCharacters(Tag.li, "Prev");
 				} else {
-					docNavBarListItemHref(pathPrefix+conf.prev,"Prev",null,"strong",null);
+					docNavBarListItemHref(pathPrefix+conf.prev,"Prev","Previous Item",null,"strong",null);
 				}
 				if (conf.next==null) {
 					printTagCharacters(Tag.li, "Next");
 				} else {
-					docNavBarListItemHref(pathPrefix+conf.next,"Next",null,"strong",null);
+					docNavBarListItemHref(pathPrefix+conf.next,"Next","Next Item",null,"strong",null);
 				}
 			printTagEnd(Tag.ul);
 			if (conf.frame!=null) {
@@ -223,7 +228,7 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 			}
 			if (conf.noFrameAllName!=null && conf.noFrameAllLink!=null) {
 				printTagStart(Tag.ul,ApiDocContentCss.navList,"allclasses_"+barId);
-					docNavBarListItemHref(pathPrefix+conf.noFrameAllLink,conf.noFrameAllName,null,null,null);
+					docNavBarListItemHref(pathPrefix+conf.noFrameAllLink,conf.noFrameAllName,null,null,null,null);
 				printTagEnd(Tag.ul);
 				printTagStart(Tag.div);
 					if (isTop) {
@@ -233,6 +238,7 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 					}
 				printTagEnd(Tag.div);
 			}
+			
 			String tabSpace = "&nbsp;|&nbsp;";
 			boolean printLink = conf.linkConstructors || conf.linkFields || conf.linkMethods;
 			if (printLink) {
@@ -241,13 +247,13 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 					printTagStart(Tag.li);charactersRaw("Summary:&nbsp;");printTagEnd(Tag.li);
 					//printTagText(Tag.li,"Nested | "); // TODO: Nested 
 					if (conf.linkFields) {
-						docNavBarListItemHref("#field_summary",conf.linkFieldName,null,null,tabSpace);
+						docNavBarListItemHrefLinkSpace("#field_summary",conf.linkFieldName);
 					} else {
 						printTagCharacters(Tag.li,conf.linkFieldName);charactersRaw(tabSpace);
 					}
 					
 					if (conf.linkConstructors) {
-						docNavBarListItemHref("#constructor_summary",conf.linkConstructorName,null,null,tabSpace);
+						docNavBarListItemHrefLinkSpace("#constructor_summary",conf.linkConstructorName);
 					} else {
 						printTagCharacters(Tag.li,conf.linkConstructorName);charactersRaw(tabSpace);
 					}
@@ -262,12 +268,12 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 						printTagStart(Tag.li);charactersRaw("Detail:&nbsp;");printTagEnd(Tag.li);
 						//printTagText(Tag.li,"Nested | ");
 						if (conf.linkFields) {
-							docNavBarListItemHref("#field_detail",conf.linkFieldName,null,null,tabSpace);
+							docNavBarListItemHrefLinkSpace("#field_detail",conf.linkFieldName);
 						} else {
 							printTagCharacters(Tag.li,conf.linkFieldName);charactersRaw(tabSpace);
 						}
 						if (conf.linkConstructors) {
-							docNavBarListItemHref("#constructor_detail",conf.linkConstructorName,null,null,tabSpace);
+							docNavBarListItemHrefLinkSpace("#constructor_detail",conf.linkConstructorName);
 						} else {
 							printTagCharacters(Tag.li,conf.linkConstructorName);charactersRaw(tabSpace);
 						}
@@ -286,12 +292,17 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 		comment("========= END OF "+barComment+" NAVBAR =======");
 	}
 	
-	private void docNavBarListItemHref(String href,String title,String cssClass) throws SAXException {
-		docNavBarListItemHref(href, title, cssClass, null, null);
+	private void docNavBarListItemHrefLinkSpace(String href,String title) throws SAXException {
+		String tabSpace = "&nbsp;|&nbsp;";
+		docNavBarListItemHref(href, title, title, null, null, tabSpace);
 	}
-	private void docNavBarListItemHref(String href,String title,String cssClass,String spanCss,String linkSpace) throws SAXException {
+	
+	private void docNavBarListItemHref(String href,String title, String cssClass) throws SAXException {
+		docNavBarListItemHref(href, title, title, cssClass, null, null);
+	}
+	private void docNavBarListItemHref(String href,String title,String text,String cssClass,String spanCss,String linkSpace) throws SAXException {
 		printTagStart(Tag.li,cssClass);
-		printHref(href,title,title,spanCss);
+		printHref(href,title,text,spanCss);
 		charactersRaw(linkSpace);
 		printTagEnd(Tag.li);
 	}

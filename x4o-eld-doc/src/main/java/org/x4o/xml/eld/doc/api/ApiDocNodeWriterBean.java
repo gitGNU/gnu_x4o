@@ -24,7 +24,6 @@ package org.x4o.xml.eld.doc.api;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.x4o.xml.eld.doc.api.dom.ApiDoc;
@@ -56,11 +55,11 @@ public class ApiDocNodeWriterBean implements ApiDocNodeWriter {
 	
 	public ApiDocNodeWriterBean(ApiDocNodeBody nodeBody,Object bean,String method,Class<?>...classes) {
 		this();
-		this.nodeBody=nodeBody;
-		this.bean=bean;
-		this.method=method;
-		if (classes!=null && classes.length>0) {
-			targetClasses.addAll(Arrays.asList(classes));
+		setNodeBody(nodeBody);
+		setBean(bean);
+		setMethod(method);
+		for (Class<?> cl:classes) {
+			addtargetClass(cl);
 		}
 	}
 	
@@ -91,10 +90,10 @@ public class ApiDocNodeWriterBean implements ApiDocNodeWriter {
 	}
 	
 	public void writeNodeContent(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		Class<?> beanClass = bean.getClass();
+		Class<?> beanClass = getBean().getClass();
 		try {
-			Method methodBean = beanClass.getMethod(method, new Class[]{ApiDocWriteEvent.class});
-			methodBean.invoke(bean, new Object[]{event});
+			Method methodBean = beanClass.getMethod(getMethod(), new Class[]{ApiDocWriteEvent.class});
+			methodBean.invoke(getBean(), new Object[]{event});
 		} catch (Exception e) {
 			throw new SAXException(e);
 		}

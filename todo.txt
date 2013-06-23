@@ -13,7 +13,7 @@
 
 - Add doc version upgrade handler;
 	- per version step xslt doc upgrade (check dyna sax piplining hooking)
-	- per version eld + support code + backing objects
+	- per version eld + support code + backing objects (DONE) 
 	- per version eld for dyna tree convert to new backing objects.
 - Add *Local layer for X4OLanguage* classes.
 - Add default define (EL) layer

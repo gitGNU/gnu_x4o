@@ -22,6 +22,15 @@
  */
 package org.x4o.xml.eld;
 
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.X4ODriverManager;
+import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.io.X4OWriter;
+import org.x4o.xml.lang.DefaultX4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.X4OLanguageLocal;
+import org.x4o.xml.lang.X4OLanguageModule;
+
 import junit.framework.TestCase;
 
 /**
@@ -95,10 +104,27 @@ public class EldParserTest extends TestCase {
 	}
 	
 	public void testRunEldParser() throws Exception {
-		//EldDriver parser =  new EldDriver(false);
-		//parser.parseResource("META-INF/test/test-lang.eld");
-		//X4ODriver<X4OLanguageModule> driver = (X4ODriver<X4OLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
-		//X4OReader<X4OLanguageModule> reader = driver.createReader();
-		//reader.readResource("META-INF/test/test-lang.eld");
+		X4ODriver<X4OLanguageModule> driver = (X4ODriver<X4OLanguageModule>)X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
+		X4OReader<X4OLanguageModule> reader = driver.createReader();
+		X4OWriter<X4OLanguageModule> writer = driver.createWriter();
+		
+		X4OLanguage language = driver.createLanguage(driver.getLanguageVersionDefault());
+		X4OLanguageModule mod = new DefaultX4OLanguageModule();
+		
+		reader.addELBeanInstance(EldModuleLoader.EL_PARENT_LANGUAGE_CONFIGURATION, language.getLanguageConfiguration());
+		reader.addELBeanInstance(EldModuleLoader.EL_PARENT_LANGUAGE, language);
+		reader.addELBeanInstance(EldModuleLoader.EL_PARENT_ELEMENT_LANGUAGE_MODULE, mod);
+		
+		X4OLanguageModule modNew = reader.readResource("META-INF/test/test-lang.eld");
+		
+		//int binds = mod.getElementBindingHandlers().size();
+		//System.out.println(binds);
+		
+		String output = writer.writeString(mod);
+		assertNotNull(output);
+		
+		// TODO; fix element config+event to new interface + reserse for writing.
+		
+		//System.out.println(output);
 	}
 }

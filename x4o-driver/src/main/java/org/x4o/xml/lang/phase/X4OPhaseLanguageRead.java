@@ -630,10 +630,10 @@ public class X4OPhaseLanguageRead {
 				return; // has already runned.
 			}
 			try {
-				//if (parser.hasX4ODebugWriter()) {
-				//	parser.getX4ODebugWriter().debugElement(element);
+				//if (element.getLanguageContext().hasX4ODebugWriter()) {
+				//	element.getLanguageContext().getX4ODebugWriter().debugElement(element);
 				//}
-				element.doElementRun();		
+				element.doElementRun();
 			} catch (ElementException e) {
 				throw new X4OPhaseException(this,e);
 			}

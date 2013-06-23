@@ -22,12 +22,14 @@
  */
 package org.x4o.xml.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.SAXException;
 
 /**
@@ -59,5 +61,12 @@ public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection 
 		} finally {
 			outputStream.close();
 		}
+	}
+	
+	public String writeStringContext(X4OLanguageContext context) throws X4OConnectionException,SAXException,IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream(4096);
+		writeContext(context, out);
+		String encoding = context.getLanguagePropertyString(X4OLanguageProperty.WRITER_OUTPUT_ENCODING);
+		return out.toString(encoding);
 	}
 }
