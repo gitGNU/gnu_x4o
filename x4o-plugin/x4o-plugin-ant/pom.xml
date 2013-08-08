@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.x4o.plugin</groupId>
     <artifactId>x4o-plugin</artifactId>
-    <version>0.8.5-SNAPSHOT</version>
+    <version>0.8.5</version>
   </parent>
   <artifactId>x4o-plugin-ant</artifactId>
   <name>x4o-plugin-ant</name>
@@ -84,9 +84,9 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <target>
-                    <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF"/>
-                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
-                    <writeLanguageSchema destdir="${coredir}/cel" languageName="cel"/>
+                    <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF" />
+                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath" />
+                    <writeLanguageSchema destdir="${coredir}/cel" languageName="cel" />
                   </target>
                 </configuration>
                 <goals>
@@ -119,9 +119,9 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <target>
-                    <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF"/>
-                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath"/>
-                    <writeLanguageSchema destdir="${coredir}/eld" languageName="eld"/>
+                    <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF" />
+                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath" />
+                    <writeLanguageSchema destdir="${coredir}/eld" languageName="eld" />
                   </target>
                 </configuration>
                 <goals>
@@ -154,18 +154,18 @@
                 <phase>pre-site</phase>
                 <configuration>
                   <target>
-                    <property name="coredir" value="${basedir}/../../target/site/elddocs"/>
-                    <mkdir dir="${coredir}/cel"/>
-                    <mkdir dir="${coredir}/eld"/>
-                    <mkdir dir="${coredir}/junit-test"/>
-                    <mkdir dir="${coredir}/junit-swixml2"/>
-                    <mkdir dir="${coredir}/junit-swixml3"/>
-                    <taskdef name="writeLanguageDoc" classname="org.x4o.plugin.ant.X4OWriteLanguageDocTask" classpathref="maven.plugin.classpath"/>
-                    <writeLanguageDoc destdir="${coredir}/cel" languageName="cel"/>
-                    <writeLanguageDoc destdir="${coredir}/eld" languageName="eld"/>
-                    <writeLanguageDoc destdir="${coredir}/junit-test" languageName="test"/>
-                    <writeLanguageDoc destdir="${coredir}/junit-swixml2" languageName="swixml" languageVersion="2.0"/>
-                    <writeLanguageDoc destdir="${coredir}/junit-swixml3" languageName="swixml"/>
+                    <property name="coredir" value="${basedir}/../../target/site/elddocs" />
+                    <mkdir dir="${coredir}/cel" />
+                    <mkdir dir="${coredir}/eld" />
+                    <mkdir dir="${coredir}/junit-test" />
+                    <mkdir dir="${coredir}/junit-swixml2" />
+                    <mkdir dir="${coredir}/junit-swixml3" />
+                    <taskdef name="writeLanguageDoc" classname="org.x4o.plugin.ant.X4OWriteLanguageDocTask" classpathref="maven.plugin.classpath" />
+                    <writeLanguageDoc destdir="${coredir}/cel" languageName="cel" />
+                    <writeLanguageDoc destdir="${coredir}/eld" languageName="eld" />
+                    <writeLanguageDoc destdir="${coredir}/junit-test" languageName="test" />
+                    <writeLanguageDoc destdir="${coredir}/junit-swixml2" languageName="swixml" languageVersion="2.0" />
+                    <writeLanguageDoc destdir="${coredir}/junit-swixml3" languageName="swixml" />
                   </target>
                 </configuration>
                 <goals>
