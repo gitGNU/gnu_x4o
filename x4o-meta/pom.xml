@@ -3,7 +3,7 @@
   <parent>
     <artifactId>x4o</artifactId>
     <groupId>org.x4o</groupId>
-    <version>0.8.5</version>
+    <version>0.8.6-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>x4o-meta</artifactId>

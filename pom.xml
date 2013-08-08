@@ -4,7 +4,7 @@
   <groupId>org.x4o</groupId>
   <artifactId>x4o</artifactId>
   <packaging>pom</packaging>
-  <version>0.8.5</version>
+  <version>0.8.6-SNAPSHOT</version>
   <name>x4o</name>
   <description>Creates an easy xml layer for objects and creating your own xml language implementations.</description>
   <url>http://www.x4o.org</url>
