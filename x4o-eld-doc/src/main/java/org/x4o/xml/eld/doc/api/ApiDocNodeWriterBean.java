@@ -79,10 +79,10 @@ public class ApiDocNodeWriterBean implements ApiDocNodeWriter {
 			if (ammo.nodeBodyOrder()!=-1) {
 				methodWriter.setNodeBodyOrder(ammo.nodeBodyOrder());
 			}
-			if (!ammo.contentGroup().isEmpty()) {
+			if (ammo.contentGroup().length()>0) {
 				methodWriter.setContentGroup(ammo.contentGroup());
 			}
-			if (!ammo.contentGroupType().isEmpty()) {
+			if (ammo.contentGroupType().length()>0) {
 				methodWriter.setContentGroupType(ammo.contentGroupType());
 			}
 			doc.addNodeBodyWriter(methodWriter);

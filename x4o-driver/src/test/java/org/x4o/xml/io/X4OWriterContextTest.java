@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Scanner;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.element.Element;
@@ -76,7 +75,7 @@ public class X4OWriterContextTest extends TestCase {
 		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
 
 		writer.writeFileContext(createContext(), outputFile);
-		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		String text = X4OWriterTest.readFile( outputFile );
 		outputFile.delete();
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
@@ -107,7 +106,7 @@ public class X4OWriterContextTest extends TestCase {
 		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
 		
 		writer.writeFileContext(createContext(), outputFile.getAbsolutePath());
-		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		String text = X4OWriterTest.readFile( outputFile );
 		outputFile.delete();
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
@@ -143,7 +142,7 @@ public class X4OWriterContextTest extends TestCase {
 		} finally {
 			outputStream.close();
 		}
-		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		String text = X4OWriterTest.readFile( outputFile );
 		outputFile.delete();
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));

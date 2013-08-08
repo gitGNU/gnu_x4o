@@ -164,7 +164,7 @@ public final class X4ODriverManager {
 		if (language==null) {
 			throw new NullPointerException("Can't provider driver for null language.");
 		}
-		if (language.isEmpty()) {
+		if (language.length()==0) {
 			throw new IllegalArgumentException("Can't provider driver for empty language.");
 		}
 		if (instance.drivers.containsKey(language)) {

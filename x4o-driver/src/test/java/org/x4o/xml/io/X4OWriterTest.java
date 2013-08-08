@@ -23,11 +23,15 @@
 package org.x4o.xml.io;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.Scanner;
+import java.nio.charset.Charset;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
@@ -47,11 +51,28 @@ import junit.framework.TestCase;
  */
 public class X4OWriterTest extends TestCase {
 	
-
 	private File createOutputFile() throws IOException {
 		File outputFile = File.createTempFile("test-writer", ".xml");
 		outputFile.deleteOnExit();
 		return outputFile;
+	}
+	
+	static public String readFile(File file) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),Charset.forName("UTF-8")));
+		try {
+			StringBuilder sb = new StringBuilder();
+			String line = br.readLine();
+			while (line != null) {
+				sb.append(line);
+				sb.append('\n');
+				line = br.readLine();
+			}
+			String out = sb.toString();
+			//System.out.println(out);
+			return out;
+		} finally {
+			br.close();
+		}
 	}
 	
 	public void testWriterSwiXmlOutput() throws Exception {
@@ -86,7 +107,7 @@ public class X4OWriterTest extends TestCase {
 		
 		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
 		writer.writeFile(root, outputFile);
-		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		String text = readFile( outputFile );
 		outputFile.delete();
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
@@ -103,7 +124,7 @@ public class X4OWriterTest extends TestCase {
 		
 		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
 		writer.writeFile(root, outputFile.getAbsolutePath());
-		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		String text = readFile( outputFile );
 		outputFile.delete();
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
@@ -127,7 +148,7 @@ public class X4OWriterTest extends TestCase {
 		}
 		
 		writer.writeFile(root, outputFile.getAbsolutePath());
-		String text = new Scanner( outputFile ).useDelimiter("\\A").next();
+		String text = readFile( outputFile );
 		outputFile.delete();
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));

@@ -99,7 +99,7 @@ public abstract class AbstractElementClassBase extends AbstractElementMetaBase i
 		if (namespaceUri==null) {
 			throw new NullPointerException("Can't add parent tag with null namespace uri.");
 		}
-		if (namespaceUri.isEmpty()) {
+		if (namespaceUri.length()==0) {
 			throw new IllegalArgumentException("Can't add parent tag with empty namespace uri.");
 		}
 		List<String> tags = elementParents.get(namespaceUri);
