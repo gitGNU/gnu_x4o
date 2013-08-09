@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.x4o.plugin</groupId>
     <artifactId>x4o-plugin</artifactId>
-    <version>0.8.6</version>
+    <version>0.8.7-SNAPSHOT</version>
   </parent>
   <artifactId>x4o-plugin-ant</artifactId>
   <name>x4o-plugin-ant</name>
