@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 public class ApiDocNodeWriterBean implements ApiDocNodeWriter {
 
 	private ApiDocNodeBody nodeBody = null;
-	private Integer nodeBodyOrder = null;
+	private List<Integer> nodeBodyOrders = null;
 	private Object bean = null;
 	private String method = null;
 	private List<Class<?>> targetClasses = null;
@@ -75,10 +75,18 @@ public class ApiDocNodeWriterBean implements ApiDocNodeWriter {
 			if (ammo==null) {
 				continue;
 			}
-			ApiDocNodeWriterBean methodWriter = new ApiDocNodeWriterBean(ammo.nodeBody(), bean, method.getName(), ammo.targetClasses());
-			if (ammo.nodeBodyOrder()!=-1) {
-				methodWriter.setNodeBodyOrder(ammo.nodeBodyOrder());
+			if (ammo.targetClasses().length==0) {
+				throw new IllegalArgumentException("Can't configure writer bean with empty 'targetClasses' parameter.");
 			}
+			if (ammo.targetClasses().length!=ammo.nodeBodyOrders().length) {
+				throw new IllegalArgumentException("Can't configure writer bean with non-equal array size of 'nodeBodyOrders'("+ammo.nodeBodyOrders().length+") and 'targetClasses'("+ammo.targetClasses().length+") parameters.");
+			}
+			ApiDocNodeWriterBean methodWriter = new ApiDocNodeWriterBean(ammo.nodeBody(), bean, method.getName(), ammo.targetClasses());
+			List<Integer> nodeBodyOrder = new ArrayList<Integer>();
+			for (int order:ammo.nodeBodyOrders()) {
+				nodeBodyOrder.add(order);
+			}
+			methodWriter.setNodeBodyOrders(nodeBodyOrder);
 			if (ammo.contentGroup().length()>0) {
 				methodWriter.setContentGroup(ammo.contentGroup());
 			}
@@ -154,17 +162,17 @@ public class ApiDocNodeWriterBean implements ApiDocNodeWriter {
 	}
 	
 	/**
-	 * @return the nodeBodyOrder
+	 * @return the nodeBodyOrders
 	 */
-	public Integer getNodeBodyOrder() {
-		return nodeBodyOrder;
+	public List<Integer> getNodeBodyOrders() {
+		return nodeBodyOrders;
 	}
 	
 	/**
-	 * @param nodeBodyOrder the nodeBodyOrder to set
+	 * @param nodeBodyOrders the nodeBodyOrders to set
 	 */
-	public void setNodeBodyOrder(Integer nodeBodyOrder) {
-		this.nodeBodyOrder = nodeBodyOrder;
+	public void setNodeBodyOrders(List<Integer> nodeBodyOrders) {
+		this.nodeBodyOrders = nodeBodyOrders;
 	}
 	
 	/**

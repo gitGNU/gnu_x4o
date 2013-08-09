@@ -21,7 +21,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * Provides interfaces for two way object converters.
+ * The interfaces for two way object converters.
  * 
  *
  * @since 1.0

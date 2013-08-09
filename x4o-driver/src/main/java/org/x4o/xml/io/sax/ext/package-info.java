@@ -20,11 +20,10 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /**
- * The Api Doc Writer classes.
- * 
- * @author Willem Cazander
- * @since 1.0 May 12,2013
+ * The SAX Extended classes and interfaces.
+ *
+ * @since 1.0
  */
-package org.x4o.xml.eld.doc.api;
+
+package org.x4o.xml.io.sax.ext;

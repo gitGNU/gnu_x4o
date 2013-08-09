@@ -41,8 +41,9 @@ src/main/build/jvm-test.sh /usr/lib/jvm/jdk1.5.0_22/
 
 -- Make release build --
 
-# todo make work
-cd project-root/;
+cd /tmp;
+git clone ssh://<scm_username>@git.sv.gnu.org/srv/git/x4o.git;
+cd x4o;
 mvn clean package;
 mvn -B -Dusername=<scm_username> clean install release:clean release:prepare release:perform;
 src/main/build/gnu-up.sh <scm_username> <version>
@@ -51,8 +52,10 @@ src/main/build/gnu-up.sh <scm_username> <version>
 -- Make site --
 
 cd project-root/;
-MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" mvn -Pbuild-site-x4o-support clean package site site:stage
-
+mvn clean install; # (installs the snapshots plugins so we can run the current eld-doc task in site phase)
+MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" mvn -Pbuild-site-x4o-support clean package site site:stage;
+cp -r target/staging/x4o-* target/site/;
+cp -r target/site/ ~/public_html/site-x4o;
 
 -- Check for code style --
 

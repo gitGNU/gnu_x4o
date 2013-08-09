@@ -48,9 +48,9 @@ public abstract class X4ODriver<T> {
 	public final static String DEFAULT_LANGUAGE_VERSION = "1.0";
 	
 	/**
-	 * Public constructor.
+	 * marker constructor.
 	 */
-	public X4ODriver() {
+	public X4ODriver(/*X4ODriverManager.ConstructorMarker marker*/) {
 	}
 	
 	/**

@@ -36,6 +36,7 @@ public interface ApiDocNodeWriter {
 
 	ApiDocNodeBody getNodeBody();
 	List<Class<?>> getTargetClasses();
+	List<Integer> getNodeBodyOrders();
 	
 	void writeNodeContent(ApiDocWriteEvent<ApiDocNode> e) throws SAXException;
 }

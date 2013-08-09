@@ -43,7 +43,7 @@ public @interface ApiDocNodeWriterMethod {
 	
 	ApiDocNodeBody nodeBody();
 	
-	int nodeBodyOrder() default -1;
+	int[] nodeBodyOrders() default {-1};
 	
 	String contentGroup() default "";
 	

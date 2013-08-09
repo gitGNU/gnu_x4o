@@ -21,7 +21,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * The maven plugin mojos.
+ * The Maven plugin mojos.
  *
  * @since 1.0
  */

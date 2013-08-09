@@ -34,6 +34,8 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -387,7 +389,7 @@ public class ApiDocWriter {
 	
 	private List<ApiDocNodeWriter> findNodeBodyWriters(ApiDocNode node,ApiDocNodeBody nodeBody) {
 		List<ApiDocNodeWriter> result = new ArrayList<ApiDocNodeWriter>();
-		Class<?> objClass = node.getUserData().getClass();
+		final Class<?> objClass = node.getUserData().getClass();
 		for (ApiDocNodeWriter writer:doc.getNodeBodyWriters()) {
 			if (!nodeBody.equals(writer.getNodeBody())) {
 				continue;
@@ -398,6 +400,45 @@ public class ApiDocWriter {
 				}
 			}
 		}
+		Collections.sort(result, new Comparator<ApiDocNodeWriter>() {
+			public int compare(ApiDocNodeWriter o1, ApiDocNodeWriter o2) {
+				int index1 = -1;
+				int index2 = -1;
+				for (int i=0;i<o1.getTargetClasses().size();i++) {
+					Class<?> c = o1.getTargetClasses().get(i);
+					if (c.isAssignableFrom(objClass)) {
+						index1 = i;
+						break;
+					}
+				}
+				for (int i=0;i<o2.getTargetClasses().size();i++) {
+					Class<?> c = o2.getTargetClasses().get(i);
+					if (c.isAssignableFrom(objClass)) {
+						index1 = i;
+						break;
+					}
+				}
+				// TODO: note check return value if are oke in order..
+				if (index1==-1 && index2==-1) {
+					return 0;
+				}
+				if (index1==-1) {
+					return 1;
+				}
+				if (index2==-1) {
+					return -1;
+				}
+				int orderValue1 = o1.getNodeBodyOrders().get(index1);
+				int orderValue2 = o2.getNodeBodyOrders().get(index2);
+				if (orderValue1==orderValue2) {
+					return 0;
+				}
+				if (orderValue1 > orderValue2) {
+					return -1;
+				}
+				return 1;
+			}
+		});
 		return result;
 	}
 	

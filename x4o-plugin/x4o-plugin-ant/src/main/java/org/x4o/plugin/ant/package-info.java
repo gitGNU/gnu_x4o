@@ -21,7 +21,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * The ant plugin tasks.
+ * The Ant plugin tasks.
  *
  * @since 1.0
  */

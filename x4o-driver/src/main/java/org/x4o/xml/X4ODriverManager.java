@@ -207,6 +207,8 @@ public final class X4ODriverManager {
 		}
 		try {
 			Class<?> driverClass = X4OLanguageClassLoader.loadClass(driverClassName);
+			//Constructor<?> markedConstructor = driverClass.getDeclaredConstructor(new Class[]{ConstructorMarker.class});
+			//X4ODriver<?> driver = (X4ODriver<?>)markedConstructor.newInstance(new Object[]{new ConstructorMarker()});
 			X4ODriver<?> driver = (X4ODriver<?>)driverClass.newInstance();
 			registerX4ODriver(driver);
 			return driver;
@@ -214,6 +216,14 @@ public final class X4ODriverManager {
 			throw new IllegalStateException(e.getMessage(),e);
 		}
 	}
+	
+	/*
+	 * Class to make sure all driver instances are created by this manager instance.
+	 
+	final public class ConstructorMarker {
+		private ConstructorMarker() {
+		}
+	}*/
 	
 	/**
 	 * Loads all defined language drivers in classpath.

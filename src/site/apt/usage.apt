@@ -64,7 +64,7 @@ Usage
   <dependency>
     <groupId>org.x4o.plugin</groupId>
     <artifactId>x4o-plugin-ant</artifactId>
-    <version>${project.version}</version>
+    <version>0.8.6-SNAPSHOT</version>
   </dependency>
 +--
 

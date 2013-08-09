@@ -22,7 +22,7 @@
  */
 
 /**
- * Api Doc Dom classes.
+ * The Api Doc Dom classes.
  * 
  * @author Willem Cazander
  * @since 1.0 May 12,2013

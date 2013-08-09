@@ -21,7 +21,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * The Sax based classes and interfaces.
+ * The SAX based classes and interfaces.
  *
  * @since 1.0
  */

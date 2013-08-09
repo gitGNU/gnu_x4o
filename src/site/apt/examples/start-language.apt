@@ -53,6 +53,9 @@ public class TestFooBarDriver extends X4ODriver<TestFooBar> {
 		return LANGUAGE_VERSIONS;
 	}
 	
+	// Convenience method not really needed but like this it limits a few non-needed objects.
+	// and does makes sure only only one instance is registered to the X4ODriverManager.
+	// thus it is currently the preferred way to create and get an instance of your language driver.
 	static public TestFooBarDriver getInstance() {
 		return (TestFooBarDriver)X4ODriverManager.getX4ODriver(LANGUAGE_NAME);
 	}
@@ -172,6 +175,7 @@ writer.writeFile(result, new File("/tmp/test-bean.xml");
 +--
 
   And writer gives output like;
+  (please note that full write support is not yet completed)
 
 +--
 <?xml version="1.0" encoding="UTF-8"?>

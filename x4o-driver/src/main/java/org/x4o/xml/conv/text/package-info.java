@@ -21,7 +21,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * Provides implementations of object to text converters.
+ * The default implementations to convert text to objects.
  * 
  *
  * @since 1.0
