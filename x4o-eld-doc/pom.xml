@@ -3,7 +3,7 @@
   <parent>
     <artifactId>x4o</artifactId>
     <groupId>org.x4o</groupId>
-    <version>0.8.6-SNAPSHOT</version>
+    <version>0.8.6</version>
   </parent>
   <artifactId>x4o-eld-doc</artifactId>
   <packaging>jar</packaging>
