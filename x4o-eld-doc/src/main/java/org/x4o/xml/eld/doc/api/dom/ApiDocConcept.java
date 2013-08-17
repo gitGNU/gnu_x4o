@@ -39,10 +39,10 @@ public class ApiDocConcept {
 	private String descriptionHelp = null;
 	private ApiDocConcept parent = null;
 	private Class<?> conceptClass = null;
-	private List<Class<?>> conceptChildClasses = null;
+	private List<ApiDocConcept> childConcepts = null;
 	
 	public ApiDocConcept() {
-		conceptChildClasses = new ArrayList<Class<?>>(5);
+		childConcepts = new ArrayList<ApiDocConcept>(5);
 	}
 	
 	public ApiDocConcept(ApiDocConcept parent,String id,Class<?> conceptClass) {
@@ -52,18 +52,15 @@ public class ApiDocConcept {
 		setParent(parent);
 	}
 	
-	public ApiDocConcept(ApiDocConcept parent,String[] text,Class<?> conceptClass,Class<?>...classes) {
-		this(parent,text[0],text[1],text[2],text[3],conceptClass,classes);
+	public ApiDocConcept(ApiDocConcept parent,String[] text,Class<?> conceptClass) {
+		this(parent,text[0],text[1],text[2],text[3],conceptClass);
 	}
 	
-	public ApiDocConcept(ApiDocConcept parent,String id,String name,String descriptionName,String descriptionHelp,Class<?> conceptClass,Class<?>...classes) {
+	public ApiDocConcept(ApiDocConcept parent,String id,String name,String descriptionName,String descriptionHelp,Class<?> conceptClass) {
 		this(parent,id,conceptClass);
 		setName(name);
 		setDescriptionName(descriptionName);
 		setDescriptionHelp(descriptionHelp);
-		for (Class<?> cl:classes) {
-			addConceptChildClass(cl);
-		}
 	}
 	
 	/**
@@ -136,16 +133,16 @@ public class ApiDocConcept {
 		this.conceptClass = conceptClass;
 	}
 	
-	public void addConceptChildClass(Class<?> targetClass) {
-		conceptChildClasses.add(targetClass);
+	public void addChildConcepts(ApiDocConcept childConcept) {
+		childConcepts.add(childConcept);
 	}
 	
-	public void removeConceptChildClass(Class<?> targetClass) {
-		conceptChildClasses.remove(conceptChildClasses);
+	public void removeChildConcept(ApiDocConcept childConcept) {
+		childConcepts.remove(childConcept);
 	}
 	
-	public List<Class<?>> getConceptChildClasses() {
-		return conceptChildClasses;
+	public List<ApiDocConcept> getChildConcepts() {
+		return childConcepts;
 	}
 
 	/**

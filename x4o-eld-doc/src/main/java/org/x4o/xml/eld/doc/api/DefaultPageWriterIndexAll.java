@@ -47,7 +47,7 @@ public class DefaultPageWriterIndexAll implements ApiDocPageWriter {
 		writer.docPageContentStart();
 		for (char i='A';i<='Z';i++) {
 			writer.printHref("#_"+i+"_", ""+i);
-			writer.charactersRaw("&nbsp;");
+			writer.characters("&nbsp;");
 		}
 		for (char i='A';i<='Z';i++) {
 			writer.printHrefNamed("_"+i+"_");

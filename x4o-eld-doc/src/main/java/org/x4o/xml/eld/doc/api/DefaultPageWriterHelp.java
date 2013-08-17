@@ -59,14 +59,14 @@ public class DefaultPageWriterHelp implements ApiDocPageWriter {
 			for (ApiDocConcept concept:doc.getConcepts()) {
 				writer.printTagCharacters(Tag.h2, concept.getName());
 				writer.printTagStart(Tag.p);
-					writer.charactersRaw(concept.getDescriptionHelp());
+					writer.characters(concept.getDescriptionHelp());
 				writer.printTagEnd(Tag.p);
 				writer.docPageBlockNext();
 			}
 			for (ApiDocPage docPage:doc.getDocPages()) {
 				writer.printTagCharacters(Tag.h2, docPage.getName());
 				writer.printTagStart(Tag.p);
-					writer.charactersRaw(docPage.getDescription());
+					writer.characters(docPage.getDescription());
 				writer.printTagEnd(Tag.p);
 				writer.docPageBlockNext();
 			}

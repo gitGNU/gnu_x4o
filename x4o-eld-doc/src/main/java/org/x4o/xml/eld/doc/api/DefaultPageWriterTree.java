@@ -52,7 +52,7 @@ public class DefaultPageWriterTree implements ApiDocPageWriter {
 	
 	public void writePageContent(ApiDocWriteEvent<ApiDocPage> e) throws SAXException {
 		ApiDoc doc = e.getDoc();
-		ApiDocPage page = e.getEvent();
+		ApiDocPage page = e.getEventObject();
 		ApiDocContentWriter writer = e.getWriter();
 		//writer.docPagePackageTitle(title, "Overview Tree");
 		writer.docPageContentStart();
@@ -69,8 +69,13 @@ public class DefaultPageWriterTree implements ApiDocPageWriter {
 			}
 		}
 		
+		StringBuffer buf = new StringBuffer();
+		if (!doc.getRootNode().equals(node)) {
+			buildParentPath(node,buf);
+		}
+		buf.append("index.html");
 		
-		String href = ApiDocContentWriter.toSafeUri("todo");// toElementUri(pathPrefix,node.module,node.namespace,node.elementClass);
+		String href = buf.toString();
 		
 		writer.printTagStart(Tag.ul);
 		writer.printTagStart(Tag.li,"",null,"circle");
@@ -85,5 +90,16 @@ public class DefaultPageWriterTree implements ApiDocPageWriter {
 			writeTree(doc,child,writer,pathPrefix);
 		}
 		writer.printTagEnd(Tag.ul);
+	}
+	
+	private void buildParentPath(ApiDocNode node,StringBuffer buf) {
+		if (node.getParent()==null) {
+			buf.append(ApiDocContentWriter.toSafeUri(node.getId()));
+			buf.append('/');
+			return;
+		}
+		buildParentPath(node.getParent(),buf);
+		buf.append(ApiDocContentWriter.toSafeUri(node.getId()));
+		buf.append('/');
 	}
 }

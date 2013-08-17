@@ -23,21 +23,96 @@
 package org.x4o.xml.eld.doc.api.dom;
 
 /**
- * ApiDocNodeBody are the parts from which the content body is created.
+ * ApiDocNavLink holds all fields of an navigation link.
  * 
  * @author Willem Cazander
- * @version 1.0 May 12, 2013
+ * @version 1.0 Aug 11, 2013
  */
-public enum ApiDocNodeBody {
+public class ApiDocNavLink {
+
+	private String id = null;
+	private String href = null;
+	private String title = null;
+	private String text = null;
+	private boolean resetHref = false;
 	
-	TREE_PATH,
-	DESCRIPTION_LINKS,
-	DESCRIPTION_NODE,
-	SUMMARY,
-	DETAIL,
+	public ApiDocNavLink() {
+	}
+	
+	public ApiDocNavLink(String id,String href,String title,String text,boolean resetHref) {
+		setId(id);
+		setHref(href);
+		setTitle(title);
+		setText(text);
+	}
 	
 	/**
-	 * Summary page blocks had no div and no block lists around content. 
+	 * @return the id
 	 */
-	SUMMARY_PAGE
+	public String getId() {
+		return id;
+	}
+	
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	/**
+	 * @return the href
+	 */
+	public String getHref() {
+		return href;
+	}
+	
+	/**
+	 * @param href the href to set
+	 */
+	public void setHref(String href) {
+		this.href = href;
+	}
+	
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+	
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+	
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+	
+	/**
+	 * @return the resetHref
+	 */
+	public boolean isResetHref() {
+		return resetHref;
+	}
+	
+	/**
+	 * @param resetHref the resetHref to set
+	 */
+	public void setResetHref(boolean resetHref) {
+		this.resetHref = resetHref;
+	}
 }

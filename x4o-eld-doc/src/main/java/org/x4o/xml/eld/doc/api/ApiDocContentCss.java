@@ -59,6 +59,7 @@ public enum ApiDocContentCss {
 	docSummary,
 	contentContainer,
 	packageSummary,
+	overviewSummary,
 	
 	colOne,
 	colFirst,

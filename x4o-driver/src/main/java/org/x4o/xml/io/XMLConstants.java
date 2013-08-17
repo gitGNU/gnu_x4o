@@ -314,12 +314,86 @@ public final class XMLConstants {
 		StringBuffer result = new StringBuffer(length);
 		for (int i=0;i<length;i++) {
 			char c = value.charAt(i);
+			if (c=='&') {
+				StringBuffer buf = new StringBuffer(length);
+				int iOrg = i;
+				i = charEntityLookup(i,value,buf);
+				String entity = buf.toString();
+				if (entity.length()>0) {
+					if (charEntityAllowed(entity)) {
+						result.append(entity);
+						continue; // contine to next i char.
+					} else {
+						i = iOrg; // continue normal escape.
+					}
+				}
+			}
 			if (escapeXMLValue(c,result)) {
 				continue;
 			}
 			result.append(c);
 		}
 		return result.toString();
+	}
+	
+	// TODO: make it loaded and xml and html version aware for correctness.
+	static private boolean charEntityAllowed(String entity) {
+		
+		// Hex code points
+		if (entity.startsWith("&#")) {
+			String hex = entity.substring(2,entity.length()-1);
+			if (hex.startsWith("x")) {
+				hex = hex.substring(1);
+			}
+			int codePoint = Integer.parseInt(hex, 16);
+			return codePoint > 0; // TODO: check if code point is valid.
+		}
+		
+		// XML
+		if ("&lt;".equals(entity))			{ return true; }
+		if ("&gt;".equals(entity))			{ return true; }
+		if ("&amp;".equals(entity))			{ return true; }
+		if ("&quote;".equals(entity))		{ return true; }
+		if ("&apos;".equals(entity))		{ return true; }
+
+		// HTML
+		if ("&acute;".equals(entity))		{ return true; }
+		if ("&alefsym;".equals(entity))		{ return true; }
+		if ("&asymp;".equals(entity))		{ return true; }
+		if ("&ang;".equals(entity))			{ return true; }
+		if ("&lowast;".equals(entity))		{ return true; }
+		if ("&clubs;".equals(entity))		{ return true; }
+		if ("&diams;".equals(entity))		{ return true; }
+		if ("&hearts;".equals(entity))		{ return true; }
+		if ("&spades;".equals(entity))		{ return true; }
+		// TODO: etc/etc
+		if ("&yuml;".equals(entity))		{ return true; }
+		if ("&yacute;".equals(entity))		{ return true; }
+		if ("&ugrave;".equals(entity))		{ return true; }
+		if ("&uuml;".equals(entity))		{ return true; }
+		if ("&ucirc;".equals(entity))		{ return true; }
+		if ("&uacute;".equals(entity))		{ return true; }
+		
+		if ("&divide;".equals(entity))		{ return true; }
+		if ("&nbsp;".equals(entity))		{ return true; }
+		if ("&reg;".equals(entity))			{ return true; }
+		if ("&trade;".equals(entity))		{ return true; }
+		if ("&copy;".equals(entity))		{ return true; }
+		return false;
+	}
+	
+	static private int charEntityLookup(int iStart,String value,StringBuffer buf) {
+		StringBuffer result = new StringBuffer();
+		int iMax = 10;
+		for (int i=iStart;i<value.length() && i<(iStart+iMax);i++) {
+			char c = value.charAt(i);
+			result.append(c);
+			if (c==';') {
+				buf.append(result);
+				return i;
+			}
+		}
+		return iStart; // not found continue escaping.
 	}
 	
 	static public String escapeCharactersCdata(String value,String replaceCdataStart,String replaceCdataEnd) {

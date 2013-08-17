@@ -39,11 +39,13 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.x4o.xml.eld.doc.api.ApiDocContentWriter.NavBarConfig;
 import org.x4o.xml.eld.doc.api.dom.ApiDoc;
 import org.x4o.xml.eld.doc.api.dom.ApiDocConcept;
+import org.x4o.xml.eld.doc.api.dom.ApiDocNavLink;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNode;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNodeBody;
+import org.x4o.xml.eld.doc.api.dom.ApiDocNodeData;
+import org.x4o.xml.eld.doc.api.dom.ApiDocNodeDataConfigurator;
 import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNodeWriter;
 import org.x4o.xml.eld.doc.api.dom.ApiDocPage;
@@ -61,7 +63,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Willem Cazander
  * @version 1.0 May 1, 2013
  */
-public class ApiDocWriter {
+public class ApiDocWriter extends AbstractApiDocWriter {
 
 	private ApiDoc doc = null;
 	private File basePath = null;
@@ -80,6 +82,7 @@ public class ApiDocWriter {
 		if (basePath==null) {
 			throw new NullPointerException("Can't write with null basePath.");
 		}
+		doc.checkModel();
 		this.doc=doc;
 		this.basePath=basePath;
 		
@@ -100,10 +103,12 @@ public class ApiDocWriter {
 	}
 	
 	private void writeNode(ApiDocNode node) throws SAXException {
-		ApiDocConcept concept = findConceptByClass(node.getUserData().getClass());
+		ApiDocConcept concept = doc.findConceptByClass(node.getUserData().getClass());
 		if (concept==null) {
-			//System.out.println("----- no concept found for: "+node.getId()+" data: "+node.getUserData());
-			return;
+			concept = doc.findConceptChildByNode(node);
+		}
+		if (concept==null) {
+			throw new IllegalStateException("No concept found for: "+node.getId()+" data: "+node.getUserData());
 		}
 		List<String> path = new ArrayList<String>(10);
 		buildParentPath(node,path);
@@ -119,30 +124,61 @@ public class ApiDocWriter {
 		}
 		File outputFile = createOutputPathFile(basePath,path.toArray(new String[]{}));
 		ApiDocContentWriter writer = createContentWriter(outputFile);
-		NavBarConfig config = createNavBarConfig(pathPrefix, outputFile, writer);
 		
-		config.navSelected=concept.getId();
-		configActiveNavConceptLinks(config,node,concept,"/..");
-		configNextPrevLinks(config,node);
+		doc.getNodeData().clearGroupTypeLinks();
+		doc.getNodeData().setNavSelected(concept.getId());
+		configNodeData(pathPrefix,outputFile);
+		configActiveNavConceptLinks(node,concept,"/..");
+		configNextPrevLinks(node);
+		configSubNavLinks(node);
+		configData(node);
 		
 		ApiDocWriteEvent<ApiDocNode> bodyEvent = new ApiDocWriteEvent<ApiDocNode>(doc,writer,node);
-		String title = node.getId();
-		String titleSub = null;
+		String titleNode = node.getName();
+		String titleNodeSub = null;
 		if (node.getParent()!=null) {
-			titleSub = node.getParent().getId()+":"+node.getId();
+			titleNodeSub = node.getParent().getId()+":"+node.getId();
+		}
+		boolean isNodePageMode = isNodePageMode(node);
+		String titleContent = titleNode;
+		if (doc.isPrintConceptTitle()) {
+			String conceptTitle = concept.getName();
+			ApiDocConcept childConcept = doc.findConceptChildByNode(node);
+			if (childConcept!=null) {
+				conceptTitle = childConcept.getName();
+			}
+			titleContent = conceptTitle +" "+titleNode;
+		}
+		String titleHtml = titleNode;
+		if (doc.getDocPageSubTitle()!=null) {
+			titleHtml = titleNode+" ("+doc.getDocPageSubTitle()+")";
+			if (node.getParent()==null) {
+				titleContent = doc.getDocPageSubTitle();
+				titleHtml = "Overview ("+doc.getDocPageSubTitle()+")";
+			}
 		}
 		
 		// Write node file
-		writer.docHtmlStart(config,title, doc.getDocKeywords());
-			writer.docPageClassStart(title, titleSub);
+		writer.docHtmlStart(titleHtml, doc.getDocKeywords(),doc.getNodeData().getPrefixPath());
+		docNavBar(writer,true,concept,node);
+			if (isNodePageMode) {
+				writer.docPageClassStart(titleContent, null,Tag.h1);
+			} else {
+				writer.docPageClassStart(titleContent, titleNodeSub,Tag.h2);	
+			}
+				
 				writer.docPageContentStart();
-					writeNodeTreePath(bodyEvent);
-					writeNodeDescription(bodyEvent);
-					writeNodeSummary(bodyEvent);
+					if (!isNodePageMode) {
+						writeNodeTreePath(bodyEvent);
+					}
+					writeNodeDescription(bodyEvent,isNodePageMode);
+					writeNodeSummary(bodyEvent,true); // print without div and block lists
+					writeNodeSummary(bodyEvent,false);
 					writeNodeDetails(bodyEvent);
 				writer.docPageContentEnd();
 			writer.docPageClassEnd();
-		writer.docHtmlEnd(config,doc.getDocCopyright());
+		docNavBar(writer,false,concept,node);
+		writer.docHtmlEnd(doc.getDocCopyright(),doc.getDocStatsJS());
 		writer.closeWriterSafe();
 		
 		// Writer other files
@@ -152,10 +188,19 @@ public class ApiDocWriter {
 		}
 	}
 	
+	private boolean isNodePageMode(ApiDocNode node) {
+		for (Class<?> pageModeClass:doc.getTreeNodePageModeClasses()) {
+			if (pageModeClass.isAssignableFrom(node.getUserData().getClass())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private void writeNodeTreePath(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		List<ApiDocNodeWriter> bodyWriterTreePath = findNodeBodyWriters(event.getEvent(),ApiDocNodeBody.TREE_PATH);
+		List<ApiDocNodeWriter> bodyWriterTreePath = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.TREE_PATH);
 		if (bodyWriterTreePath.isEmpty()) {
-			defaultWriteTreePath(event.getEvent(),event.getWriter());
+			defaultWriteTreePath(event.getEventObject(),event.getWriter());
 		}
 		for (int i=0;i<bodyWriterTreePath.size();i++) {
 			ApiDocNodeWriter nodeWriter = bodyWriterTreePath.get(i);
@@ -164,24 +209,26 @@ public class ApiDocWriter {
 	}
 	
 	private void defaultWriteNodeDescription(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		event.getWriter().characters(event.getEvent().getDescription());
+		event.getWriter().characters(event.getEventObject().getDescription());
 	}
 	
-	private void writeNodeDescription(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
+	private void writeNodeDescription(ApiDocWriteEvent<ApiDocNode> event,boolean isPageMode) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
-		List<ApiDocNodeWriter> bodyWriterDescriptionLinks = findNodeBodyWriters(event.getEvent(),ApiDocNodeBody.DESCRIPTION_LINKS);
-		List<ApiDocNodeWriter> bodyWriterDescriptionNode = findNodeBodyWriters(event.getEvent(),ApiDocNodeBody.DESCRIPTION_NODE);
+		List<ApiDocNodeWriter> bodyWriterDescriptionLinks = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.DESCRIPTION_LINKS);
+		List<ApiDocNodeWriter> bodyWriterDescriptionNode = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.DESCRIPTION_NODE);
 		writer.printTagStart(Tag.div, ApiDocContentCss.description);
 			writer.docPageBlockStart();
-			if (bodyWriterDescriptionLinks.isEmpty()) {
-				//defaultWriteTreePath(node,writer);
+			if (isPageMode==false) {
+				if (bodyWriterDescriptionLinks.isEmpty()) {
+					//defaultWriteTreePath(node,writer);
+				}
+				for (int i=0;i<bodyWriterDescriptionLinks.size();i++) {
+					ApiDocNodeWriter nodeWriter = bodyWriterDescriptionLinks.get(i);
+					nodeWriter.writeNodeContent(event);
+				}
+				writer.printTagStartEnd(Tag.hr);
+				writer.printTagStartEnd(Tag.br); // mmm
 			}
-			for (int i=0;i<bodyWriterDescriptionLinks.size();i++) {
-				ApiDocNodeWriter nodeWriter = bodyWriterDescriptionLinks.get(i);
-				nodeWriter.writeNodeContent(event);
-			}
-			writer.printTagStartEnd(Tag.hr);
-			writer.printTagStartEnd(Tag.br); // mmm
 			if (bodyWriterDescriptionNode.isEmpty()) {
 				defaultWriteNodeDescription(event);
 			}
@@ -193,30 +240,52 @@ public class ApiDocWriter {
 		writer.printTagEnd(Tag.div); // description
 	}
 	
-	private void writeNodeSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
+	private void writeNodeSummary(ApiDocWriteEvent<ApiDocNode> event,boolean isPage) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
-		List<ApiDocNodeWriter> bodyWriterSummary = findNodeBodyWriters(event.getEvent(),ApiDocNodeBody.SUMMARY);
-		writer.printTagStart(Tag.div, ApiDocContentCss.summary);
+		List<ApiDocNodeWriter> bodyWriterSummary = null;
+		List<ApiDocNodeWriter> bodyWriterSummaryPage = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.SUMMARY_PAGE);
+		List<ApiDocNodeWriter> bodyWriterSummaryNormal = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.SUMMARY);
+		if (isPage) {
+			bodyWriterSummary = bodyWriterSummaryPage;
+		} else {
+			bodyWriterSummary = bodyWriterSummaryNormal;
+		}
+		if (!isPage) {
+			writer.printTagStart(Tag.div, ApiDocContentCss.summary);
 			writer.docPageBlockStart();
-			if (bodyWriterSummary.isEmpty()) {
+		}
+			if (bodyWriterSummary.isEmpty() && !isPage && bodyWriterSummaryPage.isEmpty()) {
 				writer.docPageBlockStart();
-				defaultWriteSummary(event.getEvent(),writer);
+				defaultWriteSummary(event.getEventObject(),writer);
 				writer.docPageBlockEnd();
 			}
 			for (int i=0;i<bodyWriterSummary.size();i++) {
-				writer.docPageBlockStart();
-				writer.printTagCharacters(Tag.h3, "Summary");
 				ApiDocNodeWriter nodeWriter = bodyWriterSummary.get(i);
+				if (!isPage) { writer.docPageBlockStart(); }
+				writeSubNavNamedHref(event,nodeWriter);
+				if (!isPage) { writer.printTagCharacters(Tag.h3, "Summary"); }
 				nodeWriter.writeNodeContent(event);
-				writer.docPageBlockEnd();
+				if (!isPage) { writer.docPageBlockEnd(); }
+				if (isPage) { writer.printTagStartEnd(Tag.br); } // mm .. mm
 			}
+		if (!isPage) {
 			writer.docPageBlockEnd();
-		writer.printTagEnd(Tag.div); // Summary
+			writer.printTagEnd(Tag.div); // Summary
+		}
+	}
+	
+	private void writeSubNavNamedHref(ApiDocWriteEvent<ApiDocNode> event,ApiDocNodeWriter writer) throws SAXException {
+		String group = writer.getContentGroup();
+		String groupTypeKey = writer.getContentGroupType();
+		if (group==null | groupTypeKey==null) {
+			return;
+		}
+		event.getWriter().printHrefNamed(groupTypeKey+"_"+group);
 	}
 	
 	private void writeNodeDetails(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
-		List<ApiDocNodeWriter> bodyWriterDetail = findNodeBodyWriters(event.getEvent(),ApiDocNodeBody.DETAIL);
+		List<ApiDocNodeWriter> bodyWriterDetail = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.DETAIL);
 		if (bodyWriterDetail.isEmpty()) {
 			return;// no default ..
 		}
@@ -228,9 +297,10 @@ public class ApiDocWriter {
 			//	writer.docPageBlockEnd();
 			//}
 			for (int i=0;i<bodyWriterDetail.size();i++) {
-				writer.docPageBlockStart();
-				writer.printTagCharacters(Tag.h3, "Detail");
 				ApiDocNodeWriter nodeWriter = bodyWriterDetail.get(i);
+				writer.docPageBlockStart();
+				writeSubNavNamedHref(event,nodeWriter);
+				writer.printTagCharacters(Tag.h3, "Detail");
 				nodeWriter.writeNodeContent(event);
 				writer.docPageBlockEnd();
 			}
@@ -239,18 +309,42 @@ public class ApiDocWriter {
 
 	}
 	
-	private void configActiveNavConceptLinks(NavBarConfig conf,ApiDocNode node,ApiDocConcept concept,String prefix) {
-		List<String> pathClean = new ArrayList<String>(10);
-		buildParentPath(node,pathClean);
+	protected void configNodeData(String prefixPath,File frame) throws SAXException {
+		ApiDocNodeData conf = doc.getNodeData();
+		String framePath = null;
+		try {
+			String rootPath = new File(frame.getParentFile().getPath()+File.separatorChar+prefixPath).getCanonicalPath();
+			framePath = frame.getPath().substring(rootPath.length()+1);
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
+		conf.setPrefixPath(prefixPath);
+		conf.setFramePath(framePath);
 		
-		if (concept.getParent()!=null && !concept.getParent().getId().equals(doc.getRootNode().getId())) {
-			ApiDocConcept conceptParent = concept.getParent();
-			conf.navLinks.put(conceptParent.getId(), ApiDocContentWriter.toSafeUri(pathClean)+prefix+"/index.html");
-			conf.navTitles.put(conceptParent.getId(), conceptParent.getDescriptionName());
-			configActiveNavConceptLinks(conf,node,concept.getParent(),prefix+"/..");
+		// Reset hrefs
+		for (ApiDocNavLink link:doc.getNodeData().getNavLinks()) {
+			if (link.isResetHref()) {
+				link.setHref(null);
+			}
 		}
 	}
-	private void configNextPrevLinks(NavBarConfig conf,ApiDocNode node) {
+	
+	private void configActiveNavConceptLinks(ApiDocNode node,ApiDocConcept concept,String prefix) {
+		List<String> pathClean = new ArrayList<String>(10);
+		buildParentPath(node,pathClean);
+		if (concept.getParent()!=null && !concept.getParent().getId().equals(doc.getRootNode().getId())) {
+			ApiDocConcept conceptParent = concept.getParent();
+			ApiDocNavLink link = doc.getNodeData().getNavLinkById(conceptParent.getId());
+			
+			link.setHref(ApiDocContentWriter.toSafeUri(pathClean)+prefix+"/index.html");
+			link.setTitle(node.getParent().getId());
+			configActiveNavConceptLinks(node,concept.getParent(),prefix+"/..");
+		}
+	}
+	
+	private void configNextPrevLinks(ApiDocNode node) {
+		doc.getNodeData().setPrevLink(null);
+		doc.getNodeData().setNextLink(null);
 		if (node.getParent()==null) {
 			return;
 		}
@@ -262,7 +356,7 @@ public class ApiDocWriter {
 			ApiDocNode prevNode = pn.get(nodeIdx-1);
 			if (node.getUserData().getClass().equals(prevNode.getUserData().getClass())) {
 				buildParentPath(prevNode,pathClean);
-				conf.prev = ApiDocContentWriter.toSafeUri(pathClean)+"/index.html";
+				doc.getNodeData().setPrevLink(ApiDocContentWriter.toSafeUri(pathClean)+"/index.html");
 			}
 		}
 		if ((nodeIdx+1)<pnSize) {
@@ -270,23 +364,45 @@ public class ApiDocWriter {
 			ApiDocNode nextNode = pn.get(nodeIdx+1);
 			if (node.getUserData().getClass().equals(nextNode.getUserData().getClass())) {
 				buildParentPath(nextNode,pathClean);
-				conf.next = ApiDocContentWriter.toSafeUri(pathClean)+"/index.html";
+				doc.getNodeData().setNextLink(ApiDocContentWriter.toSafeUri(pathClean)+"/index.html");
 			}
 		}
 	}
+
+	private void configData(ApiDocNode node) {
+		ApiDocNodeData confData = doc.getNodeData();
+		for (ApiDocNodeDataConfigurator conf:findDataConfigurators(node)) {
+			conf.configNodeData(doc, node,confData);
+		}
+	}
+	
+	private void configSubNavLinks(ApiDocNode node) {
+		ApiDocNodeData conf = doc.getNodeData();
+		for (ApiDocNodeWriter writer:findNodeBodyWriters(node, null)) {
+			String group = writer.getContentGroup();
+			String groupTypeKey = writer.getContentGroupType();
+			if (group==null | groupTypeKey==null) {
+				continue;
+			}
+			if (conf.getGroupTypeKeys().contains(groupTypeKey)==false) {
+				conf.addGroupTypeKey(groupTypeKey);
+			}
+			String groupTypeName = doc.getGroupTypeName(groupTypeKey);
+			String groupName = group.substring(0,1).toUpperCase()+group.substring(1);
+			ApiDocNavLink link = new ApiDocNavLink();
+			link.setId(group);
+			link.setHref("#"+groupTypeKey+"_"+group);
+			link.setText(groupName);
+			link.setTitle(groupTypeName+" "+groupName);
+			conf.addGroupTypeLink(groupTypeKey, link);
+		}
+	}
+	
+	
 	
 	public void defaultWriteSummary(ApiDocNode node,ApiDocContentWriter writer) throws SAXException {
-		ApiDocConcept concept = findConceptByClass(node.getUserData().getClass());
-		writer.docTableStart(concept.getName()+" Summary", "All childeren in "+concept.getName());
-		writer.docTableHeader("Name", "Description");
-		for (ApiDocNode child:node.getNodes()) {
-			String link = ApiDocContentWriter.toSafeUri(child.getId())+"/index.html";
-			if (node.getParent()==null) {
-				link = ApiDocContentWriter.toSafeUri(node.getId())+"/"+link; // root node
-			}
-			writer.docTableRowHref(link,child.getName(),child.getDescription(),null);
-		}
-		writer.docTableEnd();
+		ApiDocConcept concept = doc.findConceptByClass(node.getUserData().getClass());
+		printApiTable(node, node.getNodes(), writer, concept.getName()+" Summary");
 	}
 	
 	public void defaultWriteTreePath(ApiDocNode node,ApiDocContentWriter writer) throws SAXException {
@@ -317,7 +433,7 @@ public class ApiDocWriter {
 			}
 			String linkHref = buf+"index.html";
 			if (doc.getRootNode().equals(node)) {
-				ApiDocConcept concept = findConceptByClass(node.getUserData().getClass());
+				ApiDocConcept concept = doc.findConceptByClass(node.getUserData().getClass());
 				linkHref = buf+"../overview-"+concept.getId()+".html";
 			}
 			writer.printHref(linkHref, node.getDescription(), nodeTitle);
@@ -333,6 +449,8 @@ public class ApiDocWriter {
 	private void defaultWriteTreePathBuildPath(ApiDocNode node,List<ApiDocNode> result) {
 		if (node.getParent()!=null) {
 			defaultWriteTreePathBuildPath(node.getParent(),result);
+		} else if (doc.isSkipRootTreePathNode()) {
+			return;
 		}
 		result.add(node);
 	}
@@ -354,44 +472,11 @@ public class ApiDocWriter {
 		}
 	}
 	
-	protected NavBarConfig createNavBarConfig(String pathPrefix,File frame,ApiDocContentWriter writer) throws SAXException {
-		return createNavBarConfig(pathPrefix, null, null, frame, writer);
-	}
-	
-	protected NavBarConfig createNavBarConfig(String pathPrefix,String prev,String next,File frame,ApiDocContentWriter writer) throws SAXException {
-		String framePath = null;
-		try {
-			String rootPath = new File(frame.getParentFile().getPath()+File.separatorChar+pathPrefix).getCanonicalPath();
-			framePath = frame.getPath().substring(rootPath.length()+1);
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}		
-		NavBarConfig conf = writer.new NavBarConfig(pathPrefix,prev,next,framePath,doc.getDocAbout());
-		conf.noFrameAllLink="allelements-noframe.html";
-		conf.noFrameAllName="All Elements";
-		conf.linkConstructorName="Tag";
-		conf.linkFieldName="Attributes";
-		conf.linkMethodName="Config";
-		
-		for (ApiDocConcept concept:doc.getConcepts()) {
-			String navLink = "overview-"+concept.getId()+".html";
-			if (concept.getParent()!=null) {
-				navLink = null;
-			}
-			conf.addNavItem(concept.getId(), navLink, concept.getName());
-		}
-		for (ApiDocPage page:doc.getDocPages()) {
-			String navLink = page.getId()+".html";
-			conf.addNavItem(page.getId(), navLink, page.getName());
-		}
-		return conf;
-	}
-	
 	private List<ApiDocNodeWriter> findNodeBodyWriters(ApiDocNode node,ApiDocNodeBody nodeBody) {
 		List<ApiDocNodeWriter> result = new ArrayList<ApiDocNodeWriter>();
 		final Class<?> objClass = node.getUserData().getClass();
 		for (ApiDocNodeWriter writer:doc.getNodeBodyWriters()) {
-			if (!nodeBody.equals(writer.getNodeBody())) {
+			if (nodeBody!=null && !nodeBody.equals(writer.getNodeBody())) {
 				continue;
 			}
 			for (Class<?> c:writer.getTargetClasses()) {
@@ -441,20 +526,20 @@ public class ApiDocWriter {
 		});
 		return result;
 	}
-	
-	private ApiDocConcept findConceptByClass(Class<?> objClass) {
-		for (ApiDocConcept concept:doc.getConcepts()) {
-			if (concept.getConceptClass().isAssignableFrom(objClass)) {
-				return concept;
-			}
-			for (Class<?> c:concept.getConceptChildClasses()) {
+
+	private List<ApiDocNodeDataConfigurator> findDataConfigurators(ApiDocNode node) {
+		List<ApiDocNodeDataConfigurator> result = new ArrayList<ApiDocNodeDataConfigurator>();
+		final Class<?> objClass = node.getUserData().getClass();
+		for (ApiDocNodeDataConfigurator conf:doc.getDataConfigurators()) {
+			for (Class<?> c:conf.getTargetClasses()) {
 				if (c.isAssignableFrom(objClass)) {
-					return concept;
+					result.add(conf);
 				}
 			}
 		}
-		return null;
+		return result;
 	}
+
 	
 	private void buildParentPath(ApiDocNode node,List<String> path) {
 		if (node.getParent()==null) {
@@ -535,7 +620,7 @@ public class ApiDocWriter {
 			atts.addAttribute ("", "onload", "", "", "top.loadFrames()");
 			writer.printTagStart(Tag.frameset, atts);
 			
-			ApiDocConcept rootConcept = findConceptByClass(doc.getFrameNavConceptClass());
+			ApiDocConcept navConcept = doc.findConceptByClass(doc.getFrameNavConceptClass());
 			atts = new AttributesImpl();
 			atts.addAttribute ("", "rows", "", "", "30%,70%");
 			atts.addAttribute ("", "title", "", "", "Left frames");
@@ -548,7 +633,7 @@ public class ApiDocWriter {
 				writer.printTagStart(Tag.frame, atts);
 				writer.printTagEnd(Tag.frame);
 				atts = new AttributesImpl();
-				atts.addAttribute ("", "src", "", "", "all"+rootConcept.getId()+"-frame.html");
+				atts.addAttribute ("", "src", "", "", "all"+navConcept.getId()+"-frame.html");
 				atts.addAttribute ("", "title", "", "", "All Elements");
 				atts.addAttribute ("", "name", "", "", ApiDocContentCss.frameNavDetail.name());
 				writer.printTagStart(Tag.frame, atts);
@@ -592,7 +677,7 @@ public class ApiDocWriter {
 	}
 	
 	public void writeOverviewFrame() throws SAXException {
-		ApiDocConcept concept = findConceptByClass(doc.getFrameNavConceptClass());
+		ApiDocConcept concept = doc.findConceptByClass(doc.getFrameNavConceptClass());
 		ApiDocConcept conceptParent = concept.getParent();
 		List<ApiDocNode> nodes = new ArrayList<ApiDocNode>(50);
 		findNodeByUserDataClass(doc.getRootNode(),conceptParent.getConceptClass(),nodes);
@@ -640,7 +725,7 @@ public class ApiDocWriter {
 	}
 	
 	public void writeAllFrameNav(boolean isFrame) throws SAXException {
-		ApiDocConcept concept = findConceptByClass(doc.getFrameNavConceptClass());
+		ApiDocConcept concept = doc.findConceptByClass(doc.getFrameNavConceptClass());
 		if (isFrame) {
 			writeAllFrameNav("",true,null,"all"+concept.getId()+"-frame.html");
 		} else {
@@ -649,7 +734,7 @@ public class ApiDocWriter {
 	}
 	
 	private void writeAllFrameNavNode(ApiDocNode node) throws SAXException {
-		ApiDocConcept concept = findConceptByClass(doc.getFrameNavConceptClass());
+		ApiDocConcept concept = doc.findConceptByClass(doc.getFrameNavConceptClass());
 		ApiDocConcept conceptParent = concept.getParent();
 		if (!conceptParent.getConceptClass().isAssignableFrom(node.getUserData().getClass())) {
 			return; // only frame nav nodes.
@@ -665,7 +750,7 @@ public class ApiDocWriter {
 	}
 	
 	private void writeAllFrameNav(String pathPrefix,boolean isFrame,ApiDocNode searchNode,String...fileName) throws SAXException {
-		ApiDocConcept concept = findConceptByClass(doc.getFrameNavConceptClass());
+		ApiDocConcept concept = doc.findConceptByClass(doc.getFrameNavConceptClass());
 		//ApiDocConcept conceptParent = concept.getParent();
 		List<ApiDocNode> nodes = new ArrayList<ApiDocNode>(50);
 		findNodeByUserDataClass(doc.getRootNode(),concept.getConceptClass(),nodes);
@@ -755,11 +840,12 @@ public class ApiDocWriter {
 		ApiDocContentWriter writer = createContentWriter(outputFile);
 		String pathPrefix = "";
 		try {
-			NavBarConfig conf = createNavBarConfig(pathPrefix, outputFile, writer);
-			conf.navSelected=page.getId();
+			configNodeData(pathPrefix,outputFile);
+			doc.getNodeData().setNavSelected(page.getId());
 			String title = page.getName();
-			writer.docHtmlStart(conf,title, doc.getDocKeywords());
-			writer.docPageClassStart(title, page.getDescription());
+			writer.docHtmlStart(title, doc.getDocKeywords(),doc.getNodeData().getPrefixPath());
+			docNavBar(writer,true,null,null);
+			writer.docPageClassStart(title, page.getDescription(),Tag.h1);
 			
 			ApiDocWriteEvent<ApiDocPage> e = new ApiDocWriteEvent<ApiDocPage>(doc,writer,page);
 			
@@ -770,7 +856,8 @@ public class ApiDocWriter {
 			//writer.docPageContentEnd();
 			
 			writer.docPageClassEnd();
-			writer.docHtmlEnd(conf, doc.getDocCopyright());
+			docNavBar(writer,false,null,null);
+			writer.docHtmlEnd(doc.getDocCopyright(),doc.getDocStatsJS());
 		} finally {
 			writer.closeWriterSafe();
 		}
@@ -848,5 +935,148 @@ public class ApiDocWriter {
 		}
 		//System.out.println("Creating file: "+outputFile);
 		return outputFile;
+	}
+	
+	private void docNavBar(ApiDocContentWriter writer,boolean isTop,ApiDocConcept concept,ApiDocNode node) throws SAXException {
+		ApiDocNodeData conf = doc.getNodeData();
+		String pathPrefix = conf.getPrefixPath();
+		String barComment = "TOP";
+		String barCssDiv = "topNav";
+		String barId = "navbar_top";
+		if (isTop==false) {
+			barComment = "BOTTOM";
+			barCssDiv = "bottomNav";
+			barId = "navbar_bottom";
+		}
+		writer.comment("========= START OF "+barComment+" NAVBAR =======");
+		
+		writer.printTagStart(Tag.div,barCssDiv);
+		writer.printHrefNamed(barId);		// Print named link navigation
+			AttributesImpl atts = new AttributesImpl();
+			atts.addAttribute ("", "href", "", "", "#skip-"+barId);
+			atts.addAttribute ("", "title", "", "", "Skip navigation links");
+			writer.startElement("", "a", "", atts);
+			writer.endElement("", "a", "");
+			writer.printHrefNamed(barId+"_firstrow");
+			
+			atts = new AttributesImpl();// Print nav bar
+			atts.addAttribute ("", "class", "", "", "navList");
+			atts.addAttribute ("", "title", "", "", "Navigation");
+			writer.startElement("", "ul", "", atts);
+			
+			for (ApiDocNavLink navLink:conf.getNavLinks()) {
+				String selectedCss = null;
+				String href = navLink.getHref();
+				if (navLink.getId().equals(conf.getNavSelected())) {
+					selectedCss = "navBarCell1Rev";
+					href = null; // disables link
+				}
+				String navTitle = navLink.getTitle();
+				if (navTitle==null) {
+					navTitle = navLink.getText();
+				}
+				if (href==null) {
+					writer.printTagCharacters(Tag.li, navLink.getText(), selectedCss);
+				} else {
+					docNavBarListItemHref(writer,pathPrefix+href,navTitle,navLink.getText(),selectedCss,null,null);
+				}
+			}
+			writer.endElement("", "ul", "");
+			
+			writer.docNavBarAbout(doc.getDocAbout());
+
+		writer.printTagEnd(Tag.div); // end barCssDiv
+		
+		writer.printTagStart(Tag.div,ApiDocContentCss.subNav);
+			writer.printTagStart(Tag.ul,ApiDocContentCss.navList);
+				String postFix = "";
+				if (concept!=null && doc.isPrintConceptPrevNext()) {
+					String conceptTitle = concept.getName();
+					ApiDocConcept childConcept = doc.findConceptChildByNode(node);
+					if (childConcept!=null) {
+						conceptTitle = childConcept.getName();
+					}
+					postFix = " "+conceptTitle;
+				}
+				if (conf.getPrevLink()==null) {
+					writer.printTagCharacters(Tag.li, "Prev");
+				} else {
+					docNavBarListItemHref(writer,pathPrefix+conf.getPrevLink(),"Previous Item","Prev"+postFix,null,"strong",null);
+				}
+				if (conf.getNextLink()==null) {
+					writer.printTagCharacters(Tag.li, "Next");
+				} else {
+					docNavBarListItemHref(writer,pathPrefix+conf.getNextLink(),"Next Item","Next"+postFix,null,"strong",null);
+				}
+			writer.printTagEnd(Tag.ul);
+			if (conf.getFramePath()!=null) {
+				writer.printTagStart(Tag.ul,ApiDocContentCss.navList);
+					writer.printTagStart(Tag.li);
+						writer.printHrefTarget(pathPrefix+"index.html?"+conf.getFramePath(), "Frames", "_top");
+					writer.printTagEnd(Tag.li);
+					writer.printTagStart(Tag.li);
+						writer.printHrefTarget(pathPrefix+conf.getFramePath(), "No Frames", "_top");
+					writer.printTagEnd(Tag.li);
+				writer.printTagEnd(Tag.ul);
+			}
+			if (doc.getNoFrameAllName()!=null && doc.getNoFrameAllLink()!=null) {
+				writer.printTagStart(Tag.ul,ApiDocContentCss.navList,"allclasses_"+barId);
+					docNavBarListItemHref(writer,pathPrefix+doc.getNoFrameAllLink(),doc.getNoFrameAllName(),doc.getNoFrameAllName(),null,null,null);
+				writer.printTagEnd(Tag.ul);
+				writer.printTagStart(Tag.div);
+					if (isTop) {
+						writer.printScriptInline(doc.getNoFrameAllTopJS());
+					} else {
+						writer.printScriptInline(doc.getNoFrameAllBottomJS());
+					}
+				writer.printTagEnd(Tag.div);
+			}
+			
+			String tabSpace = "&nbsp;|&nbsp;";
+			List<String> groupKeys = conf.getGroupTypeKeys();
+			boolean printLink = groupKeys.isEmpty()==false;
+			if (printLink) {
+				writer.printTagStart(Tag.div);
+				writer.printTagStart(Tag.ul,ApiDocContentCss.subNavList);
+				for (int i=0;i<groupKeys.size();i++) {
+					String groupKey = groupKeys.get(i);
+					String groupName = doc.getGroupTypeName(groupKey);
+					List<ApiDocNavLink> links = conf.getGroupTypeLinks(groupKey);
+					if (links.isEmpty()==false) {
+						writer.printTagStart(Tag.li);writer.characters(groupName+":&nbsp;");writer.printTagEnd(Tag.li);
+						for (int l=0;l<links.size();l++) {
+							ApiDocNavLink link = links.get(l);
+							writer.printTagStart(Tag.li);
+							String tab = null;
+							if (l<links.size()-1) {
+								tab = tabSpace;
+							}
+							if (link.getHref()!=null) {
+								docNavBarListItemHref(writer,link.getHref(), link.getTitle(), link.getText(), null, null, tab);
+							} else {
+								writer.characters(link.getText());
+								if (tab!=null) {
+									writer.characters(tab);
+								}
+							}
+							
+							writer.printTagEnd(Tag.li);
+						}
+					}
+				}
+				writer.printTagEnd(Tag.ul);
+				writer.printTagEnd(Tag.div);
+			}
+			
+			writer.printHrefNamed("skip-"+barId);
+			writer.printTagEnd(Tag.div);
+		writer.comment("========= END OF "+barComment+" NAVBAR =======");
+	}
+	
+	private void docNavBarListItemHref(ApiDocContentWriter writer,String href,String title,String text,String cssClass,String spanCss,String linkSpace) throws SAXException {
+		writer.printTagStart(Tag.li,cssClass);
+		writer.printHref(href,title,text,spanCss);
+		writer.characters(linkSpace);
+		writer.printTagEnd(Tag.li);
 	}
 }

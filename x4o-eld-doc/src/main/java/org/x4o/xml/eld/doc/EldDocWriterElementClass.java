@@ -22,17 +22,21 @@
  */
 package org.x4o.xml.eld.doc;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.x4o.xml.eld.doc.EldDocXTreePageWriter.TreeNode;
+import org.x4o.xml.eld.doc.api.AbstractApiDocWriter;
 import org.x4o.xml.eld.doc.api.ApiDocContentWriter;
+import org.x4o.xml.eld.doc.api.ApiDocNodeDataConfiguratorMethod;
 import org.x4o.xml.eld.doc.api.ApiDocNodeWriterMethod;
+import org.x4o.xml.eld.doc.api.dom.ApiDoc;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNode;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNodeBody;
+import org.x4o.xml.eld.doc.api.dom.ApiDocNodeData;
 import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
+import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
 import org.x4o.xml.lang.X4OLanguageContext;
@@ -45,85 +49,71 @@ import org.xml.sax.SAXException;
  * @author Willem Cazander
  * @version 1.0 May 29, 2013
  */
-public class EldDocWriterElementClass {
+public class EldDocWriterElementClass extends AbstractApiDocWriter {
 	
-	private String printList(List<String> list) {
-		StringBuffer buf = new StringBuffer(40);
-		buf.append("[L: ");
+	@ApiDocNodeDataConfiguratorMethod(targetClasses={ElementClass.class})
+	public void configNavBar(ApiDoc doc,ApiDocNode node,ApiDocNodeData data) {
+		/*
+		ElementClass ec  = (ElementClass)node.getUserData();
+		Collection<ElementClassAttribute> list = ec.getElementClassAttributes();
 		if (list.isEmpty()) {
-			buf.append("Empty.");
+			clearHrefContentGroupAlways(doc,"summary","attribute");
 		}
-		for (String s:list) {
-			buf.append(s);
-			buf.append(' ');
-		}
-		buf.append("]");
-		return buf.toString();
+		*/
+		clearHrefContentGroup(doc,node,"summary","attribute",ElementClassAttribute.class);
+		clearHrefContentGroup(doc,node,"summary","configurator",ElementConfigurator.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementClass.class})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementClass.class},nodeBodyOrders={1},contentGroup="element",contentGroupType="summary")
 	public void writeElementX4OSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		ApiDocContentWriter writer = event.getWriter();
-		ElementClass ec  = (ElementClass)event.getEvent().getUserData();
-		writer.docTableStart("Element X4O Properties", "Element X4O Property Overview");
-		writer.docTableHeader("Name", "Value");
-			writer.docTableRow("id",""+ec.getId());
-			writer.docTableRow("objectClass",""+ec.getObjectClass());
-			writer.docTableRow("elementClass",""+ec.getElementClass());
-			writer.docTableRow("autoAttributes",""+ec.getAutoAttributes());
-			writer.docTableRow("skipPhases",printList(ec.getSkipPhases()));
-			writer.docTableRow("schemaContentBase",""+ec.getSchemaContentBase());
-			writer.docTableRow("schemaContentComplex",""+ec.getSchemaContentComplex());
-			writer.docTableRow("schemaContentMixed",""+ec.getSchemaContentMixed());
-		writer.docTableEnd();
+		printApiTableBean(event, "Element", "class","id","description");
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementClass.class})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementClass.class},nodeBodyOrders={2},contentGroup="attribute",contentGroupType="summary")
+	public void writeElementClassAttribute(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
+		printApiTable(event,"Element Class Attribute Summary",ElementClassAttribute.class);
+	}
+	
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementClass.class},nodeBodyOrders={3},contentGroup="configurator",contentGroupType="summary")
+	public void writeElementConfigurator(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
+		printApiTable(event,"Element Configurator Summary",ElementConfigurator.class);
+	}
+	
+	/*
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementClass.class},nodeBodyOrders={2},contentGroup="attribute",contentGroupType="summary")
 	public void writeElementX4OAttributeSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
+		ElementClass ec  = (ElementClass)event.getEventObject().getUserData();
+		Collection<ElementClassAttribute> list = ec.getElementClassAttributes();
+		if (list.isEmpty()) {
+			return;
+		}
 		ApiDocContentWriter writer = event.getWriter();
-		ElementClass ec  = (ElementClass)event.getEvent().getUserData();
-		writer.docTableStart("Element X4O Attributes", "All Element X4O Attributes Overview");
+		writer.docTableStart("Element X4O Attributes", "All Element X4O Attributes Overview",ApiDocContentCss.overviewSummary);
 		writer.docTableHeader("URI", "Name");
-		for (ElementClassAttribute attr:ec.getElementClassAttributes()) {
+		for (ElementClassAttribute attr:list) {
 			writer.docTableRow(attr.getId(),attr.getDescription());
 		}
 		writer.docTableEnd();
 	}
+	*/
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementClass.class})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementClass.class},nodeBodyOrders={10},contentGroup="bean",contentGroupType="summary")
 	public void writeElementObjectPropertiesSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		ApiDocContentWriter writer = event.getWriter();
-		ElementClass ec  = (ElementClass)event.getEvent().getUserData();
-		Class<?> beanClass = ec.getElementClass();
+		ElementClass ec  = (ElementClass)event.getEventObject().getUserData();
+		Class<?> beanClass = ec.getObjectClass();
 		if (beanClass==null) {
 			return;
 		}
-		writer.docTableStart("Class Properties", "Bean class properties overview.");
-		writer.docTableHeader("Name", "Value");
-		for (Method m:beanClass.getMethods()) {
-			if (m.getName().startsWith("set")) {
-				String n = m.getName().substring(3);
-				if (m.getParameterTypes().length==0) {
-					continue; // set without parameters
-				}
-				if (n.length()<2) {
-					continue;
-				}
-				n = n.substring(0,1).toLowerCase()+n.substring(1,n.length());
-				Class<?> type = m.getParameterTypes()[0]; // TODO make full list for auto attribute type resolving.
-				writer.docTableRow(n,""+type);
-			}
-		}
-		writer.docTableEnd();
+		printApiTableBeanClass(event, beanClass, "Object");
 	}
 	
 	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.DESCRIPTION_LINKS,targetClasses={ElementClass.class})
 	public void writeElementRelationLinks(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
-		ElementClass ec  = (ElementClass)event.getEvent().getUserData();
-		ElementNamespaceContext ns = (ElementNamespaceContext)event.getEvent().getParent().getUserData();
-		X4OLanguageModule mod = (X4OLanguageModule)event.getEvent().getParent().getParent().getUserData();
-		X4OLanguageContext context = (X4OLanguageContext)event.getEvent().getParent().getParent().getParent().getUserData();
+		ElementClass ec  = (ElementClass)event.getEventObject().getUserData();
+		ElementNamespaceContext ns = (ElementNamespaceContext)event.getEventObject().getParent().getUserData();
+		X4OLanguageModule mod = (X4OLanguageModule)event.getEventObject().getParent().getParent().getUserData();
+		X4OLanguageContext context = (X4OLanguageContext)event.getEventObject().getParent().getParent().getParent().getUserData();
 		
 		// TODO: this is hacky
 		EldDocXTreePageWriter xtree = (EldDocXTreePageWriter)event.getDoc().findDocPageById("overview-xtree").getPageWriters().get(0);
@@ -138,7 +128,7 @@ public class EldDocWriterElementClass {
 		
 		List<TreeNode> parents = xtree.findParents(node);
 		writer.printTagStart(Tag.dl);
-			writer.printTagCharacters(Tag.dt,"Element Parents:");
+			writer.printTagCharacters(Tag.dt,"All Element Parents:");
 			writer.printTagStart(Tag.dd);
 				if (parents.isEmpty()) {
 					writer.characters("No parent.");
@@ -148,7 +138,7 @@ public class EldDocWriterElementClass {
 					String uri = toElementUri(pathPrefix, n.module, n.namespace, n.elementClass);
 					writer.printHref(uri, n.namespace.getId()+":"+n.elementClass.getId());
 					if (i<parents.size()-1) {
-						writer.charactersRaw(",&nbsp;");
+						writer.characters(",&nbsp;");
 					}
 				}
 			writer.printTagEnd(Tag.dd);
@@ -156,7 +146,7 @@ public class EldDocWriterElementClass {
 		
 		List<TreeNode> childs = xtree.findChilderen(node);
 		writer.printTagStart(Tag.dl);
-			writer.printTagCharacters(Tag.dt,"Element Childeren:");
+			writer.printTagCharacters(Tag.dt,"All Element Childeren:");
 			writer.printTagStart(Tag.dd);
 				if (childs.isEmpty()) {
 					writer.characters("No childeren.");
@@ -166,7 +156,7 @@ public class EldDocWriterElementClass {
 					String uri = toElementUri(pathPrefix, n.module, n.namespace, n.elementClass);
 					writer.printHref(uri, n.namespace.getId()+":"+n.elementClass.getId());
 					if (i<childs.size()-1) {
-						writer.charactersRaw(",&nbsp;");
+						writer.characters(",&nbsp;");
 					}
 				}
 			writer.printTagEnd(Tag.dd);

@@ -22,22 +22,17 @@
  */
 package org.x4o.xml.eld.doc.api.dom;
 
+import java.util.List;
+
 /**
- * ApiDocNodeBody are the parts from which the content body is created.
+ * ApiDocNodeDataConfigurator is for per node config of data.
  * 
  * @author Willem Cazander
- * @version 1.0 May 12, 2013
+ * @version 1.0 Aug 11, 2013
  */
-public enum ApiDocNodeBody {
+public interface ApiDocNodeDataConfigurator {
 	
-	TREE_PATH,
-	DESCRIPTION_LINKS,
-	DESCRIPTION_NODE,
-	SUMMARY,
-	DETAIL,
+	List<Class<?>> getTargetClasses();
 	
-	/**
-	 * Summary page blocks had no div and no block lists around content. 
-	 */
-	SUMMARY_PAGE
+	void configNodeData(ApiDoc doc,ApiDocNode node,ApiDocNodeData data);
 }

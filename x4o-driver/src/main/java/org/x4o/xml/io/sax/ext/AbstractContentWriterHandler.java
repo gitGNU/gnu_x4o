@@ -367,7 +367,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	}
 	
 	// move or remove ?
-	public void charactersRaw(String text) throws SAXException {
+	protected void charactersRaw(String text) throws SAXException {
 		if (text==null) {
 			return;
 		}

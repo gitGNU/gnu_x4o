@@ -33,7 +33,7 @@ import org.x4o.xml.eld.doc.api.ApiDocContentWriter;
 public class ApiDocWriteEvent<T> {
 
 	private ApiDoc doc = null;
-	private T event = null;
+	private T eventObject = null;
 	private ApiDocContentWriter writer = null;
 	
 	/**
@@ -42,10 +42,10 @@ public class ApiDocWriteEvent<T> {
 	 * @param writer	The content writer to write to.
 	 * @param event		The event we are firing this event for.
 	 */
-	public ApiDocWriteEvent(ApiDoc doc,ApiDocContentWriter writer,T event) {
+	public ApiDocWriteEvent(ApiDoc doc,ApiDocContentWriter writer,T eventObject) {
 		this.doc=doc;
 		this.writer=writer;
-		this.event=event;
+		this.eventObject=eventObject;
 	}
 	
 	/**
@@ -58,8 +58,8 @@ public class ApiDocWriteEvent<T> {
 	/**
 	 * @return the event
 	 */
-	public T getEvent() {
-		return event;
+	public T getEventObject() {
+		return eventObject;
 	}
 	
 	/**

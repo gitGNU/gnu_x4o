@@ -24,15 +24,10 @@ package org.x4o.xml.eld.doc;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.x4o.xml.eld.doc.api.ApiDocContentWriter;
-import org.x4o.xml.eld.doc.api.ApiDocNodeWriterBean;
-import org.x4o.xml.eld.doc.api.ApiDocNodeWriterMethod;
 import org.x4o.xml.eld.doc.api.ApiDocWriter;
 import org.x4o.xml.eld.doc.api.DefaultPageWriterHelp;
 import org.x4o.xml.eld.doc.api.DefaultPageWriterIndexAll;
@@ -40,12 +35,12 @@ import org.x4o.xml.eld.doc.api.DefaultPageWriterTree;
 import org.x4o.xml.eld.doc.api.dom.ApiDoc;
 import org.x4o.xml.eld.doc.api.dom.ApiDocConcept;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNode;
-import org.x4o.xml.eld.doc.api.dom.ApiDocNodeBody;
-import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
 import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
+import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
+import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
@@ -61,11 +56,22 @@ import org.xml.sax.SAXException;
  */
 public class EldDocWriter {
 	
+	// The context to write doc over.
 	private X4OLanguageContext context = null;
-	private static final String[] C_CONTEXT		= {"language","Overview","All language modules.","The loaded language modules.."};
-	private static final String[] C_MODULE 		= {"module","Module","The Language Modules.","The language is build by the modules and provides the namespaces."};
-	private static final String[] C_NAMESPACE	= {"namespace","Namespace","The Language Namespace.","The language namespace holds all the xml elements."};
-	private static final String[] C_ELEMENT		= {"element","Element","The Language Element.","The xml language element description."};
+	
+	// Core concepts
+	private static final String[] C_CONTEXT			= {"language","Overview","All language modules.","The loaded language modules.."};
+	private static final String[] C_MODULE 			= {"module","Module","The Language Modules.","The language is build by the modules and provides the namespaces."};
+	private static final String[] C_INTERFACE		= {"interface","Interface","The element interface.","The element interface."};
+	private static final String[] C_NAMESPACE		= {"namespace","Namespace","The Language Namespace.","The language namespace holds all the xml elements."};
+	private static final String[] C_ELEMENT			= {"element","Element","The Language Element.","The xml language element description."};
+	
+	// Child concepts
+	private static final String[] CC_ATTRIBUTE_H	= {"attribute-handler","Attribute Handler","The attribute handler.","The attribute handler."};
+	private static final String[] CC_ATTRIBUTE		= {"attribute","Attribute","The attribute config.","The attribute config."};
+	private static final String[] CC_CONFIGURATOR 	= {"configurator","Configurator","The element configurator.","The element configurator."};
+	private static final String[] CC_CONFIGURATOR_G = {"configurator-global","ConfiguratorGlobal","The global configurator.","The global configurator."};
+	private static final String[] CC_BINDING		= {"binding","Binding","The element binding.","The element binding."};
 	
 	/**
 	 * Creates an EldDocGenerator for this langauge context.
@@ -84,7 +90,6 @@ public class EldDocWriter {
 		try {
 			ApiDocWriter writer = new ApiDocWriter();
 			ApiDoc doc = buildLanguageDoc();
-			doc.checkModel();
 			writer.write(doc, basePath);
 		} catch (SAXException e) {
 			throw new ElementException(e);
@@ -99,37 +104,65 @@ public class EldDocWriter {
 		doc.setDescription("X4O Meta Language Description");
 		doc.setDocAbout(createLanguageAbout());
 		doc.setDocCopyright(createLanguageCopyright());
+		doc.setDocPageSubTitle(createPageSubTitle());
 		doc.addDocKeywordAll(createLanguageKeywords());
+		doc.setNoFrameAllName("All Elements");
 		doc.setFrameNavPrintParent(true);
 		doc.setFrameNavPrintParentId(true);
+		doc.setGroupTypeName("summary", "Summary");
+		doc.setGroupTypeName("overview", "Overview");
+		
+		// TODO: add config bean to task launcher 
+		//doc.addRemoteClass(new ApiDocRemoteClass("file:///home/willemc/devv/git/x4o/x4o-driver/target/apidocs"));
+		//doc.addRemoteClass(new ApiDocRemoteClass("http://docs.oracle.com/javase/7/docs/api/"));
 		
 		doc.setFrameNavConceptClass(ElementClass.class);
-		ApiDocNodeWriterBean.addAnnotatedNodeContentWriters(doc,new EldDocWriterLanguage());
-		ApiDocNodeWriterBean.addAnnotatedNodeContentWriters(doc,new EldDocWriterElementClass());
-		ApiDocNodeWriterBean.addAnnotatedNodeContentWriters(doc,this);
 		
-		ApiDocConcept adc1 = doc.addConcept(new ApiDocConcept(null,C_CONTEXT,X4OLanguageContext.class));
-		ApiDocConcept adc2 = doc.addConcept(new ApiDocConcept(adc1,C_MODULE,X4OLanguageModule.class,
-				ElementAttributeHandler.class,ElementConfigurator.class,ElementInterface.class,ElementBindingHandler.class));
-		ApiDocConcept adc3 = doc.addConcept(new ApiDocConcept(adc2,C_NAMESPACE,ElementNamespaceContext.class));
-		doc.addConcept(new ApiDocConcept(adc3,C_ELEMENT,ElementClass.class));
+		doc.addTreeNodePageModeClass(X4OLanguageContext.class);
+		doc.addTreeNodePageModeClass(X4OLanguageModule.class);
+		doc.addTreeNodePageModeClass(ElementInterface.class);
+		doc.addTreeNodePageModeClass(ElementNamespaceContext.class);
+		
+		doc.addAnnotatedClasses(EldDocWriterLanguage.class);
+		doc.addAnnotatedClasses(EldDocWriterLanguageModule.class);
+		doc.addAnnotatedClasses(EldDocWriterElementClass.class);
+		doc.addAnnotatedClasses(EldDocWriterElementNamespace.class);
+		doc.addAnnotatedClasses(EldDocWriterElementInterface.class);
+		
+		ApiDocConcept adcRoot = doc.addConcept(new ApiDocConcept(null,C_CONTEXT,X4OLanguageContext.class));
+		ApiDocConcept adcMod = doc.addConcept(new ApiDocConcept(adcRoot,C_MODULE,X4OLanguageModule.class));
+		ApiDocConcept adcIface = doc.addConcept(new ApiDocConcept(adcMod,C_INTERFACE,ElementInterface.class));
+		ApiDocConcept adcNs = doc.addConcept(new ApiDocConcept(adcMod,C_NAMESPACE,ElementNamespaceContext.class));
+		ApiDocConcept adcEc = doc.addConcept(new ApiDocConcept(adcNs,C_ELEMENT,ElementClass.class));
+		
+		// mm maybe redo something here
+		adcMod.addChildConcepts(new ApiDocConcept(adcMod,CC_ATTRIBUTE_H,ElementAttributeHandler.class));
+		adcMod.addChildConcepts(new ApiDocConcept(adcMod,CC_CONFIGURATOR_G,ElementConfiguratorGlobal.class));
+		adcMod.addChildConcepts(new ApiDocConcept(adcMod,CC_BINDING,ElementBindingHandler.class));
+		adcIface.addChildConcepts(new ApiDocConcept(adcMod,CC_ATTRIBUTE,ElementClassAttribute.class));
+		adcIface.addChildConcepts(new ApiDocConcept(adcMod,CC_CONFIGURATOR,ElementConfigurator.class));
+		adcIface.addChildConcepts(new ApiDocConcept(adcMod,CC_BINDING,ElementBindingHandler.class));
+		adcEc.addChildConcepts(new ApiDocConcept(adcEc,CC_CONFIGURATOR,ElementConfigurator.class));
+		adcEc.addChildConcepts(new ApiDocConcept(adcEc,CC_ATTRIBUTE,ElementClassAttribute.class));
 		
 		doc.addDocPage(EldDocXTreePageWriter.createDocPage());
 		doc.addDocPage(DefaultPageWriterTree.createDocPage());
 		doc.addDocPage(DefaultPageWriterIndexAll.createDocPage());
 		doc.addDocPage(DefaultPageWriterHelp.createDocPage());
 		
-		ApiDocNode rootNode = new ApiDocNode(context,"language","Language","The X4O Language");
+		ApiDocNode rootNode = new ApiDocNode(context,"language",getLanguageNameUpperCase()+" Language","The X4O "+getLanguageNameUpperCase()+" Language");
 		doc.setRootNode(rootNode);
 		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules())			{	ApiDocNode modNode = rootNode.addNode(createNodeLanguageModule(mod));
 			for (ElementBindingHandler bind:mod.getElementBindingHandlers())			{		modNode.addNode(createNodeElementBindingHandler(bind));			}
 			for (ElementAttributeHandler attr:mod.getElementAttributeHandlers())		{		modNode.addNode(createNodeElementAttributeHandler(attr));		}
-			for (ElementConfigurator conf:mod.getElementConfiguratorGlobals())			{		modNode.addNode(createNodeElementConfigurator(conf));			}
+			for (ElementConfiguratorGlobal conf:mod.getElementConfiguratorGlobals())	{		modNode.addNode(createNodeElementConfiguratorGlobal(conf));		}
 			for (ElementInterface iface:mod.getElementInterfaces())						{		ApiDocNode ifaceNode = modNode.addNode(createNodeElementInterface(iface));
+				for (ElementClassAttribute eca:iface.getElementClassAttributes())		{			ifaceNode.addNode(createNodeElementClassAttribute(eca));	}
 				for (ElementBindingHandler bind:iface.getElementBindingHandlers())		{			ifaceNode.addNode(createNodeElementBindingHandler(bind));	}
 				for (ElementConfigurator conf:iface.getElementConfigurators())			{			ifaceNode.addNode(createNodeElementConfigurator(conf));	}	}
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts())			{		ApiDocNode nsNode = modNode.addNode(createNodeElementNamespaceContext(ns));
 				for (ElementClass ec:ns.getElementClasses())							{			ApiDocNode ecNode = nsNode.addNode(createNodeElementClass(ec));
+					for (ElementClassAttribute eca:ec.getElementClassAttributes())		{				ecNode.addNode(createNodeElementClassAttribute(eca));	}
 					for (ElementConfigurator conf:ec.getElementConfigurators())			{				ecNode.addNode(createNodeElementConfigurator(conf));	}	}	}
 		}
 		return doc;
@@ -140,6 +173,9 @@ public class EldDocWriter {
 	}
 	private ApiDocNode createNodeElementAttributeHandler(ElementAttributeHandler attr) {
 		return new ApiDocNode(attr,attr.getId(),attr.getId(),attr.getDescription());
+	}
+	private ApiDocNode createNodeElementConfiguratorGlobal(ElementConfiguratorGlobal conf) {
+		return new ApiDocNode(conf,conf.getId(),conf.getId(),conf.getDescription());
 	}
 	private ApiDocNode createNodeElementConfigurator(ElementConfigurator conf) {
 		return new ApiDocNode(conf,conf.getId(),conf.getId(),conf.getDescription());
@@ -155,6 +191,18 @@ public class EldDocWriter {
 	}
 	private ApiDocNode createNodeElementClass(ElementClass ec) {
 		return new ApiDocNode(ec,ec.getId(),ec.getId(),ec.getDescription());
+	}
+	private ApiDocNode createNodeElementClassAttribute(ElementClassAttribute eca) {
+		return new ApiDocNode(eca,eca.getId(),eca.getId(),eca.getDescription());
+	}
+	
+	private String createPageSubTitle() {
+		StringBuffer buf = new StringBuffer(100);
+		buf.append(context.getLanguage().getLanguageName());
+		buf.append(" ");// note use real space as 'html/header/title' will not always escape entities. TODO: add to html writer
+		buf.append(context.getLanguage().getLanguageVersion());
+		buf.append(" API");
+		return buf.toString();
 	}
 	
 	private String createLanguageAbout() {
@@ -172,7 +220,7 @@ public class EldDocWriter {
 		buf.append("Copyright&nbsp;&#x00a9;&nbsp;");
 		buf.append(calendar.get(Calendar.YEAR));
 		buf.append("&nbsp;");
-		buf.append(context.getLanguage().getLanguageName().toUpperCase());
+		buf.append(getLanguageNameUpperCase());
 		buf.append("&nbsp;");
 		buf.append("All Rights Reserved.");
 		return buf.toString();
@@ -188,84 +236,7 @@ public class EldDocWriter {
 		return keywords;
 	}
 	
-	private void printBeanProperties(ApiDocContentWriter writer,Object bean) throws SAXException {
-		writer.docTableStart("Bean Properties", "Bean properties overview.");
-		writer.docTableHeader("Name", "Value");
-		for (Method m:bean.getClass().getMethods()) {
-			if (m.getName().startsWith("get")) {
-				String n = m.getName().substring(3);
-				if (m.getParameterTypes().length!=0) {
-					continue; // set without parameters
-				}
-				if (n.length()<2) {
-					continue;
-				}
-				n = n.substring(0,1).toLowerCase()+n.substring(1,n.length());
-				Object value = null;
-				try {
-					value = m.invoke(bean, new Object[] {});
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				}
-				writer.docTableRow(n,printValue(value));
-			}
-		}
-		writer.docTableEnd();
-	}
-	
-	private String printValue(Object value) {
-		if (value==null) {
-			return "null";
-		}
-		if (value instanceof String) {
-			return (String)value;
-		}
-		if (value instanceof Class) {
-			return "class "+((Class<?>)value).getName();
-		}
-		if (value instanceof List) {
-			StringBuffer buf = new StringBuffer(100);
-			buf.append("[L: ");
-			List<?> l = (List<?>)value;
-			if (l.isEmpty()) {
-				buf.append("Empty");
-			}
-			for (Object o:l) {
-				buf.append(""+o);
-				buf.append(" ");
-			}
-			buf.append("]");
-			return buf.toString();
-		}
-		if (value instanceof Object[]) {
-			StringBuffer buf = new StringBuffer(100);
-			buf.append("[A: ");
-			Object[] l = (Object[])value;
-			if (l.length==0) {
-				buf.append("Empty");
-			}
-			for (Object o:l) {
-				buf.append(""+o);
-				buf.append(" ");
-			}
-			buf.append("]");
-			return buf.toString();
-		}
-		
-		return value.toString();
-	}
-	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementBindingHandler.class})
-	public void writeElementBindingHandlerBeanProperties(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		printBeanProperties(event.getWriter(),event.getEvent().getUserData());
-	}
-	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementConfigurator.class})
-	public void writeElementConfiguratorBeanProperties(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		printBeanProperties(event.getWriter(),event.getEvent().getUserData());
+	private String getLanguageNameUpperCase() {
+		return context.getLanguage().getLanguageName().toUpperCase();
 	}
 }

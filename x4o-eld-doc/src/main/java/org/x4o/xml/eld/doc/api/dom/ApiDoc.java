@@ -22,10 +22,16 @@
  */
 package org.x4o.xml.eld.doc.api.dom;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.x4o.xml.eld.doc.api.ApiDocNodeDataConfiguratorBean;
+import org.x4o.xml.eld.doc.api.ApiDocNodeWriterBean;
 
 /**
  * ApiDoc holds all config and data to write a full api doc structure.
@@ -51,6 +57,22 @@ public class ApiDoc {
 	private Boolean frameNavPrintParent = null;
 	private Boolean frameNavPrintParentParent = null;
 	private List<Class<?>> treeNodeClassExcludes = null;
+	private List<Class<?>> treeNodePageModeClass = null;
+	private List<ApiDocNodeDataConfigurator> dataConfigurators = null;
+	private List<Class<?>> annotatedClasses = null;
+	private ApiDocNodeData nodeData = null;
+	private String docStatsJS = null;
+	private String noFrameAllName = null;
+	private String noFrameAllLink = null;
+	private String noFrameAllTopJS = null;
+	private String noFrameAllBottomJS = null;
+	private boolean fillOnce = false;
+	private List<ApiDocRemoteClass> remoteClasses = null;
+	private boolean skipRootTreePathNode = true;
+	private boolean printConceptTitle = true;
+	private boolean printConceptPrevNext = true;
+	private Map<String,String> groupTypeNames = null;
+	private String docPageSubTitle = null;
 	
 	public ApiDoc() {
 		nodeBodyWriters = new ArrayList<ApiDocNodeWriter>(20);
@@ -58,6 +80,11 @@ public class ApiDoc {
 		docKeywords = new ArrayList<String>(5);
 		docPages = new ArrayList<ApiDocPage>(5);
 		treeNodeClassExcludes = new ArrayList<Class<?>>(5);
+		treeNodePageModeClass = new ArrayList<Class<?>>(5);
+		dataConfigurators = new ArrayList<ApiDocNodeDataConfigurator>(5);
+		annotatedClasses = new ArrayList<Class<?>>(5);
+		remoteClasses = new ArrayList<ApiDocRemoteClass>(5);
+		groupTypeNames = new HashMap<String,String>(3);
 	}
 	
 	public void checkModel() throws NullPointerException,IllegalArgumentException {
@@ -67,11 +94,10 @@ public class ApiDoc {
 		checkNull(docCopyright,"docCopyright");
 		checkNull(rootNode,"rootNode");
 		checkNull(frameNavConceptClass,"frameNavConceptClass");
+		checkNull(noFrameAllName,"noFrameAllName");
+		
 		if (concepts.isEmpty()) {
 			throw new IllegalStateException("Can't work with empty concepts");
-		}
-		if (nodeBodyWriters.isEmpty()) {
-			throw new IllegalStateException("Can't work with empty nodeBodyWriters");
 		}
 		if (frameNavOverviewPrintParent==null) {
 			setFrameNavOverviewPrintParent(false);
@@ -85,12 +111,144 @@ public class ApiDoc {
 		if (frameNavPrintParentId==null) {
 			setFrameNavPrintParentId(false);
 		}
+		
+		if (noFrameAllTopJS==null) { 
+			noFrameAllTopJS =	"\nallClassesLink = document.getElementById(\"allclasses_navbar_top\");\n"+
+								"if(window==top) {\n\tallClassesLink.style.display = \"block\";\n} else {\n\tallClassesLink.style.display = \"none\";\n}\n";
+		}
+		if (noFrameAllBottomJS==null) { 
+			noFrameAllBottomJS =	"\nallClassesLink = document.getElementById(\"allclasses_navbar_bottom\");\n"+
+									"if(window==top) {\n\tallClassesLink.style.display = \"block\";\n} else {\n\tallClassesLink.style.display = \"none\";\n}\n";
+		}
+		if (noFrameAllLink==null) {
+			ApiDocConcept navConcept = findConceptByClass(getFrameNavConceptClass());
+			setNoFrameAllLink("all"+navConcept.getId()+"-noframe.html");
+		}
+		
+		fillRuntimeData();
+		
+		if (nodeBodyWriters.isEmpty()) {
+			fillOnce = false;
+			dataConfigurators.clear();
+			throw new IllegalStateException("Can't work with empty nodeBodyWriters");
+		}
+	}
+	
+	private void fillRuntimeData() {
+		if (fillOnce) {
+			return;
+		}
+		setNodeData(new ApiDocNodeData());
+		try {
+			for (Class<?> annoClass:getAnnotatedClasses()) {
+				Object bean = annoClass.newInstance();
+				ApiDocNodeWriterBean.addAnnotatedNodeContentWriters(this,bean);
+				ApiDocNodeDataConfiguratorBean.addAnnotatedNodeDataConfigurators(this, bean);
+			}
+		} catch (InstantiationException e) {
+			throw new IllegalArgumentException(e);
+		} catch (IllegalAccessException e) {
+			throw new IllegalArgumentException(e);
+		}
+		for (ApiDocConcept concept:getConcepts()) {
+			String navLink = "overview-"+concept.getId()+".html";
+			boolean resetHref = true;
+			if (concept.getParent()==null) {
+				resetHref = false; // don't reset root node
+			} else {
+				navLink = null; // rest start with null href's
+			}
+			ApiDocNavLink link = new ApiDocNavLink(concept.getId(), navLink, concept.getName(),concept.getName(),resetHref);
+			getNodeData().addNavLink(link);
+		}
+		for (ApiDocPage page:getDocPages()) {
+			String navLink = page.getId()+".html";
+			ApiDocNavLink link = new ApiDocNavLink(page.getId(), navLink, page.getName(),page.getName(),false);
+			getNodeData().addNavLink(link);
+		}
+		for (ApiDocRemoteClass rc:getRemoteClasses()) {
+			try {
+				rc.parseRemotePackageList();
+			} catch (IOException e) {
+				throw new IllegalStateException("While parsing: "+rc.getDocUrl()+" got: "+e.getMessage(),e);
+			}
+		}
+		fillOnce = true;
 	}
 	
 	private void checkNull(Object obj,String objName) {
 		if (obj==null) {
 			throw new NullPointerException("Can't work with null "+objName);
 		}
+	}
+	
+	public ApiDocConcept findConceptByClass(Class<?> objClass) {
+		for (ApiDocConcept concept:getConcepts()) {
+			if (concept.getConceptClass().isAssignableFrom(objClass)) {
+				return concept;
+			}
+			for (ApiDocConcept c:concept.getChildConcepts()) {
+				if (c.getConceptClass().isAssignableFrom(objClass)) {
+					return concept;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public ApiDocConcept findConceptChildByNode(ApiDocNode node) {
+		Class<?> objClass = node.getUserData().getClass();
+		Class<?> parentClass = null;
+		if (node.getParent()!=null) {
+			parentClass = node.getParent().getUserData().getClass();
+		}
+		for (ApiDocConcept concept:getConcepts()) {
+			if (parentClass!=null && concept.getConceptClass().isAssignableFrom(parentClass)==false) {
+				continue;
+			}
+			for (ApiDocConcept c:concept.getChildConcepts()) {
+				if (c.getConceptClass().isAssignableFrom(objClass)) {
+					return c;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public List<ApiDocRemoteClass> getRemoteClasses() {
+		return remoteClasses;
+	}
+	
+	public void addRemoteClass(ApiDocRemoteClass remoteClass) {
+		remoteClasses.add(remoteClass);
+	}
+	
+	public void removeRemoteClass(ApiDocRemoteClass remoteClass) {
+		remoteClasses.add(remoteClass);
+	}
+	
+	public List<Class<?>> getAnnotatedClasses() {
+		return annotatedClasses;
+	}
+	
+	public void removeAnnotatedClasses(Class<?> annotatedClass) {
+		annotatedClasses.remove(annotatedClass);
+	}
+	
+	public void addAnnotatedClasses(Class<?> annotatedClass) {
+		annotatedClasses.add(annotatedClass);
+	}
+	
+	public List<ApiDocNodeDataConfigurator> getDataConfigurators() {
+		return dataConfigurators;
+	}
+	
+	public void removeDataConfigurator(ApiDocNodeDataConfigurator conf) {
+		dataConfigurators.remove(conf);
+	}
+	
+	public void addDataConfigurator(ApiDocNodeDataConfigurator conf) {
+		dataConfigurators.add(conf);
 	}
 	
 	public ApiDocNodeWriter addNodeBodyWriter(ApiDocNodeWriter writer) {
@@ -217,6 +375,19 @@ public class ApiDoc {
 		return treeNodeClassExcludes;
 	}
 	
+	public Class<?> addTreeNodePageModeClass(Class<?> pageModeClass) {
+		treeNodePageModeClass.add(pageModeClass);
+		return pageModeClass;
+	}
+	
+	public boolean removeTreeNodePageModeClass(Class<?> pageModeClass) {
+		return treeNodePageModeClass.remove(pageModeClass);
+	}
+	
+	public List<Class<?>> getTreeNodePageModeClasses() {
+		return treeNodePageModeClass;
+	}
+	
 	/**
 	 * @return the name
 	 */
@@ -341,5 +512,157 @@ public class ApiDoc {
 	 */
 	public void setFrameNavPrintParentId(Boolean frameNavPrintParentId) {
 		this.frameNavPrintParentId = frameNavPrintParentId;
+	}
+	
+	/**
+	 * @return the nodeData
+	 */
+	public ApiDocNodeData getNodeData() {
+		return nodeData;
+	}
+	
+	/**
+	 * @param nodeData the nodeData to set
+	 */
+	public void setNodeData(ApiDocNodeData nodeData) {
+		this.nodeData = nodeData;
+	}
+	
+	/**
+	 * @return the docStatsJS
+	 */
+	public String getDocStatsJS() {
+		return docStatsJS;
+	}
+	
+	/**
+	 * @param docStatsJS the docStatsJS to set
+	 */
+	public void setDocStatsJS(String docStatsJS) {
+		this.docStatsJS = docStatsJS;
+	}
+
+	/**
+	 * @return the noFrameAllName
+	 */
+	public String getNoFrameAllName() {
+		return noFrameAllName;
+	}
+
+	/**
+	 * @param noFrameAllName the noFrameAllName to set
+	 */
+	public void setNoFrameAllName(String noFrameAllName) {
+		this.noFrameAllName = noFrameAllName;
+	}
+
+	/**
+	 * @return the noFrameAllLink
+	 */
+	public String getNoFrameAllLink() {
+		return noFrameAllLink;
+	}
+
+	/**
+	 * @param noFrameAllLink the noFrameAllLink to set
+	 */
+	public void setNoFrameAllLink(String noFrameAllLink) {
+		this.noFrameAllLink = noFrameAllLink;
+	}
+
+	/**
+	 * @return the noFrameAllTopJS
+	 */
+	public String getNoFrameAllTopJS() {
+		return noFrameAllTopJS;
+	}
+
+	/**
+	 * @param noFrameAllTopJS the noFrameAllTopJS to set
+	 */
+	public void setNoFrameAllTopJS(String noFrameAllTopJS) {
+		this.noFrameAllTopJS = noFrameAllTopJS;
+	}
+
+	/**
+	 * @return the noFrameAllBottomJS
+	 */
+	public String getNoFrameAllBottomJS() {
+		return noFrameAllBottomJS;
+	}
+
+	/**
+	 * @param noFrameAllBottomJS the noFrameAllBottomJS to set
+	 */
+	public void setNoFrameAllBottomJS(String noFrameAllBottomJS) {
+		this.noFrameAllBottomJS = noFrameAllBottomJS;
+	}
+
+	/**
+	 * @return the skipRootTreePathNode
+	 */
+	public boolean isSkipRootTreePathNode() {
+		return skipRootTreePathNode;
+	}
+
+	/**
+	 * @param skipRootTreePathNode the skipRootTreePathNode to set
+	 */
+	public void setSkipRootTreePathNode(boolean skipRootTreePathNode) {
+		this.skipRootTreePathNode = skipRootTreePathNode;
+	}
+	
+	/**
+	 * @return the printConceptTitle
+	 */
+	public boolean isPrintConceptTitle() {
+		return printConceptTitle;
+	}
+	
+	/**
+	 * @param printConceptTitle the printConceptTitle to set
+	 */
+	public void setPrintConceptTitle(boolean printConceptTitle) {
+		this.printConceptTitle = printConceptTitle;
+	}
+	
+	/**
+	 * @return the printConceptPrevNext
+	 */
+	public boolean isPrintConceptPrevNext() {
+		return printConceptPrevNext;
+	}
+	
+	/**
+	 * @param printConceptPrevNext the printConceptPrevNext to set
+	 */
+	public void setPrintConceptPrevNext(boolean printConceptPrevNext) {
+		this.printConceptPrevNext = printConceptPrevNext;
+	}
+	
+	public String getGroupTypeName(String groupTypeKey) {
+		String result = groupTypeNames.get(groupTypeKey);
+		if (result==null) {
+			result = groupTypeKey;
+		}
+		return result;
+	}
+	
+	public void setGroupTypeName(String groupTypeKey,String name) {
+		groupTypeNames.put(groupTypeKey,name);
+	}
+	
+	/**
+	 * @return the docPageSubTitle
+	 */
+	public String getDocPageSubTitle() {
+		return docPageSubTitle;
+	}
+	
+	/**
+	 * @param docPageSubTitle the docPageSubTitle to set
+	 */
+	public void setDocPageSubTitle(String docPageSubTitle) {
+		this.docPageSubTitle = docPageSubTitle;
 	}
 }
