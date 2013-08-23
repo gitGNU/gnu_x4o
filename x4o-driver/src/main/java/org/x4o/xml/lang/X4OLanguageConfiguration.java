@@ -22,10 +22,6 @@
  */
 package org.x4o.xml.lang;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 /**
  * X4OLanguageConfiguration is base configuration of language used iin x4o parser.
  * 
@@ -76,38 +72,9 @@ public interface X4OLanguageConfiguration {
 	 * @return	Returns the X4OLanguageLoader which loads languages into the element context.
 	 */
 	Class<?> getDefaultLanguageLoader();
-
+	
 	/**
 	 * @return	Returns the Expression Language Context which holds the el objects.
 	 */
 	Class<?> getDefaultExpressionLanguageContext();
-
-	Collection<String> getGlobalPropertyKeys();
-	Object getGlobalProperty(String key);
-	void setGlobalProperty(String key,Object value);
-	
-	/**
-	 * @return	Returns Map of SAX properties which are set.
-	 */
-	Map<String,Object> getSAXParserProperties(X4OLanguageContext elementContext);
-	
-	/**
-	 * @return	Returns Map of SAX properties which are optional set.
-	 */
-	Map<String,Object> getSAXParserPropertiesOptional(X4OLanguageContext elementContext);
-	
-	/**
-	 * @return	Returns Map of SAX features which are set on the xml parser.
-	 */
-	Map<String,Boolean> getSAXParserFeatures(X4OLanguageContext elementContext);
-	
-	/**
-	 * @return	Returns Map of SAX features which are optional set.
-	 */
-	Map<String, Boolean> getSAXParserFeaturesOptional(X4OLanguageContext elementContext);
-	
-	/**
-	 * @return	Returns List of SAX features which are required for xml parsing.
-	 */
-	List<String> getSAXParserFeaturesRequired(X4OLanguageContext elementContext);
 }

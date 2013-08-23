@@ -35,8 +35,8 @@ import org.xml.sax.SAXException;
  */
 public abstract class AbstractContentWriter extends AbstractContentWriterLexical implements ContentWriter {
 
-	public AbstractContentWriter(Writer out, String encoding,String charNewLine, String charTab) {
-		super(out, encoding, charNewLine, charTab);
+	public AbstractContentWriter(Writer out) {
+		super(out);
 	}
 
 	/**

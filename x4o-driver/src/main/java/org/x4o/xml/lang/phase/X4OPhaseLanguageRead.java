@@ -29,10 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import javax.el.ValueExpression;
-
 import org.x4o.xml.conv.ObjectConverterException;
-
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementAttributeValueParser;
@@ -44,14 +41,11 @@ import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespaceContext;
-import org.x4o.xml.io.sax.X4OContentParser;
 import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
-import org.x4o.xml.lang.X4OLanguageProperty;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -71,11 +65,7 @@ public class X4OPhaseLanguageRead {
 	
 
 	public void createPhases(DefaultX4OPhaseManager manager) {
-		manager.addX4OPhase(new X4OPhaseReadStart());
-		manager.addX4OPhase(new X4OPhaseReadXml());
-		
-		manager.addX4OPhase(new X4OPhaseReadConfigELBeans());
-//		if (languageContext.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+		manager.addX4OPhase(new X4OPhaseReadBegin());
 		
 		// meta start point
 //		manager.addX4OPhase(factory.startX4OPhase());
@@ -141,12 +131,12 @@ public class X4OPhaseLanguageRead {
 	/**
 	 * Creates the startX4OPhase which is a empty meta phase.
 	 */
-	class X4OPhaseReadStart extends AbstractX4OPhase {
+	class X4OPhaseReadBegin extends AbstractX4OPhase {
 		public X4OPhaseType getType() {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_START";
+			return X4OPhase.READ_BEGIN;
 		}
 		public String[] getPhaseDependencies() {
 			return new String[]{};
@@ -161,77 +151,11 @@ public class X4OPhaseLanguageRead {
 			// print the properties and classes for this language/config
 			if (languageContext.hasX4ODebugWriter()) {
 				try {
-					languageContext.getX4ODebugWriter().debugLanguageProperties(languageContext);
+					//languageContext.getX4ODebugWriter().debugLanguageProperties(languageContext);
 					languageContext.getX4ODebugWriter().debugLanguageDefaultClasses(languageContext);
 				} catch (ElementException e) {
 					throw new X4OPhaseException(this,e);
 				}
-			}
-		}
-	};
-	
-	/**
-	 * Parses the xml resource(s) and creates an Element tree.
-	 */
-	class X4OPhaseReadXml extends AbstractX4OPhase {
-		public X4OPhaseType getType() {
-			return X4OPhaseType.XML_READ;
-		}
-		public String getId() {
-			return "READ_XML";
-		}
-		public String[] getPhaseDependencies() {
-			return new String[]{"READ_START"};
-		}
-		public boolean isElementPhase() {
-			return false;
-		}
-		public void runElementPhase(Element element) throws X4OPhaseException {
-		}
-		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
-			try {
-				X4OContentParser parser = new X4OContentParser();
-				parser.parse(languageContext);
-			} catch (Exception e) {
-				throw new X4OPhaseException(this,e);
-			}
-		}
-	};
-	
-	/**
-	 * Creates the configGlobalElBeansPhase which adds beans to the el context.
-	 */
-	class X4OPhaseReadConfigELBeans extends AbstractX4OPhase {
-		public X4OPhaseType getType() {
-			return X4OPhaseType.XML_RW;
-		}
-		public String getId() {
-			return "READ_CONFIG_EL_BEANS";
-		}
-		public String[] getPhaseDependencies() {
-			return new String[] {"READ_XML"};
-		}
-		public boolean isElementPhase() {
-			return false;
-		}
-		public void runElementPhase(Element element) throws X4OPhaseException {
-			// not used.
-		}
-		@SuppressWarnings("rawtypes")
-		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
-			try {
-				Map beanMap = (Map)languageContext.getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
-				if (beanMap==null) {
-					return;
-				}
-				for (Object elName:beanMap.keySet()) {
-					Object o = beanMap.get(elName);
-					ValueExpression ve = languageContext.getExpressionLanguageFactory().createValueExpression(languageContext.getExpressionLanguageContext(),"${"+elName+"}", o.getClass());
-					ve.setValue(languageContext.getExpressionLanguageContext(), o);
-					debugPhaseMessage("Setting el bean: ${"+elName+"} to: "+o.getClass().getName(),this,languageContext);
-				}
-			} catch (Exception e) {
-				throw new X4OPhaseException(this,e);
 			}
 		}
 	};
@@ -251,7 +175,7 @@ public class X4OPhaseLanguageRead {
 			return "READ_CONFIG_ELEMENT";
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_CONFIG_EL_BEANS"};
+			return new String[] {X4OPhase.READ_BEGIN};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			
@@ -292,7 +216,7 @@ public class X4OPhaseLanguageRead {
 			return "READ_CONFIG_ELEMENT_INTERFACE";
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_CONFIG_EL_BEANS"};
+			return new String[] {"READ_CONFIG_ELEMENT"};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			if (element.getElementObject()==null) {
@@ -709,7 +633,7 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_END";
+			return X4OPhase.READ_END;
 		}
 		public String[] getPhaseDependencies() {
 			return new String[]{"READ_RUN_CONFIGURATOR"};
@@ -724,7 +648,7 @@ public class X4OPhaseLanguageRead {
 			// print the properties and classes for this language/config
 			if (languageContext.hasX4ODebugWriter()) {
 				try {
-					languageContext.getX4ODebugWriter().debugLanguageProperties(languageContext);
+					//languageContext.getX4ODebugWriter().debugLanguageProperties(languageContext);
 					languageContext.getX4ODebugWriter().debugLanguageDefaultClasses(languageContext);
 				} catch (ElementException e) {
 					throw new X4OPhaseException(this,e);
@@ -773,13 +697,13 @@ public class X4OPhaseLanguageRead {
 		final ReleasePhaseListener releaseCounter = new ReleasePhaseListener();
 		X4OPhase result = new AbstractX4OPhase() {
 			public X4OPhaseType getType() {
-				return X4OPhaseType.XML_RW;
+				return X4OPhaseType.XML_READ;
 			}
 			public String getId() {
-				return "X4O_RELEASE";
+				return X4OPhase.READ_RELEASE;
 			}
 			public String[] getPhaseDependencies() {
-				return new String[] {"READ_END"};
+				return new String[] {X4OPhase.READ_END};
 			}
 			public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
 			}
@@ -804,7 +728,7 @@ public class X4OPhaseLanguageRead {
 	public X4OPhase debugPhase(final X4OPhase afterPhase) {
 		X4OPhase result = new AbstractX4OPhase() {
 			public X4OPhaseType getType() {
-				return X4OPhaseType.XML_RW;
+				return X4OPhaseType.XML_READ;
 			}
 			public String getId() {
 				return "X4O_DEBUG_"+afterPhase.getId();

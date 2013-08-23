@@ -42,8 +42,8 @@ public abstract class AbstractContentWriterLexical extends AbstractContentWriter
 	 * Creates XmlWriter which prints to the Writer interface.
 	 * @param out	The writer to print the xml to.
 	 */
-	public AbstractContentWriterLexical(Writer out,String encoding,String charNewLine,String charTab) {
-		super(out, encoding, charNewLine, charTab);
+	public AbstractContentWriterLexical(Writer out) {
+		super(out);
 	}
 
 	/**

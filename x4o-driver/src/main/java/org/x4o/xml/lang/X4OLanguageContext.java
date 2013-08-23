@@ -22,6 +22,7 @@
  */
 package	org.x4o.xml.lang;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.el.ELContext;
@@ -54,7 +55,7 @@ public interface X4OLanguageContext {
 	 * @return	Returns the ExpressionFactory.
 	 */
 	ExpressionFactory getExpressionLanguageFactory();
-
+	
 	/**
 	 * @return	Returns the ElementAttributeValueParser.
 	 */
@@ -64,12 +65,6 @@ public interface X4OLanguageContext {
 	 * @return	Returns the ElementObjectPropertyValue.
 	 */
 	ElementObjectPropertyValue getElementObjectPropertyValue();
-	
-	/**
-	 * Returns the current X4OPhase of the parser.
-	 * @return	Returns the current phase.
-	 */
-	X4OPhase getCurrentPhase();
 	
 	/**
 	 * Marks an (new) Element as dirty and run the phases from this start phase.
@@ -108,12 +103,13 @@ public interface X4OLanguageContext {
 	 */
 	boolean hasX4ODebugWriter();
 	
-	Object getLanguageProperty(String key);
-	void setLanguageProperty(String key,Object value);
+	/**
+	 * Returns the current X4OPhase of the parser.
+	 * @return	Returns the current phase.
+	 */
+	X4OPhase getPhaseCurrent();
 	
-	Object getLanguageProperty(X4OLanguageProperty property);
-	void setLanguageProperty(X4OLanguageProperty property,Object value);
-	boolean getLanguagePropertyBoolean(X4OLanguageProperty property);
-	int getLanguagePropertyInteger(X4OLanguageProperty property);
-	String getLanguagePropertyString(X4OLanguageProperty property);
+	public String getPhaseStop();
+	
+	public List<String> getPhaseSkip();
 }

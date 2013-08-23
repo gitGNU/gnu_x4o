@@ -28,8 +28,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.x4o.xml.element.Element;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.xml.sax.SAXException;
 
 /**
@@ -40,16 +40,11 @@ import org.xml.sax.SAXException;
  */
 public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> implements X4OWriter<T> {
 
-	public AbstractX4OWriter(X4OLanguageContext elementLanguage) {
-		super(elementLanguage);
+	public AbstractX4OWriter(X4OLanguage language) {
+		super(language);
 	}
 	
-	/**
-	 * @see org.x4o.xml.io.X4OConnection#getPropertyKeySet()
-	 */
-	public String[] getPropertyKeySet() {
-		return X4OLanguagePropertyKeys.DEFAULT_X4O_WRITER_KEYS;
-	}
+	abstract X4OLanguageContext getLanguageContext();
 	
 	private X4OLanguageContext toObjectContext(T object) throws SAXException {
 		X4OLanguageContext context = getLanguageContext();
@@ -62,6 +57,7 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 			throw new SAXException(e);
 		}
 		rootElement.setElementObject(object);
+		rootElement.setLanguageContext(context);
 		context.setRootElement(rootElement);
 		return context;
 	}

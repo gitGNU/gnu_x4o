@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.x4o.xml.io.XMLConstants;
+import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -47,9 +48,7 @@ import org.xml.sax.helpers.AttributesImpl;
 public class AbstractContentWriterHandler implements ContentHandler { 
 	
 	protected final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
-	protected String encoding = null;
-	private String charNewline = null;
-	private String charTab = null;
+	private final PropertyConfig propertyConfig;
 	private Writer out = null;
 	private int indent = 0;
 	private Map<String,String> prefixMapping = null;
@@ -59,38 +58,41 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	private String lastElement = null;
 	private Stack<String> elements = null;
 
+	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_WRITER_XML;
+	private final static String PROPERTY_ENCODING = "output/encoding";
+	private final static String PROPERTY_CHAR_TAB = "output/charTab";
+	private final static String PROPERTY_CHAR_NEWLINE = "output/newLine";
+	
+	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
+	public final static String OUTPUT_ENCODING = PROPERTY_CONTEXT_PREFIX+PROPERTY_ENCODING;
+	public final static String OUTPUT_CHAR_TAB = PROPERTY_CONTEXT_PREFIX+PROPERTY_CHAR_TAB;
+	public final static String OUTPUT_CHAR_NEWLINE = PROPERTY_CONTEXT_PREFIX+PROPERTY_CHAR_NEWLINE;
+	
+	static {
+		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,null,PROPERTY_CONTEXT_PREFIX,
+				new PropertyConfigItem(PROPERTY_ENCODING,String.class,XMLConstants.XML_DEFAULT_ENCODING),
+				new PropertyConfigItem(PROPERTY_CHAR_TAB,String.class,XMLConstants.CHAR_TAB+""),
+				new PropertyConfigItem(PROPERTY_CHAR_NEWLINE,String.class,XMLConstants.CHAR_NEWLINE+"")
+				);
+	}
+	
 	/**
 	 * Creates XmlWriter which prints to the Writer interface.
 	 * @param out	The writer to print the xml to.
 	 */
-	public AbstractContentWriterHandler(Writer out,String encoding,String charNewLine,String charTab) {
+	public AbstractContentWriterHandler(Writer out) {
 		if (out==null) {
 			throw new NullPointerException("Can't write on null writer.");
 		}
-		if (encoding==null) {
-			encoding = XMLConstants.XML_DEFAULT_ENCODING;
-		}
-		if (charNewLine==null) {
-			charNewLine = XMLConstants.CHAR_NEWLINE+"";
-		}
-		if (charTab==null) {
-			charTab = XMLConstants.CHAR_TAB+"";
-		}
 		this.out = out;
-		this.encoding = encoding;
-		this.charNewline = charNewLine;
-		this.charTab = charTab;
 		prefixMapping = new HashMap<String,String>(15);
 		printedMappings = new ArrayList<String>(15);
 		elements = new Stack<String>();
-		/*
-		ContentConfig conf = new ContentConfig(
-				new ContentConfigItem("writer/output/encoding",String.class,XMLConstants.XML_DEFAULT_ENCODING),
-				new ContentConfigItem("content/writer/output/charTab",String.class)
-				);
-		conf.getPropertyString("");
-		*/
-		
+		propertyConfig = new PropertyConfig(DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX);
+	}
+	
+	public PropertyConfig getPropertyConfig() {
+		return propertyConfig;
 	}
 	
 	// TODO: check location of this. (add to api?)
@@ -114,7 +116,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	 */
 	public void startDocument() throws SAXException {
 		indent = 0;
-		write(XMLConstants.getDocumentDeclaration(encoding));
+		write(XMLConstants.getDocumentDeclaration(getPropertyConfig().getPropertyString(OUTPUT_ENCODING)));
 	}
 	
 	/**
@@ -143,9 +145,9 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		}
 		autoCloseStartElement();
 		startElement = new StringBuffer(200);
-		startElement.append(charNewline);
+		startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 		for (int i = 0; i < indent; i++) {
-			startElement.append(charTab);
+			startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB));
 		}
 		startElement.append(XMLConstants.TAG_OPEN);
 		
@@ -208,7 +210,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 				printedMappings.add(uri2);
 				
 				if (first) {
-					startElement.append(charNewline);
+					startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 					first = false;
 				}
 				
@@ -221,7 +223,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 				startElement.append("=\"");
 				startElement.append(uri2);
 				startElement.append('"');
-				startElement.append(charNewline);
+				startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 			}
 		}
 	}
@@ -251,7 +253,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 			if (printNewLine) {
 				startElement.append(XMLConstants.CHAR_NEWLINE);
 				for (int ii = 0; ii < indent+1; ii++) {
-					startElement.append(charTab);
+					startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB));
 				}
 			}
 		}
@@ -281,7 +283,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		
 		indent--;
 		if (printReturn || !localName.equals(lastElement)) {
-			write(charNewline);
+			write(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 			writeIndent();
 		} else {
 			printReturn = true;
@@ -433,7 +435,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 			throw new SAXException("Processing instruction data is invalid char; '"+data+"'");
 		}
 		autoCloseStartElement();
-		write(charNewline);
+		write(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 		writeIndent();
 		write(XMLConstants.PROCESS_START);
 		write(target);
@@ -487,11 +489,11 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		}
 		autoCloseStartElement();
 		checkPrintedReturn(text);
-		write(charNewline);
+		write(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 		writeIndent();
 		write(XMLConstants.COMMENT_START);
 		write(" ");
-		write(XMLConstants.escapeCharactersComment(text,charTab,indent));
+		write(XMLConstants.escapeCharactersComment(text,getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB),indent));
 		write(" ");
 		write(XMLConstants.COMMENT_END);
 		printReturn = true;
@@ -528,7 +530,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	 */
 	private void writeIndent() throws SAXException {
 		for (int i = 0; i < indent; i++) {
-			write(charTab);
+			write(getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB));
 		}
 	}
 	

@@ -22,8 +22,6 @@
  */
 package	org.x4o.xml.eld.lang;
 
-import java.util.Map;
-
 import org.x4o.xml.eld.EldModuleLoader;
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
@@ -38,7 +36,6 @@ import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
-import org.x4o.xml.lang.X4OLanguageProperty;
 
 /**
  * An ParentLanguageElementConfigurator.
@@ -78,13 +75,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 	 */
 	public void bindChild(Element childElement,X4OLanguageModule languageModule, Object childObject) throws ElementBindingHandlerException {
 		
-		@SuppressWarnings("rawtypes")
-		Map m = (Map)childElement.getLanguageContext().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
-		if (m==null) {
-			return;
-		}
-		X4OLanguage x4oParsingContext = (X4OLanguage)m.get(EldModuleLoader.EL_PARENT_LANGUAGE);
-		//ElementLanguageModule elementLanguageModule = (ElementLanguageModule)m.get(EldParser.PARENT_ELEMENT_LANGUAGE_MODULE);
+		X4OLanguage x4oParsingContext = EldModuleLoader.getLanguage(childElement.getLanguageContext());
 		if (x4oParsingContext==null) {
 			return;
 		}

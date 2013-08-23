@@ -44,7 +44,6 @@ import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageConfiguration;
-import org.x4o.xml.lang.X4OLanguageProperty;
 import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.x4o.xml.lang.phase.X4OPhaseListener;
@@ -114,6 +113,7 @@ public class X4ODebugWriter {
 		}
 	}
 	
+	/*
 	public void debugLanguageProperties(X4OLanguageContext ec) throws ElementException {
 		try {
 			AttributesImpl atts = new AttributesImpl();
@@ -134,6 +134,7 @@ public class X4ODebugWriter {
 			throw new ElementException(e);
 		}		
 	}
+	*/
 	
 	public void debugLanguageDefaultClasses(X4OLanguageContext ec) throws ElementException {
 		try {
@@ -428,7 +429,7 @@ public class X4ODebugWriter {
 		atts.addAttribute ("", "language", "", "", elementLanguage.getLanguage().getLanguageName());
 		atts.addAttribute ("", "languageVersion", "", "", elementLanguage.getLanguage().getLanguageVersion());
 		atts.addAttribute ("", "className", "", "", elementLanguage.getClass().getName()+"");
-		atts.addAttribute ("", "currentX4OPhase", "", "", elementLanguage.getCurrentPhase().getId());
+		atts.addAttribute ("", "currentX4OPhase", "", "", elementLanguage.getPhaseCurrent().getId());
 		contentWriter.startElement (DEBUG_URI, "printElementLanguage", "", atts);
 		contentWriter.endElement(DEBUG_URI, "printElementLanguage", "");
 	}

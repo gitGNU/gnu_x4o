@@ -35,8 +35,8 @@ import org.xml.sax.SAXException;
  */
 public class ContentWriterXmlTag<T extends Enum<?>> extends ContentWriterXml implements ContentWriterTag<T> { 
 
-	public ContentWriterXmlTag(Writer out,String encoding,String charNewLine,String charTab) {
-		super(out, encoding, charNewLine, charTab);
+	public ContentWriterXmlTag(Writer out,String encoding) {
+		super(out, encoding);
 	}
 	
 	public String getTagNamespaceUri() {

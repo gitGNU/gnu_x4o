@@ -33,15 +33,9 @@ public enum X4OPhaseType {
 	/** Language init. */
 	INIT,
 	
-	/** Read/Write xml.(not used)  */
-	XML_RW,
-	
 	/** XML Reading. */
 	XML_READ,
 	
 	/** XML Writing. */
-	XML_WRITE,
-	
-	/** XML Schema writing. */
-	XML_WRITE_SCHEMA
+	XML_WRITE;
 }

@@ -27,9 +27,10 @@ import org.x4o.xml.element.Element.ElementType;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
+import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.ext.AttributeMap;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -67,16 +68,19 @@ public class X4OContentHandler extends DefaultHandler2 {
 	
 	/** Store the override element handler */
 	private DefaultHandler2 overrideSaxHandler = null;
-		
+	
+	private final PropertyConfig propertyConfig;
+	
 	/**
 	 * Creates an X4OTagHandler 
 	 * which can receice sax xml events and converts them into the Element* interfaces  events.
 	 */
-	public X4OContentHandler(X4OLanguageContext elementLanguage) {
+	public X4OContentHandler(X4OLanguageContext elementLanguage,PropertyConfig propertyConfig) {
 		logger = Logger.getLogger(X4OContentHandler.class.getName());
 		loggerFinest = logger.isLoggable(Level.FINEST);
 		elementStack = new Stack<Element>();
 		this.elementLanguage = elementLanguage;
+		this.propertyConfig = propertyConfig;
 	}
 
 	/**
@@ -124,7 +128,7 @@ public class X4OContentHandler extends DefaultHandler2 {
 		ElementNamespaceContext enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
 		if (enc==null) {
 			if ("".equals(namespaceUri)) {
-				String configEmptryUri = (String)elementLanguage.getLanguageProperty(X4OLanguageProperty.READER_EMPTY_NAMESPACE_URI);
+				String configEmptryUri = propertyConfig.getPropertyString(DefaultX4OReader.DOC_EMPTY_NAMESPACE_URI);
 				if (configEmptryUri!=null) {
 					namespaceUri = configEmptryUri;
 					enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);

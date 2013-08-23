@@ -52,22 +52,22 @@ public class EldDocWriterElementInterface extends AbstractApiDocWriter {
 	}
 	
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementInterface.class},nodeBodyOrders={1},contentGroup="interface",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementInterface.class},nodeBodyOrders={1},contentGroup="interface",contentGroupType="summary")
 	public void writeElementNamespaceBeanProperties(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTableBean(event,"Interface","description");
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementInterface.class},nodeBodyOrders={2},contentGroup="attribute",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementInterface.class},nodeBodyOrders={2},contentGroup="attribute",contentGroupType="summary")
 	public void writeElementClassAttribute(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Element Class Attribute Summary",ElementClassAttribute.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementInterface.class},nodeBodyOrders={3},contentGroup="binding",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementInterface.class},nodeBodyOrders={3},contentGroup="binding",contentGroupType="summary")
 	public void writeElementBindingHandler(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Element Binding Handler Summary",ElementBindingHandler.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementInterface.class},nodeBodyOrders={4},contentGroup="configurator",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementInterface.class},nodeBodyOrders={4},contentGroup="configurator",contentGroupType="summary")
 	public void writeElementConfigurator(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Element Configurator Summary",ElementConfigurator.class);
 	}

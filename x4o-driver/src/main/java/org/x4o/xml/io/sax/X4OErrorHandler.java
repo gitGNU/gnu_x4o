@@ -23,8 +23,9 @@
 package org.x4o.xml.io.sax;
 
 import org.x4o.xml.element.ElementException;
+import org.x4o.xml.io.DefaultX4OReader;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -44,12 +45,12 @@ public class X4OErrorHandler implements ErrorHandler {
 	 * Construct a new SAXErrorPrinter
 	 * @param languageContext	The language to get errors to.
 	 */
-	public X4OErrorHandler(X4OLanguageContext languageContext) {
+	public X4OErrorHandler(X4OLanguageContext languageContext,PropertyConfig propertyConfig) {
 		if (languageContext==null) {
 			throw new NullPointerException("Can't debug and proxy errors with null languageContext.");
 		}
 		this.languageContext=languageContext;
-		this.errorHandler=(ErrorHandler)languageContext.getLanguageProperty(X4OLanguageProperty.READER_ERROR_HANDLER);
+		this.errorHandler=(ErrorHandler)propertyConfig.getProperty(DefaultX4OReader.SAX_ERROR_HANDLER);
 	}
 
 	/**

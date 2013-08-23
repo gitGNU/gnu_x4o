@@ -22,34 +22,17 @@
  */
 package	org.x4o.xml.lang.phase;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementClass;
-import org.x4o.xml.element.ElementClassAttribute;
-import org.x4o.xml.element.ElementInterface;
+import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
-import org.x4o.xml.element.ElementObjectPropertyValueException;
-import org.x4o.xml.io.XMLConstants;
-import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageProperty;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * X4OPhaseLanguageWrite defines all phases to write the language.
@@ -66,21 +49,21 @@ public class X4OPhaseLanguageWrite {
 	}
 	
 	public void createPhases(DefaultX4OPhaseManager manager) {
-		manager.addX4OPhase(new X4OPhaseWriteStart());
+		manager.addX4OPhase(new X4OPhaseWriteBegin());
 		manager.addX4OPhase(new X4OPhaseWriteFillTree());
-		manager.addX4OPhase(new X4OPhaseWriteXml());
 		manager.addX4OPhase(new X4OPhaseWriteEnd());
+		//manager.addX4OPhase(new X4OPhaseWriteRelease());
 	}
 	
 	/**
-	 * Creates the X4OPhaseWriteStart which is a empty meta phase.
+	 * Creates the X4OPhaseWriteBegin which is a empty meta phase.
 	 */
-	class X4OPhaseWriteStart extends AbstractX4OPhase {
+	class X4OPhaseWriteBegin extends AbstractX4OPhase {
 		public X4OPhaseType getType() {
 			return X4OPhaseType.XML_WRITE;
 		}
 		public String getId() {
-			return "WRITE_START";
+			return X4OPhase.WRITE_BEGIN;
 		}
 		public String[] getPhaseDependencies() {
 			return new String[]{};
@@ -91,7 +74,7 @@ public class X4OPhaseLanguageWrite {
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
 		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException  {
-			logger.finest("Run init start phase");
+			logger.finest("Run init begin phase");
 		}
 	};
 	
@@ -106,7 +89,7 @@ public class X4OPhaseLanguageWrite {
 			return "WRITE_FILL_TREE";
 		}
 		public String[] getPhaseDependencies() {
-			return new String[]{"WRITE_START"};
+			return new String[]{X4OPhase.WRITE_BEGIN};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -174,249 +157,6 @@ public class X4OPhaseLanguageWrite {
 	};
 	
 	/**
-	 * Write xml to output.
-	 */
-	class X4OPhaseWriteXml extends AbstractX4OPhase {
-		public X4OPhaseType getType() {
-			return X4OPhaseType.XML_WRITE;
-		}
-		public String getId() {
-			return "WRITE_XML";
-		}
-		public String[] getPhaseDependencies() {
-			return new String[] {"WRITE_FILL_TREE"};
-		}
-		public boolean isElementPhase() {
-			return false;
-		}
-		public void runElementPhase(Element element) throws X4OPhaseException {
-		}
-		
-		private AttributeEntryComparator attributeEntryComparator = new AttributeEntryComparator();
-		private boolean schemaUriPrint;
-		private String schemaUriRoot;
-		
-		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
-			OutputStream out = (OutputStream)languageContext.getLanguageProperty(X4OLanguageProperty.WRITER_OUTPUT_STREAM);
-			try {
-				String encoding = languageContext.getLanguagePropertyString(X4OLanguageProperty.WRITER_OUTPUT_ENCODING);
-				String charNew = languageContext.getLanguagePropertyString(X4OLanguageProperty.WRITER_OUTPUT_CHAR_NEWLINE);
-				String charTab = languageContext.getLanguagePropertyString(X4OLanguageProperty.WRITER_OUTPUT_CHAR_TAB);
-				schemaUriPrint = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.WRITER_SCHEMA_URI_PRINT);
-				schemaUriRoot = languageContext.getLanguagePropertyString(X4OLanguageProperty.WRITER_SCHEMA_URI_ROOT);
-				if (encoding==null) { encoding = XMLConstants.XML_DEFAULT_ENCODING; }
-				if (charNew==null)  { charNew = XMLConstants.CHAR_NEWLINE+"";		}
-				if (charTab==null)  { charTab = XMLConstants.CHAR_TAB+"";			}
-				
-				Element root = languageContext.getRootElement();
-				if (schemaUriRoot==null) {
-					String rootUri = findElementUri(root);
-					ElementNamespaceContext ns = languageContext.getLanguage().findElementNamespaceContext(rootUri);
-					if (ns!=null) {
-						schemaUriRoot = ns.getSchemaUri();
-					}
-				}
-				
-				ContentWriterXml writer = new ContentWriterXml(out,encoding,charNew,charTab);
-				writer.startDocument();
-				
-				Map<String,String> prefixes = new HashMap<String,String>();
-				startPrefixTree(root,prefixes);
-				for (String uri:prefixes.keySet()) {
-					String prefix = prefixes.get(uri);
-					writer.startPrefixMapping(prefix, uri);
-				}
-				try {
-					writeTree(writer,root,true);
-				} catch (ElementObjectPropertyValueException e) {
-					throw new SAXException(e);
-				}
-				writer.endDocument();
-				out.flush();
-				
-			} catch (Exception e) {
-				throw new X4OPhaseException(this,e);
-			} finally {
-				if (out!=null) {
-					try {
-						out.close();
-					} catch (IOException e) {
-						logger.warning(e.getMessage());
-					}
-				}
-			}
-		}
-		
-		private void startPrefixTree(Element element,Map<String,String> result) throws SAXException {
-			String elementUri = findElementUri(element);
-			if (result.containsKey(elementUri)==false) {
-				String elementUriPrefix = findNamespacePrefix(element,elementUri);
-				result.put(elementUri, elementUriPrefix);
-			}
-			for (Element e:element.getChilderen()) {
-				startPrefixTree(e,result);
-			}
-		}
-		
-		private List<String> getProperties(Class<?> objectClass) {
-			List<String> result = new ArrayList<String>();
-			for (Method m:objectClass.getMethods()) {
-				Class<?>[] types = m.getParameterTypes();
-				if (types.length != 0) {
-					continue;
-				}
-				if (m.getName().equals("getClass")) {
-					continue;
-				}
-				if (m.getName().startsWith("get")==false) {
-					continue;
-				}
-				String name = m.getName().substring(3,4).toLowerCase()+m.getName().substring(4);
-				result.add(name);
-				
-			}
-			return result;
-		}
-		class AttributeEntry {
-			String id;
-			String value;
-			Integer writeOrder;
-		}
-		class AttributeEntryComparator implements Comparator<AttributeEntry> {
-			public int compare(AttributeEntry o1, AttributeEntry o2) {
-				return o1.writeOrder.compareTo(o2.writeOrder);
-			}
-		}
-		private void writeTree(ContentWriterXml writer,Element element,boolean isRoot) throws SAXException, ElementObjectPropertyValueException {
-			List<AttributeEntry> attr = new ArrayList<AttributeEntry>(20);
-			if (element.getElementClass().getAutoAttributes()!=null && element.getElementClass().getAutoAttributes()==false) {
-				for (ElementClassAttribute eca:element.getElementClass().getElementClassAttributes()) {
-					if (eca.getRunBeanValue()!=null && eca.getRunBeanValue()==false) {
-						continue;
-					}
-					
-					Object value = element.getLanguageContext().getElementObjectPropertyValue().getProperty(element.getElementObject(),eca.getId());
-					if (value==null) {
-						continue;
-					}
-					AttributeEntry e = new AttributeEntry();
-					e.id = eca.getId();
-					e.value = ""+value;
-					e.writeOrder = calcOrderNumber(e.id,eca.getWriteOrder());
-					attr.add(e);
-				}
-				
-			} else {
-				for (String p:getProperties(element.getElementObject().getClass())) {
-					Integer writeOrder = null;
-					ElementClassAttribute eca = element.getElementClass().getElementClassAttributeByName(p);
-					if (eca!=null) {
-						writeOrder = eca.getWriteOrder();
-					}
-					if (eca!=null && eca.getRunBeanValue()!=null && eca.getRunBeanValue()) {
-						continue;
-					}
-					boolean writeValue = true;
-					for (ElementInterface ei:element.getLanguageContext().getLanguage().findElementInterfaces(element.getElementObject().getClass())) {
-						eca = ei.getElementClassAttributeByName(p);
-						if (eca!=null && writeOrder==null) {
-							writeOrder = eca.getWriteOrder(); // add interface but allow override local
-						}
-						if (eca!=null && eca.getRunBeanValue()!=null && eca.getRunBeanValue()==false) {
-							writeValue = false;
-							break;
-						}
-					}
-					if (writeValue==false) {
-						continue;
-					}
-					
-					// TODO: check attr see reader
-					Object value = element.getLanguageContext().getElementObjectPropertyValue().getProperty(element.getElementObject(),p);
-					if (value==null) {
-						continue;
-					}
-					if (value instanceof List || value instanceof Collection) {
-						continue; // TODO; filter on type of childeren
-					}
-					AttributeEntry e = new AttributeEntry();
-					e.id = p;
-					e.value = ""+value;
-					e.writeOrder = calcOrderNumber(e.id,writeOrder);
-					attr.add(e);
-				}
-			}
-			
-			// Create atts to write and append schema first.
-			AttributesImpl atts = new AttributesImpl();
-			if (isRoot && schemaUriPrint) {
-				String rootUri = findElementUri(element);
-				writer.startPrefixMapping("xsi", XMLConstants.XML_SCHEMA_INSTANCE_NS_URI);
-				atts.addAttribute ("xsi", "schemaLocation", "", "", rootUri+" "+schemaUriRoot);
-			}
-			
-			// Sort attributes in natural order of localName and add to attributes
-			Collections.sort(attr, attributeEntryComparator);
-			for (int i=0;i<attr.size();i++) {
-				AttributeEntry a = attr.get(i);
-				atts.addAttribute ("", a.id, "", "", a.value);
-			}
-			
-			// Write Element tree recursive.
-			String elementUri = findElementUri(element);
-			writer.startElement(elementUri, element.getElementClass().getId(), "", atts);
-			for (Element e:element.getChilderen()) {
-				writeTree(writer,e,false);
-			}
-			writer.endElement(elementUri, element.getElementClass().getId(), "");
-		}
-		
-		// TODO: move to defaults layer so visible in docs.
-		private Integer calcOrderNumber(String name,Integer orderNumberOverride) {
-			if (orderNumberOverride!=null) {
-				return orderNumberOverride;
-			}
-			if (name==null) {
-				throw new NullPointerException("Can't calculate order of null name.");
-			}
-			int nameSize = name.length();
-			if (nameSize==1) {
-				return (name.charAt(0) * 1000);
-			}
-			if (nameSize==2) {
-				return (name.charAt(0) * 1000) + (name.charAt(1) * 100);
-			}
-			if (nameSize==3) {
-				return (name.charAt(0) * 1000) + (name.charAt(1) * 100) + (name.charAt(2) * 10);
-			}
-			if (nameSize>3) {
-				return (name.charAt(0) * 1000) + (name.charAt(1) * 100) + (name.charAt(2) * 10) + (name.charAt(3) * 1);
-			}
-			throw new IllegalArgumentException("Can't calculate order of empty name.");
-		}
-		
-		private String findElementUri(Element e) {
-			for (X4OLanguageModule mod:e.getLanguageContext().getLanguage().getLanguageModules()) {
-				for (ElementNamespaceContext c:mod.getElementNamespaceContexts()) {
-					ElementClass ec = c.getElementClass(e.getElementClass().getId());
-					if (ec!=null) {
-						return c.getUri();
-					}
-				}
-			}
-			return null;
-		}
-		
-		private String findNamespacePrefix(Element e,String uri) {
-			ElementNamespaceContext ns = e.getLanguageContext().getLanguage().findElementNamespaceContext(uri);
-			if (ns.getPrefixMapping()!=null) {
-				return ns.getPrefixMapping();
-			}
-			return ns.getId();
-		}
-	};
-	
-	/**
 	 * Creates the X4OPhaseWriteEnd which is a empty meta phase.
 	 */
 	class X4OPhaseWriteEnd extends AbstractX4OPhase {
@@ -424,10 +164,10 @@ public class X4OPhaseLanguageWrite {
 			return X4OPhaseType.XML_WRITE;
 		}
 		public String getId() {
-			return "WRITE_END";
+			return X4OPhase.WRITE_END;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[]{"WRITE_XML"};
+			return new String[]{"WRITE_FILL_TREE"};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -438,4 +178,27 @@ public class X4OPhaseLanguageWrite {
 			logger.finest("Run init end phase");
 		}
 	};
+	
+	class X4OPhaseWriteRelease extends AbstractX4OPhase {
+		public X4OPhaseType getType() {
+			return X4OPhaseType.XML_WRITE;
+		}
+		public String getId() {
+			return X4OPhase.WRITE_RELEASE;
+		}
+		public String[] getPhaseDependencies() {
+			return new String[] {X4OPhase.WRITE_END};
+		}
+		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
+		}
+		public void runElementPhase(Element element) throws X4OPhaseException  {
+			try {
+				element.release();
+			} catch (ElementException e) {
+				throw new X4OPhaseException(this,e);
+			}/* finally {
+				releaseCounter.addReleasedElement();
+			}*/
+		}
+	}
 }

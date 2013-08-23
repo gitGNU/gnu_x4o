@@ -25,11 +25,13 @@ package org.x4o.xml.eld;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import javax.el.ValueExpression;
+
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.X4OConnectionException;
 import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModuleLoader;
@@ -38,7 +40,7 @@ import org.x4o.xml.lang.X4OLanguageLocal;
 import org.xml.sax.SAXException;
 
 /**
- * De default X4OElementConfigurator.
+ * EldModuleLoader loads the child eld language and proxies the parent language into the child so to the parent langauge is configured.
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 17, 2005
@@ -49,11 +51,8 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 	private String eldResource = null;
 	private boolean isEldCore = false;
 	
-	/** The EL key to access the parent language configuration. */
-	public static final String EL_PARENT_LANGUAGE_CONFIGURATION = "parentLanguageConfiguration";
-	
 	/** The EL key to access the parent language module. */
-	public static final String EL_PARENT_ELEMENT_LANGUAGE_MODULE = "parentElementLanguageModule";
+	public static final String EL_PARENT_LANGUAGE_MODULE = "parentLanguageModule";
 	
 	/** The EL key to access the parent language element langauge. */
 	public static final String EL_PARENT_LANGUAGE = "parentLanguage";
@@ -79,11 +78,9 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 	 * @throws X4OLanguageModuleLoaderException When eld language could not be loaded.
 	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
 		logger.fine("Loading name eld file from resource: "+eldResource);
 		try {
-			//EldDriver parser = new EldDriver(elementLanguage,elementLanguageModule,isEldCore);
-			
 			X4ODriver<?> driver = null;
 			if (isEldCore) {
 				driver = X4ODriverManager.getX4ODriver(CelDriver.LANGUAGE_NAME);
@@ -91,12 +88,13 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 				driver = X4ODriverManager.getX4ODriver(EldDriver.LANGUAGE_NAME);
 			}
 			
-			X4OLanguageContext eldLang = driver.createLanguageContext(driver.getLanguageVersionDefault()); 
-			X4OReader<?> reader = new DefaultX4OReader<Object>(eldLang);
+			X4OReader<?> reader = driver.createReader();
 			
-			reader.addELBeanInstance(EL_PARENT_LANGUAGE_CONFIGURATION, language.getLanguageConfiguration());
+			//X4OLanguageContext eldLang = driver.createLanguageContext(driver.getLanguageVersionDefault()); 
+			//X4OReader<?> reader = new DefaultX4OReader<Object>(eldLang);
+			
 			reader.addELBeanInstance(EL_PARENT_LANGUAGE, language);
-			reader.addELBeanInstance(EL_PARENT_ELEMENT_LANGUAGE_MODULE, elementLanguageModule);
+			reader.addELBeanInstance(EL_PARENT_LANGUAGE_MODULE, languageModule);
 			
 //TODO:			if (language.getLanguageConfiguration().getLanguagePropertyBoolean(X4OLanguageProperty.DEBUG_OUTPUT_ELD_PARSER)) {
 //				eldLang.setX4ODebugWriter(elementLanguage.getLanguageConfiguration().getX4ODebugWriter());
@@ -110,5 +108,15 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 		} catch (IOException e) {
 			throw new X4OLanguageModuleLoaderException(this,e.getMessage()+" while parsing: "+eldResource,e);
 		}
+	}
+	
+	public static X4OLanguage getLanguage(X4OLanguageContext context) {
+		ValueExpression ee = context.getExpressionLanguageFactory().createValueExpression(context.getExpressionLanguageContext(),"${"+EL_PARENT_LANGUAGE+"}", X4OLanguage.class);
+		return (X4OLanguage)ee.getValue(context.getExpressionLanguageContext());
+	}
+	
+	public static X4OLanguageModule getLanguageModule(X4OLanguageContext context) {
+		ValueExpression ee = context.getExpressionLanguageFactory().createValueExpression(context.getExpressionLanguageContext(),"${"+EL_PARENT_LANGUAGE_MODULE+"}", X4OLanguageModule.class);
+		return (X4OLanguageModule)ee.getValue(context.getExpressionLanguageContext());
 	}
 }

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.x4o.xml.X4ODriver;
 import org.x4o.xml.el.X4OExpressionFactory;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementAttributeValueParser;
@@ -119,8 +118,8 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	 * @throws X4OPhaseException 
 	 * @see org.x4o.xml.lang.X4OLanguage#createLanguageContext(org.x4o.xml.X4ODriver)
 	 */
-	public X4OLanguageContext createLanguageContext(X4ODriver<?> driver){
-		X4OLanguageContext result = buildElementLanguage(new DefaultX4OLanguageContext(this),driver);
+	public X4OLanguageContext createLanguageContext() {
+		X4OLanguageContext result = buildElementLanguage(new DefaultX4OLanguageContext(this));
 		try {
 			getPhaseManager().runPhases(result, X4OPhaseType.INIT);
 		} catch (X4OPhaseException e) {
@@ -129,21 +128,17 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 		return result;
 	}
 
-	protected X4OLanguageContext buildElementLanguage(X4OLanguageContext languageContext,X4ODriver<?> driver) {
+	protected X4OLanguageContext buildElementLanguage(X4OLanguageContext languageContext) {
 		if ((languageContext instanceof X4OLanguageContextLocal)==false) { 
 			throw new RuntimeException("Can't init X4OLanguageContext which has not X4OLanguageContextLocal interface obj: "+languageContext);
 		}
 		X4OLanguageContextLocal contextInit = (X4OLanguageContextLocal)languageContext; 
-		for (String key:languageContext.getLanguage().getLanguageConfiguration().getGlobalPropertyKeys()) {
-			Object value = languageContext.getLanguage().getLanguageConfiguration().getGlobalProperty(key);
-			contextInit.setLanguageProperty(key, value);
-		}
 		try {
 			if (contextInit.getExpressionLanguageFactory()==null) {
-				contextInit.setExpressionLanguageFactory(X4OExpressionFactory.createExpressionFactory(contextInit));
+				contextInit.setExpressionLanguageFactory(X4OExpressionFactory.createExpressionFactory());
 			}
 			if (contextInit.getExpressionLanguageContext()==null) {
-				contextInit.setExpressionLanguageContext(X4OExpressionFactory.createELContext(contextInit));
+				contextInit.setExpressionLanguageContext(X4OExpressionFactory.createELContext(contextInit.getLanguage().getLanguageConfiguration().getDefaultExpressionLanguageContext()));
 			}
 			if (contextInit.getElementAttributeValueParser()==null) {
 				contextInit.setElementAttributeValueParser((ElementAttributeValueParser)X4OLanguageClassLoader.newInstance(getLanguageConfiguration().getDefaultElementAttributeValueParser()));

@@ -26,8 +26,6 @@ import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 
 import org.x4o.xml.lang.X4OLanguageClassLoader;
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageProperty;
 
 /**
  * X4OExpressionFactory finds and loads the needed impl. 
@@ -40,11 +38,8 @@ public class X4OExpressionFactory {
 	static public final String EL_FACTORY_IMPL_APACHE = "org.apache.el.ExpressionFactoryImpl";
 	static public final String EL_FACTORY_IMPL_ODYSSEUS = "de.odysseus.el.ExpressionFactoryImpl";
 	
-	static public ExpressionFactory createExpressionFactory(X4OLanguageContext languageContext) {
-		ExpressionFactory result = (ExpressionFactory)languageContext.getLanguageProperty(X4OLanguageProperty.EL_FACTORY_INSTANCE);
-		if (result!=null) {
-			return result;
-		}
+	static public ExpressionFactory createExpressionFactory() {
+		ExpressionFactory result = null;
 		try {
 			Class<?> expressionFactoryClass = X4OLanguageClassLoader.loadClass(EL_FACTORY_IMPL_APACHE);
 			result = (ExpressionFactory) expressionFactoryClass.newInstance();
@@ -59,13 +54,10 @@ public class X4OExpressionFactory {
 		return result;
 	}
 	
-	static public ELContext createELContext(X4OLanguageContext languageContext) {
-		ELContext result = (ELContext)languageContext.getLanguageProperty(X4OLanguageProperty.EL_CONTEXT_INSTANCE); 
-		if (result!=null) {
-			return result;
-		}
+	static public ELContext createELContext(Class<?> elContextClass) {
+		ELContext result = null; 
 		try {
-			result = (ELContext)X4OLanguageClassLoader.newInstance(languageContext.getLanguage().getLanguageConfiguration().getDefaultExpressionLanguageContext());
+			result = (ELContext)X4OLanguageClassLoader.newInstance(elContextClass);
 		} catch (Exception e) {
 			throw new RuntimeException("Could not create instance of ELContext: "+e.getMessage(),e);
 		}

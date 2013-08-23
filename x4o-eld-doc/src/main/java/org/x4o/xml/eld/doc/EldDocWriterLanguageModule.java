@@ -55,27 +55,27 @@ public class EldDocWriterLanguageModule extends AbstractApiDocWriter {
 		clearHrefContentGroup(doc,node,"summary","namespace",ElementNamespaceContext.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageModule.class},nodeBodyOrders={1},contentGroup="interface",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={1},contentGroup="interface",contentGroupType="summary")
 	public void writeInterfaceSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Interface Summary",ElementInterface.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageModule.class},nodeBodyOrders={2},contentGroup="binding",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={2},contentGroup="binding",contentGroupType="summary")
 	public void writeBindingSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Binding Summary",ElementBindingHandler.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageModule.class},nodeBodyOrders={3},contentGroup="attribute",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={3},contentGroup="attribute",contentGroupType="summary")
 	public void writeAttributeSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Attribute Summary",ElementAttributeHandler.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageModule.class},nodeBodyOrders={4},contentGroup="configurator",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={4},contentGroup="configurator",contentGroupType="summary")
 	public void writeConfigutorSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Configurator Summary",ElementConfigurator.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageModule.class},nodeBodyOrders={5},contentGroup="namespace",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={5},contentGroup="namespace",contentGroupType="summary")
 	public void writeNamespaceSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Namespace Summary",ElementNamespaceContext.class);
 	}

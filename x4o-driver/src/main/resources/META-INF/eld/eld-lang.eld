@@ -52,7 +52,7 @@
 		id="eld-root"
 		>
 		<description>Single root namespace so xsd schema generation works correct.</description>
-		<element id="module"								objectClass="${parentLanguageConfiguration.defaultElementLanguageModule}" elementClass="org.x4o.xml.eld.lang.ModuleElement">
+		<element id="module"								objectClass="${parentLanguage.languageConfiguration.defaultElementLanguageModule}" elementClass="org.x4o.xml.eld.lang.ModuleElement">
 			<description>The module root element.</description>
 			<attribute id="id" required="true">
 				<description>The module id.</description>
@@ -77,13 +77,13 @@
 		<description>Some basic language definitions and some helper tags.</description>
 		
 		<!-- First copy some core elements over from parent config -->
-		<element id="namespace" objectClass="${parentLanguageConfiguration.defaultElementNamespaceContext}">
+		<element id="namespace" objectClass="${parentLanguage.languageConfiguration.defaultElementNamespaceContext}">
 			<description>Defines an namespace for the language.</description>
 			<attribute id="id" required="true">
 				<description>The namespace id.</description>
 			</attribute>
 		</element>
-		<element id="element" objectClass="${parentLanguageConfiguration.defaultElementClass}">
+		<element id="element" objectClass="${parentLanguage.languageConfiguration.defaultElementClass}">
 			<description>The xml element.</description>
 			<attribute id="id">
 				<attributeAlias name="tag"/>
@@ -98,7 +98,7 @@
 				<classConverter/>
 			</attribute>
 		</element>
-		<element id="elementInterface" objectClass="${parentLanguageConfiguration.defaultElementInterface}">
+		<element id="elementInterface" objectClass="${parentLanguage.languageConfiguration.defaultElementInterface}">
 			<description>Config element objects by java interface.</description>
 			<attribute id="id" required="true">
 				<description>The interface id.</description>
@@ -108,7 +108,7 @@
 				<classConverter/>
 			</attribute>
 		</element>
-		<element id="attribute" objectClass="${parentLanguageConfiguration.defaultElementClassAttribute}">
+		<element id="attribute" objectClass="${parentLanguage.languageConfiguration.defaultElementClassAttribute}">
 			<description>XML Element Attribute tag.</description>
 			<attribute id="id">
 				<attributeAlias name="name"/>

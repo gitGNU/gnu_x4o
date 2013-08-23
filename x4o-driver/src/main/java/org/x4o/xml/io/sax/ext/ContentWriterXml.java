@@ -41,25 +41,9 @@ public class ContentWriterXml extends AbstractContentWriter {
 	 * Creates XmlWriter which prints to the Writer interface.
 	 * @param out	The writer to print the xml to.
 	 */
-	public ContentWriterXml(Writer out,String encoding,String charNewLine,String charTab) {
-		super(out, encoding, charNewLine, charTab);
-	}
-
-	/**
-	 * Creates XmlWriter which prints to the Writer interface.
-	 * @param out	The writer to print the xml to.
-	 */
 	public ContentWriterXml(Writer out,String encoding) {
-		this(out,encoding,null,null);
-	}
-	
-	/**
-	 * Creates XmlWriter which prints to the OutputStream interface.
-	 * @param out	The OutputStream to write to.
-	 * @throws UnsupportedEncodingException	Is thrown when UTF-8 can't we printed.
-	 */
-	public ContentWriterXml(OutputStream out,String encoding) throws UnsupportedEncodingException {
-		this(new OutputStreamWriter(out, encoding),encoding);
+		super(out);
+		getPropertyConfig().setProperty(OUTPUT_ENCODING, encoding);
 	}
 	
 	/**
@@ -83,11 +67,9 @@ public class ContentWriterXml extends AbstractContentWriter {
 	 * Creates XmlWriter which prints to the OutputStream interface.
 	 * @param out	The OutputStream to write to.
 	 * @param encoding	The OutputStream encoding.
-	 * @param charNewLine	The newline char.
-	 * @param charTab	The tab char.
 	 * @throws UnsupportedEncodingException	Is thrown when UTF-8 can't we printed.
 	 */
-	public ContentWriterXml(OutputStream out,String encoding,String charNewLine,String charTab) throws UnsupportedEncodingException {
-		this(new OutputStreamWriter(out, encoding),encoding,charNewLine,charTab);
+	public ContentWriterXml(OutputStream out,String encoding) throws UnsupportedEncodingException {
+		this(new OutputStreamWriter(out, encoding),encoding);
 	}
 }

@@ -22,6 +22,8 @@
  */
 package org.x4o.xml.lang;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -49,12 +51,13 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	private ELContext eLContext = null;
 	private ElementAttributeValueParser elementAttributeValueParser = null;
 	private ElementObjectPropertyValue elementObjectPropertyValue = null;
-	private X4OPhase currentX4OPhase = null;
 	private Map<Element, X4OPhase> dirtyElements = null;
 	private Element rootElement = null;
-	private X4ODebugWriter debugWriter;
-	private Map<String,Object> languageProperties;
-
+	private X4ODebugWriter debugWriter = null;
+	private X4OPhase phaseCurrent = null;
+	private String phaseStop = null;
+	private List<String> phaseSkip = null;
+	
 	/**
 	 * Creates a new empty language context.
 	 */
@@ -66,11 +69,9 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 		logger.finest("Creating new ParsingContext");
 		this.language=language;
 		dirtyElements = new HashMap<Element, X4OPhase>(40);
-		languageProperties = new HashMap<String,Object>(20);
-		languageProperties.put(X4OLanguageProperty.LANGUAGE_NAME.toUri(), language.getLanguageName());
-		languageProperties.put(X4OLanguageProperty.LANGUAGE_VERSION.toUri(), language.getLanguageVersion());
+		phaseSkip = new ArrayList<String>(5);
 	}
-
+	
 	public X4OLanguage getLanguage() {
 		return language;
 	}
@@ -81,7 +82,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	public ELContext getExpressionLanguageContext() {
 		return eLContext;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setExpressionLanguageContext(javax.el.ELContext)
 	 */
@@ -91,14 +92,14 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 		}
 		eLContext = context;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContext#getExpressionLanguageFactory()
 	 */
 	public ExpressionFactory getExpressionLanguageFactory() {
 		return expressionFactory;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setExpressionLanguageFactory(javax.el.ExpressionFactory)
 	 */
@@ -115,7 +116,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	public ElementAttributeValueParser getElementAttributeValueParser() {
 		return elementAttributeValueParser;
 	}
-
+	
 	/**
 	 * @param elementAttributeValueParser the elementAttributeValueParser to set
 	 */
@@ -125,14 +126,14 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 		}
 		this.elementAttributeValueParser = elementAttributeValueParser;
 	}
-
+	
 	/**
 	 * @return the elementObjectPropertyValue
 	 */
 	public ElementObjectPropertyValue getElementObjectPropertyValue() {
 		return elementObjectPropertyValue;
 	}
-
+	
 	/**
 	 * @param elementObjectPropertyValue the elementObjectPropertyValue to set
 	 */
@@ -142,21 +143,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 		}
 		this.elementObjectPropertyValue = elementObjectPropertyValue;
 	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#getCurrentPhase()
-	 */
-	public X4OPhase getCurrentPhase() {
-		return currentX4OPhase;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setCurrentPhase(org.x4o.xml.lang.phase.X4OPhase)
-	 */
-	public void setCurrentPhase(X4OPhase currentX4OPhase) {
-		this.currentX4OPhase = currentX4OPhase;
-	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContext#addDirtyElement(org.x4o.xml.element.Element, org.x4o.xml.lang.phase.X4OPhase)
 	 */
@@ -166,21 +153,21 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 		}
 		dirtyElements.put(element,phase);
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContext#getDirtyElements()
 	 */
 	public Map<Element, X4OPhase> getDirtyElements() {
 		return dirtyElements;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContext#getRootElement()
 	 */
 	public Element getRootElement() {
 		return rootElement;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContext#setRootElement(org.x4o.xml.element.Element)
 	 */
@@ -188,66 +175,7 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 		if (element==null) {
 			throw new NullPointerException("May not set rootElement to null");
 		}
-		// allowed for reusing this context in multiple parse sessions.
-		//if (rootElement!=null) {
-		//	throw new IllegalStateException("Can't set rootElement when it is already set.");
-		//}
 		rootElement=element;
-	}
-	
-	public Object getLanguageProperty(String key) {
-		return languageProperties.get(key);
-	}
-	
-	public void setLanguageProperty(String key,Object value) {
-		languageProperties.put(key, value);
-	}
-	
-	/**
-	 * 
-	 */
-	public Object getLanguageProperty(X4OLanguageProperty property) {
-		return getLanguageProperty(property.toUri());
-	}
-
-	/**
-	 * 
-	 */
-	public void setLanguageProperty(X4OLanguageProperty property, Object value) {
-		if (property.isValueValid(value)==false) {
-			throw new IllegalArgumentException("Now allowed to set value: "+value+" in property: "+property.name());
-		}
-		setLanguageProperty(property.toUri(), value);
-	}
-
-	/**
-	 * 
-	 */
-	public boolean getLanguagePropertyBoolean(X4OLanguageProperty property) {
-		Object value = getLanguageProperty(property);
-		if (value instanceof Boolean) {
-			return (Boolean)value;
-		}
-		return (Boolean)property.getDefaultValue();
-	}
-
-	/**
-	 * 
-	 */
-	public int getLanguagePropertyInteger(X4OLanguageProperty property) {
-		Object value = getLanguageProperty(property);
-		if (value instanceof Integer) {
-			return (Integer)value;
-		}
-		return (Integer)property.getDefaultValue();
-	}
-	
-	public String getLanguagePropertyString(X4OLanguageProperty property) {
-		Object value = getLanguageProperty(property);
-		if (value instanceof String) {
-			return (String)value;
-		}
-		return (String)property.getDefaultValue();
 	}
 	
 	/**
@@ -256,18 +184,60 @@ public abstract class AbstractX4OLanguageContext implements X4OLanguageContextLo
 	public X4ODebugWriter getX4ODebugWriter() {
 		return debugWriter;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContext#hasX4ODebugWriter()
 	 */
 	public boolean hasX4ODebugWriter() {
 		return debugWriter!=null;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setX4ODebugWriter(org.x4o.xml.io.sax.X4ODebugWriter)
 	 */
 	public void setX4ODebugWriter(X4ODebugWriter debugWriter) {
 		this.debugWriter=debugWriter;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.X4OLanguageContext#getPhaseCurrent()
+	 */
+	public X4OPhase getPhaseCurrent() {
+		return phaseCurrent;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setPhaseCurrent(org.x4o.xml.lang.phase.X4OPhase)
+	 */
+	public void setPhaseCurrent(X4OPhase phaseCurrent) {
+		this.phaseCurrent = phaseCurrent;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.X4OLanguageContext#getPhaseStop()
+	 */
+	public String getPhaseStop() {
+		return phaseStop;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.X4OLanguageContext#getPhaseSkip()
+	 */
+	public List<String> getPhaseSkip() {
+		return phaseSkip;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#setPhaseStop(java.lang.String)
+	 */
+	public void setPhaseStop(String phaseId) {
+		this.phaseStop=phaseId;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.X4OLanguageContextLocal#addPhaseSkip(java.lang.String)
+	 */
+	public void addPhaseSkip(String phaseId) {
+		phaseSkip.add(phaseId);
 	}
 }

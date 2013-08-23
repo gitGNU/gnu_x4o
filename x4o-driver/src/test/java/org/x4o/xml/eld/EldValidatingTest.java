@@ -23,9 +23,8 @@
 package org.x4o.xml.eld;
 
 import org.x4o.xml.X4ODriver;
-import org.x4o.xml.eld.EldDriver;
+import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 
@@ -42,13 +41,12 @@ public class EldValidatingTest extends TestCase {
 	public void testValidation() throws Exception {
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
-		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		reader.setProperty(X4OLanguagePropertyKeys.READER_VALIDATION_INPUT, true);
-		//parser.setProperty(X4OLanguagePropertyKeys.VALIDATION_SCHEMA_PATH, "/tmp");
+		//reader.getContentConfig().setProperty("",true);
+		reader.setProperty(DefaultX4OReader.VALIDATION_INPUT_DOC, true);
+		//parser.setProperty(DefaultX4OReader.VALIDATION_SCHEMA_PATH, "/tmp");
 		try {
 			// TODO: reader.readResource("META-INF/eld/eld-lang.eld");
 		} finally {
-			
 		}
 	}
 }

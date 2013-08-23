@@ -22,8 +22,12 @@
  */
 package org.x4o.xml.io;
 
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageProperty;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.lang.X4OLanguage;
 
 /**
  * AbstractX4OConnection is the read/write interface for the classes.
@@ -33,49 +37,43 @@ import org.x4o.xml.lang.X4OLanguageProperty;
  */
 public abstract class AbstractX4OConnection implements X4OConnection {
 	
-	private X4OLanguageContext languageContext = null;
+	private final X4OLanguage language;
+	protected String phaseStop = null;
+	protected List<String> phaseSkip = null;
 	
-	/**
-	 * Creates a AbstractX4OConnection.
-	 * @param languageContext	The language context of this connection.
-	 */
-	public AbstractX4OConnection(X4OLanguageContext languageContext) {
-		this.languageContext=languageContext;
+	public AbstractX4OConnection(X4OLanguage language) {
+		this.language=language;
+		this.phaseSkip = new ArrayList<String>(2);
 	}
 	
-	/**
-	 * @return	Returns the language context.
-	 */
-	protected X4OLanguageContext getLanguageContext() {
-		return languageContext;
+	protected X4OLanguage getLanguage() {
+		return language;
 	}
-
+	
+	abstract PropertyConfig getPropertyConfig();
+	
 	/**
 	 * Sets an X4O Language property.
 	 * @param key	The key of the property to set.
 	 * @param value	The vlue of the property to set.
 	 */
 	public void setProperty(String key,Object value) {
-		String[] keyLimits = getPropertyKeySet();
-		for (int i=0;i<keyLimits.length;i++) {
-			String keyLimit = keyLimits[i];
-			if (keyLimit.equals(key)) {
-				//if (phaseManager!=null) {
-				//	TODO: throw new IllegalStateException("Can't set property after phaseManager is created.");
-				//}
-				languageContext.setLanguageProperty(X4OLanguageProperty.valueByUri(key), value);
-				return;
-			}
-		}
-		throw new IllegalArgumentException("Property with key: "+key+" is protected by key limit.");
+		getPropertyConfig().setProperty(key, value);
 	}
 	
-	/**
-	 * Returns the value an X4O Language property.
-	 * @param key	The key of the property to get the value for.
-	 * @return	Returns null or the value of the property.
-	 */
 	public Object getProperty(String key) {
-		return languageContext.getLanguageProperty(X4OLanguageProperty.valueByUri(key));
+		return getPropertyConfig().getProperty(key);
+	}
+	
+	public Collection<String> getPropertyKeys() {
+		return getPropertyConfig().getPropertyKeys();
+	}
+	
+	public void setPhaseStop(String phaseId) {
+		phaseStop = phaseId;
+	}
+	
+	public void addPhaseSkip(String phaseId) {
+		phaseSkip.add( phaseId );
 	}
 }

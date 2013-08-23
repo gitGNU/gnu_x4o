@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.models.TestObjectRoot;
 
 
@@ -50,7 +49,7 @@ public class SwingTests extends TestCase {
 		X4OReader<TestObjectRoot> reader = driver.createReader();
 		File f = File.createTempFile("test-swing", ".xml");
 		//f.deleteOnExit();
-		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(f));
+		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(f));
 		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true);
 		//reader.readResource("tests/test-swing.xml");
 		//Thread.sleep(30000);

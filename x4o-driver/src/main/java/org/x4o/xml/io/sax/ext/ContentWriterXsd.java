@@ -36,8 +36,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class ContentWriterXsd extends ContentWriterXmlTag<ContentWriterXsd.Tag> {
 	
-	public ContentWriterXsd(Writer out,String encoding,String charNewLine,String charTab) {
-		super(out,encoding,charNewLine,charTab);
+	public ContentWriterXsd(Writer out,String encoding) {
+		super(out,encoding);
 	}
 	
 	public String getTagNamespaceUri() {

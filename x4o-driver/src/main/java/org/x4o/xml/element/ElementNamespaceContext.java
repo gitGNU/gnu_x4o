@@ -31,12 +31,6 @@ import java.util.List;
  * @version 1.0 Oct 28, 2009
  */
 public interface ElementNamespaceContext extends ElementMetaBase {
-
-	//void init(ElementLanguageModuleLoader elementProvider,String language);
-	
-	//String getNamespace();
-	//String getNamespaceResourceFile();
-	//String getNamespaceLanguage();
 	
 	/**
 	 * Sets the prefix mapping.

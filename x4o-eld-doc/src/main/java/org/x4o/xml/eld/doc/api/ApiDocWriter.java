@@ -172,8 +172,7 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 						writeNodeTreePath(bodyEvent);
 					}
 					writeNodeDescription(bodyEvent,isNodePageMode);
-					writeNodeSummary(bodyEvent,true); // print without div and block lists
-					writeNodeSummary(bodyEvent,false);
+					writeNodeSummary(bodyEvent,isNodePageMode);
 					writeNodeDetails(bodyEvent);
 				writer.docPageContentEnd();
 			writer.docPageClassEnd();
@@ -240,35 +239,28 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 		writer.printTagEnd(Tag.div); // description
 	}
 	
-	private void writeNodeSummary(ApiDocWriteEvent<ApiDocNode> event,boolean isPage) throws SAXException {
+	private void writeNodeSummary(ApiDocWriteEvent<ApiDocNode> event,boolean isPageMode) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
-		List<ApiDocNodeWriter> bodyWriterSummary = null;
-		List<ApiDocNodeWriter> bodyWriterSummaryPage = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.SUMMARY_PAGE);
-		List<ApiDocNodeWriter> bodyWriterSummaryNormal = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.SUMMARY);
-		if (isPage) {
-			bodyWriterSummary = bodyWriterSummaryPage;
-		} else {
-			bodyWriterSummary = bodyWriterSummaryNormal;
-		}
-		if (!isPage) {
+		List<ApiDocNodeWriter> bodyWriterSummary = findNodeBodyWriters(event.getEventObject(),ApiDocNodeBody.SUMMARY);
+		if (!isPageMode) {
 			writer.printTagStart(Tag.div, ApiDocContentCss.summary);
 			writer.docPageBlockStart();
 		}
-			if (bodyWriterSummary.isEmpty() && !isPage && bodyWriterSummaryPage.isEmpty()) {
-				writer.docPageBlockStart();
+			if (bodyWriterSummary.isEmpty() && event.getEventObject().getNodes().isEmpty()==false) {
+				if (!isPageMode) { writer.docPageBlockStart(); }
 				defaultWriteSummary(event.getEventObject(),writer);
-				writer.docPageBlockEnd();
+				if (!isPageMode) { writer.docPageBlockEnd(); }
 			}
 			for (int i=0;i<bodyWriterSummary.size();i++) {
 				ApiDocNodeWriter nodeWriter = bodyWriterSummary.get(i);
-				if (!isPage) { writer.docPageBlockStart(); }
+				if (!isPageMode) { writer.docPageBlockStart(); }
 				writeSubNavNamedHref(event,nodeWriter);
-				if (!isPage) { writer.printTagCharacters(Tag.h3, "Summary"); }
+				if (!isPageMode) { writer.printTagCharacters(Tag.h3, "Summary"); }
 				nodeWriter.writeNodeContent(event);
-				if (!isPage) { writer.docPageBlockEnd(); }
-				if (isPage) { writer.printTagStartEnd(Tag.br); } // mm .. mm
+				if (!isPageMode) { writer.docPageBlockEnd(); }
+				if (isPageMode) { writer.printTagStartEnd(Tag.br); } // mm .. mm
 			}
-		if (!isPage) {
+		if (!isPageMode) {
 			writer.docPageBlockEnd();
 			writer.printTagEnd(Tag.div); // Summary
 		}
@@ -459,9 +451,9 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 		String encoding = XMLConstants.XML_DEFAULT_ENCODING;
 		try {
 			Writer out = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
-			String charNewLine = XMLConstants.CHAR_NEWLINE+"";
-			String charTab = "  ";
-			ApiDocContentWriter result = new ApiDocContentWriter(out,encoding,charNewLine,charTab);
+			ApiDocContentWriter result = new ApiDocContentWriter(out,encoding);
+			result.getPropertyConfig().setProperty(ApiDocContentWriter.OUTPUT_CHAR_NEWLINE, XMLConstants.CHAR_NEWLINE+"");
+			result.getPropertyConfig().setProperty(ApiDocContentWriter.OUTPUT_CHAR_TAB, "  ");
 			return result;
 		} catch (UnsupportedEncodingException e) {
 			throw new SAXException(e);

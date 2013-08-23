@@ -30,7 +30,6 @@ import java.util.List;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageContextLocal;
-import org.x4o.xml.lang.X4OLanguageProperty;
 
 /**
  * X4OPhaseManager stores the X4OPhaseHandler and puts them in the right order.
@@ -110,12 +109,6 @@ PHASE_ORDER = {	*startupX4OPhase,
 			if (p.getType().equals(type)) {
 				result.add(p);
 			}
-			if (X4OPhaseType.XML_READ.equals(type) && X4OPhaseType.XML_RW.equals(p.getType())) {
-				result.add(p);
-			}
-			if (X4OPhaseType.XML_WRITE.equals(type) && X4OPhaseType.XML_RW.equals(p.getType())) {
-				result.add(p);
-			}
 		}
 		Collections.sort(result,new X4OPhaseComparator());
 		return result;
@@ -126,47 +119,28 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
 	public void runPhases(X4OLanguageContext languageContext,X4OPhaseType type) throws X4OPhaseException {
-
+		
 		// sort for the order
 		List<X4OPhase> x4oPhasesOrder = getOrderedPhases(type);
-		
-		/*
-		System.out.println("------ phases type: "+type+" for: "+languageContext.getLanguage().getLanguageName());
-		for (X4OPhase p:x4oPhasesOrder) {
-			System.out.print("Exec phase; "+p.getId()+" deps: [");
-			for (String dep:p.getPhaseDependencies()) {
-				System.out.print(dep+",");
-			}
-			System.out.println("]");
-		}
-		*/
 		
 		// debug output
 		if (languageContext.getX4ODebugWriter()!=null) {
 			languageContext.getX4ODebugWriter().debugPhaseOrder(x4oPhases);
 		}
 		
-		boolean skipReleasePhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RELEASE);
-		boolean skipRunPhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RUN);
-		//boolean skipSiblingsPhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_SIBLINGS);
-		String stopPhase = languageContext.getLanguagePropertyString(X4OLanguageProperty.PHASE_STOP_AFTER);
+		List<String> phaseSkip = languageContext.getPhaseSkip();
+		String phaseStop = languageContext.getPhaseStop();
 		
 		// run the phases in ordered order
 		for (X4OPhase phase:x4oPhasesOrder) {
-
-			if (skipReleasePhase && phase.getId().equals("X4O_RELEASE")) {
-				continue; // skip always release phase when requested by property
+			
+			if (phaseSkip.contains(phase.getId())) {
+				continue; // skip phase when requested by context
 			}
-			if (skipRunPhase && phase.getId().equals("READ_RUN")) {
-				continue; // skip run phase on request
-			}
-	//		if (skipSiblingsPhase && phase.getId().equals("INIT_LANG_SIB")) {
-	//			continue; // skip loading sibling languages
-	//		}
 			
 			// debug output
-			((X4OLanguageContextLocal)languageContext).setCurrentPhase(phase);
-			 
+			((X4OLanguageContextLocal)languageContext).setPhaseCurrent(phase);
+			
 			// run listeners
 			for (X4OPhaseListener l:phase.getPhaseListeners()) {
 				l.preRunPhase(phase, languageContext);
@@ -186,7 +160,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 				}
 			}
 			
-			if (stopPhase!=null && stopPhase.equals(phase.getId())) {
+			if (phaseStop!=null && phaseStop.equals(phase.getId())) {
 				return; // we are done
 			}
 		}
@@ -200,8 +174,8 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 */
 	public void runPhasesForElement(Element e,X4OPhaseType type,X4OPhase p) throws X4OPhaseException {
 		X4OLanguageContext languageContext = e.getLanguageContext();
-		boolean skipRunPhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RUN);
-		String stopPhase = languageContext.getLanguagePropertyString(X4OLanguageProperty.PHASE_STOP_AFTER);
+		List<String> phaseSkip = languageContext.getPhaseSkip();
+		String phaseStop = languageContext.getPhaseStop();
 		
 		// sort for the order
 		List<X4OPhase> x4oPhasesOrder = getOrderedPhases(type);
@@ -209,15 +183,12 @@ PHASE_ORDER = {	*startupX4OPhase,
 			if (phase.getId().equals(p.getId())==false) {
 				continue; // we start running all phases from specified phase
 			}
-			if (phase.getId().equals("RELEASE")) {
-				continue; // skip always release phase in dirty extra runs.
-			}
-			if (skipRunPhase && phase.getId().equals("READ_RUN")) {
-				continue; // skip run phase on request
+			if (phaseSkip.contains(phase.getId())) {
+				continue; // skip phase when requested by context
 			}
 			
 			// set phase
-			((X4OLanguageContextLocal)languageContext).setCurrentPhase(phase);
+			((X4OLanguageContextLocal)languageContext).setPhaseCurrent(phase);
 			
 			// do the run interface
 			phase.runPhase(languageContext);
@@ -225,7 +196,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 			//  run the element phase if possible
 			executePhaseRoot(languageContext,phase);
 			
-			if (stopPhase!=null && stopPhase.equals(phase.getId())) {
+			if (phaseStop!=null && phaseStop.equals(phase.getId())) {
 				return; // we are done
 			}
 		}
@@ -236,8 +207,15 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
 	public void doReleasePhaseManual(X4OLanguageContext languageContext) throws X4OPhaseException {
-		boolean skipReleasePhase = languageContext.getLanguagePropertyBoolean(X4OLanguageProperty.PHASE_SKIP_RELEASE);
-		if (skipReleasePhase==false) {
+		List<String> phaseSkip = languageContext.getPhaseSkip();
+		String releaseRequested = null;
+		if (phaseSkip.contains(X4OPhase.READ_RELEASE)) {
+			releaseRequested = X4OPhase.READ_RELEASE;
+		}
+		if (phaseSkip.contains(X4OPhase.WRITE_RELEASE)) {
+			releaseRequested = X4OPhase.WRITE_RELEASE;
+		}
+		if (releaseRequested==null) {
 			throw new IllegalStateException("No manual release requested.");
 		}
 		if (languageContext.getRootElement()==null) {
@@ -249,7 +227,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 		
 		X4OPhase h = null;
 		for (X4OPhase phase:x4oPhases) {
-			if (phase.getId().equals("X4O_RELEASE")) {
+			if (phase.getId().equals(releaseRequested)) {
 				h = phase;
 				break;
 			}
@@ -259,7 +237,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 		}
 		
 		// set phase
-		((X4OLanguageContextLocal)languageContext).setCurrentPhase(h);
+		((X4OLanguageContextLocal)languageContext).setPhaseCurrent(h);
 		
 		// do the run interface
 		h.runPhase(languageContext);

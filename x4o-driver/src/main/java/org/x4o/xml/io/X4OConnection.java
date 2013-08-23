@@ -22,6 +22,8 @@
  */
 package org.x4o.xml.io;
 
+import java.util.Collection;
+
 /**
  * X4OConnection interface for config the io drivers.
  * 
@@ -37,15 +39,11 @@ public interface X4OConnection {
 	 */
 	void setProperty(String key,Object value);
 	
-	/**
-	 * Returns the value an X4O Language property.
-	 * @param key	The key of the property to get the value for.
-	 * @return	Returns null or the value of the property.
-	 */
-	Object getProperty(String key);
+	public Object getProperty(String key);
 	
-	/**
-	 * @return Returns the propery keys which can be set.
-	 */
-	String[] getPropertyKeySet();
+	public Collection<String> getPropertyKeys();
+	
+	public void setPhaseStop(String phaseId);
+	
+	public void addPhaseSkip(String phaseId);
 }

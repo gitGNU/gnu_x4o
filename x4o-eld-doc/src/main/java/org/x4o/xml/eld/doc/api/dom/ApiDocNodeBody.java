@@ -34,10 +34,5 @@ public enum ApiDocNodeBody {
 	DESCRIPTION_LINKS,
 	DESCRIPTION_NODE,
 	SUMMARY,
-	DETAIL,
-	
-	/**
-	 * Summary page blocks had no div and no block lists around content. 
-	 */
-	SUMMARY_PAGE
+	DETAIL
 }

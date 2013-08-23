@@ -95,7 +95,7 @@ public class X4OWriteLanguageDocExecutor {
 	 */
 	public void execute() throws ElementException {
 		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguageName());
-		X4OLanguageContext context = driver.createLanguageContext(getLanguageVersion());
+		X4OLanguageContext context = driver.createLanguage(getLanguageVersion()).createLanguageContext();
 			
 		// Run doc writer
 		EldDocWriter docWriter = new EldDocWriter(context);

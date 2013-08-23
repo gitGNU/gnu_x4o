@@ -30,12 +30,12 @@ import java.io.Writer;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespaceContext;
-import org.x4o.xml.io.XMLConstants;
+import org.x4o.xml.io.DefaultX4OSchemaWriter;
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.io.sax.ext.ContentWriterXsd;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.SAXException;
 
 /**
@@ -46,12 +46,12 @@ import org.xml.sax.SAXException;
  */
 public class EldXsdXmlGenerator {
 
-	private X4OLanguage language = null;
-	private X4OLanguageContext languageContext = null;
+	private final X4OLanguage language;
+	private final PropertyConfig propertyConfig;
 	
-	public EldXsdXmlGenerator(X4OLanguageContext languageContext) {
-		this.languageContext=languageContext;
-		this.language=languageContext.getLanguage();
+	public EldXsdXmlGenerator(X4OLanguage language,PropertyConfig propertyConfig) {
+		this.language=language;
+		this.propertyConfig=propertyConfig;
 	}
 	
 	private void checkNamespace(ElementNamespaceContext ns) {
@@ -64,16 +64,11 @@ public class EldXsdXmlGenerator {
 	}
 	
 	public void writeSchema(String namespace) throws ElementException {
-		File basePath = (File)languageContext.getLanguageProperty(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_PATH);
-		String encoding = languageContext.getLanguagePropertyString(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_ENCODING);
-		String charNew = languageContext.getLanguagePropertyString(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_CHAR_NEWLINE);
-		String charTab = languageContext.getLanguagePropertyString(X4OLanguageProperty.SCHEMA_WRITER_OUTPUT_CHAR_TAB);
+		File basePath = (File)propertyConfig.getProperty(DefaultX4OSchemaWriter.OUTPUT_PATH);
+		String encoding = propertyConfig.getPropertyString(ContentWriterXml.OUTPUT_ENCODING);
 		if (basePath==null) {
 			throw new ElementException("Can't write schema to null output path.");
 		}
-		if (encoding==null) { encoding = XMLConstants.XML_DEFAULT_ENCODING;		}
-		if (charNew==null)  { charNew = XMLConstants.CHAR_NEWLINE+"";	}
-		if (charTab==null)  { charTab = XMLConstants.CHAR_TAB+"";		}
 		try {
 			
 			
@@ -86,7 +81,8 @@ public class EldXsdXmlGenerator {
 				File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
 				Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
 				try {
-					ContentWriterXsd out = new ContentWriterXsd(wr,encoding,charNew,charTab);
+					ContentWriterXsd out = new ContentWriterXsd(wr,encoding);
+					out.getPropertyConfig().copyParentProperties(propertyConfig);
 					generateSchema(ns.getUri(), out);
 				} finally {
 					wr.close();
@@ -99,7 +95,8 @@ public class EldXsdXmlGenerator {
 					File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
 					Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
 					try {
-						ContentWriterXsd out = new ContentWriterXsd(wr,encoding,charNew,charTab);
+						ContentWriterXsd out = new ContentWriterXsd(wr,encoding);
+						out.getPropertyConfig().copyParentProperties(propertyConfig);
 						generateSchema(ns.getUri(), out);
 					} finally {
 						wr.close();

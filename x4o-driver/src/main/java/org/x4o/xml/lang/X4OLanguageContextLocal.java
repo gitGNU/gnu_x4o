@@ -61,13 +61,17 @@ public interface X4OLanguageContextLocal extends X4OLanguageContext {
 	void setElementObjectPropertyValue(ElementObjectPropertyValue elementObjectPropertyValue);
 	
 	/**
-	 * Sets the phase of the context.
-	 * @param phase	The current phase to set.
-	 */
-	void setCurrentPhase(X4OPhase phase);
-	
-	/**
 	 * @param debugWriter	The debug writer to set
 	 */
 	void setX4ODebugWriter(X4ODebugWriter debugWriter);
+	
+	/**
+	 * Sets the phase of the context.
+	 * @param phase	The current phase to set.
+	 */
+	void setPhaseCurrent(X4OPhase phase);
+	
+	void setPhaseStop(String phaseId);
+	
+	void addPhaseSkip(String phaseId);
 }

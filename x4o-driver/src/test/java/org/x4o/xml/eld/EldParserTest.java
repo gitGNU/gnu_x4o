@@ -111,9 +111,8 @@ public class EldParserTest extends TestCase {
 		X4OLanguage language = driver.createLanguage(driver.getLanguageVersionDefault());
 		X4OLanguageModule mod = new DefaultX4OLanguageModule();
 		
-		reader.addELBeanInstance(EldModuleLoader.EL_PARENT_LANGUAGE_CONFIGURATION, language.getLanguageConfiguration());
 		reader.addELBeanInstance(EldModuleLoader.EL_PARENT_LANGUAGE, language);
-		reader.addELBeanInstance(EldModuleLoader.EL_PARENT_ELEMENT_LANGUAGE_MODULE, mod);
+		reader.addELBeanInstance(EldModuleLoader.EL_PARENT_LANGUAGE_MODULE, mod);
 		
 		X4OLanguageModule modNew = reader.readResource("META-INF/test/test-lang.eld");
 		

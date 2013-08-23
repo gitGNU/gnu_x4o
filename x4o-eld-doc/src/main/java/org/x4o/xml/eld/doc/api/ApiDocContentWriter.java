@@ -40,8 +40,8 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 	
 	private boolean isAltRow = true;
 	
-	public ApiDocContentWriter(Writer out,String encoding,String charNewLine,String charTab) {
-		super(out,encoding,charNewLine,charTab);
+	public ApiDocContentWriter(Writer out,String encoding) {
+		super(out,encoding);
 	}
 	
 	public void docCommentGenerated() throws SAXException {

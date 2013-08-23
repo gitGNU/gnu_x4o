@@ -24,7 +24,6 @@ package org.x4o.xml.lang;
 
 import java.util.List;
 
-import org.x4o.xml.X4ODriver;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementInterface;
@@ -62,10 +61,9 @@ public interface X4OLanguage {
 
 	/**
 	 * Creates and fills the initial element language used to store the language.
-	 * @param	driver	The driver to create language context for.
 	 * @return	The newly created ElementLanguage.
 	 */
-	X4OLanguageContext createLanguageContext(X4ODriver<?> driver);
+	X4OLanguageContext createLanguageContext();
 
 	/**
 	 * Search language for object and create element for it.

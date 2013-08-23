@@ -56,13 +56,10 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	private Class<?> defaultLanguageLoader = null;
 	private Class<?> defaultExpressionLanguageContext = null;
 	
-	private Map<String,Object> globalProperties = null;
-	
 	/**
 	 * Default constructor.
 	 */
 	public AbstractX4OLanguageConfiguration() {
-		globalProperties = new HashMap<String,Object>(10);
 	}
 	
 	/**
@@ -327,26 +324,5 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	public void setDefaultExpressionLanguageContext(
 			Class<?> defaultExpressionLanguageContext) {
 		this.defaultExpressionLanguageContext = defaultExpressionLanguageContext;
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getGlobalPropertyKeys()
-	 */
-	public Collection<String> getGlobalPropertyKeys() {
-		return globalProperties.keySet();
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getGlobalProperty(java.lang.String)
-	 */
-	public Object getGlobalProperty(String key) {
-		return globalProperties.get(key);
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfigurationLocal#setGlobalProperty(java.lang.String, java.lang.Object)
-	 */
-	public void setGlobalProperty(String key, Object value) {
-		globalProperties.put(key,value);
 	}
 }

@@ -28,8 +28,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.SAXException;
 
 /**
@@ -40,8 +41,8 @@ import org.xml.sax.SAXException;
  */
 public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection implements X4OWriterContext<T> {
 
-	public AbstractX4OWriterContext(X4OLanguageContext elementLanguage) {
-		super(elementLanguage);
+	public AbstractX4OWriterContext(X4OLanguage language) {
+		super(language);
 	}
 	
 	public void writeFileContext(X4OLanguageContext context,String fileName) throws X4OConnectionException,SAXException,IOException {
@@ -66,7 +67,7 @@ public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection 
 	public String writeStringContext(X4OLanguageContext context) throws X4OConnectionException,SAXException,IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream(4096);
 		writeContext(context, out);
-		String encoding = context.getLanguagePropertyString(X4OLanguageProperty.WRITER_OUTPUT_ENCODING);
+		String encoding = (String)getProperty(ContentWriterXml.OUTPUT_ENCODING);
 		return out.toString(encoding);
 	}
 }

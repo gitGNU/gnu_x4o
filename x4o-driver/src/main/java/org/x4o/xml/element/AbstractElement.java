@@ -43,7 +43,7 @@ public abstract class AbstractElement implements Element {
 	/** The config object */
 	private Object elementObject = null;
 	/** The language parsing context */
-	private X4OLanguageContext elementLanguage = null;
+	private X4OLanguageContext languageContext = null;
 	/** The ElementClass */
 	private ElementClass elementClass = null;
 	/** The attributes */
@@ -116,15 +116,15 @@ public abstract class AbstractElement implements Element {
 	/**
 	 * @see Element#setLanguageContext(X4OLanguageContext)
 	 */
-	public void setLanguageContext(X4OLanguageContext elementLanguage) {
-		this.elementLanguage=elementLanguage;
+	public void setLanguageContext(X4OLanguageContext languageContext) {
+		this.languageContext=languageContext;
 	}
 	
 	/**
 	 * @see Element#getLanguageContext()
 	 */
 	public X4OLanguageContext getLanguageContext() {
-		return elementLanguage;
+		return languageContext;
 	}
 
 	/**

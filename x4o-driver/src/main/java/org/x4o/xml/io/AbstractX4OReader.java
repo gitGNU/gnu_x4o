@@ -28,8 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
 
 /**
@@ -41,15 +40,8 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("unchecked")
 abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> implements X4OReader<T> {
 	
-	public AbstractX4OReader(X4OLanguageContext elementLanguage) {
-		super(elementLanguage);
-	}
-
-	/**
-	 * @see org.x4o.xml.io.X4OConnection#getPropertyKeySet()
-	 */
-	public String[] getPropertyKeySet() {
-		return X4OLanguagePropertyKeys.DEFAULT_X4O_READER_KEYS;
+	public AbstractX4OReader(X4OLanguage language) {
+		super(language);
 	}
 	
 	public T read(InputStream input, String systemId, URL basePath) throws X4OConnectionException,SAXException,IOException {

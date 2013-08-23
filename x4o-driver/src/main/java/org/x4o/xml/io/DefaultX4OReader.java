@@ -22,27 +22,32 @@
  */
 package org.x4o.xml.io;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.el.ValueExpression;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.x4o.xml.io.sax.X4OContentParser;
 import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.io.sax.ext.ContentWriterXml;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageContextLocal;
-import org.x4o.xml.lang.X4OLanguageProperty;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.x4o.xml.lang.phase.X4OPhaseType;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -53,25 +58,82 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version 1.0 Aug 9, 2012
  */
 public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
-
 	
 	/** The logger to log to. */
 	private Logger logger = null;
 	
-	public DefaultX4OReader(X4OLanguageContext elementLanguage) {
-		super(elementLanguage);
+	private X4OLanguageContext languageContext = null;
+	
+	private PropertyConfig propertyConfig;
+	
+	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_READER;
+	private final static String PROPERTY_SAX_ERROR_HANDLER            = "sax/error-handler";
+	private final static String PROPERTY_SAX_ENTITY_RESOLVER          = "sax/entity-resolver";
+	private final static String PROPERTY_DOC_EMPTY_NAMESPACE_URI      = "doc/empty-namespace-uri";
+	private final static String PROPERTY_DOC_BUFFER_SIZE              = "doc/buffer-size";
+	private final static String PROPERTY_INPUT_STREAM                 = "input/stream";
+	private final static String PROPERTY_INPUT_ENCODING               = "input/encoding";
+	private final static String PROPERTY_INPUT_SOURCE                 = "input/source";
+	private final static String PROPERTY_INPUT_SYSTEM_ID              = "input/system-id";
+	private final static String PROPERTY_INPUT_BASE_PATH              = "input/base-path";
+	private final static String PROPERTY_VALIDATION_SCHEMA_AUTO_WRITE = "validation/schema-auto-write";
+	private final static String PROPERTY_VALIDATION_SCHEMA_PATH       = "validation/schema-path";
+	private final static String PROPERTY_VALIDATION_INPUT_DOC         = "validation/input-doc";
+	private final static String PROPERTY_VALIDATION_INPUT_SCHEMA      = "validation/input-schema";
+	
+	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
+	public final static String SAX_ERROR_HANDLER            = PROPERTY_CONTEXT_PREFIX+PROPERTY_SAX_ERROR_HANDLER;
+	public final static String SAX_ENTITY_RESOLVER          = PROPERTY_CONTEXT_PREFIX+PROPERTY_SAX_ENTITY_RESOLVER;
+	public final static String DOC_EMPTY_NAMESPACE_URI      = PROPERTY_CONTEXT_PREFIX+PROPERTY_DOC_EMPTY_NAMESPACE_URI;
+	public final static String DOC_BUFFER_SIZE              = PROPERTY_CONTEXT_PREFIX+PROPERTY_DOC_BUFFER_SIZE;
+	public final static String INPUT_STREAM                 = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_STREAM;
+	public final static String INPUT_ENCODING               = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_ENCODING;
+	public final static String INPUT_SOURCE                 = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_SOURCE;
+	public final static String INPUT_SYSTEM_ID              = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_SYSTEM_ID;
+	public final static String INPUT_BASE_PATH              = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_BASE_PATH;
+	public final static String VALIDATION_SCHEMA_AUTO_WRITE = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_SCHEMA_AUTO_WRITE;
+	public final static String VALIDATION_SCHEMA_PATH       = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_SCHEMA_PATH;
+	public final static String VALIDATION_INPUT_DOC         = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_INPUT_DOC;
+	public final static String VALIDATION_INPUT_SCHEMA      = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_INPUT_SCHEMA;
+	
+	static {
+		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,null,PROPERTY_CONTEXT_PREFIX,
+				new PropertyConfigItem(PROPERTY_SAX_ERROR_HANDLER,ErrorHandler.class),
+				new PropertyConfigItem(PROPERTY_SAX_ENTITY_RESOLVER,EntityResolver.class),
+				new PropertyConfigItem(PROPERTY_DOC_EMPTY_NAMESPACE_URI,String.class),
+				new PropertyConfigItem(PROPERTY_DOC_BUFFER_SIZE,Integer.class,4096*2),
+				new PropertyConfigItem(PROPERTY_INPUT_STREAM,InputStream.class),
+				new PropertyConfigItem(PROPERTY_INPUT_ENCODING,String.class,XMLConstants.XML_DEFAULT_ENCODING),
+				new PropertyConfigItem(PROPERTY_INPUT_SOURCE,InputSource.class),
+				new PropertyConfigItem(PROPERTY_INPUT_SYSTEM_ID,String.class),
+				new PropertyConfigItem(PROPERTY_INPUT_BASE_PATH,URL.class),
+				new PropertyConfigItem(PROPERTY_VALIDATION_SCHEMA_AUTO_WRITE,Boolean.class,true),
+				new PropertyConfigItem(PROPERTY_VALIDATION_SCHEMA_PATH,File.class),
+				new PropertyConfigItem(PROPERTY_VALIDATION_INPUT_DOC,Boolean.class,false),
+				new PropertyConfigItem(PROPERTY_VALIDATION_INPUT_SCHEMA,Boolean.class,false)
+				);
+	}
+	
+	public DefaultX4OReader(X4OLanguage language) {
+		super(language);
 		logger = Logger.getLogger(DefaultX4OReader.class.getName());
+		languageContext = language.createLanguageContext();
+		propertyConfig = new PropertyConfig(DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX);
+	}
+	
+	@Override
+	PropertyConfig getPropertyConfig() {
+		return propertyConfig;
 	}
 	
 	public X4OLanguageContext readContext(InputStream input, String systemId, URL basePath) throws X4OConnectionException, SAXException, IOException {
-		setProperty(X4OLanguagePropertyKeys.READER_INPUT_STREAM, input);
-		setProperty(X4OLanguagePropertyKeys.READER_INPUT_SYSTEM_ID, systemId);
-		setProperty(X4OLanguagePropertyKeys.READER_INPUT_BASE_PATH, basePath);
+		setProperty(INPUT_STREAM, input);
+		setProperty(INPUT_SYSTEM_ID, systemId);
+		setProperty(INPUT_BASE_PATH, basePath);
 		read();
-		return getLanguageContext();
+		return languageContext;
 	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	
 	public void addELBeanInstance(String name,Object bean) {
 		if (name==null) {
 			throw new NullPointerException("Can't add null name.");
@@ -82,28 +144,33 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		if (bean==null) {
 			throw new NullPointerException("Can't add null bean.");
 		}
-		Map map = (Map)getProperty(X4OLanguagePropertyKeys.EL_BEAN_INSTANCE_MAP);
-		if (map==null) {
-			map = new HashMap<String,Object>(20);
-			setProperty(X4OLanguagePropertyKeys.EL_BEAN_INSTANCE_MAP, map);
-		}
-		logger.finer("Adding el bean: "+name+" type: "+bean.getClass());
-		map.put(name,bean);
+		ValueExpression ve = languageContext.getExpressionLanguageFactory().createValueExpression(languageContext.getExpressionLanguageContext(),"${"+name+"}", bean.getClass());
+		ve.setValue(languageContext.getExpressionLanguageContext(), bean);
 	}
 	
 	/**
 	 * Parses the input stream as a X4O document.
 	 */
 	protected void read() throws X4OConnectionException,SAXException,IOException {
-		X4OLanguageContext languageContext = getLanguageContext();
 		if (languageContext.getLanguage()==null) {
 			throw new X4OConnectionException("languageContext is broken getLanguage() returns null."); 
 		}
 		
+		
+		if (languageContext instanceof X4OLanguageContextLocal) {
+			X4OLanguageContextLocal ll = (X4OLanguageContextLocal)languageContext;
+			if (phaseStop!=null) {
+				ll.setPhaseStop(phaseStop);
+			}
+			for (String phaseId:phaseSkip) {
+				ll.addPhaseSkip(phaseId);
+			}
+		}
+		
 		// init debugWriter if enabled
 		boolean startedDebugWriter = false;
-		Object debugOutputHandler = languageContext.getLanguageProperty(X4OLanguageProperty.DEBUG_OUTPUT_HANDLER);
-		Object debugOutputStream = languageContext.getLanguageProperty(X4OLanguageProperty.DEBUG_OUTPUT_STREAM);
+		Object debugOutputHandler = null; //TODO: getProperty(X4OLanguageProperty.DEBUG_OUTPUT_HANDLER.name());
+		Object debugOutputStream = null; //getProperty(X4OLanguageProperty.DEBUG_OUTPUT_STREAM.name());
 		if (languageContext.getX4ODebugWriter()==null) {
 			ContentWriter xmlDebugWriter = null;
 			if (debugOutputHandler instanceof ContentWriter) {
@@ -131,7 +198,10 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		
 		// start parsing language
 		try {
-			getLanguageContext().getLanguage().getPhaseManager().runPhases(getLanguageContext(), X4OPhaseType.XML_READ);
+			X4OContentParser parser = new X4OContentParser(propertyConfig);
+			parser.parse(languageContext);
+			
+			getLanguage().getPhaseManager().runPhases(languageContext, X4OPhaseType.XML_READ);
 		} catch (Exception e) {
 
 			// also debug exceptions

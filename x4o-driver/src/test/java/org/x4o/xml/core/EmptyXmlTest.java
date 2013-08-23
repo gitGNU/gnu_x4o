@@ -69,7 +69,7 @@ public class EmptyXmlTest extends TestCase {
 		X4OReader<TestObjectRoot> reader = driver.createReader();
 		try {
 			reader.readResource("tests/empty-xml/empty-test.xml");	
-		} catch (SAXParseException e) {
+		} catch (SAXException e) {
 			assertEquals("No ElementNamespaceContext found for empty namespace.", e.getMessage());
 			return;
 		}

@@ -36,8 +36,8 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag> {
 	
-	public ContentWriterHtml(Writer out,String encoding,String charNewLine,String charTab) {
-		super(out,encoding,charNewLine,charTab);
+	public ContentWriterHtml(Writer out,String encoding) {
+		super(out,encoding);
 	}
 	
 	public void printDocType(DocType doc) throws SAXException {
@@ -69,7 +69,7 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "http-equiv", "", "", "Content-Type");
 		atts.addAttribute ("", "content", "", "", "text/html");
-		atts.addAttribute ("", "charset", "", "", this.encoding);
+		atts.addAttribute ("", "charset", "", "", getPropertyConfig().getPropertyString(OUTPUT_ENCODING));
 		startElementEnd("", "meta", "", atts);
 	}
 	

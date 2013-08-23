@@ -23,10 +23,7 @@
 package org.x4o.xml.eld.doc.api.dom;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * ApiDocNode defines the concept impl data tree nodes for which we write documents.
@@ -42,11 +39,9 @@ public class ApiDocNode {
 	private String description = null;
 	private ApiDocNode parent = null;
 	private List<ApiDocNode> nodes = null;
-	private Map<String,String> contentGroupTypes = null;
 	
 	public ApiDocNode() {
 		nodes = new ArrayList<ApiDocNode>(30);
-		contentGroupTypes = new HashMap<String,String>(3);
 	}
 	
 	public ApiDocNode(Object userData,String id,String name,String description) {
@@ -74,22 +69,6 @@ public class ApiDocNode {
 		return nodes;
 	}
 	
-	public void addContentGroupType(String id,String name) {
-		contentGroupTypes.put(id, name);
-	}
-	
-	public void removeContentGroupType(String id) {
-		contentGroupTypes.remove(id);
-	}
-	
-	public String getContentGroupTypeName(String id) {
-		return contentGroupTypes.get(id);
-	}
-	
-	public Set<String> getContentGroupTypeKeys() {
-		return contentGroupTypes.keySet();
-	}
-	
 	/**
 	 * @return the userData
 	 */
@@ -103,8 +82,6 @@ public class ApiDocNode {
 	public void setUserData(Object userData) {
 		this.userData = userData;
 	}
-	
-
 	
 	/**
 	 * @return the id

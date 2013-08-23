@@ -26,8 +26,10 @@ import java.io.File;
 
 import org.x4o.xml.eld.xsd.EldXsdXmlGenerator;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
+import org.x4o.xml.lang.X4OLanguage;
 
 /**
  * DefaultX4OSchemaWriter can write the schema of a x4o language.
@@ -37,15 +39,28 @@ import org.x4o.xml.lang.X4OLanguagePropertyKeys;
  */
 public class DefaultX4OSchemaWriter extends AbstractX4OConnection implements X4OSchemaWriter {
 	
-	public DefaultX4OSchemaWriter(X4OLanguageContext languageContext) {
-		super(languageContext);
+	private PropertyConfig propertyConfig;
+	
+	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_WRITER;
+	private final static String PROPERTY_OUTPUT_PATH    = "output/path";
+	
+	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
+	public final static String OUTPUT_PATH              = PROPERTY_CONTEXT_PREFIX+PROPERTY_OUTPUT_PATH;	
+	
+	static {
+		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
+				new PropertyConfigItem(PROPERTY_OUTPUT_PATH,File.class)
+				);
 	}
 	
-	/**
-	 * @see org.x4o.xml.io.X4OConnection#getPropertyKeySet()
-	 */
-	public String[] getPropertyKeySet() {
-		return X4OLanguagePropertyKeys.DEFAULT_X4O_SCHEMA_WRITER_KEYS;
+	public DefaultX4OSchemaWriter(X4OLanguage language) {
+		super(language);
+		propertyConfig = new PropertyConfig(DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX);
+	}
+	
+	@Override
+	PropertyConfig getPropertyConfig() {
+		return propertyConfig;
 	}
 	
 	/**
@@ -54,13 +69,14 @@ public class DefaultX4OSchemaWriter extends AbstractX4OConnection implements X4O
 	public void writeSchema(File basePath) throws ElementException {
 		writeSchema(basePath, null);
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.io.X4OSchemaWriter#writeSchema(java.io.File, java.lang.String)
 	 */
 	public void writeSchema(File basePath, String namespace) throws ElementException {
-		setProperty(X4OLanguagePropertyKeys.SCHEMA_WRITER_OUTPUT_PATH, basePath);
-		EldXsdXmlGenerator xsd = new EldXsdXmlGenerator(getLanguageContext());
+		setProperty(OUTPUT_PATH, basePath);
+		// TODO: fix create context
+		EldXsdXmlGenerator xsd = new EldXsdXmlGenerator(getLanguage().createLanguageContext().getLanguage(),getPropertyConfig());
 		xsd.writeSchema(namespace);		// Start xsd generator
 	}
 }

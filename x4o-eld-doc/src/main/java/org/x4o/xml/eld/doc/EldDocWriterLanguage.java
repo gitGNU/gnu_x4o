@@ -64,7 +64,7 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 	}
 	
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageContext.class},nodeBodyOrders={1})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageContext.class},nodeBodyOrders={1})
 	public void writeLanguageSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
 		ApiDocNode node = event.getEventObject();
@@ -99,12 +99,12 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 		writer.docTableEnd();
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageContext.class},nodeBodyOrders={2})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageContext.class},nodeBodyOrders={2})
 	public void writeModulesSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Module Summary",X4OLanguageModule.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={X4OLanguageContext.class},nodeBodyOrders={3})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageContext.class},nodeBodyOrders={3})
 	public void writeNamespaceSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
 		ApiDocNode node = event.getEventObject();

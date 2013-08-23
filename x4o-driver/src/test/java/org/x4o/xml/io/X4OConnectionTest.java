@@ -24,7 +24,6 @@ package org.x4o.xml.io;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 
@@ -38,19 +37,34 @@ import junit.framework.TestCase;
  */
 public class X4OConnectionTest extends TestCase {
 	
-	public void testReaderPropertyFail() throws Exception {
+	public void testReaderPropertyFailRead() throws Exception {
 		Exception e = null;
 		try {
 			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 			X4OReader<TestObjectRoot> reader = driver.createReader();
-			reader.setProperty(X4OLanguagePropertyKeys.WRITER_OUTPUT_ENCODING, "test");
+			reader.getProperty("test");
 		} catch (Exception catchE) {
 			e = catchE;
 		}
 		assertNotNull("No exception",e);
 		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
 		assertTrue("Wrong exception message",e.getMessage().contains("key"));
-		assertTrue("Wrong exception message",e.getMessage().contains("protected"));
+		assertTrue("Wrong exception message",e.getMessage().contains("No"));
+	}
+	
+	public void testReaderPropertyFail() throws Exception {
+		Exception e = null;
+		try {
+			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+			X4OReader<TestObjectRoot> reader = driver.createReader();
+			reader.setProperty("test", "test");
+		} catch (Exception catchE) {
+			e = catchE;
+		}
+		assertNotNull("No exception",e);
+		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
+		assertTrue("Wrong exception message",e.getMessage().contains("key"));
+		assertTrue("Wrong exception message",e.getMessage().contains("No"));
 	}
 	
 	public void testWriterPropertyFail() throws Exception {
@@ -58,14 +72,14 @@ public class X4OConnectionTest extends TestCase {
 		try {
 			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 			X4OWriter<TestObjectRoot> writer = driver.createWriter();
-			writer.setProperty(X4OLanguagePropertyKeys.READER_INPUT_ENCODING, "test");
+			writer.setProperty("test", "test");
 		} catch (Exception catchE) {
 			e = catchE;
 		}
 		assertNotNull("No exception",e);
 		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
 		assertTrue("Wrong exception message",e.getMessage().contains("key"));
-		assertTrue("Wrong exception message",e.getMessage().contains("protected"));
+		assertTrue("Wrong exception message",e.getMessage().contains("No"));
 	}
 	
 	public void testSchemaWriterPropertyFail() throws Exception {
@@ -73,13 +87,13 @@ public class X4OConnectionTest extends TestCase {
 		try {
 			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 			X4OSchemaWriter schemaWriter = driver.createSchemaWriter();
-			schemaWriter.setProperty(X4OLanguagePropertyKeys.WRITER_OUTPUT_ENCODING, "test");
+			schemaWriter.setProperty("test", "test");
 		} catch (Exception catchE) {
 			e = catchE;
 		}
 		assertNotNull("No exception",e);
 		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
 		assertTrue("Wrong exception message",e.getMessage().contains("key"));
-		assertTrue("Wrong exception message",e.getMessage().contains("protected"));
+		assertTrue("Wrong exception message",e.getMessage().contains("No"));
 	}
 }

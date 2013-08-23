@@ -22,13 +22,10 @@
  */
 package org.x4o.xml.eld.lang;
 
-import java.util.Map;
-
 import org.x4o.xml.eld.EldModuleLoader;
 import org.x4o.xml.element.AbstractElement;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.X4OLanguageProperty;
 
 /**
  * ModuleElement put in an instance from parent language module.
@@ -48,12 +45,7 @@ public class ModuleElement extends AbstractElement {
 		if (getParent()!=null) {
 			throw new ElementException("Need to be root tag");
 		}
-		@SuppressWarnings("rawtypes")
-		Map m = (Map)getLanguageContext().getLanguageProperty(X4OLanguageProperty.EL_BEAN_INSTANCE_MAP);
-		if (m==null) {
-			return;
-		}
-		X4OLanguageModule elementLanguageModule = (X4OLanguageModule)m.get(EldModuleLoader.EL_PARENT_ELEMENT_LANGUAGE_MODULE);
+		X4OLanguageModule elementLanguageModule = EldModuleLoader.getLanguageModule(getLanguageContext());
 		setElementObject(elementLanguageModule);
 	}
 }

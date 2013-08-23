@@ -30,9 +30,9 @@ import	java.io.IOException;
 import	java.io.InputStream;
 import	java.net.URL;
 
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageProperty;
 import	org.xml.sax.SAXException;
 
 /**
@@ -44,8 +44,8 @@ import	org.xml.sax.SAXException;
  */
 abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection implements X4OReaderContext<T> {
 	
-	public AbstractX4OReaderContext(X4OLanguageContext languageContext) {
-		super(languageContext);
+	public AbstractX4OReaderContext(X4OLanguage language) {
+		super(language);
 	}
 
 	/**
@@ -135,7 +135,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 			throw new NullPointerException("Can't read null xml string.");
 		}
 		URL basePath = new File(System.getProperty("user.dir")).toURI().toURL();
-		String encoding = getLanguageContext().getLanguagePropertyString(X4OLanguageProperty.READER_INPUT_ENCODING);
+		String encoding = (String)getProperty(DefaultX4OReader.INPUT_ENCODING);
 		return readContext(new ByteArrayInputStream(xmlString.getBytes(encoding)),"inline-xml",basePath);
 	}
 	

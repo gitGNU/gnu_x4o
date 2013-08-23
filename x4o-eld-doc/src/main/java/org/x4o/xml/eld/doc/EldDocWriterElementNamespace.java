@@ -47,12 +47,12 @@ public class EldDocWriterElementNamespace extends AbstractApiDocWriter {
 		clearHrefContentGroup(doc,node,"summary","element",ElementClass.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementNamespaceContext.class},nodeBodyOrders={1},contentGroup="namespace",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementNamespaceContext.class},nodeBodyOrders={1},contentGroup="namespace",contentGroupType="summary")
 	public void writeElementNamespaceBeanProperties(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTableBean(event,"Namespace","description","elementClasses","elementNamespaceInstanceProvider","prefixMapping");
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementNamespaceContext.class},nodeBodyOrders={2},contentGroup="element",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementNamespaceContext.class},nodeBodyOrders={2},contentGroup="element",contentGroupType="summary")
 	public void writeElementNamespaceElements(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Element Summary",ElementClass.class);
 	}

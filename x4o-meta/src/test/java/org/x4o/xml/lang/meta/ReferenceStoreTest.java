@@ -26,7 +26,7 @@ import java.util.Date;
 
 import org.x4o.xml.io.X4OReaderContext;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.lang.phase.X4OPhase;
 
 import junit.framework.TestCase;
 
@@ -42,7 +42,7 @@ public class ReferenceStoreTest extends TestCase {
 		X4OLanguageContext context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
-		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
 			context = reader.readResourceContext("junit/test-meta-generic.xml");
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(0).getElementObject().getClass().getName());
@@ -55,7 +55,7 @@ public class ReferenceStoreTest extends TestCase {
 		X4OLanguageContext context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
-		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
 			context = reader.readResourceContext("junit/test-meta-reference.xml");
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(0).getElementObject().getClass().getName());
@@ -68,7 +68,7 @@ public class ReferenceStoreTest extends TestCase {
 		X4OLanguageContext context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
-		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
 			context = reader.readResourceContext("junit/test-meta-reference.xml");
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(0).getElementObject().getClass().getName());

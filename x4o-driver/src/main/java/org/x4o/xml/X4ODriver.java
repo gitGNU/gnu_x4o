@@ -32,7 +32,6 @@ import org.x4o.xml.io.X4OWriter;
 import org.x4o.xml.io.X4OWriterContext;
 
 import org.x4o.xml.lang.X4OLanguageConfiguration;
-import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 
@@ -97,7 +96,7 @@ public abstract class X4ODriver<T> {
 	 * @return	The schema writer for this language.
 	 */
 	public X4OSchemaWriter createSchemaWriter(String version) {
-		return new DefaultX4OSchemaWriter(createLanguageContext(version));
+		return new DefaultX4OSchemaWriter(createLanguage(version));
 	}
 	
 	
@@ -117,7 +116,7 @@ public abstract class X4ODriver<T> {
 	}
 	
 	public X4OReaderContext<T> createReaderContext(String version) {
-		return new DefaultX4OReader<T>(createLanguageContext(version));
+		return new DefaultX4OReader<T>(createLanguage(version));
 	}
 	
 	
@@ -137,7 +136,7 @@ public abstract class X4ODriver<T> {
 	}
 	
 	public X4OWriterContext<T> createWriterContext(String version) {
-		return new DefaultX4OWriter<T>(createLanguageContext(version));
+		return new DefaultX4OWriter<T>(createLanguage(version));
 	}
 	
 	
@@ -162,19 +161,27 @@ public abstract class X4ODriver<T> {
 	}
 	
 	/**
+	 * Creates the X4OLanguage for the default version.
+	 * @return	The created X4OLanguage.
+	 */
+	final public X4OLanguage createLanguage() {
+		return buildLanguage(getLanguageVersionDefault());
+	}
+	
+	/*
 	 * Creates the X4OLanguageContext for the default language version.
 	 * @return	The created X4OLanguageContext.
-	 */
+	 *
 	final public X4OLanguageContext createLanguageContext() {
 		return createLanguageContext(getLanguageVersionDefault());
 	}
 	
-	/**
+	*
 	 * Creates the X4OLanguageContext for the specified version.
 	 * @param version	The language version to create the context for.
 	 * @return	The created X4OLanguageContext.
-	 */
+	 *
 	final public X4OLanguageContext createLanguageContext(String version) {
-		return createLanguage(version).createLanguageContext(this);
-	}
+		return createLanguage(version).createLanguageContext();
+	}*/
 }

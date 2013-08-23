@@ -55,7 +55,7 @@ public class X4OWriterContextTest extends TestCase {
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
 		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
-		X4OLanguageContext context = driver.createLanguageContext();
+		X4OLanguageContext context = driver.createLanguage().createLanguageContext();
 		Element rootElement = null;
 		try {
 			rootElement = (Element)context.getLanguage().getLanguageConfiguration().getDefaultElement().newInstance();

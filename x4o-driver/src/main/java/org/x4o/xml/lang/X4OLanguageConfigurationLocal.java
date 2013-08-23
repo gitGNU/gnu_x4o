@@ -53,6 +53,4 @@ public interface X4OLanguageConfigurationLocal extends X4OLanguageConfiguration 
 	void setDefaultLanguageVersionFilter(Class<?> value);
 	void setDefaultLanguageLoader(Class<?> value);
 	void setDefaultExpressionLanguageContext(Class<?> value);
-
-	void setGlobalProperty(String key,Object value);
 }

@@ -50,7 +50,7 @@ public class X4OPhaseManagerTest extends TestCase {
 
 	public void testPhases() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OLanguageContext context = driver.createLanguageContext();
+		X4OLanguageContext context = driver.createLanguage().createLanguageContext();
 		X4OPhaseManager manager = context.getLanguage().getPhaseManager();
 		Collection<X4OPhase> phasesAll = manager.getAllPhases();
 		List<X4OPhase> phases = manager.getOrderedPhases(X4OPhaseType.XML_READ);

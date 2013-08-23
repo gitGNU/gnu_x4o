@@ -43,7 +43,7 @@ public class X4OParserConfigurationTest extends TestCase {
 	
 	public void setUp() throws Exception {
 		driver = TestDriver.getInstance();
-		config = driver.createLanguageContext().getLanguage().getLanguageConfiguration();
+		config = driver.createLanguage().getLanguageConfiguration();
 	}
 	
 	public void testParserConfigurationLanguage() {

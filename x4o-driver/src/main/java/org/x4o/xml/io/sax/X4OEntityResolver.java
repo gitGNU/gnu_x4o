@@ -31,10 +31,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.io.DefaultX4OReader;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
-import org.x4o.xml.lang.X4OLanguageProperty;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -55,21 +56,21 @@ public class X4OEntityResolver implements EntityResolver {
 	
 	private Logger logger = null;
 	private URL basePath = null;
-	private X4OLanguageContext elementContext = null;
 	private Map<String,String> schemaResources = null;
 	private Map<String,String> schemaPathResources = null;
+	private final PropertyConfig propertyConfig;
 	
 	/**
 	 * Creates an X4OEntityResolver for a language.
 	 * @param elementContext	The x4o language to resolve entities for.
 	 */
-	public X4OEntityResolver(X4OLanguageContext elementContext) {
+	public X4OEntityResolver(X4OLanguageContext elementContext,PropertyConfig propertyConfig) {
 		if (elementContext==null) {
 			throw new NullPointerException("Can't provide entities with null elementContext.");
 		}
 		this.logger=Logger.getLogger(X4OEntityResolver.class.getName());
-		this.elementContext=elementContext;
-		this.basePath=(URL)elementContext.getLanguageProperty(X4OLanguageProperty.READER_INPUT_BASE_PATH);
+		this.propertyConfig=propertyConfig;
+		this.basePath=(URL)propertyConfig.getProperty(DefaultX4OReader.INPUT_BASE_PATH);
 		this.schemaResources=new HashMap<String,String>(20);
 		this.schemaPathResources=new HashMap<String,String>(20);
 		for (X4OLanguageModule mod:elementContext.getLanguage().getLanguageModules()) {
@@ -111,7 +112,7 @@ public class X4OEntityResolver implements EntityResolver {
 		logger.finer("Fetch sysId: "+systemId+" pubId: "+publicId);
 		
 		// Check if other resolver has resource
-		EntityResolver resolver = (EntityResolver)elementContext.getLanguageProperty(X4OLanguageProperty.READER_ENTITY_RESOLVER);
+		EntityResolver resolver = (EntityResolver)propertyConfig.getProperty(DefaultX4OReader.SAX_ENTITY_RESOLVER);
 		if (resolver!=null) {
 			InputSource result = resolver.resolveEntity(publicId, systemId);
 			if (result!=null) {
@@ -121,7 +122,7 @@ public class X4OEntityResolver implements EntityResolver {
 		
 		// Check if we have it on user defined schema base path
 		if (schemaPathResources.containsKey(systemId)) {
-			File schemaBasePath = (File)elementContext.getLanguageProperty(X4OLanguageProperty.READER_VALIDATION_SCHEMA_PATH);
+			File schemaBasePath = (File)propertyConfig.getProperty(DefaultX4OReader.VALIDATION_SCHEMA_PATH);
 			if (schemaBasePath!=null && schemaBasePath.exists()) {
 				String schemeResource = schemaResources.get(systemId);
 				File schemaFile = new File(schemaBasePath.getAbsolutePath()+File.separatorChar+schemeResource);

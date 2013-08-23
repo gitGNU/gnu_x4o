@@ -23,12 +23,10 @@
 package org.x4o.xml.core;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 
@@ -53,7 +51,7 @@ public class X4ODebugWriterTest extends TestCase {
 		File debugFile = createDebugFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
-		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
+		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
 		reader.readResource("tests/attributes/test-bean.xml");
 		
 		assertTrue("Debug file does not exists.",debugFile.exists());
@@ -64,7 +62,7 @@ public class X4ODebugWriterTest extends TestCase {
 		File debugFile = createDebugFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
-		reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
+		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
 		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true);
 		reader.readResource("tests/attributes/test-bean.xml");
 		

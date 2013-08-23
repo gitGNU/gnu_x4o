@@ -22,9 +22,10 @@
  */
 package org.x4o.xml.core;
 
+import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.X4OReaderContext;
 import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguagePropertyKeys;
+import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 
@@ -42,7 +43,7 @@ public class NamespaceUriTest extends TestCase {
 		X4OLanguageContext context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
 			context = reader.readResourceContext("tests/namespace/uri-simple.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);
@@ -55,8 +56,8 @@ public class NamespaceUriTest extends TestCase {
 		X4OLanguageContext context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
-		reader.setProperty(X4OLanguagePropertyKeys.READER_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
+		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
+		reader.setProperty(DefaultX4OReader.DOC_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
 		try {
 			context = reader.readResourceContext("tests/namespace/uri-empty.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);
@@ -69,7 +70,7 @@ public class NamespaceUriTest extends TestCase {
 		X4OLanguageContext context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		reader.setProperty(X4OLanguagePropertyKeys.PHASE_SKIP_RELEASE, true);
+		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
 			context = reader.readResourceContext("tests/namespace/uri-schema.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);
