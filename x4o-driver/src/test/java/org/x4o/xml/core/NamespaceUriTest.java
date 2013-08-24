@@ -24,7 +24,7 @@ package org.x4o.xml.core;
 
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.X4OReaderContext;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
@@ -40,7 +40,7 @@ import junit.framework.TestCase;
 public class NamespaceUriTest extends TestCase {
 	
 	public void testSimpleUri() throws Exception {
-		X4OLanguageContext context = null;
+		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
@@ -53,7 +53,7 @@ public class NamespaceUriTest extends TestCase {
 	}
 	
 	public void testEmptyUri() throws Exception {
-		X4OLanguageContext context = null;
+		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
@@ -67,7 +67,7 @@ public class NamespaceUriTest extends TestCase {
 	}
 	
 	public void testSchemaUri() throws Exception {
-		X4OLanguageContext context = null;
+		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);

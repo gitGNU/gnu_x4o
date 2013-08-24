@@ -35,12 +35,12 @@ import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.lang.phase.X4OPhase;
 
 /**
- * ElementLanguage is the central store of the defined element language.
+ * X4OLanguageSession store all language session related information.
  * 
  * @author Willem Cazander
  * @version 1.0 Feb 14, 2007
  */
-public interface X4OLanguageContext {
+public interface X4OLanguageSession {
 	
 	X4OLanguage getLanguage();
 	

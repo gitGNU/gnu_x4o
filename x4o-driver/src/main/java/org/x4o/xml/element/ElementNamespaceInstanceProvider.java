@@ -22,7 +22,7 @@
  */
 package org.x4o.xml.element;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguage;
 
 /**
@@ -43,10 +43,10 @@ public interface ElementNamespaceInstanceProvider {
 	
 	/**
 	 * Provide an Element for an xml tag.
-	 * @param languageContext The languageContext to create element for.
+	 * @param languageSession The languageSession to create element for.
 	 * @param tag   The xml tag to create instance for.
 	 * @return An new Element instance.
 	 * @throws ElementNamespaceInstanceProviderException	Thrown when error happened in language.
 	 */
-	Element createElementInstance(X4OLanguageContext languageContext,String tag) throws ElementNamespaceInstanceProviderException;
+	Element createElementInstance(X4OLanguageSession languageSession,String tag) throws ElementNamespaceInstanceProviderException;
 }

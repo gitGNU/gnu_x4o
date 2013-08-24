@@ -33,7 +33,7 @@ import org.x4o.xml.io.X4OConnectionException;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModuleLoader;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
 import org.x4o.xml.lang.X4OLanguageLocal;
@@ -90,7 +90,7 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 			
 			X4OReader<?> reader = driver.createReader();
 			
-			//X4OLanguageContext eldLang = driver.createLanguageContext(driver.getLanguageVersionDefault()); 
+			//X4OLanguageSession eldLang = driver.createLanguageSession(driver.getLanguageVersionDefault()); 
 			//X4OReader<?> reader = new DefaultX4OReader<Object>(eldLang);
 			
 			reader.addELBeanInstance(EL_PARENT_LANGUAGE, language);
@@ -110,12 +110,12 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 		}
 	}
 	
-	public static X4OLanguage getLanguage(X4OLanguageContext context) {
+	public static X4OLanguage getLanguage(X4OLanguageSession context) {
 		ValueExpression ee = context.getExpressionLanguageFactory().createValueExpression(context.getExpressionLanguageContext(),"${"+EL_PARENT_LANGUAGE+"}", X4OLanguage.class);
 		return (X4OLanguage)ee.getValue(context.getExpressionLanguageContext());
 	}
 	
-	public static X4OLanguageModule getLanguageModule(X4OLanguageContext context) {
+	public static X4OLanguageModule getLanguageModule(X4OLanguageSession context) {
 		ValueExpression ee = context.getExpressionLanguageFactory().createValueExpression(context.getExpressionLanguageContext(),"${"+EL_PARENT_LANGUAGE_MODULE+"}", X4OLanguageModule.class);
 		return (X4OLanguageModule)ee.getValue(context.getExpressionLanguageContext());
 	}

@@ -89,7 +89,7 @@ public class DefaultX4OLanguageConfiguration extends AbstractX4OLanguageConfigur
 				Class<?>[] invokeArgs = new Class[argsLength];
 				for (int i=0;i<argsLength;i++) {
 					//Object o = args[i];
-					invokeArgs[i] = X4OLanguageContext.class; //o.getClass(); todo fix
+					invokeArgs[i] = X4OLanguageSession.class; //o.getClass(); todo fix
 				}
 				Method localMethod = local.getClass().getMethod(method.getName(), invokeArgs);
 				Object result = localMethod.invoke(local, args);

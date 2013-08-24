@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.xml.sax.SAXException;
 
@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  */
 public interface X4OReaderContext<T> extends X4OReader<T> {
 	
-	void releaseContext(X4OLanguageContext context) throws X4OPhaseException;
+	void releaseContext(X4OLanguageSession context) throws X4OPhaseException;
 	
 	/**
 	 * Method to parse the xml data.
@@ -49,7 +49,7 @@ public interface X4OReaderContext<T> extends X4OReader<T> {
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception.
 	 */
-	X4OLanguageContext readContext(InputStream input,String systemId,URL basePath) throws X4OConnectionException,SAXException,IOException;
+	X4OLanguageSession readContext(InputStream input,String systemId,URL basePath) throws X4OConnectionException,SAXException,IOException;
 	
 	/**
 	 * Reads the file fileName and parses it as an InputStream.
@@ -60,7 +60,7 @@ public interface X4OReaderContext<T> extends X4OReader<T> {
 	 * @throws IOException	Is thrown after io exception. 
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readFileContext(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
+	X4OLanguageSession readFileContext(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
 	
 	/**
 	 * Reads the file and parses it as an InputStream.
@@ -71,7 +71,7 @@ public interface X4OReaderContext<T> extends X4OReader<T> {
 	 * @throws IOException	Is thrown after io exception. 
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readFileContext(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
+	X4OLanguageSession readFileContext(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
 	
 	/**
 	 * Parses an resource locaction.
@@ -81,7 +81,7 @@ public interface X4OReaderContext<T> extends X4OReader<T> {
 	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readResourceContext(String resourceName) throws X4OConnectionException,SAXException,IOException;
+	X4OLanguageSession readResourceContext(String resourceName) throws X4OConnectionException,SAXException,IOException;
 	
 	/**
 	 * Converts a String to a InputStream to is can me parsed by SAX.
@@ -91,7 +91,7 @@ public interface X4OReaderContext<T> extends X4OReader<T> {
 	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readStringContext(String xmlString) throws X4OConnectionException,SAXException,IOException;
+	X4OLanguageSession readStringContext(String xmlString) throws X4OConnectionException,SAXException,IOException;
 	
 	/**
 	 * Fetched the data direct from remote url to a InputStream to is can me parsed by SAX.
@@ -101,5 +101,5 @@ public interface X4OReaderContext<T> extends X4OReader<T> {
 	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	X4OLanguageContext readUrlContext(URL url) throws X4OConnectionException,SAXException,IOException;
+	X4OLanguageSession readUrlContext(URL url) throws X4OConnectionException,SAXException,IOException;
 }

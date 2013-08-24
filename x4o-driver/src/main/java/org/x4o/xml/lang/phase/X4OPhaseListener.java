@@ -22,7 +22,7 @@
  */
 package	org.x4o.xml.lang.phase;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 
 /**
@@ -40,7 +40,7 @@ public interface X4OPhaseListener {
 	 * @param elementLanguage	The elementLanguage of the driver.
 	 * @throws X4OPhaseException	Is throws when listeners has error.
 	 */
-	void preRunPhase(X4OPhase phase,X4OLanguageContext elementLanguage) throws X4OPhaseException;
+	void preRunPhase(X4OPhase phase,X4OLanguageSession elementLanguage) throws X4OPhaseException;
 	
 	/**
 	 * Gets called after the X4OPhaseHandler is runned.
@@ -48,5 +48,5 @@ public interface X4OPhaseListener {
 	 * @param elementLanguage	The elementLanguage of the driver.
 	 * @throws X4OPhaseException	Is throws when listeners has error.
 	 */
-	void endRunPhase(X4OPhase phase,X4OLanguageContext elementLanguage) throws X4OPhaseException;
+	void endRunPhase(X4OPhase phase,X4OLanguageSession elementLanguage) throws X4OPhaseException;
 }

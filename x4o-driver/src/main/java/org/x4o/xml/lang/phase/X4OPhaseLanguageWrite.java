@@ -32,7 +32,7 @@ import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 /**
  * X4OPhaseLanguageWrite defines all phases to write the language.
@@ -73,7 +73,7 @@ public class X4OPhaseLanguageWrite {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException  {
+		public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException  {
 			logger.finest("Run init begin phase");
 		}
 	};
@@ -96,58 +96,58 @@ public class X4OPhaseLanguageWrite {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException  {
+		public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException  {
 			try {
-				Element root = languageContext.getRootElement();
+				Element root = languageSession.getRootElement();
 				// TODO: check for read tree then write support as ec is not null then ..
 				if (root.getElementClass()==null) {
-					root = fillElementTree(languageContext,root.getElementObject());
+					root = fillElementTree(languageSession,root.getElementObject());
 				}
 			} catch (Exception e) {
 				throw new X4OPhaseException(this,e);
 			}
 		}
 		
-		private Element fillElementTree(X4OLanguageContext languageContext,Object object) throws ElementNamespaceInstanceProviderException, ElementBindingHandlerException {
-			Element element = findRootElement(languageContext,object.getClass());
+		private Element fillElementTree(X4OLanguageSession languageSession,Object object) throws ElementNamespaceInstanceProviderException, ElementBindingHandlerException {
+			Element element = findRootElement(languageSession,object.getClass());
 			element.setElementObject(object);
-			languageContext.setRootElement(element);
+			languageSession.setRootElement(element);
 			
-			for (ElementBindingHandler bind:languageContext.getLanguage().findElementBindingHandlers(object)) {
+			for (ElementBindingHandler bind:languageSession.getLanguage().findElementBindingHandlers(object)) {
 				bind.createChilderen(element);
-				fillTree(languageContext,element);
+				fillTree(languageSession,element);
 			}
 			return element;
 		}
 		
-		private void fillTree(X4OLanguageContext languageContext,Element element) throws ElementNamespaceInstanceProviderException, ElementBindingHandlerException {
+		private void fillTree(X4OLanguageSession languageSession,Element element) throws ElementNamespaceInstanceProviderException, ElementBindingHandlerException {
 			for (Element e:element.getChilderen()) {
 				Object object = e.getElementObject();
-				for (ElementBindingHandler bind:languageContext.getLanguage().findElementBindingHandlers(object)) {
+				for (ElementBindingHandler bind:languageSession.getLanguage().findElementBindingHandlers(object)) {
 					bind.createChilderen(e);
-					fillTree(languageContext,e);
+					fillTree(languageSession,e);
 				}
 			}
 		}
 		
-		private Element findRootElement(X4OLanguageContext languageContext,Class<?> objectClass) throws ElementNamespaceInstanceProviderException {
+		private Element findRootElement(X4OLanguageSession languageSession,Class<?> objectClass) throws ElementNamespaceInstanceProviderException {
 			// redo this mess, add nice find for root
-			for (X4OLanguageModule modContext:languageContext.getLanguage().getLanguageModules()) {
+			for (X4OLanguageModule modContext:languageSession.getLanguage().getLanguageModules()) {
 				for (ElementNamespace nsContext:modContext.getElementNamespaces()) {
 					if (nsContext.getLanguageRoot()!=null && nsContext.getLanguageRoot()) {
 						for (ElementClass ec:nsContext.getElementClasses()) {
 							if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
-								return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageContext, ec.getId());
+								return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageSession, ec.getId());
 							}
 						}
 					}
 				}
 			}
-			for (X4OLanguageModule modContext:languageContext.getLanguage().getLanguageModules()) {
+			for (X4OLanguageModule modContext:languageSession.getLanguage().getLanguageModules()) {
 				for (ElementNamespace nsContext:modContext.getElementNamespaces()) {
 					for (ElementClass ec:nsContext.getElementClasses()) {
 						if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
-							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageContext, ec.getId());
+							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageSession, ec.getId());
 						}
 					}
 				}
@@ -174,7 +174,7 @@ public class X4OPhaseLanguageWrite {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
-		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException  {
+		public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException  {
 			logger.finest("Run init end phase");
 		}
 	};
@@ -189,7 +189,7 @@ public class X4OPhaseLanguageWrite {
 		public String[] getPhaseDependencies() {
 			return new String[] {X4OPhase.WRITE_END};
 		}
-		public void runPhase(X4OLanguageContext languageContext) throws X4OPhaseException {
+		public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException {
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException  {
 			try {

@@ -34,7 +34,7 @@ import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -64,7 +64,7 @@ public class X4OEntityResolver implements EntityResolver {
 	 * Creates an X4OEntityResolver for a language.
 	 * @param elementContext	The x4o language to resolve entities for.
 	 */
-	public X4OEntityResolver(X4OLanguageContext elementContext,PropertyConfig propertyConfig) {
+	public X4OEntityResolver(X4OLanguageSession elementContext,PropertyConfig propertyConfig) {
 		if (elementContext==null) {
 			throw new NullPointerException("Can't provide entities with null elementContext.");
 		}

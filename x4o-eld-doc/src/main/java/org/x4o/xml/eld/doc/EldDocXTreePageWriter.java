@@ -39,7 +39,7 @@ import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
 
@@ -81,7 +81,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	public void writePageContent(ApiDocWriteEvent<ApiDocPage> e) throws SAXException {
 		//selectRootNode(e.getDoc()); // create
 		ApiDoc doc = e.getDoc();
-		X4OLanguageContext context = (X4OLanguageContext)doc.getRootNode().getUserData();
+		X4OLanguageSession context = (X4OLanguageSession)doc.getRootNode().getUserData();
 		
 		String pathPrefix = "language/";
 		
@@ -137,7 +137,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	
 	private ApiDocNode createXTree(ApiDoc doc) throws SAXException {
 		
-		X4OLanguageContext context = (X4OLanguageContext)doc.getRootNode().getUserData();
+		X4OLanguageSession context = (X4OLanguageSession)doc.getRootNode().getUserData();
 		ApiDocNode root = new ApiDocNode(context,"root","Root","Language root");
 		
 		List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
@@ -175,7 +175,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	
 	
 	class TreeNode {
-		X4OLanguageContext context;
+		X4OLanguageSession context;
 		X4OLanguageModule module;
 		ElementNamespace namespace;
 		ElementClass elementClass;

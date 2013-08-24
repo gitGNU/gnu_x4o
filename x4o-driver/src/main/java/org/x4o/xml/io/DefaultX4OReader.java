@@ -41,8 +41,8 @@ import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageContextLocal;
+import org.x4o.xml.lang.X4OLanguageSession;
+import org.x4o.xml.lang.X4OLanguageSessionLocal;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.x4o.xml.lang.phase.X4OPhaseType;
 import org.xml.sax.EntityResolver;
@@ -62,7 +62,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	/** The logger to log to. */
 	private Logger logger = null;
 	
-	private X4OLanguageContext languageContext = null;
+	private X4OLanguageSession languageSession = null;
 	
 	private PropertyConfig propertyConfig;
 	
@@ -117,7 +117,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	public DefaultX4OReader(X4OLanguage language) {
 		super(language);
 		logger = Logger.getLogger(DefaultX4OReader.class.getName());
-		languageContext = language.createLanguageContext();
+		languageSession = language.createLanguageSession();
 		propertyConfig = new PropertyConfig(DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX);
 	}
 	
@@ -126,12 +126,12 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		return propertyConfig;
 	}
 	
-	public X4OLanguageContext readContext(InputStream input, String systemId, URL basePath) throws X4OConnectionException, SAXException, IOException {
+	public X4OLanguageSession readContext(InputStream input, String systemId, URL basePath) throws X4OConnectionException, SAXException, IOException {
 		setProperty(INPUT_STREAM, input);
 		setProperty(INPUT_SYSTEM_ID, systemId);
 		setProperty(INPUT_BASE_PATH, basePath);
 		read();
-		return languageContext;
+		return languageSession;
 	}
 	
 	public void addELBeanInstance(String name,Object bean) {
@@ -144,21 +144,21 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		if (bean==null) {
 			throw new NullPointerException("Can't add null bean.");
 		}
-		ValueExpression ve = languageContext.getExpressionLanguageFactory().createValueExpression(languageContext.getExpressionLanguageContext(),"${"+name+"}", bean.getClass());
-		ve.setValue(languageContext.getExpressionLanguageContext(), bean);
+		ValueExpression ve = languageSession.getExpressionLanguageFactory().createValueExpression(languageSession.getExpressionLanguageContext(),"${"+name+"}", bean.getClass());
+		ve.setValue(languageSession.getExpressionLanguageContext(), bean);
 	}
 	
 	/**
 	 * Parses the input stream as a X4O document.
 	 */
 	protected void read() throws X4OConnectionException,SAXException,IOException {
-		if (languageContext.getLanguage()==null) {
-			throw new X4OConnectionException("languageContext is broken getLanguage() returns null."); 
+		if (languageSession.getLanguage()==null) {
+			throw new X4OConnectionException("languageSession is broken getLanguage() returns null."); 
 		}
 		
 		
-		if (languageContext instanceof X4OLanguageContextLocal) {
-			X4OLanguageContextLocal ll = (X4OLanguageContextLocal)languageContext;
+		if (languageSession instanceof X4OLanguageSessionLocal) {
+			X4OLanguageSessionLocal ll = (X4OLanguageSessionLocal)languageSession;
 			if (phaseStop!=null) {
 				ll.setPhaseStop(phaseStop);
 			}
@@ -171,7 +171,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		boolean startedDebugWriter = false;
 		Object debugOutputHandler = null; //TODO: getProperty(X4OLanguageProperty.DEBUG_OUTPUT_HANDLER.name());
 		Object debugOutputStream = null; //getProperty(X4OLanguageProperty.DEBUG_OUTPUT_STREAM.name());
-		if (languageContext.getX4ODebugWriter()==null) {
+		if (languageSession.getX4ODebugWriter()==null) {
 			ContentWriter xmlDebugWriter = null;
 			if (debugOutputHandler instanceof ContentWriter) {
 				xmlDebugWriter = (ContentWriter)debugOutputHandler;
@@ -182,37 +182,37 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				xmlDebugWriter.startDocument();
 				xmlDebugWriter.startPrefixMapping("debug", X4ODebugWriter.DEBUG_URI);
 				X4ODebugWriter debugWriter = new X4ODebugWriter(xmlDebugWriter);
-				X4OLanguageContextLocal local = (X4OLanguageContextLocal)languageContext;
+				X4OLanguageSessionLocal local = (X4OLanguageSessionLocal)languageSession;
 				local.setX4ODebugWriter(debugWriter);
 				startedDebugWriter = true;
 			}
 		}
 		
 		// debug language
-		if (languageContext.hasX4ODebugWriter()) {
+		if (languageSession.hasX4ODebugWriter()) {
 			AttributesImpl atts = new AttributesImpl();
-			atts.addAttribute ("", "language", "", "", languageContext.getLanguage().getLanguageName());
+			atts.addAttribute ("", "language", "", "", languageSession.getLanguage().getLanguageName());
 			atts.addAttribute ("", "currentTimeMillis", "", "", System.currentTimeMillis()+"");
-			languageContext.getX4ODebugWriter().getContentWriter().startElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "", atts);
+			languageSession.getX4ODebugWriter().getContentWriter().startElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "", atts);
 		}
 		
 		// start parsing language
 		try {
 			X4OContentParser parser = new X4OContentParser(propertyConfig);
-			parser.parse(languageContext);
+			parser.parse(languageSession);
 			
-			getLanguage().getPhaseManager().runPhases(languageContext, X4OPhaseType.XML_READ);
+			getLanguage().getPhaseManager().runPhases(languageSession, X4OPhaseType.XML_READ);
 		} catch (Exception e) {
 
 			// also debug exceptions
-			if (languageContext.hasX4ODebugWriter()) {
+			if (languageSession.hasX4ODebugWriter()) {
 				try {
 					AttributesImpl atts = new AttributesImpl();
 					atts.addAttribute ("", "message", "", "", e.getMessage());
 					if (e instanceof X4OPhaseException) {
 						atts.addAttribute ("", "phase", "", "", ((X4OPhaseException)e).getX4OPhaseHandler().getId());
 					}
-					languageContext.getX4ODebugWriter().getContentWriter().startElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "", atts);
+					languageSession.getX4ODebugWriter().getContentWriter().startElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "", atts);
 					StringWriter writer = new StringWriter();
 					PrintWriter printer = new PrintWriter(writer);
 					printer.append('\n');
@@ -222,8 +222,8 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 						e.getCause().printStackTrace(printer);
 					}
 					char[] stack = writer.getBuffer().toString().toCharArray();
-					languageContext.getX4ODebugWriter().getContentWriter().characters(stack, 0, stack.length);
-					languageContext.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "");
+					languageSession.getX4ODebugWriter().getContentWriter().characters(stack, 0, stack.length);
+					languageSession.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "");
 				} catch (Exception ee) {
 					logger.warning(ee.getMessage());
 				}
@@ -245,12 +245,12 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				throw new SAXException((Exception)e.getCause());
 			}
 		} finally {
-			if (languageContext.hasX4ODebugWriter()) {
-				languageContext.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "");
+			if (languageSession.hasX4ODebugWriter()) {
+				languageSession.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "");
 			}
-			if (startedDebugWriter && languageContext.hasX4ODebugWriter()) {
-				languageContext.getX4ODebugWriter().getContentWriter().endPrefixMapping("debug");
-				languageContext.getX4ODebugWriter().getContentWriter().endDocument();
+			if (startedDebugWriter && languageSession.hasX4ODebugWriter()) {
+				languageSession.getX4ODebugWriter().getContentWriter().endPrefixMapping("debug");
+				languageSession.getX4ODebugWriter().getContentWriter().endDocument();
 				if (debugOutputStream instanceof OutputStream) {
 					OutputStream outputStream = (OutputStream)debugOutputStream;
 					outputStream.flush();
@@ -260,7 +260,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		}
 	}
 
-	public void releaseContext(X4OLanguageContext context) throws X4OPhaseException {
+	public void releaseContext(X4OLanguageSession context) throws X4OPhaseException {
 		if (context==null) {
 			return;
 		}

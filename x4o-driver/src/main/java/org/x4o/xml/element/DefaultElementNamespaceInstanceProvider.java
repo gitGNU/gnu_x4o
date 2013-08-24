@@ -24,7 +24,7 @@ package org.x4o.xml.element;
 
 import java.util.logging.Logger;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
 
@@ -57,13 +57,13 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 	}
 
 	/**
-	 * @param	languageContext The language context for which we create the Element instance.
+	 * @param	languageSession The language context for which we create the Element instance.
 	 * @param	tag	The xml tag to create an Element instance for.
 	 * @return	The Element to handle the given tag.
 	 * @throws ElementNamespaceInstanceProviderException 
-	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#createElementInstance(org.x4o.xml.lang.X4OLanguageContext,java.lang.String)
+	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#createElementInstance(org.x4o.xml.lang.X4OLanguageSession,java.lang.String)
 	 */
-	public Element createElementInstance(X4OLanguageContext languageContext,String tag) throws ElementNamespaceInstanceProviderException {
+	public Element createElementInstance(X4OLanguageSession languageSession,String tag) throws ElementNamespaceInstanceProviderException {
 		ElementClass	elementClass	= elementNamespace.getElementClass(tag);
 		Element 		element			= null;
 		
@@ -80,7 +80,7 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 					throw new ElementNamespaceInstanceProviderException(this,"Provided elementClassName is not an Element: "+obj.getClass());
 				}
 			} else {
-				element = (Element)X4OLanguageClassLoader.newInstance((languageContext.getLanguage().getLanguageConfiguration().getDefaultElement()));
+				element = (Element)X4OLanguageClassLoader.newInstance((languageSession.getLanguage().getLanguageConfiguration().getDefaultElement()));
 			}
 			
 			if (elementClass.getObjectClass()!=null) {
@@ -94,7 +94,7 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 			throw new ElementNamespaceInstanceProviderException(this,"Error while providing Element: "+e.getMessage(),e);
 		} */
 		element.setElementClass(elementClass);
-		element.setLanguageContext(languageContext);
+		element.setLanguageSession(languageSession);
 		return element;
 	}
 }

@@ -26,7 +26,7 @@ import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -57,7 +57,7 @@ public class X4OContentParser {
 		return propertyConfig;
 	}
 	
-	public void parse(X4OLanguageContext languageContext) throws SAXException, IOException {
+	public void parse(X4OLanguageSession languageSession) throws SAXException, IOException {
 		
 		// If xsd caching is needed this should be the way 
 		//XMLParserConfiguration config = new XIncludeAwareParserConfiguration();
@@ -65,56 +65,56 @@ public class X4OContentParser {
 		//SAXParser parser = new SAXParser(config);
 		
 		// Create Sax parser with x4o tag handler
-		X4OContentHandler xth = new X4OContentHandler(languageContext,getPropertyConfig());
+		X4OContentHandler xth = new X4OContentHandler(languageSession,getPropertyConfig());
 		XMLReader saxParser = XMLReaderFactory.createXMLReader();
-		saxParser.setErrorHandler(new X4OErrorHandler(languageContext,getPropertyConfig()));
-		saxParser.setEntityResolver(new X4OEntityResolver(languageContext,getPropertyConfig()));
+		saxParser.setErrorHandler(new X4OErrorHandler(languageSession,getPropertyConfig()));
+		saxParser.setEntityResolver(new X4OEntityResolver(languageSession,getPropertyConfig()));
 		saxParser.setContentHandler(xth);
 		saxParser.setProperty("http://xml.org/sax/properties/lexical-handler", xth);
 		saxParser.setProperty("http://xml.org/sax/properties/declaration-handler",xth);
 
 		// Set properties and optional 
-		Map<String,Object> saxParserProperties = getSAXParserProperties(languageContext);
+		Map<String,Object> saxParserProperties = getSAXParserProperties(languageSession);
 		for (Map.Entry<String,Object> entry:saxParserProperties.entrySet()) {
 			String name = entry.getKey();
 			Object value= entry.getValue();
 			saxParser.setProperty(name, value);
-			debugMessage("Set SAX property: "+name+" to: "+value,languageContext);
+			debugMessage("Set SAX property: "+name+" to: "+value,languageSession);
 		}
-		Map<String,Object> saxParserPropertiesOptional = getSAXParserPropertiesOptional(languageContext);
+		Map<String,Object> saxParserPropertiesOptional = getSAXParserPropertiesOptional(languageSession);
 		for (Map.Entry<String,Object> entry:saxParserPropertiesOptional.entrySet()) {
 			String name = entry.getKey();
 			Object value= entry.getValue();
 			try {
 				saxParser.setProperty(name, value);
-				debugMessage("Set SAX optional property: "+name+" to: "+value,languageContext);
+				debugMessage("Set SAX optional property: "+name+" to: "+value,languageSession);
 			} catch (SAXException e) {
-				debugMessage("Could not set optional SAX property: "+name+" to: "+value+" error: "+e.getMessage(),languageContext);
+				debugMessage("Could not set optional SAX property: "+name+" to: "+value+" error: "+e.getMessage(),languageSession);
 			}
 		}
 		
 		// Set sax features and optional
-		Map<String, Boolean> features = getSAXParserFeatures(languageContext);
+		Map<String, Boolean> features = getSAXParserFeatures(languageSession);
 		for (String key:features.keySet()) {
 			Boolean value=features.get(key);
 			saxParser.setFeature(key, value);
-			debugMessage("Set SAX feature: "+key+" to: "+value,languageContext);
+			debugMessage("Set SAX feature: "+key+" to: "+value,languageSession);
 		}
-		Map<String, Boolean> featuresOptional = getSAXParserFeaturesOptional(languageContext);
+		Map<String, Boolean> featuresOptional = getSAXParserFeaturesOptional(languageSession);
 		for (String key:featuresOptional.keySet()) {
 			Boolean value=featuresOptional.get(key);
 			try {
 				saxParser.setFeature(key, value);
-				debugMessage("Set SAX optional feature: "+key+" to: "+value,languageContext);
+				debugMessage("Set SAX optional feature: "+key+" to: "+value,languageSession);
 			} catch (SAXException e) {
-				debugMessage("Could not set optional SAX feature: "+key+" to: "+value+" error: "+e.getMessage(),languageContext);
+				debugMessage("Could not set optional SAX feature: "+key+" to: "+value+" error: "+e.getMessage(),languageSession);
 			}
 		}
 		
 		// check for required features
-		List<String> requiredFeatures = getSAXParserFeaturesRequired(languageContext);
+		List<String> requiredFeatures = getSAXParserFeaturesRequired(languageSession);
 		for (String requiredFeature:requiredFeatures) {
-			debugMessage("Checking required SAX feature: "+requiredFeature,languageContext);
+			debugMessage("Checking required SAX feature: "+requiredFeature,languageSession);
 			if (saxParser.getFeature(requiredFeature)==false) {
 				throw new IllegalStateException("Missing required feature: "+requiredFeature);
 			}	
@@ -149,10 +149,10 @@ public class X4OContentParser {
 		}
 	}
 	
-	private void debugMessage(String message,X4OLanguageContext languageContext) throws SAXException {
-		if (languageContext.hasX4ODebugWriter()) {
+	private void debugMessage(String message,X4OLanguageSession languageSession) throws SAXException {
+		if (languageSession.hasX4ODebugWriter()) {
 			try {
-				languageContext.getX4ODebugWriter().debugPhaseMessage(message, X4OContentParser.class);
+				languageSession.getX4ODebugWriter().debugPhaseMessage(message, X4OContentParser.class);
 			} catch (ElementException ee) {
 				throw new SAXException(ee);
 			}
@@ -160,26 +160,26 @@ public class X4OContentParser {
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserProperties(org.x4o.xml.lang.X4OLanguageContext)
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserProperties(org.x4o.xml.lang.X4OLanguageSession)
 	 */
-	public Map<String, Object> getSAXParserProperties(X4OLanguageContext elementContext) {
+	public Map<String, Object> getSAXParserProperties(X4OLanguageSession elementContext) {
 		Map<String,Object> saxParserProperties = new HashMap<String,Object>(1);
 		return saxParserProperties;
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserPropertiesOptional(org.x4o.xml.lang.X4OLanguageContext)
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserPropertiesOptional(org.x4o.xml.lang.X4OLanguageSession)
 	 */
-	public Map<String, Object> getSAXParserPropertiesOptional(X4OLanguageContext elementContext) {
+	public Map<String, Object> getSAXParserPropertiesOptional(X4OLanguageSession elementContext) {
 		Map<String,Object> saxParserProperties = new HashMap<String,Object>(1);
 		saxParserProperties.put("http://apache.org/xml/properties/input-buffer-size",getPropertyConfig().getProperty(DefaultX4OReader.DOC_BUFFER_SIZE));	// Increase buffer to 8KB
 		return saxParserProperties;
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeatures(org.x4o.xml.lang.X4OLanguageContext)
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeatures(org.x4o.xml.lang.X4OLanguageSession)
 	 */
-	public Map<String, Boolean> getSAXParserFeatures(X4OLanguageContext elementContext) {
+	public Map<String, Boolean> getSAXParserFeatures(X4OLanguageSession elementContext) {
 		
 		// see example: http://xerces.apache.org/xerces2-j/features.html
 		Map<String,Boolean> saxParserFeatures = new HashMap<String,Boolean>(20);
@@ -226,9 +226,9 @@ public class X4OContentParser {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesOptional(org.x4o.xml.lang.X4OLanguageContext)
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesOptional(org.x4o.xml.lang.X4OLanguageSession)
 	 */
-	public Map<String, Boolean> getSAXParserFeaturesOptional(X4OLanguageContext elementContext) {
+	public Map<String, Boolean> getSAXParserFeaturesOptional(X4OLanguageSession elementContext) {
 		Map<String,Boolean> saxParserFeatures = new HashMap<String,Boolean>(20);
 		
 		// Make Sax Impl more strict.
@@ -250,9 +250,9 @@ public class X4OContentParser {
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesRequired(org.x4o.xml.lang.X4OLanguageContext)
+	 * @see org.x4o.xml.lang.X4OLanguageConfiguration#getSAXParserFeaturesRequired(org.x4o.xml.lang.X4OLanguageSession)
 	 */
-	public List<String> getSAXParserFeaturesRequired(X4OLanguageContext elementContext) {
+	public List<String> getSAXParserFeaturesRequired(X4OLanguageSession elementContext) {
 		List<String> result = new ArrayList<String>(5);
 		result.add("http://xml.org/sax/features/use-attributes2");	// Attributes objects passed by the parser are ext.Attributes2 interface.
 		result.add("http://xml.org/sax/features/use-locator2");		// Locator objects passed by the parser are org.xml.sax.ext.Locator2 interface.

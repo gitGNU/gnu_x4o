@@ -29,7 +29,7 @@ import org.x4o.xml.eld.CelDriver;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.X4OEntityResolver;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 import org.xml.sax.EntityResolver;
@@ -60,14 +60,14 @@ public class X4OEntityResolverTest extends TestCase {
 	
 	public void testResolve() throws Exception {
 		X4ODriver<?> driver = new CelDriver();
-		X4OEntityResolver resolver = new X4OEntityResolver(driver.createLanguage().createLanguageContext(),DefaultX4OReader.DEFAULT_PROPERTY_CONFIG);
+		X4OEntityResolver resolver = new X4OEntityResolver(driver.createLanguage().createLanguageSession(),DefaultX4OReader.DEFAULT_PROPERTY_CONFIG);
 		InputSource input = resolver.resolveEntity("","http://cel.x4o.org/xml/ns/cel-root-1.0.xsd");
 		assertNotNull(input);
 	}
 
 	public void testResolveMissing() throws Exception {
 		X4ODriver<TestObjectRoot> driver = new TestDriver();
-		X4OEntityResolver resolver = new X4OEntityResolver(driver.createLanguage().createLanguageContext(),DefaultX4OReader.DEFAULT_PROPERTY_CONFIG);
+		X4OEntityResolver resolver = new X4OEntityResolver(driver.createLanguage().createLanguageSession(),DefaultX4OReader.DEFAULT_PROPERTY_CONFIG);
 		Exception e = null;
 		try {
 			resolver.resolveEntity("","http://cel.x4o.org/xml/ns/cel-root-1.0.xsd-missing-resource");
@@ -81,7 +81,7 @@ public class X4OEntityResolverTest extends TestCase {
 	
 	public void testResolveProperty() throws Exception {
 		X4ODriver<TestObjectRoot> driver = new TestDriver();
-		X4OLanguageContext language = driver.createLanguage().createLanguageContext();
+		X4OLanguageSession language = driver.createLanguage().createLanguageSession();
 		PropertyConfig conf = new PropertyConfig(DefaultX4OReader.DEFAULT_PROPERTY_CONFIG,PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_READER);
 		conf.setProperty(DefaultX4OReader.SAX_ENTITY_RESOLVER, new TestEntityResolver());
 		X4OEntityResolver resolver = new X4OEntityResolver(language,conf);
@@ -98,7 +98,7 @@ public class X4OEntityResolverTest extends TestCase {
 	
 	public void testResolvePropertyNull() throws Exception {
 		X4ODriver<TestObjectRoot> driver = new TestDriver();
-		X4OLanguageContext language = driver.createLanguage().createLanguageContext();
+		X4OLanguageSession language = driver.createLanguage().createLanguageSession();
 		PropertyConfig conf = new PropertyConfig(DefaultX4OReader.DEFAULT_PROPERTY_CONFIG,PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_READER);
 		conf.setProperty(DefaultX4OReader.SAX_ENTITY_RESOLVER, new TestEntityResolver());
 		X4OEntityResolver resolver = new X4OEntityResolver(language,conf);

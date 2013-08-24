@@ -25,7 +25,7 @@ package	org.x4o.xml.lang.phase;
 import java.util.List;
 
 import org.x4o.xml.element.Element;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 
 /**
@@ -68,7 +68,7 @@ public interface X4OPhase {
 	 * @param elementLanguage	The elementLanguage running this phase.
 	 * @throws X4OPhaseException	When error has happend. 
 	 */
-	void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException;
+	void runPhase(X4OLanguageSession elementLanguage) throws X4OPhaseException;
 	
 	/**
 	 * Returns all phase listeners which where added.

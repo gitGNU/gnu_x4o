@@ -45,7 +45,7 @@ import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.SAXException;
 
 /**
@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
 public class EldDocWriter {
 	
 	// The context to write doc over.
-	private X4OLanguageContext context = null;
+	private X4OLanguageSession context = null;
 	
 	// Core concepts
 	private static final String[] C_CONTEXT			= {"language","Overview","All language modules.","The loaded language modules.."};
@@ -77,7 +77,7 @@ public class EldDocWriter {
 	 * Creates an EldDocGenerator for this langauge context.
 	 * @param context	The language context to generate doc for.
 	 */
-	public EldDocWriter(X4OLanguageContext context) {
+	public EldDocWriter(X4OLanguageSession context) {
 		this.context=context;
 	}
 	
@@ -118,7 +118,7 @@ public class EldDocWriter {
 		
 		doc.setFrameNavConceptClass(ElementClass.class);
 		
-		doc.addTreeNodePageModeClass(X4OLanguageContext.class);
+		doc.addTreeNodePageModeClass(X4OLanguageSession.class);
 		doc.addTreeNodePageModeClass(X4OLanguageModule.class);
 		doc.addTreeNodePageModeClass(ElementInterface.class);
 		doc.addTreeNodePageModeClass(ElementNamespace.class);
@@ -129,7 +129,7 @@ public class EldDocWriter {
 		doc.addAnnotatedClasses(EldDocWriterElementNamespace.class);
 		doc.addAnnotatedClasses(EldDocWriterElementInterface.class);
 		
-		ApiDocConcept adcRoot = doc.addConcept(new ApiDocConcept(null,C_CONTEXT,X4OLanguageContext.class));
+		ApiDocConcept adcRoot = doc.addConcept(new ApiDocConcept(null,C_CONTEXT,X4OLanguageSession.class));
 		ApiDocConcept adcMod = doc.addConcept(new ApiDocConcept(adcRoot,C_MODULE,X4OLanguageModule.class));
 		ApiDocConcept adcIface = doc.addConcept(new ApiDocConcept(adcMod,C_INTERFACE,ElementInterface.class));
 		ApiDocConcept adcNs = doc.addConcept(new ApiDocConcept(adcMod,C_NAMESPACE,ElementNamespace.class));

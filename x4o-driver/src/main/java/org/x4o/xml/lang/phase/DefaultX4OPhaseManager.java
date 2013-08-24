@@ -28,8 +28,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.x4o.xml.element.Element;
-import org.x4o.xml.lang.X4OLanguageContext;
-import org.x4o.xml.lang.X4OLanguageContextLocal;
+import org.x4o.xml.lang.X4OLanguageSession;
+import org.x4o.xml.lang.X4OLanguageSessionLocal;
 
 /**
  * X4OPhaseManager stores the X4OPhaseHandler and puts them in the right order.
@@ -118,18 +118,18 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 * Runs all the phases in the right order.
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
-	public void runPhases(X4OLanguageContext languageContext,X4OPhaseType type) throws X4OPhaseException {
+	public void runPhases(X4OLanguageSession languageSession,X4OPhaseType type) throws X4OPhaseException {
 		
 		// sort for the order
 		List<X4OPhase> x4oPhasesOrder = getOrderedPhases(type);
 		
 		// debug output
-		if (languageContext.getX4ODebugWriter()!=null) {
-			languageContext.getX4ODebugWriter().debugPhaseOrder(x4oPhases);
+		if (languageSession.getX4ODebugWriter()!=null) {
+			languageSession.getX4ODebugWriter().debugPhaseOrder(x4oPhases);
 		}
 		
-		List<String> phaseSkip = languageContext.getPhaseSkip();
-		String phaseStop = languageContext.getPhaseStop();
+		List<String> phaseSkip = languageSession.getPhaseSkip();
+		String phaseStop = languageSession.getPhaseStop();
 		
 		// run the phases in ordered order
 		for (X4OPhase phase:x4oPhasesOrder) {
@@ -139,24 +139,24 @@ PHASE_ORDER = {	*startupX4OPhase,
 			}
 			
 			// debug output
-			((X4OLanguageContextLocal)languageContext).setPhaseCurrent(phase);
+			((X4OLanguageSessionLocal)languageSession).setPhaseCurrent(phase);
 			
 			// run listeners
 			for (X4OPhaseListener l:phase.getPhaseListeners()) {
-				l.preRunPhase(phase, languageContext);
+				l.preRunPhase(phase, languageSession);
 			}
 			
 			// always run endRunPhase for valid debug xml
 			try {
 				// do the run interface
-				phase.runPhase(languageContext);
+				phase.runPhase(languageSession);
 				
 				//  run the element phase if possible
-				executePhaseRoot(languageContext,phase);
+				executePhaseRoot(languageSession,phase);
 			} finally {
 				// run the listeners again
 				for (X4OPhaseListener l:phase.getPhaseListeners()) {
-					l.endRunPhase(phase, languageContext);
+					l.endRunPhase(phase, languageSession);
 				}
 			}
 			
@@ -173,9 +173,9 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
 	public void runPhasesForElement(Element e,X4OPhaseType type,X4OPhase p) throws X4OPhaseException {
-		X4OLanguageContext languageContext = e.getLanguageContext();
-		List<String> phaseSkip = languageContext.getPhaseSkip();
-		String phaseStop = languageContext.getPhaseStop();
+		X4OLanguageSession languageSession = e.getLanguageSession();
+		List<String> phaseSkip = languageSession.getPhaseSkip();
+		String phaseStop = languageSession.getPhaseStop();
 		
 		// sort for the order
 		List<X4OPhase> x4oPhasesOrder = getOrderedPhases(type);
@@ -188,13 +188,13 @@ PHASE_ORDER = {	*startupX4OPhase,
 			}
 			
 			// set phase
-			((X4OLanguageContextLocal)languageContext).setPhaseCurrent(phase);
+			((X4OLanguageSessionLocal)languageSession).setPhaseCurrent(phase);
 			
 			// do the run interface
-			phase.runPhase(languageContext);
+			phase.runPhase(languageSession);
 			
 			//  run the element phase if possible
-			executePhaseRoot(languageContext,phase);
+			executePhaseRoot(languageSession,phase);
 			
 			if (phaseStop!=null && phaseStop.equals(phase.getId())) {
 				return; // we are done
@@ -206,8 +206,8 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 * Run release phase manual if auto release is disabled by config.
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
-	public void doReleasePhaseManual(X4OLanguageContext languageContext) throws X4OPhaseException {
-		List<String> phaseSkip = languageContext.getPhaseSkip();
+	public void doReleasePhaseManual(X4OLanguageSession languageSession) throws X4OPhaseException {
+		List<String> phaseSkip = languageSession.getPhaseSkip();
 		String releaseRequested = null;
 		if (phaseSkip.contains(X4OPhase.READ_RELEASE)) {
 			releaseRequested = X4OPhase.READ_RELEASE;
@@ -218,10 +218,10 @@ PHASE_ORDER = {	*startupX4OPhase,
 		if (releaseRequested==null) {
 			throw new IllegalStateException("No manual release requested.");
 		}
-		if (languageContext.getRootElement()==null) {
+		if (languageSession.getRootElement()==null) {
 			return; // no  root element , empty xml document ?
 		}
-		if (languageContext.getRootElement().getElementClass()==null) {
+		if (languageSession.getRootElement().getElementClass()==null) {
 			throw new IllegalStateException("Release phase has already been runned.");
 		}
 		
@@ -237,13 +237,13 @@ PHASE_ORDER = {	*startupX4OPhase,
 		}
 		
 		// set phase
-		((X4OLanguageContextLocal)languageContext).setPhaseCurrent(h);
+		((X4OLanguageSessionLocal)languageSession).setPhaseCurrent(h);
 		
 		// do the run interface
-		h.runPhase(languageContext);
+		h.runPhase(languageSession);
 		
 		//  run the element phase if possible
-		executePhaseRoot(languageContext,h);
+		executePhaseRoot(languageSession,h);
 	}
 	
 	class X4OPhaseComparator implements Comparator<X4OPhase> {
@@ -305,7 +305,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 	 * @param phase	The phase to run.
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
-	private void executePhaseRoot(X4OLanguageContext elementLanguage,X4OPhase phase) throws X4OPhaseException {
+	private void executePhaseRoot(X4OLanguageSession elementLanguage,X4OPhase phase) throws X4OPhaseException {
 		if (elementLanguage.getRootElement()==null) {
 			return;
 		}

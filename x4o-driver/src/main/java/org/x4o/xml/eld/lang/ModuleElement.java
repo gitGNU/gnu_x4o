@@ -45,7 +45,7 @@ public class ModuleElement extends AbstractElement {
 		if (getParent()!=null) {
 			throw new ElementException("Need to be root tag");
 		}
-		X4OLanguageModule elementLanguageModule = EldModuleLoader.getLanguageModule(getLanguageContext());
+		X4OLanguageModule elementLanguageModule = EldModuleLoader.getLanguageModule(getLanguageSession());
 		setElementObject(elementLanguageModule);
 	}
 }

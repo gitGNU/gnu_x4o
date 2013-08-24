@@ -30,7 +30,7 @@ import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.ext.AttributeMap;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -61,7 +61,7 @@ public class X4OContentHandler extends DefaultHandler2 {
 	private Stack<Element> elementStack = null;
 	
 	/** The elememtContext */
-	private X4OLanguageContext elementLanguage = null;
+	private X4OLanguageSession elementLanguage = null;
 	
 	/** Store the override element */
 	private Element overrideSaxElement = null;
@@ -75,7 +75,7 @@ public class X4OContentHandler extends DefaultHandler2 {
 	 * Creates an X4OTagHandler 
 	 * which can receice sax xml events and converts them into the Element* interfaces  events.
 	 */
-	public X4OContentHandler(X4OLanguageContext elementLanguage,PropertyConfig propertyConfig) {
+	public X4OContentHandler(X4OLanguageSession elementLanguage,PropertyConfig propertyConfig) {
 		logger = Logger.getLogger(X4OContentHandler.class.getName());
 		loggerFinest = logger.isLoggable(Level.FINEST);
 		elementStack = new Stack<Element>();

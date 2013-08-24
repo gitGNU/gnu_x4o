@@ -75,7 +75,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 	 */
 	public void bindChild(Element childElement,X4OLanguageModule languageModule, Object childObject) throws ElementBindingHandlerException {
 		
-		X4OLanguage x4oParsingContext = EldModuleLoader.getLanguage(childElement.getLanguageContext());
+		X4OLanguage x4oParsingContext = EldModuleLoader.getLanguage(childElement.getLanguageSession());
 		if (x4oParsingContext==null) {
 			return;
 		}
@@ -133,7 +133,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 			}
 			
 			try {
-				elementNamespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
+				elementNamespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getLanguageSession().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
 			} catch (Exception e) {
 				throw new ElementBindingHandlerException("Error loading: "+e.getMessage(),e);
 			}

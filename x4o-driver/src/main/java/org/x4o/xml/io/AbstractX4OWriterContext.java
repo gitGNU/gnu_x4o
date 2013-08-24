@@ -30,7 +30,7 @@ import java.io.OutputStream;
 
 import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.SAXException;
 
 /**
@@ -45,14 +45,14 @@ public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection 
 		super(language);
 	}
 	
-	public void writeFileContext(X4OLanguageContext context,String fileName) throws X4OConnectionException,SAXException,IOException {
+	public void writeFileContext(X4OLanguageSession context,String fileName) throws X4OConnectionException,SAXException,IOException {
 		if (fileName==null) {
 			throw new NullPointerException("Can't convert null fileName to file object.");
 		}		
 		writeFileContext(context,new File(fileName));
 	}
 	
-	public void writeFileContext(X4OLanguageContext context,File file) throws X4OConnectionException,SAXException,IOException {
+	public void writeFileContext(X4OLanguageSession context,File file) throws X4OConnectionException,SAXException,IOException {
 		if (file==null) {
 			throw new NullPointerException("Can't read null file.");
 		}
@@ -64,7 +64,7 @@ public abstract class AbstractX4OWriterContext<T> extends AbstractX4OConnection 
 		}
 	}
 	
-	public String writeStringContext(X4OLanguageContext context) throws X4OConnectionException,SAXException,IOException {
+	public String writeStringContext(X4OLanguageSession context) throws X4OConnectionException,SAXException,IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream(4096);
 		writeContext(context, out);
 		String encoding = (String)getProperty(ContentWriterXml.OUTPUT_ENCODING);

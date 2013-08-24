@@ -30,7 +30,7 @@ import java.io.OutputStream;
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 import org.xml.sax.SAXException;
@@ -51,11 +51,11 @@ public class X4OWriterContextTest extends TestCase {
 		return outputFile;
 	}
 	
-	private X4OLanguageContext createContext() throws SAXException, X4OConnectionException, IOException {
+	private X4OLanguageSession createContext() throws SAXException, X4OConnectionException, IOException {
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
 		TestObjectRoot root = reader.readResource("tests/attributes/test-bean.xml");
-		X4OLanguageContext context = driver.createLanguage().createLanguageContext();
+		X4OLanguageSession context = driver.createLanguage().createLanguageSession();
 		Element rootElement = null;
 		try {
 			rootElement = (Element)context.getLanguage().getLanguageConfiguration().getDefaultElement().newInstance();

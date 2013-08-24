@@ -169,19 +169,19 @@ public abstract class X4ODriver<T> {
 	}
 	
 	/*
-	 * Creates the X4OLanguageContext for the default language version.
-	 * @return	The created X4OLanguageContext.
+	 * Creates the X4OLanguageSession for the default language version.
+	 * @return	The created X4OLanguageSession.
 	 *
-	final public X4OLanguageContext createLanguageContext() {
-		return createLanguageContext(getLanguageVersionDefault());
+	final public X4OLanguageSession createLanguageSession() {
+		return createLanguageSession(getLanguageVersionDefault());
 	}
 	
 	*
-	 * Creates the X4OLanguageContext for the specified version.
+	 * Creates the X4OLanguageSession for the specified version.
 	 * @param version	The language version to create the context for.
-	 * @return	The created X4OLanguageContext.
+	 * @return	The created X4OLanguageSession.
 	 *
-	final public X4OLanguageContext createLanguageContext(String version) {
-		return createLanguage(version).createLanguageContext();
+	final public X4OLanguageSession createLanguageSession(String version) {
+		return createLanguage(version).createLanguageSession();
 	}*/
 }

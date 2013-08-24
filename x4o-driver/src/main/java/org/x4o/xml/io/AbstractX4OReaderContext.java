@@ -30,9 +30,9 @@ import	java.io.IOException;
 import	java.io.InputStream;
 import	java.net.URL;
 
-import org.x4o.xml.lang.X4OLanguage;
+import	org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
-import org.x4o.xml.lang.X4OLanguageContext;
+import	org.x4o.xml.lang.X4OLanguageSession;
 import	org.xml.sax.SAXException;
 
 /**
@@ -57,7 +57,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws IOException	Is thrown after io exception. 
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageContext readFileContext(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
+	public X4OLanguageSession readFileContext(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
 		if (fileName==null) {
 			throw new NullPointerException("Can't convert null fileName to file object.");
 		}		
@@ -73,7 +73,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws IOException	Is thrown after io exception. 
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageContext readFileContext(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
+	public X4OLanguageSession readFileContext(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
 		if (file==null) {
 			throw new NullPointerException("Can't read null file.");
 		}
@@ -100,7 +100,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageContext readResourceContext(String resourceName) throws X4OConnectionException,SAXException,IOException {
+	public X4OLanguageSession readResourceContext(String resourceName) throws X4OConnectionException,SAXException,IOException {
 		if (resourceName==null) {
 			throw new NullPointerException("Can't read null resourceName from classpath.");
 		}
@@ -130,7 +130,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageContext readStringContext(String xmlString) throws X4OConnectionException,SAXException,IOException {
+	public X4OLanguageSession readStringContext(String xmlString) throws X4OConnectionException,SAXException,IOException {
 		if (xmlString==null) {
 			throw new NullPointerException("Can't read null xml string.");
 		}
@@ -147,7 +147,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws IOException	Is thrown after io exception.
 	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageContext readUrlContext(URL url) throws X4OConnectionException,SAXException,IOException {
+	public X4OLanguageSession readUrlContext(URL url) throws X4OConnectionException,SAXException,IOException {
 		if (url==null) {
 			throw new NullPointerException("Can't read null url.");
 		}

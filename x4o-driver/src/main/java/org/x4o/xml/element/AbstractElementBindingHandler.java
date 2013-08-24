@@ -53,7 +53,7 @@ public abstract class AbstractElementBindingHandler<T> extends AbstractElementMe
 		if (parentElement==null) {
 			throw new NullPointerException("Can't create child with null parent.");
 		}
-		Element childElement = parentElement.getLanguageContext().getLanguage().createElementInstance(parentElement.getLanguageContext(), childObject.getClass());
+		Element childElement = parentElement.getLanguageSession().getLanguage().createElementInstance(parentElement.getLanguageSession(), childObject.getClass());
 		if (childElement==null) {
 			throw new NullPointerException("Could not find Element for child: "+childObject.getClass());
 		}

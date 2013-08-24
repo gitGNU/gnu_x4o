@@ -59,7 +59,7 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	 * Creates a new empty ElementLanguage.
 	 */
 	public AbstractX4OLanguageModule() {
-		logger = Logger.getLogger(AbstractX4OLanguageContext.class.getName());
+		logger = Logger.getLogger(AbstractX4OLanguageSession.class.getName());
 		logger.finest("Creating new ParsingContext");
 		elementAttributeHandlers = new ArrayList<ElementAttributeHandler>(4);
 		elementBindingHandlers = new ArrayList<ElementBindingHandler>(4);

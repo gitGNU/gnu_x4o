@@ -28,7 +28,7 @@ import javax.el.ValueExpression;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 /**
  * SwiXmlParser works with the SwingEngine to config the UI tree.
@@ -50,7 +50,7 @@ public class SwiXmlDriver extends X4ODriver<Component> {
 	 * @param elementLanguage	The elementLanguage to get the swingEngine out.
 	 * @return	Returns the SwingEngine for this elementLanguage.
 	 */
-	static public SwingEngine getSwingEngine(X4OLanguageContext elementLanguage) {
+	static public SwingEngine getSwingEngine(X4OLanguageSession elementLanguage) {
 		ValueExpression ee = elementLanguage.getExpressionLanguageFactory().createValueExpression(elementLanguage.getExpressionLanguageContext(),"${"+SwiXmlDriver.LANGUAGE_EL_SWING_ENGINE+"}",Object.class);    	
 		SwingEngine se = (SwingEngine)ee.getValue(elementLanguage.getExpressionLanguageContext());
 		return se;

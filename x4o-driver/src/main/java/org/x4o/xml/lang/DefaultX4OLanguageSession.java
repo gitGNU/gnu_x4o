@@ -24,17 +24,17 @@ package	org.x4o.xml.lang;
 
 
 /**
- * An DefaultElementLanguage.
+ * An DefaultX4OLanguageSession.
  * 
  * @author Willem Cazander
  * @version 1.0 Feb 16, 2007
  */
-public class DefaultX4OLanguageContext extends AbstractX4OLanguageContext {
+public class DefaultX4OLanguageSession extends AbstractX4OLanguageSession {
 
 	/**
 	 * Creates a new empty language context.
 	 */
-	public DefaultX4OLanguageContext(X4OLanguage language) {
+	public DefaultX4OLanguageSession(X4OLanguage language) {
 		super(language);
 	}
 }

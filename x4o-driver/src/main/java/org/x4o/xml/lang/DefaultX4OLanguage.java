@@ -118,8 +118,8 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	 * @throws X4OPhaseException 
 	 * @see org.x4o.xml.lang.X4OLanguage#createLanguageContext(org.x4o.xml.X4ODriver)
 	 */
-	public X4OLanguageContext createLanguageContext() {
-		X4OLanguageContext result = buildElementLanguage(new DefaultX4OLanguageContext(this));
+	public X4OLanguageSession createLanguageSession() {
+		X4OLanguageSession result = buildElementLanguage(new DefaultX4OLanguageSession(this));
 		try {
 			getPhaseManager().runPhases(result, X4OPhaseType.INIT);
 		} catch (X4OPhaseException e) {
@@ -128,11 +128,11 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 		return result;
 	}
 
-	protected X4OLanguageContext buildElementLanguage(X4OLanguageContext languageContext) {
-		if ((languageContext instanceof X4OLanguageContextLocal)==false) { 
-			throw new RuntimeException("Can't init X4OLanguageContext which has not X4OLanguageContextLocal interface obj: "+languageContext);
+	protected X4OLanguageSession buildElementLanguage(X4OLanguageSession languageSession) {
+		if ((languageSession instanceof X4OLanguageSessionLocal)==false) { 
+			throw new RuntimeException("Can't init X4OLanguageSession which has not X4OLanguageSessionLocal interface obj: "+languageSession);
 		}
-		X4OLanguageContextLocal contextInit = (X4OLanguageContextLocal)languageContext; 
+		X4OLanguageSessionLocal contextInit = (X4OLanguageSessionLocal)languageSession; 
 		try {
 			if (contextInit.getExpressionLanguageFactory()==null) {
 				contextInit.setExpressionLanguageFactory(X4OExpressionFactory.createExpressionFactory());
@@ -153,9 +153,9 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguage#createElementInstance(org.x4o.xml.lang.X4OLanguageContext,java.lang.Class)
+	 * @see org.x4o.xml.lang.X4OLanguage#createElementInstance(org.x4o.xml.lang.X4OLanguageSession,java.lang.Class)
 	 */
-	public Element createElementInstance(X4OLanguageContext context,Class<?> objectClass) {
+	public Element createElementInstance(X4OLanguageSession context,Class<?> objectClass) {
 		for (X4OLanguageModule modContext:getLanguageModules()) {
 			for (ElementNamespace nsContext:modContext.getElementNamespaces()) {
 				for (ElementClass ec:nsContext.getElementClasses()) {

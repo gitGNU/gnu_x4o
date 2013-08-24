@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.x4o.xml.element.Element;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 
 /**
@@ -97,6 +97,6 @@ public abstract class AbstractX4OPhase implements X4OPhase {
 	 * @param elementLanguage The language to run phase for.
 	 * @throws X4OPhaseException when phase has error.
 	 */
-	public void runPhase(X4OLanguageContext elementLanguage) throws X4OPhaseException {
+	public void runPhase(X4OLanguageSession elementLanguage) throws X4OPhaseException {
 	}
 }

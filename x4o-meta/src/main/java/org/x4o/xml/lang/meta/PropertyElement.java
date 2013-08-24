@@ -64,7 +64,7 @@ public class PropertyElement extends AbstractElement {
 
 		// convert value object
 		try {
-			value = getLanguageContext().getElementAttributeValueParser().getParameterValue(name,valueString,this);
+			value = getLanguageSession().getElementAttributeValueParser().getParameterValue(name,valueString,this);
 		} catch (ObjectConverterException ece) {
 			throw new ElementException(ece);
 		}
@@ -101,7 +101,7 @@ public class PropertyElement extends AbstractElement {
 		
 		// try to set as property on bean.
 		try {
-			getLanguageContext().getElementObjectPropertyValue().setProperty(getParent().getElementObject(), name, value);
+			getLanguageSession().getElementObjectPropertyValue().setProperty(getParent().getElementObject(), name, value);
 			return;
 		} catch (Exception e) {
 			throw new ElementException("Could not set property on parent element object: "+name,e);

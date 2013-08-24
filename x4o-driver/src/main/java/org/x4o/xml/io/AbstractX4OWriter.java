@@ -29,7 +29,7 @@ import java.io.OutputStream;
 
 import org.x4o.xml.element.Element;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.SAXException;
 
 /**
@@ -44,10 +44,10 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 		super(language);
 	}
 	
-	abstract X4OLanguageContext getLanguageContext();
+	abstract X4OLanguageSession createLanguageSession();
 	
-	private X4OLanguageContext toObjectContext(T object) throws SAXException {
-		X4OLanguageContext context = getLanguageContext();
+	private X4OLanguageSession toObjectContext(T object) throws SAXException {
+		X4OLanguageSession context = createLanguageSession();
 		Element rootElement = null;
 		try {
 			rootElement = (Element)context.getLanguage().getLanguageConfiguration().getDefaultElement().newInstance();
@@ -57,7 +57,7 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 			throw new SAXException(e);
 		}
 		rootElement.setElementObject(object);
-		rootElement.setLanguageContext(context);
+		rootElement.setLanguageSession(context);
 		context.setRootElement(rootElement);
 		return context;
 	}

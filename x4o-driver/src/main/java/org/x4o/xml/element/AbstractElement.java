@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
 
 /**
@@ -43,7 +43,7 @@ public abstract class AbstractElement implements Element {
 	/** The config object */
 	private Object elementObject = null;
 	/** The language parsing context */
-	private X4OLanguageContext languageContext = null;
+	private X4OLanguageSession languageSession = null;
 	/** The ElementClass */
 	private ElementClass elementClass = null;
 	/** The attributes */
@@ -93,7 +93,7 @@ public abstract class AbstractElement implements Element {
 		getAttributes().clear();
 		setElementClass(null);
 		setParent(null);
-		setLanguageContext(null);
+		setLanguageSession(null);
 		attributes.clear();
 		childeren.clear(); // we do not release childeren, x4o does that
 		allChilderen.clear();
@@ -114,17 +114,17 @@ public abstract class AbstractElement implements Element {
 	}
 	
 	/**
-	 * @see Element#setLanguageContext(X4OLanguageContext)
+	 * @see Element#setLanguageSession(X4OLanguageSession)
 	 */
-	public void setLanguageContext(X4OLanguageContext languageContext) {
-		this.languageContext=languageContext;
+	public void setLanguageSession(X4OLanguageSession languageSession) {
+		this.languageSession=languageSession;
 	}
 	
 	/**
-	 * @see Element#getLanguageContext()
+	 * @see Element#getLanguageSession()
 	 */
-	public X4OLanguageContext getLanguageContext() {
-		return languageContext;
+	public X4OLanguageSession getLanguageSession() {
+		return languageSession;
 	}
 
 	/**
@@ -132,7 +132,7 @@ public abstract class AbstractElement implements Element {
 	 */
 	public void doCharacters(String characters) throws ElementException {
 		try {
-			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementBodyCharacters());
+			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageSession().getLanguage().getLanguageConfiguration().getDefaultElementBodyCharacters());
 			e.setElementObject(characters);
 			addChild(e);
 		} catch (Exception exception) {
@@ -145,7 +145,7 @@ public abstract class AbstractElement implements Element {
 	 */
 	public void doComment(String comment) throws ElementException {
 		try {
-			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementBodyComment());
+			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageSession().getLanguage().getLanguageConfiguration().getDefaultElementBodyComment());
 			e.setElementObject(comment);
 			addChild(e);
 		} catch (Exception exception) {
@@ -158,7 +158,7 @@ public abstract class AbstractElement implements Element {
 	 */
 	public void doIgnorableWhitespace(String space) throws ElementException {
 		try {
-			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementBodyWhitespace());
+			Element e = (Element)X4OLanguageClassLoader.newInstance(getLanguageSession().getLanguage().getLanguageConfiguration().getDefaultElementBodyWhitespace());
 			e.setElementObject(space);
 			addChild(e);
 		} catch (Exception exception) {

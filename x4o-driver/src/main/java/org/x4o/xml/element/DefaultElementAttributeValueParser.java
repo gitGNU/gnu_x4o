@@ -82,7 +82,7 @@ public class DefaultElementAttributeValueParser implements ElementAttributeValue
 		if (element.getElementObject()==null) {
 			return value;
 		}
-		for (ElementInterface ei:element.getLanguageContext().getLanguage().findElementInterfaces(element.getElementObject())) {
+		for (ElementInterface ei:element.getLanguageSession().getLanguage().findElementInterfaces(element.getElementObject())) {
 			logger.finer("Found interface match executing converter.");
 			for (ElementClassAttribute attrClass:ei.getElementClassAttributes()) {
 				if (name.equals(attrClass.getId())==false) {
@@ -106,8 +106,8 @@ public class DefaultElementAttributeValueParser implements ElementAttributeValue
 	 * @see org.x4o.xml.element.ElementAttributeValueParser#getELParameterValue(java.lang.String, org.x4o.xml.element.Element)
 	 */
 	public Object getELParameterValue(String value, Element element) throws ElementAttributeValueParserException {
-		ValueExpression e = element.getLanguageContext().getExpressionLanguageFactory().createValueExpression(element.getLanguageContext().getExpressionLanguageContext(), (String)value,Object.class);
-		return e.getValue(element.getLanguageContext().getExpressionLanguageContext());
+		ValueExpression e = element.getLanguageSession().getExpressionLanguageFactory().createValueExpression(element.getLanguageSession().getExpressionLanguageContext(), (String)value,Object.class);
+		return e.getValue(element.getLanguageSession().getExpressionLanguageContext());
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class DefaultElementAttributeValueParser implements ElementAttributeValue
 			return false;
 		}
 		
-		for (ElementInterface ei:element.getLanguageContext().getLanguage().findElementInterfaces(element.getElementObject())) {
+		for (ElementInterface ei:element.getLanguageSession().getLanguage().findElementInterfaces(element.getElementObject())) {
 			logger.finest("Found interface match checking disables el parameters.");
 			
 			attr = ei.getElementClassAttributeByName(name);

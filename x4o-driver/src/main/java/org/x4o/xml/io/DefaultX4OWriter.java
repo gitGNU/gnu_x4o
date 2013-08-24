@@ -43,7 +43,7 @@ import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.lang.phase.X4OPhaseException;
@@ -81,7 +81,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	
 	/**
 	 * Default constructor.
-	 * @param languageContext	The language context for this writer.
+	 * @param language	The language for this writer.
 	 */
 	public DefaultX4OWriter(X4OLanguage language) {
 		super(language);
@@ -89,35 +89,35 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageContext#getPropertyConfig()
+	 * @see org.x4o.xml.lang.X4OLanguageSession#getPropertyConfig()
 	 */
 	public PropertyConfig getPropertyConfig() {
 		return propertyConfig;
 	}
 	
-	X4OLanguageContext getLanguageContext() {
-		return getLanguage().createLanguageContext();
+	X4OLanguageSession createLanguageSession() {
+		return getLanguage().createLanguageSession();
 	}
 	
 	/**
-	 * @see org.x4o.xml.io.X4OWriterContext#writeContext(org.x4o.xml.lang.X4OLanguageContext, java.io.OutputStream)
+	 * @see org.x4o.xml.io.X4OWriterContext#writeContext(org.x4o.xml.lang.X4OLanguageSession, java.io.OutputStream)
 	 */
-	public void writeContext(X4OLanguageContext languageContext,OutputStream output) throws X4OConnectionException,SAXException,IOException {
+	public void writeContext(X4OLanguageSession languageSession,OutputStream output) throws X4OConnectionException,SAXException,IOException {
 		setProperty(OUTPUT_STREAM, output);
 		addPhaseSkip(X4OPhase.WRITE_RELEASE);
 		try {
-			languageContext.getLanguage().getPhaseManager().runPhases(languageContext, X4OPhaseType.XML_WRITE);
+			languageSession.getLanguage().getPhaseManager().runPhases(languageSession, X4OPhaseType.XML_WRITE);
 		} catch (X4OPhaseException e) {
 			throw new X4OConnectionException(e);
 		}
-		runWrite(languageContext);
+		runWrite(languageSession);
 	}
 	
 	private AttributeEntryComparator attributeEntryComparator = new AttributeEntryComparator();
 	private boolean schemaUriPrint;
 	private String schemaUriRoot;
 	
-	private void runWrite(X4OLanguageContext languageContext) throws X4OConnectionException {
+	private void runWrite(X4OLanguageSession languageSession) throws X4OConnectionException {
 		OutputStream out = (OutputStream)getProperty(OUTPUT_STREAM);
 		try {
 			String encoding = getPropertyConfig().getPropertyString(ContentWriterXml.OUTPUT_ENCODING);
@@ -125,10 +125,10 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 			schemaUriRoot = getPropertyConfig().getPropertyString(SCHEMA_ROOT_URI);
 			if (encoding==null) { encoding = XMLConstants.XML_DEFAULT_ENCODING; }
 			
-			Element root = languageContext.getRootElement();
+			Element root = languageSession.getRootElement();
 			if (schemaUriRoot==null) {
 				String rootUri = findElementUri(root);
-				ElementNamespace ns = languageContext.getLanguage().findElementNamespace(rootUri);
+				ElementNamespace ns = languageSession.getLanguage().findElementNamespace(rootUri);
 				if (ns!=null) {
 					schemaUriRoot = ns.getSchemaUri();
 				}
@@ -214,7 +214,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 					continue;
 				}
 				
-				Object value = element.getLanguageContext().getElementObjectPropertyValue().getProperty(element.getElementObject(),eca.getId());
+				Object value = element.getLanguageSession().getElementObjectPropertyValue().getProperty(element.getElementObject(),eca.getId());
 				if (value==null) {
 					continue;
 				}
@@ -236,7 +236,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 					continue;
 				}
 				boolean writeValue = true;
-				for (ElementInterface ei:element.getLanguageContext().getLanguage().findElementInterfaces(element.getElementObject().getClass())) {
+				for (ElementInterface ei:element.getLanguageSession().getLanguage().findElementInterfaces(element.getElementObject().getClass())) {
 					eca = ei.getElementClassAttributeByName(p);
 					if (eca!=null && writeOrder==null) {
 						writeOrder = eca.getWriteOrder(); // add interface but allow override local
@@ -251,7 +251,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 				}
 				
 				// TODO: check attr see reader
-				Object value = element.getLanguageContext().getElementObjectPropertyValue().getProperty(element.getElementObject(),p);
+				Object value = element.getLanguageSession().getElementObjectPropertyValue().getProperty(element.getElementObject(),p);
 				if (value==null) {
 					continue;
 				}
@@ -315,7 +315,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	}
 	
 	private String findElementUri(Element e) {
-		for (X4OLanguageModule mod:e.getLanguageContext().getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:e.getLanguageSession().getLanguage().getLanguageModules()) {
 			for (ElementNamespace c:mod.getElementNamespaces()) {
 				ElementClass ec = c.getElementClass(e.getElementClass().getId());
 				if (ec!=null) {
@@ -327,7 +327,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	}
 	
 	private String findNamespacePrefix(Element e,String uri) {
-		ElementNamespace ns = e.getLanguageContext().getLanguage().findElementNamespace(uri);
+		ElementNamespace ns = e.getLanguageSession().getLanguage().findElementNamespace(uri);
 		if (ns.getPrefixMapping()!=null) {
 			return ns.getPrefixMapping();
 		}

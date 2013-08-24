@@ -31,12 +31,12 @@ import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.lang.phase.X4OPhase;
 
 /**
- * ElementLanguageLocal is the local set interface for ElementLanguage.
+ * X4OLanguageSessionLocal is the local set interface for X4OLanguageSession.
  * 
  * @author Willem Cazander
  * @version 1.0 Oct 28, 2009
  */
-public interface X4OLanguageContextLocal extends X4OLanguageContext {
+public interface X4OLanguageSessionLocal extends X4OLanguageSession {
 
 	/**
 	 * Sets the EL Context.

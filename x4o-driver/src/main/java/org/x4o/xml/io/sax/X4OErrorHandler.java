@@ -25,7 +25,7 @@ package org.x4o.xml.io.sax;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -38,18 +38,18 @@ import org.xml.sax.SAXParseException;
  */
 public class X4OErrorHandler implements ErrorHandler {
 	
-	private X4OLanguageContext languageContext = null;
+	private X4OLanguageSession languageSession = null;
 	private ErrorHandler errorHandler = null;
 	
 	/**
 	 * Construct a new SAXErrorPrinter
-	 * @param languageContext	The language to get errors to.
+	 * @param languageSession	The language to get errors to.
 	 */
-	public X4OErrorHandler(X4OLanguageContext languageContext,PropertyConfig propertyConfig) {
-		if (languageContext==null) {
-			throw new NullPointerException("Can't debug and proxy errors with null languageContext.");
+	public X4OErrorHandler(X4OLanguageSession languageSession,PropertyConfig propertyConfig) {
+		if (languageSession==null) {
+			throw new NullPointerException("Can't debug and proxy errors with null languageSession.");
 		}
-		this.languageContext=languageContext;
+		this.languageSession=languageSession;
 		this.errorHandler=(ErrorHandler)propertyConfig.getProperty(DefaultX4OReader.SAX_ERROR_HANDLER);
 	}
 
@@ -57,12 +57,12 @@ public class X4OErrorHandler implements ErrorHandler {
 	 * Prints the error message to debug output.
 	 */
 	private void printError(boolean isError, SAXParseException exception) throws SAXException {
-		if (languageContext.hasX4ODebugWriter()==false) {
+		if (languageSession.hasX4ODebugWriter()==false) {
 			return;
 		}
 		String message = printErrorString(isError,exception);
 		try {
-			languageContext.getX4ODebugWriter().debugPhaseMessage(message, X4OErrorHandler.class);
+			languageSession.getX4ODebugWriter().debugPhaseMessage(message, X4OErrorHandler.class);
 		} catch (ElementException e) {
 			throw new SAXException(e);
 		}

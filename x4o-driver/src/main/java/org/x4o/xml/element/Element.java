@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 /**
  * Defines an XML element with an object.<br>
@@ -132,16 +132,16 @@ public interface Element {
 	void setElementObject(Object object);
 	
 	/**
-	 * Sets the ElementLanguage.
-	 * @param elementLanguage	The ElementLanguage to set.
+	 * Sets the X4OLanguageSession.
+	 * @param languageSession	The X4OLanguageSession to set.
 	 */
-	void setLanguageContext(X4OLanguageContext elementLanguage);
+	void setLanguageSession(X4OLanguageSession languageSession);
 	
 	/**
-	 * Gets the ElementLanguage.
-	 * @return	Returns the ElementLanguage.
+	 * Gets the X4OLanguageSession.
+	 * @return	Returns the X4OLanguageSession.
 	 */
-	X4OLanguageContext getLanguageContext();
+	X4OLanguageSession getLanguageSession();
 	
 	/**
 	 * Sets the body texts on an event based system.

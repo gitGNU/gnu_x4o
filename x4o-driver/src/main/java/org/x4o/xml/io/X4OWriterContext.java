@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.SAXException;
 
 /**
@@ -37,11 +37,11 @@ import org.xml.sax.SAXException;
  */
 public interface X4OWriterContext<T> extends X4OWriter<T> {
 
-	void writeContext(X4OLanguageContext context,OutputStream out) throws X4OConnectionException,SAXException,IOException;
+	void writeContext(X4OLanguageSession context,OutputStream out) throws X4OConnectionException,SAXException,IOException;
 	
-	void writeFileContext(X4OLanguageContext context,String fileName) throws X4OConnectionException,SAXException,IOException;
+	void writeFileContext(X4OLanguageSession context,String fileName) throws X4OConnectionException,SAXException,IOException;
 	
-	void writeFileContext(X4OLanguageContext context,File file) throws X4OConnectionException,SAXException,IOException;
+	void writeFileContext(X4OLanguageSession context,File file) throws X4OConnectionException,SAXException,IOException;
 	
-	String writeStringContext(X4OLanguageContext context) throws X4OConnectionException,SAXException,IOException;
+	String writeStringContext(X4OLanguageSession context) throws X4OConnectionException,SAXException,IOException;
 }

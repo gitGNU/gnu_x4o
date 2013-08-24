@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 
 /**
@@ -124,9 +124,9 @@ public class DefaultElementBodyCharacters implements Element {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.Element#getLanguageContext()
+	 * @see org.x4o.xml.element.Element#getLanguageSession()
 	 */
-	public X4OLanguageContext getLanguageContext() {
+	public X4OLanguageSession getLanguageSession() {
 		return null;
 	}
 
@@ -176,9 +176,9 @@ public class DefaultElementBodyCharacters implements Element {
 	}
 
 	/**
-	 * @see org.x4o.xml.element.Element#setLanguageContext(org.x4o.xml.lang.X4OLanguageContext)
+	 * @see org.x4o.xml.element.Element#setLanguageSession(org.x4o.xml.lang.X4OLanguageSession)
 	 */
-	public void setLanguageContext(X4OLanguageContext elementLanguage) {
+	public void setLanguageSession(X4OLanguageSession elementLanguage) {
 	}
 
 	/**

@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.x4o.xml.element.Element;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 
 /**
@@ -52,13 +52,13 @@ public interface X4OPhaseManager {
 	 */
 	List<X4OPhase> getOrderedPhases(X4OPhaseType type);
 
-	void doReleasePhaseManual(X4OLanguageContext languageContext) throws X4OPhaseException;
+	void doReleasePhaseManual(X4OLanguageSession languageSession) throws X4OPhaseException;
 	
 	/**
 	 * Runs all the phases in the right order.
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
-	void runPhases(X4OLanguageContext elementContext,X4OPhaseType type) throws X4OPhaseException;
+	void runPhases(X4OLanguageSession elementContext,X4OPhaseType type) throws X4OPhaseException;
 
 	/**
 	 * Runs phase on single element.

@@ -39,7 +39,7 @@ import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
 
@@ -113,7 +113,7 @@ public class EldDocWriterElementClass extends AbstractApiDocWriter {
 		ElementClass ec  = (ElementClass)event.getEventObject().getUserData();
 		ElementNamespace ns = (ElementNamespace)event.getEventObject().getParent().getUserData();
 		X4OLanguageModule mod = (X4OLanguageModule)event.getEventObject().getParent().getParent().getUserData();
-		X4OLanguageContext context = (X4OLanguageContext)event.getEventObject().getParent().getParent().getParent().getUserData();
+		X4OLanguageSession context = (X4OLanguageSession)event.getEventObject().getParent().getParent().getParent().getUserData();
 		
 		// TODO: this is hacky
 		EldDocXTreePageWriter xtree = (EldDocXTreePageWriter)event.getDoc().findDocPageById("overview-xtree").getPageWriters().get(0);

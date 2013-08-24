@@ -29,7 +29,7 @@ import java.net.URL;
 
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestBean;
 import org.x4o.xml.test.models.TestObjectRoot;
@@ -62,7 +62,7 @@ public class X4OReaderContextTest extends TestCase {
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		File xmlFile = copyResourceToTempFile();
-		X4OLanguageContext context = reader.readFileContext(xmlFile.getAbsolutePath());
+		X4OLanguageSession context = reader.readFileContext(xmlFile.getAbsolutePath());
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
@@ -90,7 +90,7 @@ public class X4OReaderContextTest extends TestCase {
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		File xmlFile = copyResourceToTempFile();
-		X4OLanguageContext context = reader.readFileContext(xmlFile);
+		X4OLanguageSession context = reader.readFileContext(xmlFile);
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
@@ -153,7 +153,7 @@ public class X4OReaderContextTest extends TestCase {
 	public void testReadResource() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		X4OLanguageContext context = reader.readResourceContext("tests/attributes/test-bean.xml");
+		X4OLanguageSession context = reader.readResourceContext("tests/attributes/test-bean.xml");
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 	}
@@ -176,7 +176,7 @@ public class X4OReaderContextTest extends TestCase {
 	public void testReadString() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		X4OLanguageContext context = reader.readStringContext(
+		X4OLanguageSession context = reader.readStringContext(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
 				"<root:root xmlns:root=\"http://test.x4o.org/xml/ns/test-root\" xmlns=\"http://test.x4o.org/xml/ns/test-lang\">"+
 				"<testBean privateIntegerTypeField=\"987654321\"/>"+
@@ -209,7 +209,7 @@ public class X4OReaderContextTest extends TestCase {
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
 		URL xmlUrl = Thread.currentThread().getContextClassLoader().getResource("tests/attributes/test-bean.xml");
-		X4OLanguageContext context = reader.readUrlContext(xmlUrl);
+		X4OLanguageSession context = reader.readUrlContext(xmlUrl);
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);

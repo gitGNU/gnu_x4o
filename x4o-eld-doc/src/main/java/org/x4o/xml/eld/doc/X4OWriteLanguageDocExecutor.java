@@ -30,7 +30,7 @@ import java.util.List;
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 
 /**
  * X4OWriteLanguageDoc is support class to write html documentation from the eld.
@@ -95,7 +95,7 @@ public class X4OWriteLanguageDocExecutor {
 	 */
 	public void execute() throws ElementException {
 		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(getLanguageName());
-		X4OLanguageContext context = driver.createLanguage(getLanguageVersion()).createLanguageContext();
+		X4OLanguageSession context = driver.createLanguage(getLanguageVersion()).createLanguageSession();
 			
 		// Run doc writer
 		EldDocWriter docWriter = new EldDocWriter(context);

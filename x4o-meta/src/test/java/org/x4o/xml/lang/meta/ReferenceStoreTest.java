@@ -25,7 +25,7 @@ package org.x4o.xml.lang.meta;
 import java.util.Date;
 
 import org.x4o.xml.io.X4OReaderContext;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.phase.X4OPhase;
 
 import junit.framework.TestCase;
@@ -39,7 +39,7 @@ import junit.framework.TestCase;
 public class ReferenceStoreTest extends TestCase {
 	
 	public void testMetaGeneric() throws Exception {
-		X4OLanguageContext context = null;
+		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
@@ -52,7 +52,7 @@ public class ReferenceStoreTest extends TestCase {
 	}
 	
 	public void testLoadClass() throws Exception {
-		X4OLanguageContext context = null;
+		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
@@ -65,7 +65,7 @@ public class ReferenceStoreTest extends TestCase {
 	}
 	
 	public void testStoreRef() throws Exception {
-		X4OLanguageContext context = null;
+		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderContext<?> reader = driver.createReaderContext();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);

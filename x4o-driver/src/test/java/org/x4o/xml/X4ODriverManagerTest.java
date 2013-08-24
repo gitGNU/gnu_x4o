@@ -86,7 +86,7 @@ public class X4ODriverManagerTest extends TestCase {
 		Throwable e = null;
 		try {
 			X4ODriver<?> driver = X4ODriverManager.getX4ODriver(language);
-			driver.createLanguage(version).createLanguageContext();
+			driver.createLanguage(version).createLanguageSession();
 		} catch (Throwable catchE) {
 			e = catchE;
 		}

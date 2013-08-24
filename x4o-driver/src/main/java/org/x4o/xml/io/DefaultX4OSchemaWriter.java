@@ -76,7 +76,7 @@ public class DefaultX4OSchemaWriter extends AbstractX4OConnection implements X4O
 	public void writeSchema(File basePath, String namespace) throws ElementException {
 		setProperty(OUTPUT_PATH, basePath);
 		// TODO: fix create context
-		EldXsdXmlGenerator xsd = new EldXsdXmlGenerator(getLanguage().createLanguageContext().getLanguage(),getPropertyConfig());
+		EldXsdXmlGenerator xsd = new EldXsdXmlGenerator(getLanguage().createLanguageSession().getLanguage(),getPropertyConfig());
 		xsd.writeSchema(namespace);		// Start xsd generator
 	}
 }

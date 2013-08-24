@@ -25,7 +25,7 @@ package org.x4o.xml.core;
 import java.util.Collection;
 import java.util.List;
 
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 import org.x4o.xml.lang.phase.X4OPhaseType;
@@ -50,7 +50,7 @@ public class X4OPhaseManagerTest extends TestCase {
 
 	public void testPhases() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OLanguageContext context = driver.createLanguage().createLanguageContext();
+		X4OLanguageSession context = driver.createLanguage().createLanguageSession();
 		X4OPhaseManager manager = context.getLanguage().getPhaseManager();
 		Collection<X4OPhase> phasesAll = manager.getAllPhases();
 		List<X4OPhase> phases = manager.getOrderedPhases(X4OPhaseType.XML_READ);
@@ -67,7 +67,7 @@ public class X4OPhaseManagerTest extends TestCase {
 	/*
 	public void testPhaseManager() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		ElementLanguage context = driver.createLanguageContext();
+		ElementLanguage context = driver.createLanguageSession();
 		X4OPhaseManager manager = context.getLanguage().getPhaseManager();
 		
 		Exception e = null;

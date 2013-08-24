@@ -42,7 +42,7 @@ import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.X4OLanguageContext;
+import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.lang.phase.X4OPhaseException;
@@ -81,9 +81,9 @@ public class X4ODebugWriter {
 		
 		/**
 		 * @throws X4OPhaseException 
-		 * @see org.x4o.xml.lang.phase.X4OPhaseListener#preRunPhase(org.x4o.xml.lang.X4OLanguageContext)
+		 * @see org.x4o.xml.lang.phase.X4OPhaseListener#preRunPhase(org.x4o.xml.lang.X4OLanguageSession)
 		 */
-		public void preRunPhase(X4OPhase phase,X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void preRunPhase(X4OPhase phase,X4OLanguageSession elementLanguage) throws X4OPhaseException {
 			startTime = System.currentTimeMillis();
 			try {
 				AttributesImpl atts = new AttributesImpl();
@@ -97,7 +97,7 @@ public class X4ODebugWriter {
 			debugPhase(phase);
 		}
 		
-		public void endRunPhase(X4OPhase phase,X4OLanguageContext elementLanguage) throws X4OPhaseException {
+		public void endRunPhase(X4OPhase phase,X4OLanguageSession elementLanguage) throws X4OPhaseException {
 			long stopTime = System.currentTimeMillis();
 			try {
 				AttributesImpl atts = new AttributesImpl();
@@ -114,7 +114,7 @@ public class X4ODebugWriter {
 	}
 	
 	/*
-	public void debugLanguageProperties(X4OLanguageContext ec) throws ElementException {
+	public void debugLanguageProperties(X4OLanguageSession ec) throws ElementException {
 		try {
 			AttributesImpl atts = new AttributesImpl();
 			contentWriter.startElement (DEBUG_URI, "X4OLanguageProperties", "", atts);
@@ -136,7 +136,7 @@ public class X4ODebugWriter {
 	}
 	*/
 	
-	public void debugLanguageDefaultClasses(X4OLanguageContext ec) throws ElementException {
+	public void debugLanguageDefaultClasses(X4OLanguageSession ec) throws ElementException {
 		try {
 			AttributesImpl atts = new AttributesImpl();
 			contentWriter.startElement (DEBUG_URI, "X4OLanguageDefaultClasses", "", atts);
@@ -212,7 +212,7 @@ public class X4ODebugWriter {
 		}	
 	}
 	
-	public void debugElementLanguageModules(X4OLanguageContext elementLanguage) throws ElementException {
+	public void debugElementLanguageModules(X4OLanguageSession elementLanguage) throws ElementException {
 		try {
 			AttributesImpl attsEmpty = new AttributesImpl();
 			contentWriter.startElement (DEBUG_URI, "ElementLanguageModules", "", attsEmpty);
@@ -422,7 +422,7 @@ public class X4ODebugWriter {
 		}
 	}
 	
-	public void debugLanguageContext(X4OLanguageContext elementLanguage) throws SAXException {
+	public void debugLanguageSession(X4OLanguageSession elementLanguage) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		//atts.addAttribute ("", key, "", "", value);
 		atts.addAttribute ("", "language", "", "", elementLanguage.getLanguage().getLanguageName());

@@ -61,9 +61,9 @@ public interface X4OLanguage {
 
 	/**
 	 * Creates and fills the initial element language used to store the language.
-	 * @return	The newly created ElementLanguage.
+	 * @return	The newly created X4OLanguageSession.
 	 */
-	X4OLanguageContext createLanguageContext();
+	X4OLanguageSession createLanguageSession();
 
 	/**
 	 * Search language for object and create element for it.
@@ -71,7 +71,7 @@ public interface X4OLanguage {
 	 * @param objectClass The object to search for.
 	 * @return	Returns an new Element instance for the object.
 	 */
-	Element createElementInstance(X4OLanguageContext context,Class<?> objectClass);
+	Element createElementInstance(X4OLanguageSession context,Class<?> objectClass);
 	
 	/**
 	 * Gets all ElementBindingHandlers which are possible for parent.
