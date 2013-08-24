@@ -33,7 +33,7 @@ import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 
 /**
  * An AbstractElementLanguageModule.
@@ -52,7 +52,7 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	private List<ElementBindingHandler> elementBindingHandlers = null;
 	private List<ElementConfiguratorGlobal> elementConfiguratorGlobals = null;
 	private List<ElementInterface> elementInterfaces = null;
-	private Map<String,ElementNamespaceContext> elementNamespaceContexts = null;
+	private Map<String,ElementNamespace> elementNamespaces = null;
 	private X4OLanguageModuleLoader elementLanguageModuleLoader = null;
 
 	/**
@@ -65,7 +65,7 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		elementBindingHandlers = new ArrayList<ElementBindingHandler>(4);
 		elementConfiguratorGlobals = new ArrayList<ElementConfiguratorGlobal>(4);
 		elementInterfaces = new ArrayList<ElementInterface>(20);
-		elementNamespaceContexts = new HashMap<String,ElementNamespaceContext>(10);
+		elementNamespaces = new HashMap<String,ElementNamespace>(10);
 	}
 	
 	/**
@@ -190,31 +190,31 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageModule#addElementNamespaceContext(org.x4o.xml.element.ElementNamespaceContext)
+	 * @see org.x4o.xml.lang.X4OLanguageModule#addElementNamespace(org.x4o.xml.element.ElementNamespace)
 	 */
-	public void addElementNamespaceContext(ElementNamespaceContext elementNamespaceContext) {
-		if (elementNamespaceContext==null) {
+	public void addElementNamespace(ElementNamespace elementNamespace) {
+		if (elementNamespace==null) {
 			throw new NullPointerException("Can't add null.");
 		}
-		if (elementNamespaceContext.getUri()==null) {
-			throw new NullPointerException("Can add ElementNamespaceContext without uri.");
+		if (elementNamespace.getUri()==null) {
+			throw new NullPointerException("Can add ElementNamespace without uri.");
 		}
-		logger.fine("Adding namespaceUri: "+elementNamespaceContext.getUri());
-		elementNamespaceContexts.put(elementNamespaceContext.getUri(), elementNamespaceContext);
+		logger.fine("Adding namespaceUri: "+elementNamespace.getUri());
+		elementNamespaces.put(elementNamespace.getUri(), elementNamespace);
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementNamespaceContext(java.lang.String)
+	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementNamespace(java.lang.String)
 	 */
-	public ElementNamespaceContext getElementNamespaceContext(String namespaceUri) {
-		return elementNamespaceContexts.get(namespaceUri);
+	public ElementNamespace getElementNamespace(String namespaceUri) {
+		return elementNamespaces.get(namespaceUri);
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementNamespaceContexts()
+	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementNamespaces()
 	 */
-	public List<ElementNamespaceContext> getElementNamespaceContexts() {
-		return new ArrayList<ElementNamespaceContext>(elementNamespaceContexts.values());
+	public List<ElementNamespace> getElementNamespaces() {
+		return new ArrayList<ElementNamespace>(elementNamespaces.values());
 	}
 
 	/**
@@ -252,7 +252,7 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		elementAttributeHandlers.clear();
 		elementBindingHandlers.clear();
 		elementInterfaces.clear();
-		elementNamespaceContexts.clear();
+		elementNamespaces.clear();
 		
 		getLanguageModuleLoader().loadLanguageModule(elementLanguage, elementLanguageModule);
 	}

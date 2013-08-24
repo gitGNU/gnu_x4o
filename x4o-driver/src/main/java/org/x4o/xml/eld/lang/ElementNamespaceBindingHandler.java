@@ -26,15 +26,15 @@ import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementClass;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 
 /**
- * ElementNamespaceContextBindingHandler binds ElementClass into namespace.
+ * ElementNamespaceBindingHandler binds ElementClass into namespace.
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 21, 2012
  */
-public class ElementNamespaceContextBindingHandler extends AbstractElementBindingHandler<ElementNamespaceContext> {
+public class ElementNamespaceBindingHandler extends AbstractElementBindingHandler<ElementNamespace> {
 
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementClass.class
@@ -44,7 +44,7 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
 	 */
 	public Class<?> getBindParentClass() {
-		return ElementNamespaceContext.class;
+		return ElementNamespace.class;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 	/**
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void bindChild(Element childElement,ElementNamespaceContext parent, Object childObject) throws ElementBindingHandlerException {
+	public void bindChild(Element childElement,ElementNamespace parent, Object childObject) throws ElementBindingHandlerException {
 		if (childObject instanceof ElementClass) {
 			ElementClass elementClass = (ElementClass)childObject;
 			if (elementClass.getId()==null && elementClass.getObjectClass()!=null) {
@@ -70,7 +70,7 @@ public class ElementNamespaceContextBindingHandler extends AbstractElementBindin
 	/**
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
 	 */
-	public void createChilderen(Element parentElement,ElementNamespaceContext parent) throws ElementBindingHandlerException {
+	public void createChilderen(Element parentElement,ElementNamespace parent) throws ElementBindingHandlerException {
 		for (ElementClass child:parent.getElementClasses()) {
 			createChild(parentElement, child);
 		}

@@ -38,7 +38,7 @@ import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
@@ -142,7 +142,7 @@ public class X4ODebugWriter {
 			contentWriter.startElement (DEBUG_URI, "X4OLanguageDefaultClasses", "", atts);
 			X4OLanguageConfiguration conf = ec.getLanguage().getLanguageConfiguration();
 
-			debugLanguageDefaultClass("getDefaultElementNamespaceContext",conf.getDefaultElementNamespaceContext());
+			debugLanguageDefaultClass("getDefaultElementNamespace",conf.getDefaultElementNamespace());
 			debugLanguageDefaultClass("getDefaultElementInterface",conf.getDefaultElementInterface());
 			debugLanguageDefaultClass("getDefaultElement",conf.getDefaultElement());
 			debugLanguageDefaultClass("getDefaultElementClass",conf.getDefaultElementClass());
@@ -234,7 +234,7 @@ public class X4ODebugWriter {
 				//module.getElementBindingHandlers();
 				//module.getGlobalElementConfigurators();
 				//module.getElementInterfaces();
-				//module.getElementNamespaceContexts();
+				//module.getElementNamespace();
 				
 				debugElementConfiguratorGlobal(module.getElementConfiguratorGlobals());
 				debugElementBindingHandler(module.getElementBindingHandlers());
@@ -265,7 +265,7 @@ public class X4ODebugWriter {
 					contentWriter.endElement(DEBUG_URI, "elementInterface", "");
 				}
 				
-				for (ElementNamespaceContext enc:module.getElementNamespaceContexts()) {
+				for (ElementNamespace enc:module.getElementNamespaces()) {
 					atts = new AttributesImpl();
 					atts.addAttribute ("", "uri", "", "", enc.getUri());	
 					atts.addAttribute ("", "description", "", "", enc.getDescription());
@@ -273,7 +273,7 @@ public class X4ODebugWriter {
 					atts.addAttribute ("", "schemaResource", "", "", enc.getSchemaResource());
 					atts.addAttribute ("", "className", "", "", enc.getClass().getName());
 					
-					contentWriter.startElement (DEBUG_URI, ElementNamespaceContext.class.getSimpleName(), "", atts);
+					contentWriter.startElement (DEBUG_URI, ElementNamespace.class.getSimpleName(), "", atts);
 					for (ElementClass ec:enc.getElementClasses()) {
 						debugElementClass(ec);
 					}
@@ -284,7 +284,7 @@ public class X4ODebugWriter {
 					contentWriter.startElement (DEBUG_URI, ElementNamespaceInstanceProvider.class.getSimpleName(), "", atts);
 					contentWriter.endElement(DEBUG_URI, ElementNamespaceInstanceProvider.class.getSimpleName(), "");
 					
-					contentWriter.endElement(DEBUG_URI, ElementNamespaceContext.class.getSimpleName(), "");
+					contentWriter.endElement(DEBUG_URI, ElementNamespace.class.getSimpleName(), "");
 				}
 				
 				contentWriter.endElement(DEBUG_URI, "ElementLanguageModule", "");

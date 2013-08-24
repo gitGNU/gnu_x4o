@@ -47,7 +47,7 @@ public interface X4OLanguageConfiguration {
 	String getLanguageResourceModulesFileName();
 	
 	// Core interfaces are also in class for text reference without instance
-	Class<?> getDefaultElementNamespaceContext();
+	Class<?> getDefaultElementNamespace();
 	Class<?> getDefaultElementInterface();
 	Class<?> getDefaultElement();
 	Class<?> getDefaultElementClass();

@@ -28,11 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The abstract verion of ElementNamespaceContext
+ * AbstractElementNamespace is the abstract version of an ElementNamespace.
+ * 
  * @author Willem Cazander
  * @version 1.0 Oct 28, 2009
  */
-public abstract class AbstractElementNamespaceContext extends AbstractElementMetaBase implements ElementNamespaceContext {
+public abstract class AbstractElementNamespace extends AbstractElementMetaBase implements ElementNamespace {
 
 	private ElementNamespaceInstanceProvider elementNamespaceInstanceProvider = null;
 	private String prefixMapping = null;
@@ -44,12 +45,12 @@ public abstract class AbstractElementNamespaceContext extends AbstractElementMet
 	private String schemaPrefix = null;
 	private Boolean languageRoot = null;
 	
-	public AbstractElementNamespaceContext() {
+	public AbstractElementNamespace() {
 		elementClasses = new HashMap<String,ElementClass>(100);
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementNamespaceContext#getPrefixMapping()
+	 * @see org.x4o.xml.element.ElementNamespace#getPrefixMapping()
 	 */
 	public String getPrefixMapping() {
 		return prefixMapping;
@@ -70,14 +71,14 @@ public abstract class AbstractElementNamespaceContext extends AbstractElementMet
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementNamespaceContext#setPrefixMapping(java.lang.String)
+	 * @see org.x4o.xml.element.ElementNamespace#setPrefixMapping(java.lang.String)
 	 */
 	public void setPrefixMapping(String prefixMapping) {
 		this.prefixMapping=prefixMapping;
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementNamespaceContext#addElementClass(org.x4o.xml.element.ElementClass)
+	 * @see org.x4o.xml.element.ElementNamespace#addElementClass(org.x4o.xml.element.ElementClass)
 	 */
 	public void addElementClass(ElementClass elementClass) {
 		if (elementClass.getId()==null) {
@@ -87,14 +88,14 @@ public abstract class AbstractElementNamespaceContext extends AbstractElementMet
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementNamespaceContext#getElementClass(java.lang.String)
+	 * @see org.x4o.xml.element.ElementNamespace#getElementClass(java.lang.String)
 	 */
 	public ElementClass getElementClass(String tag) {
 		return elementClasses.get(tag);
 	}
 
 	/**
-	 * @see org.x4o.xml.element.ElementNamespaceContext#getElementClasses()
+	 * @see org.x4o.xml.element.ElementNamespace#getElementClasses()
 	 */
 	public List<ElementClass> getElementClasses() {
 		return new ArrayList<ElementClass>(elementClasses.values());

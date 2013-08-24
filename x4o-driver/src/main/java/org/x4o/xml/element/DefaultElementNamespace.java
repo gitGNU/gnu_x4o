@@ -24,11 +24,11 @@ package org.x4o.xml.element;
 
 
 /**
- * The default namespace context.
+ * DefaultElementNamespace is the default element namespace implementation.
  * 
  * @author Willem Cazander
  * @version 1.0 Oct 28, 2009
  */
-public class DefaultElementNamespaceContext extends AbstractElementNamespaceContext {
+public class DefaultElementNamespace extends AbstractElementNamespace {
 
 }

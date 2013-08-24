@@ -35,7 +35,7 @@ public interface X4OLanguageConfigurationLocal extends X4OLanguageConfiguration 
 	void setLanguageResourcePathPrefix(String value);
 	void setLanguageResourceModulesFileName(String value);
 	
-	void setDefaultElementNamespaceContext(Class<?> value);
+	void setDefaultElementNamespace(Class<?> value);
 	void setDefaultElementInterface(Class<?> value);
 	void setDefaultElement(Class<?> value);
 	void setDefaultElementClass(Class<?> value);

@@ -70,7 +70,7 @@ public class EmptyXmlTest extends TestCase {
 		try {
 			reader.readResource("tests/empty-xml/empty-test.xml");	
 		} catch (SAXException e) {
-			assertEquals("No ElementNamespaceContext found for empty namespace.", e.getMessage());
+			assertEquals("No ElementNamespace found for empty namespace.", e.getMessage());
 			return;
 		}
 		assertEquals(true,false);

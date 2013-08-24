@@ -35,7 +35,7 @@ import org.x4o.xml.element.DefaultElementBodyWhitespace;
 import org.x4o.xml.element.DefaultElementClass;
 import org.x4o.xml.element.DefaultElementClassAttribute;
 import org.x4o.xml.element.DefaultElementInterface;
-import org.x4o.xml.element.DefaultElementNamespaceContext;
+import org.x4o.xml.element.DefaultElementNamespace;
 import org.x4o.xml.element.DefaultElementNamespaceInstanceProvider;
 import org.x4o.xml.element.DefaultElementObjectPropertyValue;
 import org.x4o.xml.element.DefaultGlobalAttributeHandlerComparator;
@@ -57,7 +57,7 @@ public class DefaultX4OLanguageConfiguration extends AbstractX4OLanguageConfigur
 	public void fillDefaults() {
 		if (getLanguageResourcePathPrefix()==null) {				setLanguageResourcePathPrefix(					X4OLanguageConfiguration.DEFAULT_LANG_PATH_PREFIX);	}
 		if (getLanguageResourceModulesFileName()==null) {			setLanguageResourceModulesFileName(				X4OLanguageConfiguration.DEFAULT_LANG_MODULES_FILE);}
-		if (getDefaultElementNamespaceContext()==null) {			setDefaultElementNamespaceContext(				DefaultElementNamespaceContext.class);				}
+		if (getDefaultElementNamespace()==null) {					setDefaultElementNamespace(						DefaultElementNamespace.class);						}
 		if (getDefaultElementInterface()==null) {					setDefaultElementInterface(						DefaultElementInterface.class);						}
 		if (getDefaultElement()==null) {							setDefaultElement(								DefaultElement.class);								}
 		if (getDefaultElementClass()==null) {						setDefaultElementClass(							DefaultElementClass.class);							}

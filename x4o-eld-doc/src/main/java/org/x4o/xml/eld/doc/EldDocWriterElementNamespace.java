@@ -31,7 +31,7 @@ import org.x4o.xml.eld.doc.api.dom.ApiDocNodeBody;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNodeData;
 import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
 import org.x4o.xml.element.ElementClass;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.xml.sax.SAXException;
 
 /**
@@ -42,22 +42,22 @@ import org.xml.sax.SAXException;
  */
 public class EldDocWriterElementNamespace extends AbstractApiDocWriter {
 	
-	@ApiDocNodeDataConfiguratorMethod(targetClasses={ElementNamespaceContext.class})
+	@ApiDocNodeDataConfiguratorMethod(targetClasses={ElementNamespace.class})
 	public void configNavBar(ApiDoc doc,ApiDocNode node,ApiDocNodeData data) {
 		clearHrefContentGroup(doc,node,"summary","element",ElementClass.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementNamespaceContext.class},nodeBodyOrders={1},contentGroup="namespace",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementNamespace.class},nodeBodyOrders={1},contentGroup="namespace",contentGroupType="summary")
 	public void writeElementNamespaceBeanProperties(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTableBean(event,"Namespace","description","elementClasses","elementNamespaceInstanceProvider","prefixMapping");
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementNamespaceContext.class},nodeBodyOrders={2},contentGroup="element",contentGroupType="summary")
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={ElementNamespace.class},nodeBodyOrders={2},contentGroup="element",contentGroupType="summary")
 	public void writeElementNamespaceElements(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Element Summary",ElementClass.class);
 	}
 	
-	//@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementNamespaceContext.class},nodeBodyOrders={2})
+	//@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY_PAGE,targetClasses={ElementNamespace.class},nodeBodyOrders={2})
 	//public void writeElementNamespaceAttributes(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 	//	printApiTable(event,"Element Summary",ElementClass.class);
 	//}

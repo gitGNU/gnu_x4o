@@ -40,7 +40,7 @@ import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
@@ -767,7 +767,7 @@ public class X4OPhaseLanguageRead {
 			// note: slow version
 			private String getNamespaceForElement(Element e) {
 				for (X4OLanguageModule mod:e.getLanguageContext().getLanguage().getLanguageModules()) {
-					for (ElementNamespaceContext enc:mod.getElementNamespaceContexts()) {
+					for (ElementNamespace enc:mod.getElementNamespaces()) {
 						List<ElementClass> l = enc.getElementClasses();
 						if (l.contains(e.getElementClass())) {
 							return enc.getUri();
@@ -802,7 +802,7 @@ public class X4OPhaseLanguageRead {
 				}
 				
 				String nameSpace = getNamespaceForElement(element);
-				String prefix = element.getLanguageContext().getLanguage().findElementNamespaceContext(nameSpace).getPrefixMapping();
+				String prefix = element.getLanguageContext().getLanguage().findElementNamespace(nameSpace).getPrefixMapping();
 				
 				if (startedPrefix.contains(prefix)==false) {
 					handler.startPrefixMapping(prefix, nameSpace);

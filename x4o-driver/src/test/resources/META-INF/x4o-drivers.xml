@@ -32,7 +32,7 @@
 		<!-- 
 		<languageResourcePathPrefix>META-INF</languageResourcePathPrefix>
 		<languageResourceModulesFileName>-modules.xml</languageResourceModulesFileName>
-		<defaultElementNamespaceContext>org.x4o.xml.element.DefaultElementNamespaceContext</defaultElementNamespaceContext>
+		<defaultElementNamespace>org.x4o.xml.element.DefaultElementNamespace</defaultElementNamespace>
 		<defaultElementInterface>org.x4o.xml.element.DefaultElementInterface</defaultElementInterface>
 		<defaultElement>org.x4o.xml.element.DefaultElement</defaultElement>
 		<defaultElementClass>org.x4o.xml.element.DefaultElementClass</defaultElementClass>

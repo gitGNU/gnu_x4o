@@ -32,7 +32,7 @@ import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
@@ -80,7 +80,7 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 			bindHandlers += mod.getElementBindingHandlers().size();
 			interFaces += mod.getElementInterfaces().size();
 			eleConfigs += mod.getElementConfiguratorGlobals().size();
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				namespaces++;
 				elements += ns.getElementClasses().size();
 			}
@@ -112,7 +112,7 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 		writer.docTableStart("Namespace Summary", "All Language Namespaces Overview",ApiDocContentCss.overviewSummary);
 		writer.docTableHeader("ID", "URI");
 		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				writer.docTableRowLink("language/"+ApiDocContentWriter.toSafeUri(mod.getId())+"/"+ApiDocContentWriter.toSafeUri(ns.getId())+"/index.html",ns.getId(),ns.getUri());
 			}
 		}

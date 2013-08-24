@@ -25,7 +25,7 @@ package org.x4o.xml.io.sax;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.Element.ElementType;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.ext.AttributeMap;
@@ -106,7 +106,7 @@ public class X4OContentHandler extends DefaultHandler2 {
 		if ("http://www.w3.org/2001/XInclude".equals(namespaceUri)) {
 			return; // skip xinclude ns.
 		}
-		ElementNamespaceContext enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
+		ElementNamespace enc = elementLanguage.getLanguage().findElementNamespace(namespaceUri);
 		if (enc==null) {
 			throw new SAXException("Can't find namespace uri: "+namespaceUri+" in language: "+elementLanguage.getLanguage().getLanguageName());
 		}
@@ -125,16 +125,16 @@ public class X4OContentHandler extends DefaultHandler2 {
 			overrideSaxHandler.startElement(namespaceUri, tag, qName, attributes);
 			return;
 		}
-		ElementNamespaceContext enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
+		ElementNamespace enc = elementLanguage.getLanguage().findElementNamespace(namespaceUri);
 		if (enc==null) {
 			if ("".equals(namespaceUri)) {
 				String configEmptryUri = propertyConfig.getPropertyString(DefaultX4OReader.DOC_EMPTY_NAMESPACE_URI);
 				if (configEmptryUri!=null) {
 					namespaceUri = configEmptryUri;
-					enc = elementLanguage.getLanguage().findElementNamespaceContext(namespaceUri);
+					enc = elementLanguage.getLanguage().findElementNamespace(namespaceUri);
 				}
 				if (enc==null) {	
-					throw new SAXParseException("No ElementNamespaceContext found for empty namespace.",locator);
+					throw new SAXParseException("No ElementNamespace found for empty namespace.",locator);
 				}
 				enc.setPrefixMapping("");
 			}

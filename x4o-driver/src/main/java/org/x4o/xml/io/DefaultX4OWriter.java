@@ -37,7 +37,7 @@ import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementObjectPropertyValueException;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.io.sax.ext.ContentWriterXml;
@@ -128,7 +128,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 			Element root = languageContext.getRootElement();
 			if (schemaUriRoot==null) {
 				String rootUri = findElementUri(root);
-				ElementNamespaceContext ns = languageContext.getLanguage().findElementNamespaceContext(rootUri);
+				ElementNamespace ns = languageContext.getLanguage().findElementNamespace(rootUri);
 				if (ns!=null) {
 					schemaUriRoot = ns.getSchemaUri();
 				}
@@ -316,7 +316,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	
 	private String findElementUri(Element e) {
 		for (X4OLanguageModule mod:e.getLanguageContext().getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext c:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace c:mod.getElementNamespaces()) {
 				ElementClass ec = c.getElementClass(e.getElementClass().getId());
 				if (ec!=null) {
 					return c.getUri();
@@ -327,7 +327,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	}
 	
 	private String findNamespacePrefix(Element e,String uri) {
-		ElementNamespaceContext ns = e.getLanguageContext().getLanguage().findElementNamespaceContext(uri);
+		ElementNamespace ns = e.getLanguageContext().getLanguage().findElementNamespace(uri);
 		if (ns.getPrefixMapping()!=null) {
 			return ns.getPrefixMapping();
 		}

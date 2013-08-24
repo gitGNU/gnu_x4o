@@ -29,7 +29,7 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
@@ -133,7 +133,7 @@ public class X4OPhaseLanguageWrite {
 		private Element findRootElement(X4OLanguageContext languageContext,Class<?> objectClass) throws ElementNamespaceInstanceProviderException {
 			// redo this mess, add nice find for root
 			for (X4OLanguageModule modContext:languageContext.getLanguage().getLanguageModules()) {
-				for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
+				for (ElementNamespace nsContext:modContext.getElementNamespaces()) {
 					if (nsContext.getLanguageRoot()!=null && nsContext.getLanguageRoot()) {
 						for (ElementClass ec:nsContext.getElementClasses()) {
 							if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
@@ -144,7 +144,7 @@ public class X4OPhaseLanguageWrite {
 				}
 			}
 			for (X4OLanguageModule modContext:languageContext.getLanguage().getLanguageModules()) {
-				for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
+				for (ElementNamespace nsContext:modContext.getElementNamespaces()) {
 					for (ElementClass ec:nsContext.getElementClasses()) {
 						if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
 							return nsContext.getElementNamespaceInstanceProvider().createElementInstance(languageContext, ec.getId());

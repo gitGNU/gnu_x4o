@@ -27,7 +27,7 @@ import java.util.List;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 
 /**
@@ -98,9 +98,9 @@ public interface X4OLanguage {
 	/**
 	 * Returns the namespace context for an namespace uri.
 	 * @param namespaceUri the namespace uri.
-	 * @return	The ElementNamespaceContext.
+	 * @return	The ElementNamespace.
 	 */
-	ElementNamespaceContext findElementNamespaceContext(String namespaceUri);
+	ElementNamespace findElementNamespace(String namespaceUri);
 	
 	/**
 	 * @return Returns a list of element language modules in this defined and loaded language.

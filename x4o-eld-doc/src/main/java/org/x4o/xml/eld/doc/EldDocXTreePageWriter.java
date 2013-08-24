@@ -37,7 +37,7 @@ import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
@@ -88,7 +88,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 		// temp print old way
 		List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
 		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				if (ns.getLanguageRoot()!=null && ns.getLanguageRoot()) {
 					// found language root elements.
 					for (ElementClass ec:ns.getElementClasses()) {
@@ -107,7 +107,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 			walkTree(rootNode,e.getWriter(),pathPrefix);
 		}
 	}
-	private String toElementUri(String pathPrefix,X4OLanguageModule mod,ElementNamespaceContext namespace,ElementClass ec) {
+	private String toElementUri(String pathPrefix,X4OLanguageModule mod,ElementNamespace namespace,ElementClass ec) {
 		StringBuffer buf = new StringBuffer(100);
 		if (pathPrefix!=null) {
 			buf.append(pathPrefix);
@@ -142,7 +142,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 		
 		List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
 		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				if (ns.getLanguageRoot()!=null && ns.getLanguageRoot()) {
 					// found language root elements.
 					for (ElementClass ec:ns.getElementClasses()) {
@@ -177,7 +177,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	class TreeNode {
 		X4OLanguageContext context;
 		X4OLanguageModule module;
-		ElementNamespaceContext namespace;
+		ElementNamespace namespace;
 		ElementClass elementClass;
 		TreeNode parent;
 		int indent = 0;
@@ -190,7 +190,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 			return result; // hard fail limit
 		}
 		for (X4OLanguageModule mod:node.context.getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				for (ElementClass ec:ns.getElementClasses()) {
 					TreeNode n=null;
 					List<String> tags = ec.getElementParents(node.namespace.getUri());
@@ -262,7 +262,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 		List<TreeNode> result = new ArrayList<TreeNode>(10);
 		TreeNode n=null;
 		for (X4OLanguageModule mod:node.context.getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				
 				List<String> tags = node.elementClass.getElementParents(ns.getUri());
 				if (tags!=null) {

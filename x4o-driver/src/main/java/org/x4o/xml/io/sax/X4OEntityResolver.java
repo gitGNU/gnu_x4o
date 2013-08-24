@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.lang.X4OLanguageModule;
@@ -74,7 +74,7 @@ public class X4OEntityResolver implements EntityResolver {
 		this.schemaResources=new HashMap<String,String>(20);
 		this.schemaPathResources=new HashMap<String,String>(20);
 		for (X4OLanguageModule mod:elementContext.getLanguage().getLanguageModules()) {
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				if (ns.getSchemaUri()==null) {
 					continue;
 				}

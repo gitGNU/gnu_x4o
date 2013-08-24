@@ -22,10 +22,6 @@
  */
 package org.x4o.xml.lang;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * AbstractX4OLanguageConfiguration.
  * 
@@ -37,7 +33,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	private String languageResourcePathPrefix = null;
 	private String languageResourceModulesFileName = null;
 	
-	private Class<?> defaultElementNamespaceContext = null;
+	private Class<?> defaultElementNamespace = null;
 	private Class<?> defaultElementInterface = null;
 	private Class<?> defaultElement = null;
 	private Class<?> defaultElementClass = null;
@@ -86,24 +82,22 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param languageResourceModulesFileName the languageResourceModulesFileName to set
 	 */
-	public void setLanguageResourceModulesFileName(
-			String languageResourceModulesFileName) {
+	public void setLanguageResourceModulesFileName(String languageResourceModulesFileName) {
 		this.languageResourceModulesFileName = languageResourceModulesFileName;
 	}
 	
 	/**
-	 * @return the defaultElementNamespaceContext
+	 * @return the defaultElementNamespace
 	 */
-	public Class<?> getDefaultElementNamespaceContext() {
-		return defaultElementNamespaceContext;
+	public Class<?> getDefaultElementNamespace() {
+		return defaultElementNamespace;
 	}
 	
 	/**
-	 * @param defaultElementNamespaceContext the defaultElementNamespaceContext to set
+	 * @param defaultElementNamespace the defaultElementNamespace to set
 	 */
-	public void setDefaultElementNamespaceContext(
-			Class<?> defaultElementNamespaceContext) {
-		this.defaultElementNamespaceContext = defaultElementNamespaceContext;
+	public void setDefaultElementNamespace(Class<?> defaultElementNamespace) {
+		this.defaultElementNamespace = defaultElementNamespace;
 	}
 	
 	/**
@@ -158,8 +152,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementClassAttribute the defaultElementClassAttribute to set
 	 */
-	public void setDefaultElementClassAttribute(
-			Class<?> defaultElementClassAttribute) {
+	public void setDefaultElementClassAttribute(Class<?> defaultElementClassAttribute) {
 		this.defaultElementClassAttribute = defaultElementClassAttribute;
 	}
 	
@@ -173,8 +166,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementLanguageModule the defaultElementLanguageModule to set
 	 */
-	public void setDefaultElementLanguageModule(
-			Class<?> defaultElementLanguageModule) {
+	public void setDefaultElementLanguageModule(Class<?> defaultElementLanguageModule) {
 		this.defaultElementLanguageModule = defaultElementLanguageModule;
 	}
 	
@@ -202,8 +194,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementBodyCharacters the defaultElementBodyCharacters to set
 	 */
-	public void setDefaultElementBodyCharacters(
-			Class<?> defaultElementBodyCharacters) {
+	public void setDefaultElementBodyCharacters(Class<?> defaultElementBodyCharacters) {
 		this.defaultElementBodyCharacters = defaultElementBodyCharacters;
 	}
 	
@@ -217,8 +208,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementBodyWhitespace the defaultElementBodyWhitespace to set
 	 */
-	public void setDefaultElementBodyWhitespace(
-			Class<?> defaultElementBodyWhitespace) {
+	public void setDefaultElementBodyWhitespace(Class<?> defaultElementBodyWhitespace) {
 		this.defaultElementBodyWhitespace = defaultElementBodyWhitespace;
 	}
 	
@@ -232,8 +222,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementNamespaceInstanceProvider the defaultElementNamespaceInstanceProvider to set
 	 */
-	public void setDefaultElementNamespaceInstanceProvider(
-			Class<?> defaultElementNamespaceInstanceProvider) {
+	public void setDefaultElementNamespaceInstanceProvider(Class<?> defaultElementNamespaceInstanceProvider) {
 		this.defaultElementNamespaceInstanceProvider = defaultElementNamespaceInstanceProvider;
 	}
 	
@@ -247,8 +236,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementAttributeValueParser the defaultElementAttributeValueParser to set
 	 */
-	public void setDefaultElementAttributeValueParser(
-			Class<?> defaultElementAttributeValueParser) {
+	public void setDefaultElementAttributeValueParser(Class<?> defaultElementAttributeValueParser) {
 		this.defaultElementAttributeValueParser = defaultElementAttributeValueParser;
 	}
 	
@@ -262,8 +250,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementObjectPropertyValue the defaultElementObjectPropertyValue to set
 	 */
-	public void setDefaultElementObjectPropertyValue(
-			Class<?> defaultElementObjectPropertyValue) {
+	public void setDefaultElementObjectPropertyValue(Class<?> defaultElementObjectPropertyValue) {
 		this.defaultElementObjectPropertyValue = defaultElementObjectPropertyValue;
 	}
 	
@@ -277,8 +264,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultElementAttributeHandlerComparator the defaultElementAttributeHandlerComparator to set
 	 */
-	public void setDefaultElementAttributeHandlerComparator(
-			Class<?> defaultElementAttributeHandlerComparator) {
+	public void setDefaultElementAttributeHandlerComparator(Class<?> defaultElementAttributeHandlerComparator) {
 		this.defaultElementAttributeHandlerComparator = defaultElementAttributeHandlerComparator;
 	}
 	
@@ -292,8 +278,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultLanguageVersionFilter the defaultLanguageVersionFilter to set
 	 */
-	public void setDefaultLanguageVersionFilter(
-			Class<?> defaultLanguageVersionFilter) {
+	public void setDefaultLanguageVersionFilter(Class<?> defaultLanguageVersionFilter) {
 		this.defaultLanguageVersionFilter = defaultLanguageVersionFilter;
 	}
 	
@@ -321,8 +306,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	/**
 	 * @param defaultExpressionLanguageContext the defaultExpressionLanguageContext to set
 	 */
-	public void setDefaultExpressionLanguageContext(
-			Class<?> defaultExpressionLanguageContext) {
+	public void setDefaultExpressionLanguageContext(Class<?> defaultExpressionLanguageContext) {
 		this.defaultExpressionLanguageContext = defaultExpressionLanguageContext;
 	}
 }

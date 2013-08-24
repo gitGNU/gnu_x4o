@@ -37,7 +37,7 @@ import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.x4o.xml.lang.X4OLanguageModule;
@@ -111,7 +111,7 @@ public class EldDocWriterElementClass extends AbstractApiDocWriter {
 	public void writeElementRelationLinks(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
 		ElementClass ec  = (ElementClass)event.getEventObject().getUserData();
-		ElementNamespaceContext ns = (ElementNamespaceContext)event.getEventObject().getParent().getUserData();
+		ElementNamespace ns = (ElementNamespace)event.getEventObject().getParent().getUserData();
 		X4OLanguageModule mod = (X4OLanguageModule)event.getEventObject().getParent().getParent().getUserData();
 		X4OLanguageContext context = (X4OLanguageContext)event.getEventObject().getParent().getParent().getParent().getUserData();
 		
@@ -163,7 +163,7 @@ public class EldDocWriterElementClass extends AbstractApiDocWriter {
 		writer.printTagEnd(Tag.dl);
 	}
 	
-	private String toElementUri(String pathPrefix,X4OLanguageModule mod,ElementNamespaceContext namespace,ElementClass ec) {
+	private String toElementUri(String pathPrefix,X4OLanguageModule mod,ElementNamespace namespace,ElementClass ec) {
 		StringBuffer buf = new StringBuffer(100);
 		if (pathPrefix!=null) {
 			buf.append(pathPrefix);

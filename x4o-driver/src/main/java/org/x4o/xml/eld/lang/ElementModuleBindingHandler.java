@@ -30,7 +30,7 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.lang.X4OLanguageModule;
@@ -49,7 +49,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 	
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementInterface.class,
-		ElementNamespaceContext.class,
+		ElementNamespace.class,
 		ElementBindingHandler.class,
 		ElementAttributeHandler.class,
 		ElementConfiguratorGlobal.class,
@@ -88,62 +88,62 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 			languageModule.addElementInterface(elementInterface);
 			return;
 		}
-		if (childObject instanceof ElementNamespaceContext) {
-			ElementNamespaceContext elementNamespaceContext = (ElementNamespaceContext)childObject;
+		if (childObject instanceof ElementNamespace) {
+			ElementNamespace elementNamespace = (ElementNamespace)childObject;
 			
-			if (elementNamespaceContext.getId()==null) {
-				throw new NullPointerException("Can add ElementNamespaceContext without id.");
+			if (elementNamespace.getId()==null) {
+				throw new NullPointerException("Can add elementNamespace without id.");
 			}
 			// TODO: no language here so move to EL default on eld attribute tag
-			if (elementNamespaceContext.getId()!=null) {
+			if (elementNamespace.getId()!=null) {
 				StringBuffer buf = new StringBuffer(30);
-				for (char c:elementNamespaceContext.getId().toLowerCase().toCharArray()) {
+				for (char c:elementNamespace.getId().toLowerCase().toCharArray()) {
 					if (Character.isLetter(c))	{buf.append(c);}
 					if (Character.isDigit(c))	{buf.append(c);}
 					if ('-'==c)					{buf.append(c);}
 				}
 				String id = buf.toString();
-				elementNamespaceContext.setId(id);
+				elementNamespace.setId(id);
 			}
-			if (elementNamespaceContext.getUri()==null) {
-				elementNamespaceContext.setUri(
+			if (elementNamespace.getUri()==null) {
+				elementNamespace.setUri(
 						"http://"+languageModule.getProviderHost()+
 						"/xml/ns/"+x4oParsingContext.getLanguageName()+
-						"-"+elementNamespaceContext.getId());
+						"-"+elementNamespace.getId());
 			}
-			if (elementNamespaceContext.getSchemaUri()==null) {
-				elementNamespaceContext.setSchemaUri(
+			if (elementNamespace.getSchemaUri()==null) {
+				elementNamespace.setSchemaUri(
 						"http://"+languageModule.getProviderHost()+
 						"/xml/ns/"+x4oParsingContext.getLanguageName()+
-						"-"+elementNamespaceContext.getId()+
+						"-"+elementNamespace.getId()+
 						"-"+x4oParsingContext.getLanguageVersion()+
 						".xsd"
 					);
 			}
-			if (elementNamespaceContext.getSchemaResource()==null) {
-				elementNamespaceContext.setSchemaResource(
+			if (elementNamespace.getSchemaResource()==null) {
+				elementNamespace.setSchemaResource(
 						x4oParsingContext.getLanguageName()+
-						"-"+elementNamespaceContext.getId()+
+						"-"+elementNamespace.getId()+
 						"-"+x4oParsingContext.getLanguageVersion()+
 						".xsd"
 					);
 			}
-			if (elementNamespaceContext.getSchemaPrefix()==null) {
-				elementNamespaceContext.setSchemaPrefix(elementNamespaceContext.getId());
+			if (elementNamespace.getSchemaPrefix()==null) {
+				elementNamespace.setSchemaPrefix(elementNamespace.getId());
 			}
 			
 			try {
-				elementNamespaceContext.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
+				elementNamespace.setElementNamespaceInstanceProvider((ElementNamespaceInstanceProvider)X4OLanguageClassLoader.newInstance(childElement.getLanguageContext().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceInstanceProvider()));
 			} catch (Exception e) {
 				throw new ElementBindingHandlerException("Error loading: "+e.getMessage(),e);
 			}
 			try {
 				
-				elementNamespaceContext.getElementNamespaceInstanceProvider().start(x4oParsingContext, elementNamespaceContext);
+				elementNamespace.getElementNamespaceInstanceProvider().start(x4oParsingContext, elementNamespace);
 			} catch (ElementNamespaceInstanceProviderException e) {
 				throw new ElementBindingHandlerException("Error starting: "+e.getMessage(),e);
 			}
-			languageModule.addElementNamespaceContext(elementNamespaceContext);
+			languageModule.addElementNamespace(elementNamespace);
 			return;
 		}
 		if (childObject instanceof ElementBindingHandler) {
@@ -170,7 +170,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 		for (ElementInterface child:parent.getElementInterfaces()) {
 			createChild(parentElement, child);
 		}
-		for (ElementNamespaceContext child:parent.getElementNamespaceContexts()) {
+		for (ElementNamespace child:parent.getElementNamespaces()) {
 			createChild(parentElement, child);
 		}
 		for (ElementBindingHandler child:parent.getElementBindingHandlers()) {

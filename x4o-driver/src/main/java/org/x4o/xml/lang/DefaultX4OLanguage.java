@@ -32,7 +32,7 @@ import org.x4o.xml.element.ElementAttributeValueParser;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.element.ElementObjectPropertyValue;
 import org.x4o.xml.lang.phase.X4OPhaseException;
@@ -157,7 +157,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	 */
 	public Element createElementInstance(X4OLanguageContext context,Class<?> objectClass) {
 		for (X4OLanguageModule modContext:getLanguageModules()) {
-			for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
+			for (ElementNamespace nsContext:modContext.getElementNamespaces()) {
 				for (ElementClass ec:nsContext.getElementClasses()) {
 					if (ec.getObjectClass()!=null && ec.getObjectClass().equals(objectClass)) { 
 						try {
@@ -253,15 +253,15 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	}
 
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguage#findElementNamespaceContext(java.lang.String)
+	 * @see org.x4o.xml.lang.X4OLanguage#findElementNamespace(java.lang.String)
 	 */
-	public ElementNamespaceContext findElementNamespaceContext(String namespaceUri) {
+	public ElementNamespace findElementNamespace(String namespaceUri) {
 		
 		// TODO: refactor so no search for every tag !!
-		ElementNamespaceContext result = null;
+		ElementNamespace result = null;
 		for (int i=0;i<elementLanguageModules.size();i++) {
 			X4OLanguageModule module = elementLanguageModules.get(i);
-			result = module.getElementNamespaceContext(namespaceUri);
+			result = module.getElementNamespace(namespaceUri);
 			if (result!=null) {
 				return result;
 			}

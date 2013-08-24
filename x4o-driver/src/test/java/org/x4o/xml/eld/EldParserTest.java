@@ -76,7 +76,7 @@ public class EldParserTest extends TestCase {
 		try {
 			//X4OLanguageModule module = reader.readResource("META-INF/eld/eld-lang.eld");
 			//List<String> resultTags = new ArrayList<String>(50);
-			//for (ElementNamespaceContext ns:module.getElementNamespaceContexts()) {
+			//for (ElementNamespace ns:module.getElementNamespaces()) {
 			//	
 			//}
 			/*

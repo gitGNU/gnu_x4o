@@ -25,12 +25,12 @@ package org.x4o.xml.element;
 import java.util.List;
 
 /**
- * ElementNamespaceContext stores all element tag classes for the namespace.
+ * ElementNamespace stores all element tag classes for the namespace.
  * 
  * @author Willem Cazander
  * @version 1.0 Oct 28, 2009
  */
-public interface ElementNamespaceContext extends ElementMetaBase {
+public interface ElementNamespace extends ElementMetaBase {
 	
 	/**
 	 * Sets the prefix mapping.

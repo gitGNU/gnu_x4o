@@ -34,7 +34,7 @@ import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementInterface;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
 
@@ -52,7 +52,7 @@ public class EldDocWriterLanguageModule extends AbstractApiDocWriter {
 		clearHrefContentGroup(doc,node,"summary","binding",ElementBindingHandler.class);
 		clearHrefContentGroup(doc,node,"summary","attribute",ElementAttributeHandler.class);
 		clearHrefContentGroup(doc,node,"summary","configurator",ElementConfigurator.class);
-		clearHrefContentGroup(doc,node,"summary","namespace",ElementNamespaceContext.class);
+		clearHrefContentGroup(doc,node,"summary","namespace",ElementNamespace.class);
 	}
 	
 	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={1},contentGroup="interface",contentGroupType="summary")
@@ -77,6 +77,6 @@ public class EldDocWriterLanguageModule extends AbstractApiDocWriter {
 	
 	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={5},contentGroup="namespace",contentGroupType="summary")
 	public void writeNamespaceSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		printApiTable(event,"Namespace Summary",ElementNamespaceContext.class);
+		printApiTable(event,"Namespace Summary",ElementNamespace.class);
 	}
 }

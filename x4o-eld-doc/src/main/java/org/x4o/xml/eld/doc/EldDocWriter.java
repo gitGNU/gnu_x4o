@@ -43,7 +43,7 @@ import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageContext;
 import org.xml.sax.SAXException;
@@ -121,7 +121,7 @@ public class EldDocWriter {
 		doc.addTreeNodePageModeClass(X4OLanguageContext.class);
 		doc.addTreeNodePageModeClass(X4OLanguageModule.class);
 		doc.addTreeNodePageModeClass(ElementInterface.class);
-		doc.addTreeNodePageModeClass(ElementNamespaceContext.class);
+		doc.addTreeNodePageModeClass(ElementNamespace.class);
 		
 		doc.addAnnotatedClasses(EldDocWriterLanguage.class);
 		doc.addAnnotatedClasses(EldDocWriterLanguageModule.class);
@@ -132,7 +132,7 @@ public class EldDocWriter {
 		ApiDocConcept adcRoot = doc.addConcept(new ApiDocConcept(null,C_CONTEXT,X4OLanguageContext.class));
 		ApiDocConcept adcMod = doc.addConcept(new ApiDocConcept(adcRoot,C_MODULE,X4OLanguageModule.class));
 		ApiDocConcept adcIface = doc.addConcept(new ApiDocConcept(adcMod,C_INTERFACE,ElementInterface.class));
-		ApiDocConcept adcNs = doc.addConcept(new ApiDocConcept(adcMod,C_NAMESPACE,ElementNamespaceContext.class));
+		ApiDocConcept adcNs = doc.addConcept(new ApiDocConcept(adcMod,C_NAMESPACE,ElementNamespace.class));
 		ApiDocConcept adcEc = doc.addConcept(new ApiDocConcept(adcNs,C_ELEMENT,ElementClass.class));
 		
 		// mm maybe redo something here
@@ -158,7 +158,7 @@ public class EldDocWriter {
 			for (ElementInterface iface:mod.getElementInterfaces())						{		ApiDocNode ifaceNode = modNode.addNode(createNodeElementInterface(iface));
 				for (ElementClassAttribute eca:iface.getElementClassAttributes())		{			ifaceNode.addNode(createNodeElementClassAttribute(eca));	}
 				for (ElementConfigurator conf:iface.getElementConfigurators())			{			ifaceNode.addNode(createNodeElementConfigurator(conf));	}	}
-			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts())			{		ApiDocNode nsNode = modNode.addNode(createNodeElementNamespaceContext(ns));
+			for (ElementNamespace ns:mod.getElementNamespaces())						{		ApiDocNode nsNode = modNode.addNode(createNodeElementNamespace(ns));
 				for (ElementClass ec:ns.getElementClasses())							{			ApiDocNode ecNode = nsNode.addNode(createNodeElementClass(ec));
 					for (ElementClassAttribute eca:ec.getElementClassAttributes())		{				ecNode.addNode(createNodeElementClassAttribute(eca));	}
 					for (ElementConfigurator conf:ec.getElementConfigurators())			{				ecNode.addNode(createNodeElementConfigurator(conf));	}	}	}
@@ -184,7 +184,7 @@ public class EldDocWriter {
 	private ApiDocNode createNodeElementInterface(ElementInterface iface) {
 		return new ApiDocNode(iface,iface.getId(),iface.getId(),iface.getDescription());
 	}
-	private ApiDocNode createNodeElementNamespaceContext(ElementNamespaceContext ns) {
+	private ApiDocNode createNodeElementNamespace(ElementNamespace ns) {
 		return new ApiDocNode(ns,ns.getId(),ns.getUri(),ns.getDescription());
 	}
 	private ApiDocNode createNodeElementClass(ElementClass ec) {

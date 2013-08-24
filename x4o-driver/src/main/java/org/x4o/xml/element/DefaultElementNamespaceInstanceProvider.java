@@ -37,7 +37,7 @@ import org.x4o.xml.lang.X4OLanguageClassLoader;
 public class DefaultElementNamespaceInstanceProvider implements ElementNamespaceInstanceProvider {
 
 	private Logger logger = null;
-	private ElementNamespaceContext elementNamespaceContext = null;
+	private ElementNamespace elementNamespace = null;
 	
 	/**
 	 * Creates new DefaultElementNamespaceInstanceProvider.
@@ -48,12 +48,12 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 
 	/**
 	 * @param	language	The elementLanguage of this provider.
-	 * @param	elementNamespaceContext	The elementNamespaceContext for this provider.
-	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#start(org.x4o.xml.lang.X4OLanguage, org.x4o.xml.element.ElementNamespaceContext)
+	 * @param	elementNamespace	The elementNamespace for this provider.
+	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#start(org.x4o.xml.lang.X4OLanguage, org.x4o.xml.element.ElementNamespace)
 	 */
-	public void start(X4OLanguage language,ElementNamespaceContext elementNamespaceContext) {
-		this.elementNamespaceContext=elementNamespaceContext;
-		logger.finer("Starting DefaultElementNamespaceInstanceProvider for: "+elementNamespaceContext.getUri());
+	public void start(X4OLanguage language,ElementNamespace elementNamespace) {
+		this.elementNamespace=elementNamespace;
+		logger.finer("Starting DefaultElementNamespaceInstanceProvider for: "+elementNamespace.getUri());
 	}
 
 	/**
@@ -64,11 +64,11 @@ public class DefaultElementNamespaceInstanceProvider implements ElementNamespace
 	 * @see org.x4o.xml.element.ElementNamespaceInstanceProvider#createElementInstance(org.x4o.xml.lang.X4OLanguageContext,java.lang.String)
 	 */
 	public Element createElementInstance(X4OLanguageContext languageContext,String tag) throws ElementNamespaceInstanceProviderException {
-		ElementClass	elementClass	= elementNamespaceContext.getElementClass(tag);
+		ElementClass	elementClass	= elementNamespace.getElementClass(tag);
 		Element 		element			= null;
 		
 		if (elementClass==null) {
-			throw new ElementNamespaceInstanceProviderException(this,"Tag: " + tag + " unknown in: " + elementNamespaceContext.getUri());
+			throw new ElementNamespaceInstanceProviderException(this,"Tag: " + tag + " unknown in: " + elementNamespace.getUri());
 		}
 		
 		try {

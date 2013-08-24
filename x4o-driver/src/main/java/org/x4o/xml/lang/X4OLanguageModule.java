@@ -29,7 +29,7 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementMetaBase;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 
 /**
  * The ElementLanguageModule.<br>
@@ -110,21 +110,21 @@ public interface X4OLanguageModule extends ElementMetaBase {
 	
 	/**
 	 * Adds an namespace to this langauge module.
-	 * @param elementNamespaceContext Adds an ElementNamespaceContext to this langauge module.
+	 * @param elementNamespace Adds an ElementNamespace to this langauge module.
 	 */
-	void addElementNamespaceContext(ElementNamespaceContext elementNamespaceContext);
+	void addElementNamespace(ElementNamespace elementNamespace);
 	
 	/**
 	 * Returns the namespace context for an namespace uri.
 	 * @param namespaceUri the namespace uri.
-	 * @return	The ElementNamespaceContext.
+	 * @return	The ElementNamespace.
 	 */
-	ElementNamespaceContext getElementNamespaceContext(String namespaceUri);
+	ElementNamespace getElementNamespace(String namespaceUri);
 	
 	/**
 	 * @return Returns a list of all namespaces defined in this language.
 	 */
-	List<ElementNamespaceContext> getElementNamespaceContexts();
+	List<ElementNamespace> getElementNamespaces();
 	
 	/**
 	 * @param elementLanguageModuleLoader	Sets the loader of this module.

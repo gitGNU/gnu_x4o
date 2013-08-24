@@ -35,13 +35,13 @@ import org.x4o.xml.eld.lang.ElementClassAttributeBindingHandler;
 import org.x4o.xml.eld.lang.ElementClassBindingHandler;
 import org.x4o.xml.eld.lang.ElementInterfaceBindingHandler;
 import org.x4o.xml.eld.lang.ElementModuleBindingHandler;
-import org.x4o.xml.eld.lang.ElementNamespaceContextBindingHandler;
+import org.x4o.xml.eld.lang.ElementNamespaceBindingHandler;
 import org.x4o.xml.eld.lang.ModuleElement;
 
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 
@@ -96,15 +96,15 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		addBindingHandler(languageModule,new ElementModuleBindingHandler(),"cel-module-bind","Binds the LanguageModule childeren.");
 		addBindingHandler(languageModule,new ElementClassAttributeBindingHandler(),"cel-class-attr-bind","Binds the ElementClassAttribute childeren.");
 		addBindingHandler(languageModule,new ElementInterfaceBindingHandler(),"cel-interface-bind","Binds the ElementInterface childeren.");
-		addBindingHandler(languageModule,new ElementNamespaceContextBindingHandler(),"cel-namespace-bind","Binds the Namespace childeren.");
+		addBindingHandler(languageModule,new ElementNamespaceBindingHandler(),"cel-namespace-bind","Binds the Namespace childeren.");
 		
 		// Create cel-lang namespace in language
-		ElementNamespaceContext namespace = createNamespaceContext(language,CEL_CORE,CEL_CORE_URI,CEL_CORE_XSD_URI,CEL_CORE_XSD_FILE,CEL_CORE);
+		ElementNamespace namespace = createNamespaceContext(language,CEL_CORE,CEL_CORE_URI,CEL_CORE_XSD_URI,CEL_CORE_XSD_FILE,CEL_CORE);
 		configElementClasses(language,namespace);
 		startAndAddNamespace(language,languageModule,namespace);
 
 		// Create cel-root namespace in language for schema support
-		ElementNamespaceContext namespaceRoot = createNamespaceContext(language,CEL_ROOT,CEL_ROOT_URI,CEL_ROOT_XSD_URI,CEL_ROOT_XSD_FILE,CEL_ROOT);
+		ElementNamespace namespaceRoot = createNamespaceContext(language,CEL_ROOT,CEL_ROOT_URI,CEL_ROOT_XSD_URI,CEL_ROOT_XSD_FILE,CEL_ROOT);
 		namespaceRoot.setLanguageRoot(true); // Only define single language root so xsd is (mostly) not cicle import.
 		ElementClass rootElement = createElementClass(language,"module",language.getLanguageConfiguration().getDefaultElementLanguageModule(),ModuleElement.class,"The module tag is the root xml element for ELD language.");
 		rootElement.addElementClassAttribute(createElementClassAttribute(language,"id",true,null));
@@ -119,7 +119,7 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	 * @param language	The language to config for.
 	 * @throws X4OLanguageModuleLoaderException 
 	 */
-	private void configElementClasses(X4OLanguage language,ElementNamespaceContext namespace) throws X4OLanguageModuleLoaderException {
+	private void configElementClasses(X4OLanguage language,ElementNamespace namespace) throws X4OLanguageModuleLoaderException {
 		ElementClass ec = null;
 		
 		namespace.addElementClass(createElementClass(language,"attribute",language.getLanguageConfiguration().getDefaultElementClassAttribute(),null,"Defines xml element attribute."));
@@ -131,7 +131,7 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		
 		namespace.addElementClass(createElementClass(language,"classConverter",ClassConverter.class,null,"Converts string attribute to java class instance."));
 		
-		ec = createElementClass(language,"namespace",language.getLanguageConfiguration().getDefaultElementNamespaceContext(),null,"Defines an xml namespace.");
+		ec = createElementClass(language,"namespace",language.getLanguageConfiguration().getDefaultElementNamespace(),null,"Defines an xml namespace.");
 		ec.addElementClassAttribute(createElementClassAttribute(language,"uri",true,null));
 		namespace.addElementClass(ec);
 		
@@ -197,20 +197,20 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		languageModule.setSourceResource(this.getClass().getSimpleName()); //TODO: check if oke.
 	}
 	
-	private void startAndAddNamespace(X4OLanguageLocal language,X4OLanguageModule languageModule,ElementNamespaceContext namespace) throws X4OLanguageModuleLoaderException {
+	private void startAndAddNamespace(X4OLanguageLocal language,X4OLanguageModule languageModule,ElementNamespace namespace) throws X4OLanguageModuleLoaderException {
 		try {
 			namespace.getElementNamespaceInstanceProvider().start(language, namespace);
 		} catch (ElementNamespaceInstanceProviderException e) {
 			throw new X4OLanguageModuleLoaderException(this,"Error starting instance provider: "+e.getMessage(),e);
 		}
-		languageModule.addElementNamespaceContext(namespace);
+		languageModule.addElementNamespace(namespace);
 	}
 	
-	private ElementNamespaceContext createNamespaceContext(X4OLanguageLocal language,String id,String uri,String schemaUri,String schemaResource,String schemaPrefix) throws X4OLanguageModuleLoaderException {
+	private ElementNamespace createNamespaceContext(X4OLanguageLocal language,String id,String uri,String schemaUri,String schemaResource,String schemaPrefix) throws X4OLanguageModuleLoaderException {
 		logger.finer("Creating "+language.getLanguageName()+" namespace.");
-		ElementNamespaceContext namespace;
+		ElementNamespace namespace;
 		try {
-			namespace = (ElementNamespaceContext)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespaceContext());
+			namespace = (ElementNamespace)X4OLanguageClassLoader.newInstance(language.getLanguageConfiguration().getDefaultElementNamespace());
 		} catch (InstantiationException e) {
 			throw new X4OLanguageModuleLoaderException(this,e.getMessage(),e);
 		} catch (IllegalAccessException e) {

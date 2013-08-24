@@ -29,7 +29,7 @@ import java.io.Writer;
 
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementException;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.DefaultX4OSchemaWriter;
 import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.io.sax.ext.ContentWriterXsd;
@@ -54,7 +54,7 @@ public class EldXsdXmlGenerator {
 		this.propertyConfig=propertyConfig;
 	}
 	
-	private void checkNamespace(ElementNamespaceContext ns) {
+	private void checkNamespace(ElementNamespace ns) {
 		if (ns.getSchemaResource()==null) {
 			throw new NullPointerException("Can't generate xsd for namespace without schemaResource uri: "+ns.getUri());
 		}
@@ -73,7 +73,7 @@ public class EldXsdXmlGenerator {
 			
 			
 			if (namespace!=null) {
-				ElementNamespaceContext ns = language.findElementNamespaceContext(namespace);
+				ElementNamespace ns = language.findElementNamespace(namespace);
 				if (ns==null) {
 					throw new NullPointerException("Could not find namespace: "+namespace);
 				}
@@ -90,7 +90,7 @@ public class EldXsdXmlGenerator {
 				return;
 			}
 			for (X4OLanguageModule mod:language.getLanguageModules()) {
-				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+				for (ElementNamespace ns:mod.getElementNamespaces()) {
 					checkNamespace(ns);
 					File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
 					Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
@@ -111,7 +111,7 @@ public class EldXsdXmlGenerator {
 	
 	public void generateSchema(String namespaceUri,ContentWriterXsd xmlWriter) throws SAXException  {
 		
-		ElementNamespaceContext ns = language.findElementNamespaceContext(namespaceUri);
+		ElementNamespace ns = language.findElementNamespace(namespaceUri);
 		if (ns==null) {
 			throw new NullPointerException("Could not find namespace: "+namespaceUri);
 		}

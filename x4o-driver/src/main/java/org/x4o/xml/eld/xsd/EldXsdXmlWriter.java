@@ -38,7 +38,7 @@ import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementMetaBase;
-import org.x4o.xml.element.ElementNamespaceContext;
+import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.XMLConstants;
 import org.x4o.xml.io.sax.ext.ContentWriterXsd;
 import org.x4o.xml.lang.X4OLanguageModule;
@@ -112,13 +112,13 @@ public class EldXsdXmlWriter {
 		
 		// redo this mess, add nice find for binding handlers
 		for (X4OLanguageModule modContext:language.getLanguageModules()) {
-			for (ElementNamespaceContext nsContext:modContext.getElementNamespaceContexts()) {
+			for (ElementNamespace nsContext:modContext.getElementNamespaces()) {
 				for (ElementClass ec:nsContext.getElementClasses()) {
 					Class<?> objectClass = null;
 					if (ec.getObjectClass()!=null) {
 						objectClass = ec.getObjectClass();
 						for (X4OLanguageModule mod:language.getLanguageModules()) {
-							for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+							for (ElementNamespace ns:mod.getElementNamespaces()) {
 								for (ElementClass checkClass:ns.getElementClasses()) {
 									if (checkClass.getObjectClass()==null) {
 										continue;
@@ -147,7 +147,7 @@ public class EldXsdXmlWriter {
 	private static final String COMMENT_SEPERATOR = " ==================================================================== ";
 	private static final String COMMENT_TEXT = "=====";
 	
-	public void startSchema(ElementNamespaceContext ns) throws SAXException {
+	public void startSchema(ElementNamespace ns) throws SAXException {
 		
 		xmlWriter.startDocument();
 		xmlWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
@@ -174,7 +174,7 @@ public class EldXsdXmlWriter {
 		
 		X4OLanguageModule module = null;
 		for (X4OLanguageModule elm:language.getLanguageModules()) {
-			ElementNamespaceContext s = elm.getElementNamespaceContext(ns.getUri());
+			ElementNamespace s = elm.getElementNamespace(ns.getUri());
 			if (s!=null) {
 				module = elm;
 				break;
@@ -185,7 +185,7 @@ public class EldXsdXmlWriter {
 		b.append("\n\tID:\t\t");			b.append(module.getId());
 		b.append("\n\tProviderName:\t");	b.append(module.getProviderName());
 		b.append("\n\tProviderHost:\t");	b.append(module.getProviderHost());
-		b.append("\n\tNamespaces:\t\t");	b.append(module.getElementNamespaceContexts().size());
+		b.append("\n\tNamespaces:\t\t");	b.append(module.getElementNamespaces().size());
 		b.append("\n\tUri:\t\t\t");			b.append(ns.getUri());
 		b.append("\n\tUri schema:\t");		b.append(ns.getSchemaUri());
 		b.append("\n\tCreated on:\t\t");	b.append(new Date());
@@ -211,7 +211,7 @@ public class EldXsdXmlWriter {
 			if (ns.getUri().equals(uri)) {
 				continue;
 			}
-			ElementNamespaceContext nsContext = language.findElementNamespaceContext(uri);
+			ElementNamespace nsContext = language.findElementNamespace(uri);
 			atts = new AttributesImpl();
 			atts.addAttribute ("", "namespace", "", "", nsContext.getUri());
 			atts.addAttribute ("", "schemaLocation", "", "", nsContext.getSchemaResource());
@@ -226,7 +226,7 @@ public class EldXsdXmlWriter {
 		xmlWriter.endDocument();
 	}
 	
-	public void writeElementClass(ElementClass ec,ElementNamespaceContext nsWrite) throws SAXException {
+	public void writeElementClass(ElementClass ec,ElementNamespace nsWrite) throws SAXException {
 		
 		AttributesImpl atts = new AttributesImpl();
 		if (nsWrite.getLanguageRoot()!=null && nsWrite.getLanguageRoot()) {
@@ -262,7 +262,7 @@ public class EldXsdXmlWriter {
 			xmlWriter.startElement (SCHEMA_URI, "choice", "", atts);
 			
 			for (X4OLanguageModule mod:language.getLanguageModules()) {
-				for (ElementNamespaceContext ns:mod.getElementNamespaceContexts()) {
+				for (ElementNamespace ns:mod.getElementNamespaces()) {
 					writeElementClassNamespaces(ec,nsWrite,ns);
 				}
 			}
@@ -362,7 +362,7 @@ public class EldXsdXmlWriter {
 		}
 	}
 	
-	private void writeElementClassNamespaces(ElementClass ecWrite,ElementNamespaceContext nsWrite,ElementNamespaceContext ns) throws SAXException {
+	private void writeElementClassNamespaces(ElementClass ecWrite,ElementNamespace nsWrite,ElementNamespace ns) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		List<String> refElements = new ArrayList<String>(20);
 		for (ElementClass checkClass:ns.getElementClasses()) {
@@ -417,7 +417,7 @@ public class EldXsdXmlWriter {
 	}
 	
 	
-	public void writeElement(ElementClass ec,ElementNamespaceContext nsWrite) throws SAXException {
+	public void writeElement(ElementClass ec,ElementNamespace nsWrite) throws SAXException {
 		if (nsWrite.getLanguageRoot()!=null && nsWrite.getLanguageRoot()) {
 			return; // is done in writeElementClass
 		}

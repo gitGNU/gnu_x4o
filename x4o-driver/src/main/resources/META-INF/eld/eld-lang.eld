@@ -38,7 +38,7 @@
 	<bindingHandler id="ElementModuleBindingHandler"			bean.class="org.x4o.xml.eld.lang.ElementModuleBindingHandler"/>
 	<bindingHandler id="ElementClassAttributeBindingHandler"	bean.class="org.x4o.xml.eld.lang.ElementClassAttributeBindingHandler"/>
 	<bindingHandler id="ElementInterfaceBindingHandler"			bean.class="org.x4o.xml.eld.lang.ElementInterfaceBindingHandler"/>
-	<bindingHandler id="ElementNamespaceContextBindingHandler"	bean.class="org.x4o.xml.eld.lang.ElementNamespaceContextBindingHandler"/>
+	<bindingHandler id="ElementNamespaceBindingHandler"			bean.class="org.x4o.xml.eld.lang.ElementNamespaceBindingHandler"/>
 	<bindingHandler id="StringSplitConverterBindingHandler"		bean.class="org.x4o.xml.eld.lang.StringSplitConverterBindingHandler"/>
 	<bindingHandler id="StringSplitConverterStepBindingHandler"	bean.class="org.x4o.xml.eld.lang.StringSplitConverterStepBindingHandler"/>
 	
@@ -77,7 +77,7 @@
 		<description>Some basic language definitions and some helper tags.</description>
 		
 		<!-- First copy some core elements over from parent config -->
-		<element id="namespace" objectClass="${parentLanguage.languageConfiguration.defaultElementNamespaceContext}">
+		<element id="namespace" objectClass="${parentLanguage.languageConfiguration.defaultElementNamespace}">
 			<description>Defines an namespace for the language.</description>
 			<attribute id="id" required="true">
 				<description>The namespace id.</description>
