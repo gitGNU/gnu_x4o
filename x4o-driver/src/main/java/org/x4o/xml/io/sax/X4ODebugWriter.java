@@ -261,7 +261,6 @@ public class X4ODebugWriter {
 					atts.addAttribute ("", "interfaceClass", "", "", elementInterface.getInterfaceClass().getName());
 					
 					contentWriter.startElement (DEBUG_URI, "elementInterface", "", atts);
-					debugElementBindingHandler(elementInterface.getElementBindingHandlers());
 					debugElementClassBase(elementInterface);
 					contentWriter.endElement(DEBUG_URI, "elementInterface", "");
 				}

@@ -127,7 +127,6 @@
 				<description>The class of the binding handler.</description>
 			</attribute>
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
-			<elementParent tag="elementInterface"/>
 		</element>
 		
 		<element id="attributeHandler" elementClass="org.x4o.xml.eld.lang.BeanElement">

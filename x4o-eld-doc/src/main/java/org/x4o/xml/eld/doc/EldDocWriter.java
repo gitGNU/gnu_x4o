@@ -141,7 +141,6 @@ public class EldDocWriter {
 		adcMod.addChildConcepts(new ApiDocConcept(adcMod,CC_BINDING,ElementBindingHandler.class));
 		adcIface.addChildConcepts(new ApiDocConcept(adcMod,CC_ATTRIBUTE,ElementClassAttribute.class));
 		adcIface.addChildConcepts(new ApiDocConcept(adcMod,CC_CONFIGURATOR,ElementConfigurator.class));
-		adcIface.addChildConcepts(new ApiDocConcept(adcMod,CC_BINDING,ElementBindingHandler.class));
 		adcEc.addChildConcepts(new ApiDocConcept(adcEc,CC_CONFIGURATOR,ElementConfigurator.class));
 		adcEc.addChildConcepts(new ApiDocConcept(adcEc,CC_ATTRIBUTE,ElementClassAttribute.class));
 		
@@ -158,7 +157,6 @@ public class EldDocWriter {
 			for (ElementConfiguratorGlobal conf:mod.getElementConfiguratorGlobals())	{		modNode.addNode(createNodeElementConfiguratorGlobal(conf));		}
 			for (ElementInterface iface:mod.getElementInterfaces())						{		ApiDocNode ifaceNode = modNode.addNode(createNodeElementInterface(iface));
 				for (ElementClassAttribute eca:iface.getElementClassAttributes())		{			ifaceNode.addNode(createNodeElementClassAttribute(eca));	}
-				for (ElementBindingHandler bind:iface.getElementBindingHandlers())		{			ifaceNode.addNode(createNodeElementBindingHandler(bind));	}
 				for (ElementConfigurator conf:iface.getElementConfigurators())			{			ifaceNode.addNode(createNodeElementConfigurator(conf));	}	}
 			for (ElementNamespaceContext ns:mod.getElementNamespaceContexts())			{		ApiDocNode nsNode = modNode.addNode(createNodeElementNamespaceContext(ns));
 				for (ElementClass ec:ns.getElementClasses())							{			ApiDocNode ecNode = nsNode.addNode(createNodeElementClass(ec));

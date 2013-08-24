@@ -24,7 +24,6 @@ package	org.x4o.xml.eld.lang;
 
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
-import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
@@ -40,8 +39,7 @@ public class ElementInterfaceBindingHandler extends AbstractElementBindingHandle
 	
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementClassAttribute.class,
-		ElementConfigurator.class,
-		ElementBindingHandler.class
+		ElementConfigurator.class
 	};
 	
 	/**
@@ -62,9 +60,6 @@ public class ElementInterfaceBindingHandler extends AbstractElementBindingHandle
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
 	public void bindChild(Element childElement,ElementInterface parent, Object childObject) throws ElementBindingHandlerException {
-		if (childObject instanceof ElementBindingHandler) { 
-			parent.addElementBindingHandler((ElementBindingHandler)childObject);
-		}
 		if (childObject instanceof ElementClassAttribute) {
 			parent.addElementClassAttribute((ElementClassAttribute)childObject);
 		}
@@ -77,9 +72,6 @@ public class ElementInterfaceBindingHandler extends AbstractElementBindingHandle
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
 	 */
 	public void createChilderen(Element parentElement,ElementInterface parent) throws ElementBindingHandlerException {
-		for (ElementBindingHandler child:parent.getElementBindingHandlers()) {
-			createChild(parentElement, child);
-		}
 		for (ElementClassAttribute child:parent.getElementClassAttributes()) {
 			createChild(parentElement, child);
 		}

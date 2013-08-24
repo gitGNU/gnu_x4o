@@ -181,9 +181,6 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 			X4OLanguageModule module = elementLanguageModules.get(i);
 			findElementBindingHandlerInList(parent,null,result,module.getElementBindingHandlers(),false);
 		}
-		for (ElementInterface ei:findElementInterfaces(parent)) {
-			findElementBindingHandlerInList(parent,null,result,ei.getElementBindingHandlers(),false);
-		}
 		return result;
 	}
 
@@ -195,9 +192,6 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 		for (int i=0;i<elementLanguageModules.size();i++) {
 			X4OLanguageModule module = elementLanguageModules.get(i);
 			findElementBindingHandlerInList(parent,child,result,module.getElementBindingHandlers(),true);
-		}
-		for (ElementInterface ei:findElementInterfaces(parent)) {
-			findElementBindingHandlerInList(parent,child,result,ei.getElementBindingHandlers(),true);
 		}
 		return result;
 	}

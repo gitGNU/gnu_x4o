@@ -146,7 +146,6 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		
 		ec = createElementClass(language,"bindingHandler",null,BeanElement.class,"Defines generic binding handler for languge.");
 		ec.addElementParent(CEL_ROOT_URI, "module");
-		ec.addElementParent(CEL_CORE_URI, "elementInterface");
 		ec.addElementClassAttribute(createElementClassAttribute(language,"id",true,null));
 		ec.addElementClassAttribute(createElementClassAttribute(language,"bean.class",true,null));
 		namespace.addElementClass(ec);

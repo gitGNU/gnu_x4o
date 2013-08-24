@@ -22,9 +22,6 @@
  */
 package	org.x4o.xml.element;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * AbstractElementInterface extends base support with element interface support.
  * 
@@ -34,31 +31,13 @@ import java.util.List;
 public abstract class AbstractElementInterface extends AbstractElementClassBase implements ElementInterface {
 
 	private Class<?> interfaceClass = null;
-	private List<ElementBindingHandler> elementBindingHandlers = null;
 	
 	/**
 	 * Creates AbstractElementInterface.
 	 */
 	public AbstractElementInterface() {
-		elementBindingHandlers = new ArrayList<ElementBindingHandler>(4);
 	}
 	
-	/**
-	 * @see org.x4o.xml.element.ElementInterface#addElementBindingHandler(org.x4o.xml.element.ElementBindingHandler)
-	 * @param elementBindingHandler The binding handler to add.
-	 */
-	public void addElementBindingHandler(ElementBindingHandler elementBindingHandler) {
-		elementBindingHandlers.add(elementBindingHandler);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementInterface#getElementBindingHandlers()
-	 * @return All binding handlers.
-	 */
-	public List<ElementBindingHandler> getElementBindingHandlers() {
-		return elementBindingHandlers;
-	}
-
 	/**
 	 * @see org.x4o.xml.element.ElementInterface#getInterfaceClass()
 	 * @return The interface class
@@ -66,7 +45,7 @@ public abstract class AbstractElementInterface extends AbstractElementClassBase 
 	public Class<?> getInterfaceClass() {
 		return interfaceClass;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.element.ElementInterface#setInterfaceClass(java.lang.Class)
 	 * @param interfaceClass The interface class to set.

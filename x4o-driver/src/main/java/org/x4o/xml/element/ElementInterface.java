@@ -22,8 +22,6 @@
  */
 package	org.x4o.xml.element;
 
-import java.util.List;
-
 /**
  * Defines an ElementInterface.
  * 
@@ -43,16 +41,4 @@ public interface ElementInterface extends ElementClassBase {
 	 * @param interfaceClass the interfaceClass to set.
 	 */
 	void setInterfaceClass(Class<?> interfaceClass);
-		
-	/**
-	 * Adds an ElementBindingHanlder.
-	 * @param elementBindingHandler	The ElementBindingHandler to add.
-	 */
-	void addElementBindingHandler(ElementBindingHandler elementBindingHandler);
-
-	/**
-	 * Gets all ElementBindingHandlers.
-	 * @return	Returns all the ElementBindingHandlers.
-	 */
-	List<ElementBindingHandler> getElementBindingHandlers();
 }
