@@ -23,7 +23,7 @@
 package org.x4o.xml.eld.lang;
 
 import org.x4o.xml.element.AbstractElement;
-import org.x4o.xml.element.ElementAttributeHandler;
+import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementException;
 
 /**
@@ -44,8 +44,8 @@ public class NextAttributeElement extends AbstractElement {
 		if (getParent()==null) {
 			throw new ElementException("can't be a root tag");
 		}
-		if (getParent().getElementObject() instanceof ElementAttributeHandler) {
-			((ElementAttributeHandler)getParent().getElementObject()).addNextAttribute(param);
+		if (getParent().getElementObject() instanceof ElementNamespaceAttribute) {
+			((ElementNamespaceAttribute)getParent().getElementObject()).addNextAttribute(param);
 		} else {
 			throw new ElementException("Wrong parent class");
 		}

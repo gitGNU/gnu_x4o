@@ -72,20 +72,6 @@
 		</eld:classBindingHandler>
 	</eld:elementInterface>
 	
-	<!-- TODO: fix writer, run EldParserTest 
-	<eld:configuratorGlobal bean.class="org.x4o.xml.test.element.TestElementConfigurator" id="testConfigGlobal">
-		<eld:description>Test the global element configurator.</eld:description>
-	</eld:configuratorGlobal>
-	
-	<eld:attributeHandler attributeName="tt.attr1" bean.class="org.x4o.xml.test.element.TestElementAttributeHandler" id="attrTest1">
-		<eld:description>Test the global element attribute1 handler.</eld:description>
-	</eld:attributeHandler>
-	<eld:attributeHandler attributeName="tt.attr2" bean.class="org.x4o.xml.test.element.TestElementAttributeHandler" id="attrTest2">
-		<eld:description>Test the global element attribute2 handler.</eld:description>
-		<eld:attributeHandlerNextAttribute attributeName="tt.attr1"/>
-	</eld:attributeHandler>
-	-->
-	
 	<eld:namespace
 		uri="http://test.x4o.org/xml/ns/test-root"
 		schemaUri="http://test.x4o.org/xml/ns/test-root-1.0.xsd"
@@ -111,6 +97,15 @@
 		name="Test Language Namespace"
 		id="test-lang"
 		>
+		<!-- TODO: fix x4o writer, run EldParserTest
+		<eld:namespaceAttribute attributeName="attr1" bean.class="org.x4o.xml.test.element.TestElementNamespaceAttribute" id="attrTest1">
+			<eld:description>Test the global element attribute1 handler.</eld:description>
+		</eld:namespaceAttribute>
+		<eld:namespaceAttribute attributeName="attr2" bean.class="org.x4o.xml.test.element.TestElementNamespaceAttribute" id="attrTest2">
+			<eld:description>Test the global element attribute2 handler.</eld:description>
+			<eld:attributeHandlerNextAttribute attributeName="attr1"/>
+		</eld:namespaceAttribute>
+		 -->
 		<eld:element tag="testNoNSRoot" objectClass="org.x4o.xml.test.models.TestObjectRoot"/>
 		
 		<eld:element tag="testBean" objectClass="org.x4o.xml.test.models.TestBean">

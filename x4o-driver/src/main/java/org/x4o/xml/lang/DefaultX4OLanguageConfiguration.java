@@ -38,7 +38,7 @@ import org.x4o.xml.element.DefaultElementInterface;
 import org.x4o.xml.element.DefaultElementNamespace;
 import org.x4o.xml.element.DefaultElementNamespaceInstanceProvider;
 import org.x4o.xml.element.DefaultElementObjectPropertyValue;
-import org.x4o.xml.element.DefaultGlobalAttributeHandlerComparator;
+import org.x4o.xml.element.DefaultElementNamespaceAttributeComparator;
 
 /**
  * Provides all implementions of the different parts of the language parser.
@@ -69,7 +69,7 @@ public class DefaultX4OLanguageConfiguration extends AbstractX4OLanguageConfigur
 		if (getDefaultElementNamespaceInstanceProvider()==null) {	setDefaultElementNamespaceInstanceProvider(		DefaultElementNamespaceInstanceProvider.class);		}
 		if (getDefaultElementAttributeValueParser()==null) {		setDefaultElementAttributeValueParser(			DefaultElementAttributeValueParser.class);			}
 		if (getDefaultElementObjectPropertyValue()==null) {			setDefaultElementObjectPropertyValue(			DefaultElementObjectPropertyValue.class);			}
-		if (getDefaultElementAttributeHandlerComparator()==null) {	setDefaultElementAttributeHandlerComparator(	DefaultGlobalAttributeHandlerComparator.class);		}
+		if (getDefaultElementNamespaceAttributeComparator()==null){	setDefaultElementNamespaceAttributeComparator(	DefaultElementNamespaceAttributeComparator.class);		}
 		if (getDefaultLanguageVersionFilter()==null) {				setDefaultLanguageVersionFilter(				DefaultX4OLanguageVersionFilter.class);				}
 		if (getDefaultLanguageLoader()==null) {						setDefaultLanguageLoader(						DefaultX4OLanguageLoader.class);					}
 		if (getDefaultExpressionLanguageContext()==null) {			setDefaultExpressionLanguageContext(			X4OELContext.class);								}

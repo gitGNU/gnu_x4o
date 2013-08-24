@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.x4o.xml.element.ElementAttributeHandler;
+import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
@@ -288,9 +288,9 @@ public class EldXsdXmlWriter {
 				writeElementAttribute(null,atts);
 			}
 		}
-		
+		/* TODO: fix xsd namespace attribute printing !!!
 		for (X4OLanguageModule mod:language.getLanguageModules()) {
-			for (ElementAttributeHandler eah:mod.getElementAttributeHandlers()) {
+			for (ElementNamespaceAttribute eah:ns.getElementNamespaceAttributes()) {
 				attrNames.add(eah.getAttributeName());
 				atts = new AttributesImpl();
 				atts.addAttribute ("", "name", "", "", eah.getAttributeName());
@@ -298,6 +298,7 @@ public class EldXsdXmlWriter {
 				writeElementAttribute(eah,atts);	
 			}
 		}
+		*/
 		
 		if (ec.getAutoAttributes()!=null && ec.getAutoAttributes()==false) {
 			// oke, reverse this if and rm whitespace.

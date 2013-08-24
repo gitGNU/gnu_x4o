@@ -25,7 +25,6 @@ package	org.x4o.xml.eld.lang;
 import org.x4o.xml.eld.EldModuleLoader;
 import org.x4o.xml.element.AbstractElementBindingHandler;
 import org.x4o.xml.element.Element;
-import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
@@ -51,7 +50,6 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 		ElementInterface.class,
 		ElementNamespace.class,
 		ElementBindingHandler.class,
-		ElementAttributeHandler.class,
 		ElementConfiguratorGlobal.class,
 	};
 	
@@ -151,11 +149,6 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 			languageModule.addElementBindingHandler(elementBindingHandler);
 			return;
 		}
-		if (childObject instanceof ElementAttributeHandler) {
-			ElementAttributeHandler elementAttributeHandler = (ElementAttributeHandler)childObject;
-			languageModule.addElementAttributeHandler(elementAttributeHandler);
-			return;
-		}
 		if (childObject instanceof ElementConfiguratorGlobal) {
 			ElementConfiguratorGlobal elementConfigurator = (ElementConfiguratorGlobal)childObject;
 			languageModule.addElementConfiguratorGlobal(elementConfigurator);
@@ -174,9 +167,6 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 			createChild(parentElement, child);
 		}
 		for (ElementBindingHandler child:parent.getElementBindingHandlers()) {
-			createChild(parentElement, child);
-		}
-		for (ElementAttributeHandler child:parent.getElementAttributeHandlers()) {
 			createChild(parentElement, child);
 		}
 		for (ElementConfiguratorGlobal child:parent.getElementConfiguratorGlobals()) {

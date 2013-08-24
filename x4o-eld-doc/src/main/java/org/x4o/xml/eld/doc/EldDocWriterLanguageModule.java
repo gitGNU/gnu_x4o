@@ -30,7 +30,7 @@ import org.x4o.xml.eld.doc.api.dom.ApiDocNode;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNodeBody;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNodeData;
 import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
-import org.x4o.xml.element.ElementAttributeHandler;
+import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementInterface;
@@ -50,7 +50,7 @@ public class EldDocWriterLanguageModule extends AbstractApiDocWriter {
 	public void configNavBar(ApiDoc doc,ApiDocNode node,ApiDocNodeData data) {
 		clearHrefContentGroup(doc,node,"summary","interface",ElementInterface.class);
 		clearHrefContentGroup(doc,node,"summary","binding",ElementBindingHandler.class);
-		clearHrefContentGroup(doc,node,"summary","attribute",ElementAttributeHandler.class);
+		clearHrefContentGroup(doc,node,"summary","attribute",ElementNamespaceAttribute.class);
 		clearHrefContentGroup(doc,node,"summary","configurator",ElementConfigurator.class);
 		clearHrefContentGroup(doc,node,"summary","namespace",ElementNamespace.class);
 	}
@@ -67,7 +67,7 @@ public class EldDocWriterLanguageModule extends AbstractApiDocWriter {
 	
 	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={3},contentGroup="attribute",contentGroupType="summary")
 	public void writeAttributeSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
-		printApiTable(event,"Attribute Summary",ElementAttributeHandler.class);
+		printApiTable(event,"Attribute Summary",ElementNamespaceAttribute.class);
 	}
 	
 	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageModule.class},nodeBodyOrders={4},contentGroup="configurator",contentGroupType="summary")

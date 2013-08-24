@@ -150,8 +150,8 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		ec.addElementClassAttribute(createElementClassAttribute(language,"bean.class",true,null));
 		namespace.addElementClass(ec);
 		
-		ec = createElementClass(language,"attributeHandler",null,BeanElement.class,"Defines generic attribute handler for language.");
-		ec.addElementParent(CEL_ROOT_URI, "module");
+		ec = createElementClass(language,"namespaceAttribute",null,BeanElement.class,"Defines generic namespace attribute for language.");
+		ec.addElementParent(CEL_CORE_URI, "namespace");
 		ec.addElementClassAttribute(createElementClassAttribute(language,"bean.class",true,null));
 		namespace.addElementClass(ec);
 		
@@ -172,7 +172,7 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		ec.setSchemaContentBase("string");
 		ec.addElementParent(CEL_ROOT_URI, "module");
 		ec.addElementParent(CEL_CORE_URI, "namespace");
-		ec.addElementParent(CEL_CORE_URI, "attributeHandler");
+		ec.addElementParent(CEL_CORE_URI, "namespaceAttribute");
 		ec.addElementParent(CEL_CORE_URI, "bindingHandler");
 		ec.addElementParent(CEL_CORE_URI, "configurator");
 		ec.addElementParent(CEL_CORE_URI, "configuratorGlobal");

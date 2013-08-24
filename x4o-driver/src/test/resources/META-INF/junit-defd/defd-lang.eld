@@ -64,25 +64,10 @@
 			</conv:stringSplitConverter>
 		</eld:attribute>
 	</eld:elementInterface>
-
-	<eld:elementInterface id="JComponent" interfaceClass="javax.swing.JComponent">
-		<eld:description>Configs the JComponent based objects.</eld:description>
-		<eld:classBindingHandler id="JComponent-JComponent" parentClass="javax.swing.JComponent" childClass="javax.swing.JComponent" addMethod="add" getMethod="getComponents">
-			<eld:description>Binds the JComponent to the JComponent.</eld:description>
-		</eld:classBindingHandler>
-	</eld:elementInterface>
 	
 	<eld:configuratorGlobal bean.class="org.x4o.xml.test.element.TestElementConfigurator" id="testConfigGlobal">
 		<eld:description>Test the global element configurator.</eld:description>
 	</eld:configuratorGlobal>
-	
-	<eld:attributeHandler attributeName="tt.attr1" bean.class="org.x4o.xml.test.element.TestElementAttributeHandler" id="attrTest1">
-		<eld:description>Test the global element attribute1 handler.</eld:description>
-	</eld:attributeHandler>
-	<eld:attributeHandler attributeName="tt.attr2" bean.class="org.x4o.xml.test.element.TestElementAttributeHandler" id="attrTest2">
-		<eld:description>Test the global element attribute2 handler.</eld:description>
-		<eld:attributeHandlerNextAttribute attributeName="tt.attr1"/>
-	</eld:attributeHandler>
 	
 	<eld:namespace
 		uri="http://test.x4o.org/xml/ns/test-root"
@@ -109,6 +94,14 @@
 		name="Test Language Namespace"
 		id="test-lang"
 		>
+		<eld:namespaceAttribute attributeName="attr1" bean.class="org.x4o.xml.test.element.TestElementNamespaceAttribute" id="attrTest1">
+			<eld:description>Test the global element attribute1 handler.</eld:description>
+		</eld:namespaceAttribute>
+		<eld:namespaceAttribute attributeName="attr2" bean.class="org.x4o.xml.test.element.TestElementNamespaceAttribute" id="attrTest2">
+			<eld:description>Test the global element attribute2 handler.</eld:description>
+			<eld:namespaceAttributeNext attributeName="attr1"/>
+		</eld:namespaceAttribute>
+		
 		<eld:element tag="testNoNSRoot" objectClass="org.x4o.xml.test.models.TestObjectRoot"/>
 		
 		<eld:element tag="testBean" objectClass="org.x4o.xml.test.models.TestBean">

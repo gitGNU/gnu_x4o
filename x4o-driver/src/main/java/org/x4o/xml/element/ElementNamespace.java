@@ -144,4 +144,16 @@ public interface ElementNamespace extends ElementMetaBase {
 	 * @param schemaPrefix the schemaPrefix to set
 	 */
 	void setSchemaPrefix(String schemaPrefix);
+	
+	/**
+	 * Adds an ElementNamespaceAttribute.
+	 * @param elementNamespaceAttribute	Adds an ElementNamespaceAttribute.
+	 */
+	void addElementNamespaceAttribute(ElementNamespaceAttribute elementNamespaceAttribute);
+
+	/**
+	 * Geta All ElementNamespaceAttributes.
+	 * @return Returns an List of ElementNamespaceAttributes.
+	 */
+	List<ElementNamespaceAttribute> getElementNamespaceAttributes();
 }

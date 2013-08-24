@@ -76,13 +76,13 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 		int elements = 0;
 		int namespaces = 0;
 		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
-			attrHandlers += mod.getElementAttributeHandlers().size();
 			bindHandlers += mod.getElementBindingHandlers().size();
 			interFaces += mod.getElementInterfaces().size();
 			eleConfigs += mod.getElementConfiguratorGlobals().size();
 			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				namespaces++;
 				elements += ns.getElementClasses().size();
+				attrHandlers += ns.getElementNamespaceAttributes().size();
 			}
 		}
 		writer.docTableStart("Language Summary", "Language Stats Summary.",ApiDocContentCss.overviewSummary);
@@ -90,10 +90,10 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 			writer.docTableRow("LanguageName:", ""+context.getLanguage().getLanguageName(), null);
 			writer.docTableRow("LanguageVersion:",""+context.getLanguage().getLanguageVersion(),null);
 			writer.docTableRow("Modules:",""+context.getLanguage().getLanguageModules().size(),null);
-			writer.docTableRow("Namespaces:",""+namespaces,null);
 			writer.docTableRow("Elements:",""+elements,null);
+			writer.docTableRow("ElementNamespaces:",""+namespaces,null);
+			writer.docTableRow("ElementNamespaceAttribute:",""+attrHandlers,null);
 			writer.docTableRow("ElementInterfaces:",""+interFaces,null);
-			writer.docTableRow("ElementAttributeHandlers:",""+attrHandlers,null);
 			writer.docTableRow("ElementBindingHandlers:",""+bindHandlers,null);
 			writer.docTableRow("ElementConfigurators:",""+eleConfigs,null);
 		writer.docTableEnd();

@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.x4o.xml.conv.ObjectConverter;
 import org.x4o.xml.element.Element;
-import org.x4o.xml.element.ElementAttributeHandler;
+import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
@@ -154,7 +154,7 @@ public class X4ODebugWriter {
 			debugLanguageDefaultClass("getDefaultElementNamespaceInstanceProvider",conf.getDefaultElementNamespaceInstanceProvider());
 			debugLanguageDefaultClass("getDefaultElementAttributeValueParser",conf.getDefaultElementAttributeValueParser());
 			debugLanguageDefaultClass("getDefaultElementObjectPropertyValue",conf.getDefaultElementObjectPropertyValue());
-			debugLanguageDefaultClass("getDefaultElementAttributeHandlerComparator",conf.getDefaultElementAttributeHandlerComparator());
+			debugLanguageDefaultClass("getDefaultElementNamespaceAttributeComparator",conf.getDefaultElementNamespaceAttributeComparator());
 							
 			contentWriter.endElement(DEBUG_URI, "X4OLanguageDefaultClasses", "");
 		} catch (SAXException e) {
@@ -230,29 +230,8 @@ public class X4ODebugWriter {
 				}
 				contentWriter.startElement (DEBUG_URI, "ElementLanguageModule", "", atts);
 				
-				//module.getElementAttributeHandlers();
-				//module.getElementBindingHandlers();
-				//module.getGlobalElementConfigurators();
-				//module.getElementInterfaces();
-				//module.getElementNamespace();
-				
 				debugElementConfiguratorGlobal(module.getElementConfiguratorGlobals());
 				debugElementBindingHandler(module.getElementBindingHandlers());
-				
-				for (ElementAttributeHandler p:module.getElementAttributeHandlers()) {
-					atts = new AttributesImpl();
-					atts.addAttribute ("", "attributeName", "", "", p.getAttributeName());
-					atts.addAttribute ("", "description", "", "", p.getDescription());
-					atts.addAttribute ("", "className", "", "", p.getClass().getName());
-					contentWriter.startElement (DEBUG_URI, "elementAttributeHandler", "", atts);
-					for (String para:p.getNextAttributes()) {
-						atts = new AttributesImpl();
-						atts.addAttribute ("", "attributeName", "", "", para);	
-						contentWriter.startElement (DEBUG_URI, "nextAttribute", "", atts);
-						contentWriter.endElement(DEBUG_URI, "nextAttribute", "");
-					}
-					contentWriter.endElement(DEBUG_URI, "elementAttributeHandler", "");
-				}
 				
 				for (ElementInterface elementInterface:module.getElementInterfaces()) {
 					atts = new AttributesImpl();
@@ -274,6 +253,21 @@ public class X4ODebugWriter {
 					atts.addAttribute ("", "className", "", "", enc.getClass().getName());
 					
 					contentWriter.startElement (DEBUG_URI, ElementNamespace.class.getSimpleName(), "", atts);
+					
+					for (ElementNamespaceAttribute p:enc.getElementNamespaceAttributes()) {
+						atts = new AttributesImpl();
+						atts.addAttribute ("", "attributeName", "", "", p.getAttributeName());
+						atts.addAttribute ("", "description", "", "", p.getDescription());
+						atts.addAttribute ("", "className", "", "", p.getClass().getName());
+						contentWriter.startElement (DEBUG_URI, "elementNamespaceAttribute", "", atts);
+						for (String para:p.getNextAttributes()) {
+							atts = new AttributesImpl();
+							atts.addAttribute ("", "attributeName", "", "", para);	
+							contentWriter.startElement (DEBUG_URI, "nextAttribute", "", atts);
+							contentWriter.endElement(DEBUG_URI, "nextAttribute", "");
+						}
+						contentWriter.endElement(DEBUG_URI, "elementNamespaceAttribute", "");
+					}
 					for (ElementClass ec:enc.getElementClasses()) {
 						debugElementClass(ec);
 					}

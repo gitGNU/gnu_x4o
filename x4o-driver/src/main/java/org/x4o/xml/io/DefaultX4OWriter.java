@@ -59,7 +59,7 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	
-	private PropertyConfig propertyConfig;
+	private final PropertyConfig propertyConfig;
 	
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_WRITER;
 	private final static String PROPERTY_OUTPUT_STREAM      = "output/stream";

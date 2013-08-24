@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 import javax.el.ValueExpression;
 
-import org.x4o.xml.element.AbstractElementAttributeHandler;
+import org.x4o.xml.element.AbstractElementNamespaceAttribute;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementConfiguratorException;
 
@@ -37,7 +37,7 @@ import org.x4o.xml.element.ElementConfiguratorException;
  * @author Willem Cazander
  * @version 1.0 Aug 23, 2006
  */
-public class ELIDAttributeHandler extends AbstractElementAttributeHandler {
+public class ELIDAttributeHandler extends AbstractElementNamespaceAttribute {
 
 	/**
 	 * @see org.x4o.xml.element.ElementConfigurator#doConfigElement(org.x4o.xml.element.Element)

@@ -44,7 +44,7 @@
 		<defaultElementNamespaceInstanceProvider></defaultElementNamespaceInstanceProvider>
 		<defaultElementAttributeValueParser></defaultElementAttributeValueParser>
 		<defaultElementObjectPropertyValue></defaultElementObjectPropertyValue>
-		<defaultElementAttributeHandlerComparator></defaultElementAttributeHandlerComparator>
+		<defaultElementNamespaceAttributeComparator></defaultElementNamespaceAttributeComparator>
 		
 		<properties>
 			<property key="" value=""/>

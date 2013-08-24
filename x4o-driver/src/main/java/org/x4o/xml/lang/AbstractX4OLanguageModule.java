@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.x4o.xml.element.AbstractElementMetaBase;
-import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
@@ -48,7 +47,6 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	private String providerHost=null;
 	private String sourceResource = null;
 	
-	private List<ElementAttributeHandler> elementAttributeHandlers = null;
 	private List<ElementBindingHandler> elementBindingHandlers = null;
 	private List<ElementConfiguratorGlobal> elementConfiguratorGlobals = null;
 	private List<ElementInterface> elementInterfaces = null;
@@ -61,7 +59,6 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	public AbstractX4OLanguageModule() {
 		logger = Logger.getLogger(AbstractX4OLanguageSession.class.getName());
 		logger.finest("Creating new ParsingContext");
-		elementAttributeHandlers = new ArrayList<ElementAttributeHandler>(4);
 		elementBindingHandlers = new ArrayList<ElementBindingHandler>(4);
 		elementConfiguratorGlobals = new ArrayList<ElementConfiguratorGlobal>(4);
 		elementInterfaces = new ArrayList<ElementInterface>(20);
@@ -94,27 +91,6 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	 */
 	public void setProviderHost(String providerHost) {
 		this.providerHost = providerHost;
-	}
-	
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageModule#addElementAttributeHandler(ElementAttributeHandler)
-	 */
-	public void addElementAttributeHandler(ElementAttributeHandler elementAttributeHandler) {
-		if (elementAttributeHandler==null) {
-			throw new NullPointerException("Can't add null object");
-		}
-		if (elementAttributeHandler.getId()==null) {
-			throw new NullPointerException("Can't add with null id property.");
-		}
-		logger.finer("Adding ElementAttributeHandler: "+elementAttributeHandler.getAttributeName());
-		elementAttributeHandlers.add(elementAttributeHandler);
-	}
-
-	/**
-	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementAttributeHandlers()
-	 */
-	public List<ElementAttributeHandler> getElementAttributeHandlers() {
-		return elementAttributeHandlers;
 	}
 
 	/**
@@ -249,7 +225,6 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	 * Reloads the module, experiment !!
 	 */
 	public void reloadModule(X4OLanguageLocal elementLanguage,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
-		elementAttributeHandlers.clear();
 		elementBindingHandlers.clear();
 		elementInterfaces.clear();
 		elementNamespaces.clear();

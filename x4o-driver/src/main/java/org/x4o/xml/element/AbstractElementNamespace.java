@@ -44,9 +44,11 @@ public abstract class AbstractElementNamespace extends AbstractElementMetaBase i
 	private String schemaResource = null;
 	private String schemaPrefix = null;
 	private Boolean languageRoot = null;
+	private List<ElementNamespaceAttribute> elementNamespaceAttributes = null;
 	
 	public AbstractElementNamespace() {
-		elementClasses = new HashMap<String,ElementClass>(100);
+		elementClasses = new HashMap<String,ElementClass>(60);
+		elementNamespaceAttributes = new ArrayList<ElementNamespaceAttribute>(5);
 	}
 
 	/**
@@ -183,5 +185,21 @@ public abstract class AbstractElementNamespace extends AbstractElementMetaBase i
 	 */
 	public void setSchemaPrefix(String schemaPrefix) {
 		this.schemaPrefix = schemaPrefix;
+	}
+	
+	
+	public void addElementNamespaceAttribute(ElementNamespaceAttribute elementNamespaceAttribute) {
+		if (elementNamespaceAttribute==null) {
+			throw new NullPointerException("Can't add null object");
+		}
+		if (elementNamespaceAttribute.getId()==null) {
+			throw new NullPointerException("Can't add with null id property.");
+		}
+		//logger.finer("Adding elementNamespaceAttribute: "+elementNamespaceAttribute.getAttributeName());
+		elementNamespaceAttributes.add(elementNamespaceAttribute);
+	}
+
+	public List<ElementNamespaceAttribute> getElementNamespaceAttributes() {
+		return elementNamespaceAttributes;
 	}
 }

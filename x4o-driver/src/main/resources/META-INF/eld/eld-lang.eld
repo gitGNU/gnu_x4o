@@ -129,18 +129,18 @@
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 		</element>
 		
-		<element id="attributeHandler" elementClass="org.x4o.xml.eld.lang.BeanElement">
-			<description>Define an className in bean.class for an ElementAttributeHandler.</description>
+		<element id="namespaceAttribute" elementClass="org.x4o.xml.eld.lang.BeanElement">
+			<description>Define an className in bean.class for an ElementNamespaceAttribute.</description>
 			<attribute id="id" required="true">
-				<description>The atttribute handler id.</description>
+				<description>The namespace attribute id.</description>
 			</attribute>
 			<attribute id="bean.class" required="true">
-				<description>The class of the attribute handler.</description>
+				<description>The class of the namespace attribute.</description>
 			</attribute>
 			<attribute id="attributeName" required="true">
 				<description>The xml attribute name.</description>
 			</attribute>
-			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
+			<elementParent tag="namespace"/>
 		</element>
 		
 		<element id="configuratorGlobal" elementClass="org.x4o.xml.eld.lang.BeanElement">
@@ -176,8 +176,8 @@
 			<description>An ELD elementDescription field which lets you type text like this one in xml characters instead of an attribute.</description>
 			<elementParent tag="module" uri="http://eld.x4o.org/xml/ns/eld-root"/>
 			<elementParent tag="namespace"/>
+			<elementParent tag="namespaceAttribute"/>
 			<elementParent tag="bindingHandler"/>
-			<elementParent tag="attributeHandler"/>
 			<elementParent tag="configurator"/>
 			<elementParent tag="configuratorGlobal"/>
 			<elementParent tag="elementInterface"/>
@@ -210,12 +210,12 @@
 			<elementParent tag="element"/>
 		</element>
 		
-		<element id="attributeHandlerNextAttribute" elementClass="org.x4o.xml.eld.lang.NextAttributeElement">
+		<element id="namespaceAttributeNext" elementClass="org.x4o.xml.eld.lang.NextAttributeElement">
 			<description>Defines the parameter order.</description>
 			<attribute id="attributeName" required="true">
 				<description>The attribute name to run after this attribute.</description>
 			</attribute>
-			<elementParent tag="attributeHandler"/>
+			<elementParent tag="namespaceAttribute"/>
 			<elementParent tag="bean"/>
 		</element>
 	

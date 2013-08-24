@@ -30,7 +30,7 @@ import java.util.List;
  * @author Willem Cazander
  * @version 1.0 Aug 20, 2005
  */
-public interface ElementAttributeHandler extends ElementConfigurator {
+public interface ElementNamespaceAttribute extends ElementConfigurator {
 	
 	/**
 	 * Gets the attribute name this attribute handler handles.
@@ -46,7 +46,7 @@ public interface ElementAttributeHandler extends ElementConfigurator {
 	
 	/**
 	 * Adds an NextAttribute.
-	 * There next attributes will defines the order in which the ElementAttributeHandlers are executed.
+	 * There next attributes will defines the order in which the ElementNamespaceAttribute are executed.
 	 * @param attribute	Add attribute which be will processed after this one.
 	 */
 	void addNextAttribute(String attribute);

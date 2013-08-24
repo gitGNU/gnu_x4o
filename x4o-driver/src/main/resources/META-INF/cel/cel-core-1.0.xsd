@@ -1,55 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
 
-    Copyright (c) 2004-2013, Willem Cazander
-    All rights reserved.
+<!--  ====================================================================  -->
 
-    Redistribution and use in source and binary forms, with or without modification, are permitted provided
-    that the following conditions are met:
+<!--  =====  Automatic generated schema for language: cel            =====  -->
 
-    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
-      following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
-      the following disclaimer in the documentation and/or other materials provided with the distribution.
+<!--  ====================================================================  -->
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
-    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--->
-<!-- ==================================================================== -->
-<!-- =====  Automatic generated schema for language: cel            ===== -->
-<!-- ==================================================================== -->
-<!--
+<!-- 
 	ID:		cel-module
 	ProviderName:	Core Element Languag Module
-	ProviderHost:		cel.x4o.org
+	ProviderHost:	cel.x4o.org
 	Namespaces:		2
-	Namespace:		http://cel.x4o.org/xml/ns/cel-core
-	Created on:		Sun Apr 28 11:41:33 CEST 2013
--->
+	Uri:			http://cel.x4o.org/xml/ns/cel-core
+	Uri schema:	http://cel.x4o.org/xml/ns/cel-core-1.0.xsd
+	Created on:		Sat Aug 24 22:02:08 CEST 2013
+ -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://cel.x4o.org/xml/ns/cel-core"
  version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://cel.x4o.org/xml/ns/cel-core">
+	<complexType name="attributeType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="attributeAlias" type="this:attributeAliasType"/>
+			<element name="classConverter" type="this:classConverterType"/>
+			<element name="description" type="this:descriptionType"/>
+		</choice>
+		<attribute name="required" type="boolean"/>
+		<attribute name="defaultValue" type="string"/>
+		<attribute name="runResolveEL" type="boolean"/>
+		<attribute name="runConverters" type="boolean"/>
+		<attribute name="objectConverter" type="string"/>
+		<attribute name="runBeanValue" type="boolean"/>
+		<attribute name="writeOrder" type="integer"/>
+		<attribute name="description" type="string"/>
+		<attribute name="id" type="string"/>
+	</complexType>
+	<complexType name="classConverterType">
+		<choice minOccurs="0" maxOccurs="unbounded"/>
+	</complexType>
+	<complexType name="namespaceAttributeType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="description" type="this:descriptionType"/>
+		</choice>
+		<attribute name="bean.class" type="string" use="required"/>
+		<anyAttribute/>
+	</complexType>
 	<complexType name="namespaceType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="description" type="this:descriptionType"/>
 			<element name="element" type="this:elementType"/>
+			<element name="namespaceAttribute" type="this:namespaceAttributeType"/>
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
 		<attribute name="name" type="string"/>
-		<attribute name="languageRoot" type="boolean"/>
-		<attribute name="prefixMapping" type="string"/>
-		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
+		<attribute name="languageRoot" type="boolean"/>
 		<attribute name="schemaPrefix" type="string"/>
+		<attribute name="elementNamespaceInstanceProvider" type="string"/>
+		<attribute name="prefixMapping" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -60,6 +68,14 @@
 			</extension>
 		</simpleContent>
 	</complexType>
+	<complexType name="bindingHandlerType">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="description" type="this:descriptionType"/>
+		</choice>
+		<attribute name="id" type="string" use="required"/>
+		<attribute name="bean.class" type="string" use="required"/>
+		<anyAttribute/>
+	</complexType>
 	<complexType name="elementType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="attribute" type="this:attributeType"/>
@@ -69,10 +85,10 @@
 		</choice>
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
+		<attribute name="autoAttributes" type="boolean"/>
+		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
 		<attribute name="schemaContentMixed" type="boolean"/>
-		<attribute name="schemaContentBase" type="string"/>
-		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -97,45 +113,9 @@
 		<attribute name="configAction" type="string"/>
 		<anyAttribute/>
 	</complexType>
-	<complexType name="attributeHandlerType">
-		<choice minOccurs="0" maxOccurs="unbounded">
-			<element name="description" type="this:descriptionType"/>
-		</choice>
-		<attribute name="bean.class" type="string" use="required"/>
-		<anyAttribute/>
-	</complexType>
-	<complexType name="attributeType">
-		<choice minOccurs="0" maxOccurs="unbounded">
-			<element name="attributeAlias" type="this:attributeAliasType"/>
-			<element name="classConverter" type="this:classConverterType"/>
-			<element name="description" type="this:descriptionType"/>
-		</choice>
-		<attribute name="name" type="string"/>
-		<attribute name="runBeanValue" type="boolean"/>
-		<attribute name="runResolveEL" type="boolean"/>
-		<attribute name="writeOrder" type="integer"/>
-		<attribute name="objectConverter" type="string"/>
-		<attribute name="runConverters" type="boolean"/>
-		<attribute name="required" type="boolean"/>
-		<attribute name="defaultValue" type="string"/>
-		<attribute name="description" type="string"/>
-		<attribute name="id" type="string"/>
-	</complexType>
-	<complexType name="classConverterType">
-		<choice minOccurs="0" maxOccurs="unbounded"/>
-	</complexType>
-	<complexType name="bindingHandlerType">
-		<choice minOccurs="0" maxOccurs="unbounded">
-			<element name="description" type="this:descriptionType"/>
-		</choice>
-		<attribute name="id" type="string" use="required"/>
-		<attribute name="bean.class" type="string" use="required"/>
-		<anyAttribute/>
-	</complexType>
 	<complexType name="elementInterfaceType">
 		<choice minOccurs="0" maxOccurs="unbounded">
 			<element name="attribute" type="this:attributeType"/>
-			<element name="bindingHandler" type="this:bindingHandlerType"/>
 			<element name="configurator" type="this:configuratorType"/>
 			<element name="description" type="this:descriptionType"/>
 			<element name="elementParent" type="this:elementParentType"/>
@@ -150,76 +130,64 @@
 		<attribute name="uri" type="string"/>
 		<anyAttribute/>
 	</complexType>
-	<element name="namespace" type="this:namespaceType">
-		<annotation>
-			<documentation xml:lang="en">Defines an xml namespace.
-			</documentation>
-		</annotation>
-	</element>
-	<element name="description" type="this:descriptionType">
-		<annotation>
-			<documentation xml:lang="en">Adds description as text on all eld elements.
-			</documentation>
-		</annotation>
-	</element>
-	<element name="element" type="this:elementType">
-		<annotation>
-			<documentation xml:lang="en">Defines xml element tag.
-			</documentation>
-		</annotation>
-	</element>
-	<element name="configuratorGlobal" type="this:configuratorGlobalType">
-		<annotation>
-			<documentation xml:lang="en">Define generic global configuator for languge.
-			</documentation>
-		</annotation>
-	</element>
-	<element name="attributeAlias" type="this:attributeAliasType">
-		<annotation>
-			<documentation xml:lang="en">Adds an attribute alias.
-			</documentation>
-		</annotation>
-	</element>
-	<element name="configurator" type="this:configuratorType">
-		<annotation>
-			<documentation xml:lang="en">Define generic configurator for language.
-			</documentation>
-		</annotation>
-	</element>
-	<element name="attributeHandler" type="this:attributeHandlerType">
-		<annotation>
-			<documentation xml:lang="en">Defines generic attribute handler for language.
-			</documentation>
-		</annotation>
-	</element>
 	<element name="attribute" type="this:attributeType">
 		<annotation>
-			<documentation xml:lang="en">Defines xml element attribute.
-			</documentation>
+			<documentation xml:lang="en">Defines xml element attribute.</documentation>
 		</annotation>
 	</element>
 	<element name="classConverter" type="this:classConverterType">
 		<annotation>
-			<documentation xml:lang="en">Converts string attribute to java class instance.
-			</documentation>
+			<documentation xml:lang="en">Converts string attribute to java class instance.</documentation>
+		</annotation>
+	</element>
+	<element name="namespaceAttribute" type="this:namespaceAttributeType">
+		<annotation>
+			<documentation xml:lang="en">Defines generic namespace attribute for language.</documentation>
+		</annotation>
+	</element>
+	<element name="namespace" type="this:namespaceType">
+		<annotation>
+			<documentation xml:lang="en">Defines an xml namespace.</documentation>
+		</annotation>
+	</element>
+	<element name="description" type="this:descriptionType">
+		<annotation>
+			<documentation xml:lang="en">Adds description as text on all eld elements.</documentation>
 		</annotation>
 	</element>
 	<element name="bindingHandler" type="this:bindingHandlerType">
 		<annotation>
-			<documentation xml:lang="en">Defines generic binding handler for languge.
-			</documentation>
+			<documentation xml:lang="en">Defines generic binding handler for languge.</documentation>
+		</annotation>
+	</element>
+	<element name="element" type="this:elementType">
+		<annotation>
+			<documentation xml:lang="en">Defines xml element tag.</documentation>
+		</annotation>
+	</element>
+	<element name="configuratorGlobal" type="this:configuratorGlobalType">
+		<annotation>
+			<documentation xml:lang="en">Define generic global configuator for languge.</documentation>
+		</annotation>
+	</element>
+	<element name="attributeAlias" type="this:attributeAliasType">
+		<annotation>
+			<documentation xml:lang="en">Adds an attribute alias.</documentation>
+		</annotation>
+	</element>
+	<element name="configurator" type="this:configuratorType">
+		<annotation>
+			<documentation xml:lang="en">Define generic configurator for language.</documentation>
 		</annotation>
 	</element>
 	<element name="elementInterface" type="this:elementInterfaceType">
 		<annotation>
-			<documentation xml:lang="en">Defines element interface class.
-			</documentation>
+			<documentation xml:lang="en">Defines element interface class.</documentation>
 		</annotation>
 	</element>
 	<element name="elementParent" type="this:elementParentType">
 		<annotation>
-			<documentation xml:lang="en">Added (meta) element parent.
-			</documentation>
+			<documentation xml:lang="en">Added (meta) element parent.</documentation>
 		</annotation>
 	</element>
 </schema>

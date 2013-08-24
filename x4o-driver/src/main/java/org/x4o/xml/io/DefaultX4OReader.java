@@ -64,7 +64,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	
 	private X4OLanguageSession languageSession = null;
 	
-	private PropertyConfig propertyConfig;
+	private final PropertyConfig propertyConfig;
 	
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_READER;
 	private final static String PROPERTY_SAX_ERROR_HANDLER            = "sax/error-handler";

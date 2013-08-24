@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 import org.x4o.xml.conv.ObjectConverterException;
 import org.x4o.xml.element.Element;
-import org.x4o.xml.element.ElementAttributeHandler;
+import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementAttributeValueParser;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
@@ -263,7 +263,7 @@ public class X4OPhaseLanguageRead {
 	 * X4OPhaseReadConfigGlobalAttribute
 	 */
 	class X4OPhaseReadConfigGlobalAttribute extends AbstractX4OPhase {
-		Comparator<ElementAttributeHandler> elementAttributeHandlerComparator = null;
+		Comparator<ElementNamespaceAttribute> elementNamespaceAttributeComparator = null;
 		private X4OPhaseReadRunConfigurator runConf = null;
 		public X4OPhaseReadConfigGlobalAttribute(X4OPhaseReadRunConfigurator runConf) {
 			this.runConf=runConf;
@@ -279,9 +279,9 @@ public class X4OPhaseLanguageRead {
 		}
 		@SuppressWarnings("unchecked")
 		public void runElementPhase(Element element) throws X4OPhaseException {
-			if (elementAttributeHandlerComparator==null) {
+			if (elementNamespaceAttributeComparator==null) {
 				try {
-					elementAttributeHandlerComparator = (Comparator<ElementAttributeHandler>)X4OLanguageClassLoader.newInstance(element.getLanguageSession().getLanguage().getLanguageConfiguration().getDefaultElementAttributeHandlerComparator());
+					elementNamespaceAttributeComparator = (Comparator<ElementNamespaceAttribute>)X4OLanguageClassLoader.newInstance(element.getLanguageSession().getLanguage().getLanguageConfiguration().getDefaultElementNamespaceAttributeComparator());
 				} catch (Exception e) {
 					throw new X4OPhaseException(this,e);
 				}
@@ -289,17 +289,18 @@ public class X4OPhaseLanguageRead {
 			
 			// do global parameters
 			logger.finest("Do Element Global AttributeHandlers.");
-			List<ElementAttributeHandler> handlers = new ArrayList<ElementAttributeHandler>();
+			List<ElementNamespaceAttribute> handlers = new ArrayList<ElementNamespaceAttribute>();
 			for (X4OLanguageModule mod:element.getLanguageSession().getLanguage().getLanguageModules()) {
-				for (ElementAttributeHandler global:mod.getElementAttributeHandlers()) {
-					
-					String attribute = element.getAttributes().get(global.getAttributeName());
-					if (attribute!=null) {
-						handlers.add(global);
+				for (ElementNamespace ns:mod.getElementNamespaces()) {
+					for (ElementNamespaceAttribute global:ns.getElementNamespaceAttributes()) {
+						String attribute = element.getAttributes().get(global.getAttributeName());
+						if (attribute!=null) {
+							handlers.add(global);
+						}
 					}
 				}
 			}
-			Collections.sort(handlers,elementAttributeHandlerComparator);
+			Collections.sort(handlers,elementNamespaceAttributeComparator);
 			List<ElementConfigurator> handlers2 = new ArrayList<ElementConfigurator>(handlers.size());
 			handlers2.addAll(handlers);
 			for (ElementConfigurator ec:handlers) {

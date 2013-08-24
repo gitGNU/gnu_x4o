@@ -46,7 +46,7 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	private Class<?> defaultElementNamespaceInstanceProvider = null;
 	private Class<?> defaultElementAttributeValueParser = null;
 	private Class<?> defaultElementObjectPropertyValue = null;
-	private Class<?> defaultElementAttributeHandlerComparator = null;
+	private Class<?> defaultElementNamespaceAttributeComparator = null;
 	
 	private Class<?> defaultLanguageVersionFilter = null;
 	private Class<?> defaultLanguageLoader = null;
@@ -255,17 +255,17 @@ public abstract class AbstractX4OLanguageConfiguration implements X4OLanguageCon
 	}
 	
 	/**
-	 * @return the defaultElementAttributeHandlerComparator
+	 * @return the defaultElementNamespaceAttributeComparator
 	 */
-	public Class<?> getDefaultElementAttributeHandlerComparator() {
-		return defaultElementAttributeHandlerComparator;
+	public Class<?> getDefaultElementNamespaceAttributeComparator() {
+		return defaultElementNamespaceAttributeComparator;
 	}
 	
 	/**
-	 * @param defaultElementAttributeHandlerComparator the defaultElementAttributeHandlerComparator to set
+	 * @param defaultElementNamespaceAttributeComparator the defaultElementNamespaceAttributeComparator to set
 	 */
-	public void setDefaultElementAttributeHandlerComparator(Class<?> defaultElementAttributeHandlerComparator) {
-		this.defaultElementAttributeHandlerComparator = defaultElementAttributeHandlerComparator;
+	public void setDefaultElementNamespaceAttributeComparator(Class<?> defaultElementNamespaceAttributeComparator) {
+		this.defaultElementNamespaceAttributeComparator = defaultElementNamespaceAttributeComparator;
 	}
 	
 	/**

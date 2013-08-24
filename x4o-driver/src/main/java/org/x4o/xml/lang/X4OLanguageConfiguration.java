@@ -61,7 +61,7 @@ public interface X4OLanguageConfiguration {
 	Class<?> getDefaultElementNamespaceInstanceProvider();
 	Class<?> getDefaultElementAttributeValueParser();
 	Class<?> getDefaultElementObjectPropertyValue();
-	Class<?> getDefaultElementAttributeHandlerComparator();
+	Class<?> getDefaultElementNamespaceAttributeComparator();
 	
 	/**
 	 * @return	Returns the X4OLanguageVersionFilter which filters the best version to use.

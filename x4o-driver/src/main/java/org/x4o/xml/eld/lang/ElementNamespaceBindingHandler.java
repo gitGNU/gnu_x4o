@@ -27,6 +27,7 @@ import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementBindingHandlerException;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementNamespace;
+import org.x4o.xml.element.ElementNamespaceAttribute;
 
 /**
  * ElementNamespaceBindingHandler binds ElementClass into namespace.
@@ -37,7 +38,8 @@ import org.x4o.xml.element.ElementNamespace;
 public class ElementNamespaceBindingHandler extends AbstractElementBindingHandler<ElementNamespace> {
 
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
-		ElementClass.class
+		ElementClass.class,
+		ElementNamespaceAttribute.class
 	};
 	
 	/**
@@ -65,6 +67,11 @@ public class ElementNamespaceBindingHandler extends AbstractElementBindingHandle
 			}
 			parent.addElementClass(elementClass);
 		}
+		if (childObject instanceof ElementNamespaceAttribute) {
+			ElementNamespaceAttribute elementNamespaceAttribute = (ElementNamespaceAttribute)childObject;
+			parent.addElementNamespaceAttribute(elementNamespaceAttribute);
+			return;
+		}
 	}
 	
 	/**
@@ -72,6 +79,9 @@ public class ElementNamespaceBindingHandler extends AbstractElementBindingHandle
 	 */
 	public void createChilderen(Element parentElement,ElementNamespace parent) throws ElementBindingHandlerException {
 		for (ElementClass child:parent.getElementClasses()) {
+			createChild(parentElement, child);
+		}
+		for (ElementNamespaceAttribute child:parent.getElementNamespaceAttributes()) {
 			createChild(parentElement, child);
 		}
 	}

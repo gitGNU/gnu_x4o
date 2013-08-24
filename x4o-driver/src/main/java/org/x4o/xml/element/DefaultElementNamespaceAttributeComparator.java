@@ -22,58 +22,37 @@
  */
 package org.x4o.xml.element;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+
+
 
 /**
- * An AbstractElementAttributeHandler.
+ * The DefaultElementNamespaceAttributeComparator.<br>
+ * This Comparator compares the NextAttribute names with the attributeName of the ElementNamespaceAttribute.<br>
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 10, 2006
+ * @version 1.0 Feb 14, 2007
  */
-public abstract class AbstractElementAttributeHandler extends AbstractElementConfigurator implements ElementAttributeHandler {
-	
-	private String attributeName = null;
-	private List<String> nextAttributes = new ArrayList<String>(2);
-	
+public class DefaultElementNamespaceAttributeComparator implements Comparator<ElementNamespaceAttribute> {
+
 	/**
-	 * @see org.x4o.xml.element.ElementAttributeHandler#addNextAttribute(java.lang.String)
+	 * @param	e1	The first ElementNamespaceAttribute to compare.
+	 * @param	e2	The second ElementNamespaceAttribute to compare.
+	 * @return	0 is same.
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
-	public void addNextAttribute(String attribute) {
-		if (attribute==null) {
-			throw new NullPointerException("Can add null attribute for loading.");
+	public int compare(ElementNamespaceAttribute e1, ElementNamespaceAttribute e2) {
+
+		for (String param:e1.getNextAttributes()) {
+			if(param.equals(e2.getAttributeName())) {
+				return -1;
+			}
 		}
-		nextAttributes.add(attribute);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementAttributeHandler#removeNextAttribute(java.lang.String)
-	 */	
-	public void removeNextAttribute(String attribute) {
-		if (attribute==null) {
-			throw new NullPointerException("Can remove null attribute for loading.");
+		for (String param:e2.getNextAttributes()) {
+			if(param.equals(e1.getAttributeName())) {
+				return 1;
+			}
 		}
-		nextAttributes.remove(attribute);
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementAttributeHandler#getNextAttributes()
-	 */
-	public List<String> getNextAttributes() {
-		return nextAttributes;
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementAttributeHandler#getAttributeName()
-	 */
-	public String getAttributeName() {
-		return attributeName;
-	}
-
-	/**
-	 * @see org.x4o.xml.element.ElementAttributeHandler#setAttributeName(java.lang.String)
-	 */
-	public void setAttributeName(String attributeName) {
-		this.attributeName=attributeName;
+		return 0;
 	}
 }

@@ -48,7 +48,7 @@ public interface X4OLanguageConfigurationLocal extends X4OLanguageConfiguration 
 	void setDefaultElementNamespaceInstanceProvider(Class<?> value);
 	void setDefaultElementAttributeValueParser(Class<?> value);
 	void setDefaultElementObjectPropertyValue(Class<?> value);
-	void setDefaultElementAttributeHandlerComparator(Class<?> value);
+	void setDefaultElementNamespaceAttributeComparator(Class<?> value);
 	
 	void setDefaultLanguageVersionFilter(Class<?> value);
 	void setDefaultLanguageLoader(Class<?> value);

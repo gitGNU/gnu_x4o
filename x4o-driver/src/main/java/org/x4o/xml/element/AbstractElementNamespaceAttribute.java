@@ -22,37 +22,58 @@
  */
 package org.x4o.xml.element;
 
-import java.util.Comparator;
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The DefaultGlobalAttributeHandlerComparator.<br>
- * This Comparator compares the NextAttribute names with the attributeName of the ElementAttributeHandlers.<br>
+ * An AbstractElementNamespaceAttribute.
  * 
  * @author Willem Cazander
- * @version 1.0 Feb 14, 2007
+ * @version 1.0 Aug 10, 2006
  */
-public class DefaultGlobalAttributeHandlerComparator implements Comparator<ElementAttributeHandler> {
+public abstract class AbstractElementNamespaceAttribute extends AbstractElementConfigurator implements ElementNamespaceAttribute {
+	
+	private String attributeName = null;
+	private List<String> nextAttributes = new ArrayList<String>(2);
+	
+	/**
+	 * @see org.x4o.xml.element.ElementNamespaceAttribute#addNextAttribute(java.lang.String)
+	 */
+	public void addNextAttribute(String attribute) {
+		if (attribute==null) {
+			throw new NullPointerException("Can add null attribute for loading.");
+		}
+		nextAttributes.add(attribute);
+	}
 
 	/**
-	 * @param	e1	The first ElementAttributeHandler to compare.
-	 * @param	e2	The second ElementAttributeHandler to compare.
-	 * @return	0 is same.
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
-	public int compare(ElementAttributeHandler e1, ElementAttributeHandler e2) {
+	 * @see org.x4o.xml.element.ElementNamespaceAttribute#removeNextAttribute(java.lang.String)
+	 */	
+	public void removeNextAttribute(String attribute) {
+		if (attribute==null) {
+			throw new NullPointerException("Can remove null attribute for loading.");
+		}
+		nextAttributes.remove(attribute);
+	}
 
-		for (String param:e1.getNextAttributes()) {
-			if(param.equals(e2.getAttributeName())) {
-				return -1;
-			}
-		}
-		for (String param:e2.getNextAttributes()) {
-			if(param.equals(e1.getAttributeName())) {
-				return 1;
-			}
-		}
-		return 0;
+	/**
+	 * @see org.x4o.xml.element.ElementNamespaceAttribute#getNextAttributes()
+	 */
+	public List<String> getNextAttributes() {
+		return nextAttributes;
+	}
+
+	/**
+	 * @see org.x4o.xml.element.ElementNamespaceAttribute#getAttributeName()
+	 */
+	public String getAttributeName() {
+		return attributeName;
+	}
+
+	/**
+	 * @see org.x4o.xml.element.ElementNamespaceAttribute#setAttributeName(java.lang.String)
+	 */
+	public void setAttributeName(String attributeName) {
+		this.attributeName=attributeName;
 	}
 }

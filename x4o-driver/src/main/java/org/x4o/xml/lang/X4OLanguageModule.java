@@ -24,7 +24,6 @@ package	org.x4o.xml.lang;
 
 import java.util.List;
 
-import org.x4o.xml.element.ElementAttributeHandler;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
@@ -61,23 +60,11 @@ public interface X4OLanguageModule extends ElementMetaBase {
 	void setProviderHost(String providerHost);
 	
 	/**
-	 * Adds an ElementAttributeHandler.
-	 * @param elementAttributeHandler	Adds an ElmentAttributeHandler.
-	 */
-	void addElementAttributeHandler(ElementAttributeHandler elementAttributeHandler);
-
-	/**
-	 * Geta All ElementAttributeHandlers.
-	 * @return Returns an List of ElementAttributeHandlers.
-	 */
-	List<ElementAttributeHandler> getElementAttributeHandlers();
-
-	/**
 	 * Adds an ElementBindingHanlder.
 	 * @param elementBindingHandler	The ElementBindingHandler to add.
 	 */
 	void addElementBindingHandler(ElementBindingHandler elementBindingHandler);
-
+	
 	/**
 	 * Gets all ElementBindingHandlers.
 	 * @return	Returns an List with all ElementBindingHandlers.

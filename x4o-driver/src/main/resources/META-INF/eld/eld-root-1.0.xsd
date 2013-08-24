@@ -1,40 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
 
-    Copyright (c) 2004-2013, Willem Cazander
-    All rights reserved.
+<!--  ====================================================================  -->
 
-    Redistribution and use in source and binary forms, with or without modification, are permitted provided
-    that the following conditions are met:
+<!--  =====  Automatic generated schema for language: eld            =====  -->
 
-    * Redistributions of source code must retain the above copyright notice, this list of conditions and the
-      following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
-      the following disclaimer in the documentation and/or other materials provided with the distribution.
+<!--  ====================================================================  -->
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-    THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
-    OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--->
-<!-- ==================================================================== -->
-<!-- =====  Automatic generated schema for language: eld            ===== -->
-<!-- ==================================================================== -->
-<!--
+<!-- 
 	ID:		eld-module
 	ProviderName:	Element Language Definition
 	ProviderHost:	eld.x4o.org
 	Namespaces:		3
 	Uri:			http://eld.x4o.org/xml/ns/eld-root
 	Uri schema:	http://eld.x4o.org/xml/ns/eld-root-1.0.xsd
-	Created on:		Sun Apr 28 11:56:32 CEST 2013
--->
+	Created on:		Sat Aug 24 21:57:18 CEST 2013
+ -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
  xmlns:lang="http://eld.x4o.org/xml/ns/eld-lang"
@@ -44,7 +24,6 @@
 	<element name="module">
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
-				<element ref="lang:attributeHandler"/>
 				<element ref="lang:bean"/>
 				<element ref="lang:bindingHandler"/>
 				<element ref="lang:classBindingHandler"/>
@@ -55,20 +34,17 @@
 			</choice>
 			<attribute name="id" type="string" use="required">
 				<annotation>
-					<documentation xml:lang="en">The module id.
-					</documentation>
+					<documentation xml:lang="en">The module id.</documentation>
 				</annotation>
 			</attribute>
 			<attribute name="providerName" type="string">
 				<annotation>
-					<documentation xml:lang="en">The provider name in normal en:lang.
-					</documentation>
+					<documentation xml:lang="en">The provider name in normal en:lang.</documentation>
 				</annotation>
 			</attribute>
 			<attribute name="providerHost" type="string" use="required">
 				<annotation>
-					<documentation xml:lang="en">The provider host like langx.someorg.domain for uri/etc defaults.
-					</documentation>
+					<documentation xml:lang="en">The provider host like langx.someorg.domain for uri/etc defaults.</documentation>
 				</annotation>
 			</attribute>
 			<attribute name="languageModuleLoader" type="string"/>

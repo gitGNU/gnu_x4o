@@ -22,7 +22,7 @@
  */
 package	org.x4o.xml.test.element;
 
-import org.x4o.xml.element.AbstractElementAttributeHandler;
+import org.x4o.xml.element.AbstractElementNamespaceAttribute;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementConfiguratorException;
 
@@ -32,7 +32,7 @@ import org.x4o.xml.element.ElementConfiguratorException;
  * @author Willem Cazander
  * @version 1.0 Aug 27, 2012
  */
-public class TestElementAttributeHandler extends AbstractElementAttributeHandler {
+public class TestElementNamespaceAttribute extends AbstractElementNamespaceAttribute {
 
 	public void doConfigElement(Element element) throws ElementConfiguratorException {
 
