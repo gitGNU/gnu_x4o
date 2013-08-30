@@ -20,54 +20,23 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package	org.x4o.xml.lang.task;
 
-a:link, a:visited {
-	text-decoration:none;
-}
-a:hover, a:focus {
-	text-decoration:none;
-}
-a:active {
-	text-decoration:none;
-}
-a[name] {
-}
-a[name]:hover {
-	text-decoration:none;
-}
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 
-ul {
-	list-style-type:disc;
-}
-.bar a, .bar a:link, .bar a:visited, .bar a:active {
-	text-decoration:none;
-}
-ul.navList li{
-	list-style:none;
-}
-ul.subNavList li{
-	list-style:none;
-}
-.topNav a:link, .topNav a:active, .topNav a:visited, .bottomNav a:link, .bottomNav a:active, .bottomNav a:visited {
-	text-decoration:none;
-}
-.topNav a:hover, .bottomNav a:hover {
-	text-decoration:none;
-}
-.header ul li, .footer ul li {
-	list-style:none;
-}
-.indexContainer ul li {
-	list-style:none;
-}
-ul.inheritance li {
-	list-style:none;
-}
-ul.blockList li.blockList, ul.blockListLast li.blockList {
-	list-style:none;
-}
-ul.blockList ul.blockList ul.blockList ul.blockList li.blockListLast {
-	list-style:none;
-}
+/**
+ * X4OLanguageTask runs a task for a language.
+ * 
+ * @author Willem Cazander
+ * @version 1.0 Aug 24, 2013
+ */
+public interface X4OLanguageTask {
 
-
+	String getId();
+	String getName();
+	String getDescription();
+	
+	PropertyConfig createTaskConfig();
+	
+	X4OLanguageTaskExecutor createTaskExecutor(PropertyConfig config);
+}

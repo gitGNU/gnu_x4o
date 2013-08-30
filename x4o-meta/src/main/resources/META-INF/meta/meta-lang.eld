@@ -28,15 +28,12 @@
 	xmlns:root="http://eld.x4o.org/xml/ns/eld-root"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://eld.x4o.org/xml/ns/eld-root http://eld.x4o.org/xml/ns/eld-root-1.0.xsd"
-	name="Meta Language Definition"
-	providerName="x4o.org"
+	providerName="Meta Language Definition"
+	providerHost="meta.x4o.org"
 	id="meta-lang"
 	>
 	<eld:description>The x4o meta language lets you do special xml tricks.</eld:description>
 	
-	<eld:attributeHandler id="global-el-id"	attributeName="el.id" bean.class="org.x4o.xml.lang.meta.ELIDAttributeHandler">
-		<eld:description>Lets you bind object into the expression language context.</eld:description>
-	</eld:attributeHandler>
 	<eld:namespace
 		uri="http://meta.x4o.org/xml/ns/meta-lang"
 		schemaUri="http://meta.x4o.org/xml/ns/meta-lang-1.0.xsd"
@@ -60,6 +57,10 @@
 				Mostly used in combination with the el.id tag.
 			</eld:description>
 		</eld:element>
+		
+		<eld:namespaceAttribute id="global-el-id"	attributeName="el.id" bean.class="org.x4o.xml.lang.meta.ELIDAttributeHandler">
+			<eld:description>Lets you bind object into the expression language context.</eld:description>
+		</eld:namespaceAttribute>
 		
 		<eld:element tag="parentObject"		elementClass="org.x4o.xml.lang.meta.ParentObjectElement">
 			<eld:description>

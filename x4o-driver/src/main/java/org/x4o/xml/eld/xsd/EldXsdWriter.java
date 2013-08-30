@@ -24,16 +24,16 @@ package org.x4o.xml.eld.xsd;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.x4o.xml.element.ElementClass;
-import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespace;
-import org.x4o.xml.io.DefaultX4OSchemaWriter;
 import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.io.sax.ext.ContentWriterXsd;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
@@ -44,14 +44,28 @@ import org.xml.sax.SAXException;
  * @author Willem Cazander
  * @version 1.0 Aug 8, 2012
  */
-public class EldXsdXmlGenerator {
-
+public class EldXsdWriter {
+	
+	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_ELD_XSD;
+	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
+	
+	public final static String OUTPUT_PATH              = PROPERTY_CONTEXT_PREFIX+"output/path";
+	public final static String NAMESPACE                = PROPERTY_CONTEXT_PREFIX+"filter/namespace";
+	
+	static {
+		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
+				new PropertyConfigItem(true,OUTPUT_PATH,File.class),
+				new PropertyConfigItem(false,NAMESPACE,String.class)
+				);
+	}
+	
 	private final X4OLanguage language;
 	private final PropertyConfig propertyConfig;
 	
-	public EldXsdXmlGenerator(X4OLanguage language,PropertyConfig propertyConfig) {
+	public EldXsdWriter(X4OLanguage language,PropertyConfig parentConfig) {
 		this.language=language;
-		this.propertyConfig=propertyConfig;
+		this.propertyConfig=new PropertyConfig(DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX);
+		this.propertyConfig.copyParentProperties(parentConfig);
 	}
 	
 	private void checkNamespace(ElementNamespace ns) {
@@ -63,20 +77,35 @@ public class EldXsdXmlGenerator {
 		}
 	}
 	
-	public void writeSchema(String namespace) throws ElementException {
-		File basePath = (File)propertyConfig.getProperty(DefaultX4OSchemaWriter.OUTPUT_PATH);
+	public void writeSchema() throws SAXException, IOException {
+		File basePath = propertyConfig.getPropertyFile(OUTPUT_PATH);
 		String encoding = propertyConfig.getPropertyString(ContentWriterXml.OUTPUT_ENCODING);
+		String namespace = propertyConfig.getPropertyString(NAMESPACE);
 		if (basePath==null) {
-			throw new ElementException("Can't write schema to null output path.");
+			throw new NullPointerException("Can't write schema to null output path.");
 		}
-		try {
-			
-			
-			if (namespace!=null) {
-				ElementNamespace ns = language.findElementNamespace(namespace);
-				if (ns==null) {
-					throw new NullPointerException("Could not find namespace: "+namespace);
-				}
+		if (!basePath.exists()) {
+			basePath.mkdirs();
+		}
+		if (namespace!=null) {
+			ElementNamespace ns = language.findElementNamespace(namespace);
+			if (ns==null) {
+				throw new NullPointerException("Could not find namespace: "+namespace);
+			}
+			checkNamespace(ns);
+			File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
+			Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
+			try {
+				ContentWriterXsd out = new ContentWriterXsd(wr,encoding);
+				out.getPropertyConfig().copyParentProperties(propertyConfig);
+				generateSchema(ns.getUri(), out);
+			} finally {
+				wr.close();
+			}	
+			return;
+		}
+		for (X4OLanguageModule mod:language.getLanguageModules()) {
+			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				checkNamespace(ns);
 				File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
 				Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
@@ -86,37 +115,18 @@ public class EldXsdXmlGenerator {
 					generateSchema(ns.getUri(), out);
 				} finally {
 					wr.close();
-				}	
-				return;
-			}
-			for (X4OLanguageModule mod:language.getLanguageModules()) {
-				for (ElementNamespace ns:mod.getElementNamespaces()) {
-					checkNamespace(ns);
-					File outputFile = new File(basePath.getAbsolutePath()+File.separatorChar+ns.getSchemaResource());
-					Writer wr = new OutputStreamWriter(new FileOutputStream(outputFile), encoding);
-					try {
-						ContentWriterXsd out = new ContentWriterXsd(wr,encoding);
-						out.getPropertyConfig().copyParentProperties(propertyConfig);
-						generateSchema(ns.getUri(), out);
-					} finally {
-						wr.close();
-					}
 				}
 			}
-			
-		} catch (Exception e) {
-			throw new ElementException(e); // TODO: rm 
 		}
 	}
 	
-	public void generateSchema(String namespaceUri,ContentWriterXsd xmlWriter) throws SAXException  {
-		
+	private void generateSchema(String namespaceUri,ContentWriterXsd xmlWriter) throws SAXException {
 		ElementNamespace ns = language.findElementNamespace(namespaceUri);
 		if (ns==null) {
 			throw new NullPointerException("Could not find namespace: "+namespaceUri);
 		}
 		
-		EldXsdXmlWriter xsdWriter = new EldXsdXmlWriter(xmlWriter,language);
+		EldXsdWriterElement xsdWriter = new EldXsdWriterElement(xmlWriter,language);
 		xsdWriter.startNamespaces(namespaceUri);
 		xsdWriter.startSchema(ns);
 		for (ElementClass ec:ns.getElementClasses()) {

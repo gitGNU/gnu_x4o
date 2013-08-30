@@ -33,7 +33,7 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementNamespace;
-import org.x4o.xml.lang.X4OLanguageSession;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
 
@@ -64,18 +64,18 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 	}
 	
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageSession.class},nodeBodyOrders={1})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguage.class},nodeBodyOrders={1})
 	public void writeLanguageSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
 		ApiDocNode node = event.getEventObject();
-		X4OLanguageSession context = (X4OLanguageSession)node.getUserData();
+		X4OLanguage language = (X4OLanguage)node.getUserData();
 		int attrHandlers = 0;
 		int bindHandlers = 0;
 		int interFaces = 0;
 		int eleConfigs = 0;
 		int elements = 0;
 		int namespaces = 0;
-		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:language.getLanguageModules()) {
 			bindHandlers += mod.getElementBindingHandlers().size();
 			interFaces += mod.getElementInterfaces().size();
 			eleConfigs += mod.getElementConfiguratorGlobals().size();
@@ -87,9 +87,9 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 		}
 		writer.docTableStart("Language Summary", "Language Stats Summary.",ApiDocContentCss.overviewSummary);
 		writer.docTableHeader("Name", "Value");
-			writer.docTableRow("LanguageName:", ""+context.getLanguage().getLanguageName(), null);
-			writer.docTableRow("LanguageVersion:",""+context.getLanguage().getLanguageVersion(),null);
-			writer.docTableRow("Modules:",""+context.getLanguage().getLanguageModules().size(),null);
+			writer.docTableRow("LanguageName:", ""+language.getLanguageName(), null);
+			writer.docTableRow("LanguageVersion:",""+language.getLanguageVersion(),null);
+			writer.docTableRow("Modules:",""+language.getLanguageModules().size(),null);
 			writer.docTableRow("Elements:",""+elements,null);
 			writer.docTableRow("ElementNamespaces:",""+namespaces,null);
 			writer.docTableRow("ElementNamespaceAttribute:",""+attrHandlers,null);
@@ -99,19 +99,19 @@ public class EldDocWriterLanguage extends AbstractApiDocWriter {
 		writer.docTableEnd();
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageSession.class},nodeBodyOrders={2})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguage.class},nodeBodyOrders={2})
 	public void writeModulesSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		printApiTable(event,"Module Summary",X4OLanguageModule.class);
 	}
 	
-	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguageSession.class},nodeBodyOrders={3})
+	@ApiDocNodeWriterMethod(nodeBody=ApiDocNodeBody.SUMMARY,targetClasses={X4OLanguage.class},nodeBodyOrders={3})
 	public void writeNamespaceSummary(ApiDocWriteEvent<ApiDocNode> event) throws SAXException {
 		ApiDocContentWriter writer = event.getWriter();
 		ApiDocNode node = event.getEventObject();
-		X4OLanguageSession context = (X4OLanguageSession)node.getUserData();
+		X4OLanguage language = (X4OLanguage)node.getUserData();
 		writer.docTableStart("Namespace Summary", "All Language Namespaces Overview",ApiDocContentCss.overviewSummary);
 		writer.docTableHeader("ID", "URI");
-		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:language.getLanguageModules()) {
 			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				writer.docTableRowLink("language/"+ApiDocContentWriter.toSafeUri(mod.getId())+"/"+ApiDocContentWriter.toSafeUri(ns.getId())+"/index.html",ns.getId(),ns.getUri());
 			}

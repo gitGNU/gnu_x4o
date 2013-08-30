@@ -35,11 +35,15 @@
 		<attribute name="language" type="string" use="required"/>
 		<attribute name="className" type="string" use="required"/>
 	</complexType>
+	<complexType name="languageTaskType">
+		<attribute name="className" type="string" use="required"/>
+	</complexType>
 	<element name="drivers">
 		<complexType>
 			<choice minOccurs="1" maxOccurs="unbounded">
 				<element name="defaultDriver" minOccurs="0" maxOccurs="unbounded" type="this:defaultDriverType" />
 				<element name="driver" minOccurs="0" maxOccurs="unbounded" type="this:driverType"/>
+				<element name="languageTask" minOccurs="0" maxOccurs="unbounded" type="this:languageTaskType"/>
 			</choice>		
 			<attribute name="version" type="decimal" use="required" fixed="1.0"/>
 		</complexType>

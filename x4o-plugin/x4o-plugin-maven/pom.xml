@@ -81,6 +81,12 @@
                 <id>build-site-x4o-support</id>
                 <phase>pre-site</phase>
                 <configuration>
+                  <languageName>cel</languageName>
+                  <taskId>eld-xsd</taskId>
+                  <taskPropertyValues>
+                    <taskPropertyValue>http://language.x4o.org/xml/properties/eld-xsd/output/path=${basedir}/../../target/site/x4o-support</taskPropertyValue>
+                  </taskPropertyValues>
+                  <!-- TODO: add exe'ids
                   <outputDirectory>${basedir}/../../target/site/x4o-support</outputDirectory>
                   <languages>
                     <cel>ALL</cel>
@@ -88,10 +94,10 @@
                     <test>ALL</test>
                     <swixml>2.0-3.0</swixml>
                   </languages>
+                   -->
                 </configuration>
                 <goals>
-                  <goal>write-language-doc</goal>
-                  <goal>write-language-schema</goal>
+                  <goal>x4o-language-task</goal>
                 </goals>
               </execution>
             </executions>

@@ -20,45 +20,47 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.plugin.ant;
+package org.x4o.xml.eld.xsd;
 
-import java.io.File;
+import java.io.IOException;
 
-import org.apache.tools.ant.BuildException;
-
-import org.x4o.xml.eld.doc.X4OWriteLanguageDocExecutor;
-import org.x4o.xml.element.ElementException;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.task.AbstractX4OLanguageTask;
+import org.x4o.xml.lang.task.X4OLanguageTaskException;
+import org.x4o.xml.lang.task.X4OLanguageTaskExecutor;
+import org.xml.sax.SAXException;
 
 /**
- * X4OWriteDocTask creates schema for language.
+ * EldXsdLanguageTask is support class to write schema files from eld.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 24, 2012
+ * @version 1.0 Aug 22, 2012
  */
-public class X4OWriteLanguageDocTask extends AbstractX4OLanguageTask {
+public class EldXsdLanguageTask extends AbstractX4OLanguageTask {
+	
+	public  static final String TASK_ID   = "eld-xsd";
+	private static final String TASK_NAME = "ELD XSD Writer Task";
+	private static final String TASK_DESC = "Writes out the schema of the language elements.";
+	
+	public EldXsdLanguageTask() {
+		super(TASK_ID,TASK_NAME,TASK_DESC,EldXsdWriter.DEFAULT_PROPERTY_CONFIG);
+	}
 	
 	/**
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#getLanguageTaskName()
+	 * Executes this language task.
 	 */
-	@Override
-	String getLanguageTaskName() {
-		return "X4O Write language documentation";
-	}
-
-	/**
-	 * Config and start eld writer
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#executeLanguageTask(java.io.File)
-	 */
-	@Override
-	void executeLanguageTask(File basePath) throws BuildException {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
-		writer.setBasePath(basePath);
-		writer.setLanguageName(getLanguageName());
-		writer.setLanguageVersion(getLanguageVersion());
-		try {
-			writer.execute();
-		} catch (ElementException e) {
-			throw new BuildException(e);
-		}
+	public X4OLanguageTaskExecutor createTaskExecutor(final PropertyConfig config) {
+		return new X4OLanguageTaskExecutor() {
+			public void execute(X4OLanguage language) throws X4OLanguageTaskException {
+				try {
+					new EldXsdWriter(language,config).writeSchema();
+				} catch (SAXException e) {
+					throw new X4OLanguageTaskException(config,e.getMessage(),e);
+				} catch (IOException e) {
+					throw new X4OLanguageTaskException(config,e.getMessage(),e);
+				}
+			}
+		};
 	}
 }

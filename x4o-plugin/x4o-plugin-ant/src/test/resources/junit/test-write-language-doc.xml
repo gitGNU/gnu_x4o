@@ -28,50 +28,83 @@
 	<property name="test.dir" value="${basedir}/target/test-elddoc/"/>
 
 	<target name="init">
-		<taskdef name="writeLanguageDoc" classname="org.x4o.plugin.ant.X4OWriteLanguageDocTask"/>
+		<taskdef name="x4oTask" classname="org.x4o.plugin.ant.X4OTask"/>
 		<mkdir dir="${test.dir}"/>
 		<mkdir dir="${test.dir}/test"/>
 	</target>
 	
 	<target name="test-elddoc-cel" depends="init">
 		<mkdir dir="${test.dir}/cel"/>
-		<writeLanguageDoc
-			destdir="${test.dir}/cel"
-			languageName="cel"
+		<x4oTask languageName="cel" taskId="eld-doc">
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				value="${test.dir}/cel"
 			/>
+		</x4oTask>
 	</target>
 	
 	<target name="test-elddoc-cel-verbose" depends="init">
-		<mkdir dir="${test.dir}/cel"/>
-		<writeLanguageDoc
-			verbose="true"
-			destdir="${test.dir}/cel"
-			languageName="cel"
+		<mkdir dir="${test.dir}/cel-verbose"/>
+		<x4oTask languageName="cel" taskId="eld-doc" verbose="true">
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				value="${test.dir}/cel-verbose"
 			/>
+		</x4oTask>
 	</target>
 	
 	<target name="test-elddoc-eld" depends="init">
 		<mkdir dir="${test.dir}/eld"/>
-		<writeLanguageDoc
-			destdir="${test.dir}/eld"
-			languageName="cel"
+		<x4oTask languageName="eld" taskId="eld-doc">
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				value="${test.dir}/eld"
 			/>
+		</x4oTask>
+	</target>
+	
+	<target name="test-elddoc-eld-custom" depends="init">
+		<mkdir dir="${test.dir}/eld-custom"/>
+		<x4oTask languageName="eld" taskId="eld-doc">
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				value="${test.dir}/eld-custom"
+			/>
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/content/output/charTab"
+				value=" "
+			/>
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-doc/meta/stylesheet-thema"
+				value="jdk6"
+			/>
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-doc/javadoc/link"
+				value="http://docs.oracle.com/javase/7/docs/api/"
+			/>
+			<!-- fixme map type property config
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-doc/javadoc/link-offline"
+				value="http://www.x4o.org/apidocs/,file:///home/willemc/devv/git/x4o/x4o-driver/target/apidocs"
+			/>
+			-->
+		</x4oTask>
 	</target>
 	
 	<target name="test-fail-all" depends="init">
-		<writeLanguageDoc/>
+		<x4oTask/>
 	</target>
 	<target name="test-fail-destdir" depends="init">
-		<writeLanguageDoc languageName="cel"/>
+		<x4oTask languageName="cel"/>
 	</target>
 	<target name="test-fail-destdir-error" depends="init">
-		<writeLanguageDoc languageName="cel" destdir="${test.dir}/no-dir"/>
+		<x4oTask languageName="cel" destdir="${test.dir}/no-dir"/>
 	</target>
 	<target name="test-fail-language" depends="init">
-		<writeLanguageDoc destdir="${test.dir}/test"/>
+		<x4oTask destdir="${test.dir}/test"/>
 	</target>
 	<target name="test-fail-language-error" depends="init">
-		<writeLanguageDoc destdir="${test.dir}/test" languageName="cel-error"/>
+		<x4oTask destdir="${test.dir}/test" languageName="cel-error"/>
 	</target>
 	
 </project>

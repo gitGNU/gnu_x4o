@@ -20,23 +20,71 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package org.x4o.xml.eld.doc.api;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.x4o.xml.lang.task.run;
 
 /**
- * ApiDocNodeDataConfiguratorMethod wraps the node data config api to a method.
+ * X4OTaskProperty stores the x4o language task property values for the task runner.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 11, 2013
+ * @version 1.0 Aug 30, 2013
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface ApiDocNodeDataConfiguratorMethod {
+public class X4OTaskProperty {
 	
-	Class<?>[] targetClasses();
+	/** The key of the property. */
+	private String key = null;
+	
+	/** The value of the property. */
+	private String value = null;
+	
+	/**
+	 * @return the key.
+	 */
+	public String getKey() {
+		return key;
+	}
+	
+	/**
+	 * @param key the key to set.
+	 */
+	public void setKey(String key) {
+		this.key = key;
+	}
+	
+	/**
+	 * @return the value.
+	 */
+	public String getValue() {
+		return value;
+	}
+	
+	/**
+	 * @param value the value to set.
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	/**
+	 * Parsed line like 'key=value' into a X4OTaskProperty object.
+	 * @param line	The text line to parse.
+	 * @return	The filled X4OTaskProperty.
+	 */
+	static public X4OTaskProperty parseLine(String line) {
+		if (line==null) {
+			throw new NullPointerException("Can't parse null line.");
+		}
+		int idx = line.indexOf('=');
+		if (idx<0) {
+			throw new IllegalArgumentException("Can't parse line with '=' sign.");
+		}
+		if (idx==line.length()) {
+			throw new IllegalArgumentException("Can't parse line empty value.");
+		}
+		String key = line.substring(0,idx);
+		String value = line.substring(idx+1);
+		X4OTaskProperty result = new X4OTaskProperty();
+		result.setKey(key);
+		result.setValue(value);
+		return result;
+	}
 }

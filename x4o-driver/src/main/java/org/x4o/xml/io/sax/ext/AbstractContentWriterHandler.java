@@ -59,20 +59,16 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	private Stack<String> elements = null;
 
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_WRITER_XML;
-	private final static String PROPERTY_ENCODING = "output/encoding";
-	private final static String PROPERTY_CHAR_TAB = "output/charTab";
-	private final static String PROPERTY_CHAR_NEWLINE = "output/newLine";
-	
 	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
-	public final static String OUTPUT_ENCODING = PROPERTY_CONTEXT_PREFIX+PROPERTY_ENCODING;
-	public final static String OUTPUT_CHAR_TAB = PROPERTY_CONTEXT_PREFIX+PROPERTY_CHAR_TAB;
-	public final static String OUTPUT_CHAR_NEWLINE = PROPERTY_CONTEXT_PREFIX+PROPERTY_CHAR_NEWLINE;
+	public final static String OUTPUT_ENCODING = PROPERTY_CONTEXT_PREFIX+"output/encoding";
+	public final static String OUTPUT_CHAR_TAB = PROPERTY_CONTEXT_PREFIX+"output/charTab";
+	public final static String OUTPUT_CHAR_NEWLINE = PROPERTY_CONTEXT_PREFIX+"output/newLine";
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,null,PROPERTY_CONTEXT_PREFIX,
-				new PropertyConfigItem(PROPERTY_ENCODING,String.class,XMLConstants.XML_DEFAULT_ENCODING),
-				new PropertyConfigItem(PROPERTY_CHAR_TAB,String.class,XMLConstants.CHAR_TAB+""),
-				new PropertyConfigItem(PROPERTY_CHAR_NEWLINE,String.class,XMLConstants.CHAR_NEWLINE+"")
+				new PropertyConfigItem(OUTPUT_ENCODING,String.class,XMLConstants.XML_DEFAULT_ENCODING),
+				new PropertyConfigItem(OUTPUT_CHAR_TAB,String.class,XMLConstants.CHAR_TAB+""),
+				new PropertyConfigItem(OUTPUT_CHAR_NEWLINE,String.class,XMLConstants.CHAR_NEWLINE+"")
 				);
 	}
 	

@@ -56,6 +56,13 @@ public class X4OWriteLanguageDocTaskTest extends BuildFileTest {
 		//assertLogContaining("Nested Element 1");
 	}
 	
+	public void testEldDocEldCustom() {
+		executeTarget("test-elddoc-eld-custom");
+		File testDir = new File("target/test-elddoc/eld-custom");
+		int files = testDir.listFiles().length;
+		assertEquals("Should created more then two files", true, files>2);
+	}
+	
 	public void testEldDocEldVerbose() {
 		executeTarget("test-elddoc-cel-verbose");
 		assertLogContaining("Verbose:");

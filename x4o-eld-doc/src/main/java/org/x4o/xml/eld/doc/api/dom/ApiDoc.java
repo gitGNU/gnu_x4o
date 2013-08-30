@@ -22,6 +22,7 @@
  */
 package org.x4o.xml.eld.doc.api.dom;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,7 +50,9 @@ public class ApiDoc {
 	private List<ApiDocConcept> concepts = null;
 	private String docCopyright = null;
 	private String docAbout = null;
-	private List<String> docKeywords = null;
+	private List<String> metaKeywords = null;
+	private File metaStyleSheet = null;
+	private String metaStyleSheetThema = null;
 	private List<ApiDocPage> docPages = null;
 	private Class<?> frameNavConceptClass = null;
 	private Boolean frameNavOverviewPrintParent = null;
@@ -77,7 +80,7 @@ public class ApiDoc {
 	public ApiDoc() {
 		nodeBodyWriters = new ArrayList<ApiDocNodeWriter>(20);
 		concepts = new ArrayList<ApiDocConcept>(10);
-		docKeywords = new ArrayList<String>(5);
+		metaKeywords = new ArrayList<String>(5);
 		docPages = new ArrayList<ApiDocPage>(5);
 		treeNodeClassExcludes = new ArrayList<Class<?>>(5);
 		treeNodePageModeClass = new ArrayList<Class<?>>(5);
@@ -277,20 +280,48 @@ public class ApiDoc {
 		return concepts;
 	}
 	
-	public void addDocKeyword(String keyword) {
-		docKeywords.add(keyword);
+	public void addMetaKeyword(String keyword) {
+		metaKeywords.add(keyword);
 	}
 	
-	public void addDocKeywordAll(Collection<String> keywords) {
-		docKeywords.addAll(keywords);
+	public void addMetaKeywordAll(Collection<String> keywords) {
+		metaKeywords.addAll(keywords);
 	}
 	
-	public boolean removeDocKeyword(String keyword) {
-		return docKeywords.remove(keyword);
+	public boolean removeMetaKeyword(String keyword) {
+		return metaKeywords.remove(keyword);
 	}
 	
 	public List<String> getDocKeywords() {
-		return docKeywords;
+		return metaKeywords;
+	}
+	
+	/**
+	 * @return the metaStyleSheet
+	 */
+	public File getMetaStyleSheet() {
+		return metaStyleSheet;
+	}
+	
+	/**
+	 * @param metaStyleSheet the metaStyleSheet to set
+	 */
+	public void setMetaStyleSheet(File metaStyleSheet) {
+		this.metaStyleSheet = metaStyleSheet;
+	}
+	
+	/**
+	 * @return the metaStyleSheetThema
+	 */
+	public String getMetaStyleSheetThema() {
+		return metaStyleSheetThema;
+	}
+	
+	/**
+	 * @param metaStyleSheetThema the metaStyleSheetThema to set
+	 */
+	public void setMetaStyleSheetThema(String metaStyleSheetThema) {
+		this.metaStyleSheetThema = metaStyleSheetThema;
 	}
 	
 	/**

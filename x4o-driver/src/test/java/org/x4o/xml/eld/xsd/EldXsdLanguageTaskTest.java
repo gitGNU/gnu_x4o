@@ -28,8 +28,9 @@ import org.x4o.xml.X4ODriver;
 import org.x4o.xml.X4ODriverManager;
 import org.x4o.xml.eld.CelDriver;
 import org.x4o.xml.eld.EldDriver;
-import org.x4o.xml.eld.xsd.X4OWriteLanguageSchemaExecutor;
-import org.x4o.xml.io.X4OSchemaWriter;
+import org.x4o.xml.eld.xsd.EldXsdLanguageTask;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.lang.task.X4OLanguageTask;
 import org.x4o.xml.test.swixml.SwiXmlDriver;
 
 import junit.framework.TestCase;
@@ -40,48 +41,37 @@ import junit.framework.TestCase;
  * @author Willem Cazander
  * @version 1.0 Auh 16, 2012
  */
-public class X4OWriteLanguageSchemaExecutorTest extends TestCase {
+public class EldXsdLanguageTaskTest extends TestCase {
 
-	private File getTempPath(String dir) throws Exception {
-		File tempFile = File.createTempFile("test-path", ".tmp"); 
-		String absolutePath = tempFile.getAbsolutePath();
-		String tempPath = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator)+1);
-		tempFile.delete();
-		File result = new File(tempPath+File.separator+dir);
+	private File createOutputPath(String dir) throws Exception {
+		File result = new File("target/tests"+File.separator+dir);
 		if (result.exists()==false) {
-			result.mkdir();
+			result.mkdirs();
 		}
 		return result;
 	}
 	
-	public void testSchemaWriterDirect() throws Exception {
-		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(CelDriver.LANGUAGE_NAME);
-		X4OSchemaWriter xsd = driver.createSchemaWriter();
-		xsd.writeSchema(getTempPath("junit-xsd-cel-direct"));
+	private void testSchema(String language,String outputPostfix) throws Exception {
+		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(language);
+		X4OLanguageTask task = driver.getLanguageTask(EldXsdLanguageTask.TASK_ID);
+		PropertyConfig config = task.createTaskConfig();
+		File outputPath  = createOutputPath(outputPostfix);
+		config.setProperty(EldXsdWriter.OUTPUT_PATH,outputPath);
+		task.createTaskExecutor(config).execute(driver.createLanguage());
+		assertTrue(outputPath.exists());
+		assertTrue(outputPath.list()!=null);
+		assertTrue(outputPath.list().length>1);
 	}
 	
 	public void testEldSchema() throws Exception {
-		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
-		writer.setBasePath(getTempPath("junit-xsd-eld"));
-		writer.setLanguageName(EldDriver.LANGUAGE_NAME);
-		writer.execute();
+		testSchema(EldDriver.LANGUAGE_NAME,"junit-xsd-eld");
 	}
 	
 	public void testEldCoreSchema() throws Exception {
-		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
-		writer.setBasePath(getTempPath("junit-xsd-cel"));
-		writer.setLanguageName(CelDriver.LANGUAGE_NAME);
-		writer.execute();
+		testSchema(CelDriver.LANGUAGE_NAME,"junit-xsd-cel");
 	}
 	
 	public void testSwiXmlSchema() throws Exception {
-		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
-		writer.setBasePath(getTempPath("junit-xsd-swixml2"));
-		writer.setLanguageName(SwiXmlDriver.LANGUAGE_NAME);
-		writer.execute();
-	}
-	
-	public void testEldDocMain() throws Exception {
-		X4OWriteLanguageSchemaExecutor.main(new String[] {"-p",getTempPath("junit-xsd-main").getAbsolutePath(),"-l",EldDriver.LANGUAGE_NAME});
+		testSchema(SwiXmlDriver.LANGUAGE_NAME,"junit-xsd-swixml");
 	}
 }

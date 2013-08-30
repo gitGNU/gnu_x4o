@@ -24,27 +24,76 @@ package org.x4o.plugin.maven;
 
 import java.io.File;
 
+import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 
 /**
- * X4OWriteLanguageSchemaMojoTest.
+ * XX4OLanguageTaskMojoTest.
  * 
  * @author Willem Cazander
- * @version 1.0 Apr 14, 2013
+ * @version 1.0 Apr 6, 2013
  */
-public class X4OWriteLanguageSchemaMojoTest extends AbstractMojoTestCase {
+public class X4OLanguageTaskMojoTest extends AbstractMojoTestCase {
+
+	/** {@inheritDoc} */
+	protected void setUp() throws Exception {
+		super.setUp(); // required
+	}
+
+	/** {@inheritDoc} */
+	protected void tearDown() throws Exception {
+		super.tearDown(); // required
+	}
 	
 	private void executeGoal(String goal,String testFile) throws Exception {
 		File pom = getTestFile(testFile);
 		assertNotNull(pom);
 		assertTrue(pom.exists());
-		X4OWriteLanguageSchemaMojo mojo = (X4OWriteLanguageSchemaMojo) lookupMojo(goal,pom);
+		X4OLanguageTaskMojo mojo = (X4OLanguageTaskMojo) lookupMojo(goal,pom);
 		assertNotNull(mojo);
 		mojo.execute();
 	}
 	
+	public void testHelp() throws Exception {
+		File pom = getTestFile("src/test/resources/junit/test-plugin-defaults.pom");
+		assertNotNull(pom);
+		assertTrue(pom.exists());
+		Mojo mojo =  lookupMojo("help",pom);
+		assertNotNull(mojo);
+		mojo.execute();
+
+	}
+	
+	/*
+	public void testConfAllWriteDoc() throws Exception {
+		executeGoal(X4OLanguageTaskMojo.GOAL,"src/test/resources/junit/test-plugin-conf-all.pom");
+		File outputDir = new File("target/jtest/test-plugin-conf-all/doc-eld-1.0");
+		assertTrue(outputDir.exists());
+		int files = outputDir.listFiles().length;
+		assertEquals("Should created more then two files", true, files>2);
+	}
+	
+	
+	public void testConfLangWriteDoc() throws Exception {
+		executeGoal(X4OLanguageTaskMojo.GOAL,"src/test/resources/junit/test-plugin-conf-lang.pom");
+		File outputDir = new File("target/jtest/test-plugin-conf-lang/cel");
+		int files = outputDir.listFiles().length;
+		assertEquals("Should created more then one files", true, files>1);
+	}
+	
+	public void testConfDefaultsWriteDoc() throws Exception {
+		executeGoal(X4OLanguageTaskMojo.GOAL,"src/test/resources/junit/test-plugin-defaults.pom");
+		File outputDir = new File("target/x4o/doc-cel-1.0");
+		int files = outputDir.listFiles().length;
+		assertEquals("Should created more then two files", true, files>2);
+		outputDir = new File("target/x4o/doc-eld-1.0");
+		files = outputDir.listFiles().length;
+		assertEquals("Should created more then two files", true, files>2);
+	}
+	
+
 	public void testConfAllWriteSchema() throws Exception {
-		executeGoal(X4OWriteLanguageSchemaMojo.GOAL,"src/test/resources/junit/test-plugin-conf-all.pom");
+		executeGoal(X4OLanguageTaskMojo.GOAL,"src/test/resources/junit/test-plugin-conf-all.pom");
 		File outputDir = new File("target/jtest/test-plugin-conf-all/xsd-eld-1.0");
 		assertTrue(outputDir.exists());
 		int files = outputDir.listFiles().length;
@@ -53,14 +102,14 @@ public class X4OWriteLanguageSchemaMojoTest extends AbstractMojoTestCase {
 	
 	
 	public void testConfLangWriteSchema() throws Exception {
-		executeGoal(X4OWriteLanguageSchemaMojo.GOAL,"src/test/resources/junit/test-plugin-conf-lang.pom");
+		executeGoal(X4OLanguageTaskMojo.GOAL,"src/test/resources/junit/test-plugin-conf-lang.pom");
 		File outputDir = new File("target/jtest/test-plugin-conf-lang/xsd-cel-1.0");
 		int files = outputDir.listFiles().length;
 		assertEquals("Should created more then one file", true, files>1);
 	}
 	
 	public void testConfDefaultsWriteSchema() throws Exception {
-		executeGoal(X4OWriteLanguageSchemaMojo.GOAL,"src/test/resources/junit/test-plugin-defaults.pom");
+		executeGoal(X4OLanguageTaskMojo.GOAL,"src/test/resources/junit/test-plugin-defaults.pom");
 		File outputDir = new File("target/x4o/xsd-cel-1.0");
 		int files = outputDir.listFiles().length;
 		assertEquals("Should created more then one file", true, files>1);
@@ -68,4 +117,5 @@ public class X4OWriteLanguageSchemaMojoTest extends AbstractMojoTestCase {
 		files = outputDir.listFiles().length;
 		assertEquals("Should created more then two files", true, files>2);
 	}
+	*/
 }

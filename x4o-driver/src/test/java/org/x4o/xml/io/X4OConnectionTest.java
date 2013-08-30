@@ -81,19 +81,4 @@ public class X4OConnectionTest extends TestCase {
 		assertTrue("Wrong exception message",e.getMessage().contains("key"));
 		assertTrue("Wrong exception message",e.getMessage().contains("No"));
 	}
-	
-	public void testSchemaWriterPropertyFail() throws Exception {
-		Exception e = null;
-		try {
-			X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
-			X4OSchemaWriter schemaWriter = driver.createSchemaWriter();
-			schemaWriter.setProperty("test", "test");
-		} catch (Exception catchE) {
-			e = catchE;
-		}
-		assertNotNull("No exception",e);
-		assertEquals("Wrong exception class",IllegalArgumentException.class, e.getClass());
-		assertTrue("Wrong exception message",e.getMessage().contains("key"));
-		assertTrue("Wrong exception message",e.getMessage().contains("No"));
-	}
 }

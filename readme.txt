@@ -52,6 +52,10 @@ the license terms described in the license.txt file.
 ./src/main/docbook/images/logo-x4o.png
 ./src/site/resources/images/logo-x4o.png
 ./src/site-child/resources/images/logo-x4o.png
+./x4o-eld-doc/src/main/resources/org/x4o/xml/eld/doc/theme/jdk7/background.png
+./x4o-eld-doc/src/main/resources/org/x4o/xml/eld/doc/theme/jdk7/tab.png
+./x4o-eld-doc/src/main/resources/org/x4o/xml/eld/doc/theme/jdk7/titlebar_end.png
+./x4o-eld-doc/src/main/resources/org/x4o/xml/eld/doc/theme/jdk7/titlebar.png
 
 The binary files in the above listing fall all under
 the license terms described in the license.txt file.

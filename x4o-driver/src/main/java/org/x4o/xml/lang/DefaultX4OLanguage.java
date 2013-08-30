@@ -37,7 +37,6 @@ import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
 import org.x4o.xml.element.ElementObjectPropertyValue;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
-import org.x4o.xml.lang.phase.X4OPhaseType;
 
 /**
  * DefaultX4OLanguage holds all information about the x4o xml language.
@@ -104,6 +103,11 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 		if (elementLanguageModule.getId()==null) {
 			throw new NullPointerException("Can't add module without id.");
 		}
+		for (X4OLanguageModule mod:elementLanguageModules) {
+			if (mod.getId().equals(elementLanguageModule.getId())) {
+				throw new IllegalArgumentException("Can't add module with duplicate id; "+elementLanguageModule.getId());
+			}
+		}
 		elementLanguageModules.add(elementLanguageModule);
 	}
 
@@ -120,11 +124,6 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	 */
 	public X4OLanguageSession createLanguageSession() {
 		X4OLanguageSession result = buildElementLanguage(new DefaultX4OLanguageSession(this));
-		try {
-			getPhaseManager().runPhases(result, X4OPhaseType.INIT);
-		} catch (X4OPhaseException e) {
-			throw new RuntimeException(e); //TODO: change layer
-		}
 		return result;
 	}
 
@@ -224,7 +223,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 			if (parentBind & childBind) {
 				result.add(binding);
 			}
-		}	
+		}
 	}
 	
 	/**

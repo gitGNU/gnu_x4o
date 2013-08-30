@@ -39,10 +39,13 @@ import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.phase.DefaultX4OPhaseManager;
+import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageInit;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageRead;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageWrite;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
+import org.x4o.xml.lang.phase.X4OPhaseType;
+import org.x4o.xml.lang.task.X4OLanguageTask;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -65,16 +68,44 @@ public final class X4ODriverManager {
 	private Map<String,String> classdrivers = null;
 	private Map<String,String> defaultDrivers = null;
 	private Map<String,X4ODriver<?>> drivers = null;
+	private Map<String,X4OLanguageTask> languageTasks = null;
 	
 	private X4ODriverManager() {
 		logger = Logger.getLogger(X4ODriverManager.class.getName());
 		classdrivers = new HashMap<String,String>(10);
 		defaultDrivers = new HashMap<String,String>(10);
 		drivers = new HashMap<String,X4ODriver<?>>(10);
+		languageTasks = new HashMap<String,X4OLanguageTask>(10);
 	}
 	
 	static {
 		instance = new X4ODriverManager();
+	}
+	
+	private void registerX4OLanguageTask(String className) {
+		try {
+			X4OLanguageTask task = (X4OLanguageTask)X4OLanguageClassLoader.newInstance(className);
+			if (languageTasks.containsKey(task.getId())) {
+				throw new RuntimeException("Can't add duplicate language task: "+task.getId());
+			}
+			languageTasks.put(task.getId(), task);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e.getMessage(),e);
+		} catch (InstantiationException e) {
+			throw new IllegalStateException(e.getMessage(),e);
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException(e.getMessage(),e);
+		}
+	}
+	
+	static public X4OLanguageTask getX4OLanguageTask(String taskId) {
+		instance.lazyInit(); // fixme
+		return instance.languageTasks.get(taskId);
+	}
+	
+	static public List<X4OLanguageTask> getX4OLanguageTasks() {
+		instance.lazyInit(); // fixme
+		return new ArrayList<X4OLanguageTask>(instance.languageTasks.values());
 	}
 	
 	static protected String getDefaultLanguageVersion(String[] languages) {
@@ -97,12 +128,18 @@ public final class X4ODriverManager {
 		if (version==null) {
 			version = driver.getLanguageVersionDefault();
 		}
-		return new DefaultX4OLanguage(
+		DefaultX4OLanguage result = new DefaultX4OLanguage(
 				driver.buildLanguageConfiguration(),
 				driver.buildPhaseManager(),
 				driver.getLanguageName(),
 				version
 			);
+		try {
+			result.getPhaseManager().runPhases(result.createLanguageSession(), X4OPhaseType.INIT); // TODO: fix phase to interface T
+		} catch (X4OPhaseException e) {
+			throw new RuntimeException(e); //TODO: change layer
+		}
+		return result;
 	}
 	
 	static protected X4OLanguageConfiguration getDefaultBuildLanguageConfiguration() {
@@ -212,7 +249,11 @@ public final class X4ODriverManager {
 			X4ODriver<?> driver = (X4ODriver<?>)driverClass.newInstance();
 			registerX4ODriver(driver);
 			return driver;
-		} catch (Exception e) {
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e.getMessage(),e);
+		} catch (InstantiationException e) {
+			throw new IllegalStateException(e.getMessage(),e);
+		} catch (IllegalAccessException e) {
 			throw new IllegalStateException(e.getMessage(),e);
 		}
 	}
@@ -287,6 +328,10 @@ public final class X4ODriverManager {
 				if (defaultDrivers.containsKey(language)==false) {
 					defaultDrivers.put(language,language);
 				}
+			} else if ("languageTask".equals(tag)) {
+				String className = attr.getValue("className");
+				logger.finest("Language task className: "+className);
+				X4ODriverManager.instance.registerX4OLanguageTask(className);
 			}
 		}
 	}

@@ -24,6 +24,7 @@ package org.x4o.xml.eld.doc.api;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -390,8 +391,6 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 		}
 	}
 	
-	
-	
 	public void defaultWriteSummary(ApiDocNode node,ApiDocContentWriter writer) throws SAXException {
 		ApiDocConcept concept = doc.findConceptByClass(node.getUserData().getClass());
 		printApiTable(node, node.getNodes(), writer, concept.getName()+" Summary");
@@ -531,7 +530,6 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 		}
 		return result;
 	}
-
 	
 	private void buildParentPath(ApiDocNode node,List<String> path) {
 		if (node.getParent()==null) {
@@ -544,35 +542,64 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 	
 	private void writeStyleSheet() throws IOException {
 		try {
-			StringBuffer cssData = new StringBuffer();
-			appendResourceToBuffer(cssData,"org/x4o/xml/eld/doc/theme/base/api-html.css");
-			appendResourceToBuffer(cssData,"org/x4o/xml/eld/doc/theme/base/api-layout.css");
-			appendResourceToBuffer(cssData,"org/x4o/xml/eld/doc/theme/base/api-inset.css");
-			appendResourceToBuffer(cssData,"org/x4o/xml/eld/doc/theme/base/api-font.css");
-			appendResourceToBuffer(cssData,"org/x4o/xml/eld/doc/theme/base/api-color.css");
+			if (doc.getMetaStyleSheet()!=null) {
+				copyStreamToFile(new FileInputStream(doc.getMetaStyleSheet()),basePath,"resources","stylesheet.css");
+				return;
+			}
+			String thema = doc.getMetaStyleSheetThema();
+			if (thema==null) {
+				thema = "jdk7";
+			}
+			List<String> cssResources = new ArrayList<String>(10);
+			cssResources.add("org/x4o/xml/eld/doc/theme/base/api-html.css");
+			cssResources.add("org/x4o/xml/eld/doc/theme/base/api-layout.css");
+			cssResources.add("org/x4o/xml/eld/doc/theme/base/api-inset.css");
+			cssResources.add("org/x4o/xml/eld/doc/theme/base/api-font.css");
+			cssResources.add("org/x4o/xml/eld/doc/theme/base/api-color.css");
 			
-			//appendResourceToBuffer(cssData,"org/x4o/xml/eld/doc/theme/jdk6/stylesheet.css");
-			appendResourceToBuffer(cssData,"org/x4o/xml/eld/doc/theme/jdk7/stylesheet.css");
-			
-			String css = cssData.toString();
-			css = css.replaceAll("\\s+"," ");
-			css = css.replaceAll("\\s*:\\s*",":");
-			css = css.replaceAll("\\s*\\;\\s*",";");
-			css = css.replaceAll("\\s*\\,\\s*",",");
-			css = css.replaceAll("\\s*\\{\\s*","{");
-			css = css.replaceAll("\\s*\\}\\s*","}\n"); // add return to have multi line file. 
-			
-			writeFileString(css,basePath,"resources","stylesheet.css");
-			
-			copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/background.png",basePath,"resources","background.png");
-			copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/tab.png",basePath,"resources","tab.png");
-			copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/titlebar_end.png",basePath,"resources","titlebar_end.png");
-			copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/titlebar.png",basePath,"resources","titlebar.png");
+			if ("jdk6".equals(thema)) {
+				cssResources.add("org/x4o/xml/eld/doc/theme/jdk6/stylesheet.css");
+				writeStyleSheetResources(cssResources);
+				return;
+			}
+			if ("jdk7".equals(thema)) {
+				cssResources.add("org/x4o/xml/eld/doc/theme/jdk7/stylesheet.css");
+				writeStyleSheetResources(cssResources);
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/background.png",basePath,"resources","background.png");
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/tab.png",basePath,"resources","tab.png");
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/titlebar_end.png",basePath,"resources","titlebar_end.png");
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/titlebar.png",basePath,"resources","titlebar.png");
+				return;
+			}
+			if ("jdk7-todo".equals(thema)) {
+				cssResources.add("org/x4o/xml/eld/doc/theme/jdk7-todo/stylesheet.css");
+				writeStyleSheetResources(cssResources);
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/background.png",basePath,"resources","background.png");
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/tab.png",basePath,"resources","tab.png");
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/titlebar_end.png",basePath,"resources","titlebar_end.png");
+				copyResourceToFile("org/x4o/xml/eld/doc/theme/jdk7/titlebar.png",basePath,"resources","titlebar.png");
+			}
 		} catch (SecurityException e) {
 			throw new IOException(e.getMessage());
 		} catch (InterruptedException e) {
 			throw new IOException(e.getMessage());
 		}
+	}
+	
+	private void writeStyleSheetResources(List<String> resources) throws IOException, SecurityException, InterruptedException {
+		StringBuffer cssData = new StringBuffer();
+		for (String cssResource:resources) {
+			appendResourceToBuffer(cssData,cssResource);
+		}
+		String css = cssData.toString();
+		css = css.replaceAll("\\s+"," ");
+		css = css.replaceAll("\\s*:\\s*",":");
+		css = css.replaceAll("\\s*\\;\\s*",";");
+		css = css.replaceAll("\\s*\\,\\s*",",");
+		css = css.replaceAll("\\s*\\{\\s*","{");
+		css = css.replaceAll("\\s*\\}\\s*","}\n"); // add return to have multi line file. 
+		
+		writeFileString(css,basePath,"resources","stylesheet.css");
 	}
 	
 	private void writeHeader(ApiDocContentWriter writer,String resourcePrefix,String title) throws SAXException {
@@ -889,6 +916,11 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 	private void copyResourceToFile(String resource,File basePath,String...argu) throws SecurityException, IOException, InterruptedException {
 		ClassLoader cl = X4OLanguageClassLoader.getClassLoader();
 		InputStream inputStream = cl.getResourceAsStream(resource);
+		copyStreamToFile(inputStream,basePath,argu);
+	}
+	
+	private void copyStreamToFile(InputStream inputStream,File basePath,String...argu) throws SecurityException, IOException, InterruptedException {
+		
 		OutputStream outputStream = new FileOutputStream(createOutputPathFile(basePath,argu));
 		try {
 			byte[] buffer = new byte[4096];

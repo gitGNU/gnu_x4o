@@ -20,23 +20,45 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.x4o.xml.lang.task.run;
 
-package org.x4o.xml.eld.doc.api;
+import java.util.List;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.X4ODriverManager;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.task.X4OLanguageTask;
+import org.x4o.xml.lang.task.X4OLanguageTaskException;
+import org.x4o.xml.lang.task.X4OLanguageTaskExecutor;
 
 /**
- * ApiDocNodeDataConfiguratorMethod wraps the node data config api to a method.
+ * X4OTaskRunner finds all x4o objects and configs and then run the x4o langauge task.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 11, 2013
+ * @version 1.0 Aug 30, 2013
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-public @interface ApiDocNodeDataConfiguratorMethod {
+public class X4OTaskRunner {
 	
-	Class<?>[] targetClasses();
+	static public void runTask(String languageName,String languageVersion,String taskId,List<X4OTaskProperty> props) throws X4OLanguageTaskException {
+		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(languageName);
+		X4OLanguageTask task = driver.getLanguageTask(taskId);
+		if (task==null) {
+			throw new NullPointerException("Could not find x4o task with id; "+taskId);
+		}
+		PropertyConfig config = task.createTaskConfig();
+		for (X4OTaskProperty prop:props) {
+			String key = prop.getKey();
+			String value = prop.getValue();
+			config.setPropertyParsedValue(key, value);
+		}
+		X4OLanguageTaskExecutor taskExecutor = task.createTaskExecutor(config);
+		X4OLanguage language = null;
+		if (languageVersion==null) {
+			language = driver.createLanguage();
+		} else {
+			language = driver.createLanguage(languageVersion);
+		}
+		taskExecutor.execute(language);
+	}
 }

@@ -22,11 +22,15 @@
  */
 package org.x4o.plugin.ant;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.x4o.xml.lang.task.X4OLanguageTaskException;
+import org.x4o.xml.lang.task.run.X4OTaskProperty;
+import org.x4o.xml.lang.task.run.X4OTaskRunner;
 
 
 /**
@@ -35,18 +39,29 @@ import org.apache.tools.ant.Task;
  * @author Willem Cazander
  * @version 1.0 Apr 8, 2013
  */
-abstract public class AbstractX4OLanguageTask extends Task {
+public class X4OTask extends Task {
 
+	private String taskId = null;
 	private String languageName = null;
 	private String languageVersion = null;
-	private String destdir = null;
 	private boolean verbose = false;
 	private boolean failonerror = true;
+	private List<X4OTaskProperty> taskProperties = null;
 	
+	/**
+	 * Constructs this ant x4o task.
+	 */
+	public X4OTask() {
+		taskProperties = new ArrayList<X4OTaskProperty>(15);
+	}
 	
-	abstract String getLanguageTaskName();
-	
-	abstract void executeLanguageTask(File basePath) throws BuildException;
+	/**
+	 * Adds the ant child x4oTaskProperty element. 
+	 * @param property
+	 */
+	public void addX4oTaskProperty(X4OTaskProperty property) {
+		taskProperties.add(property);
+	}
 	
 	/**
 	 * Executes the x4o eld schema task.
@@ -59,7 +74,6 @@ abstract public class AbstractX4OLanguageTask extends Task {
 				log("Task location: "+getLocation());
 				log("X4O language name: "+getLanguageName());
 				log("X4O language version: "+getLanguageVersion());
-				log("Destination directory: "+getDestdir());
 				log("Verbose: "+isVerbose());
 				log("Fail on error: "+isFailonerror());
 			}
@@ -75,28 +89,31 @@ abstract public class AbstractX4OLanguageTask extends Task {
 	
 	private void executeLanguageTask() throws BuildException {
 		if (getLanguageName()==null) {
-			throw new BuildException("language attribute is not set.");
-		}
-		if (getDestdir()==null) {
-			throw new BuildException("basePath attribute is not set.");
+			throw new BuildException("languageName attribute is not set.");
 		}
 		if (getLanguageName().length()==0) {
-			throw new BuildException("language attribute is empty.");
+			throw new BuildException("languageName attribute is empty.");
 		}
-		if (getDestdir().length()==0) {
-			throw new BuildException("basePath attribute is empty.");
+		if (getLanguageVersion()!=null && getLanguageVersion().length()==0) {
+			throw new BuildException("languageVersion attribute is empty.");
 		}
-		File basePathFile = new File(getDestdir());
-		if (basePathFile.exists()==false) {
-			throw new BuildException("destdir does not exists: "+basePathFile);
+		if (getTaskId()==null) {
+			throw new BuildException("taskId attribute is not set.");
+		}
+		if (getTaskId().length()==0) {
+			throw new BuildException("taskId attribute is empty.");
 		}
 		if (isVerbose()) {
-			log("Starting "+getLanguageTaskName());
+			log("Starting "+getTaskId());
 		}
 		long startTime = System.currentTimeMillis();
-		executeLanguageTask(basePathFile);
+		try {
+			X4OTaskRunner.runTask(getLanguageName(),getLanguageVersion(), getTaskId(), taskProperties);
+		} catch (X4OLanguageTaskException e) {
+			throw new BuildException(e);
+		}
 		long stopTime = System.currentTimeMillis();
-		log("Done "+getLanguageTaskName()+" in "+(stopTime-startTime)+" ms.");
+		log("Done "+getTaskId()+" in "+(stopTime-startTime)+" ms.");
 	}
 	
 	/**
@@ -105,67 +122,67 @@ abstract public class AbstractX4OLanguageTask extends Task {
 	public String getLanguageName() {
 		return languageName;
 	}
-
+	
 	/**
 	 * @param languageName the languageName to set
 	 */
 	public void setLanguageName(String languageName) {
 		this.languageName = languageName;
 	}
-
+	
 	/**
 	 * @return the languageVersion
 	 */
 	public String getLanguageVersion() {
 		return languageVersion;
 	}
-
+	
 	/**
 	 * @param languageVersion the languageVersion to set
 	 */
 	public void setLanguageVersion(String languageVersion) {
 		this.languageVersion = languageVersion;
 	}
-
-	/**
-	 * @return the destdir
-	 */
-	public String getDestdir() {
-		return destdir;
-	}
-
-	/**
-	 * @param destdir the destdir to set
-	 */
-	public void setDestdir(String destdir) {
-		this.destdir = destdir;
-	}
-
+	
 	/**
 	 * @return the verbose
 	 */
 	public boolean isVerbose() {
 		return verbose;
 	}
-
+	
 	/**
 	 * @param verbose the verbose to set
 	 */
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
 	}
-
+	
 	/**
 	 * @return the failonerror
 	 */
 	public boolean isFailonerror() {
 		return failonerror;
 	}
-
+	
 	/**
 	 * @param failonerror the failonerror to set
 	 */
 	public void setFailonerror(boolean failonerror) {
 		this.failonerror = failonerror;
+	}
+	
+	/**
+	 * @return the taskId
+	 */
+	public String getTaskId() {
+		return taskId;
+	}
+	
+	/**
+	 * @param taskId the taskId to set
+	 */
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 }

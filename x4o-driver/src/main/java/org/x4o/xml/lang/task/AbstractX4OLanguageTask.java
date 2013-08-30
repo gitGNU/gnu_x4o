@@ -20,45 +20,66 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.plugin.maven;
+package	org.x4o.xml.lang.task;
 
-import java.io.File;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-
-import org.x4o.xml.eld.doc.X4OWriteLanguageDocExecutor;
-import org.x4o.xml.element.ElementException;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 
 /**
- * X4OWriteLanguageDocMojo creates docs for language.
+ * AbstractX4OLanguageTask holds the language task meta info.
  * 
  * @author Willem Cazander
- * @version 1.0 Apr 9, 2013
+ * @version 1.0 Aug 24, 2013
  */
-@Mojo( name = X4OWriteLanguageDocMojo.GOAL,requiresProject=true,requiresDependencyResolution=ResolutionScope.COMPILE)
-public class X4OWriteLanguageDocMojo extends AbstractX4OLanguageMojo {
+public abstract class AbstractX4OLanguageTask implements X4OLanguageTask {
+
+	private final String id;
+	private final String name;
+	private final String description;
+	private final PropertyConfig propertyConfig;
 	
-	static public final String GOAL = "write-language-doc"; 
-	
-	String getLanguageTaskDirectoryLabel() {
-		return "doc";
+	public AbstractX4OLanguageTask(String id,PropertyConfig propertyConfig) {
+		this(id,id,id,propertyConfig);
 	}
 	
-	String getLanguageTaskName() {
-		return "X4O Write language documentation";
+	public AbstractX4OLanguageTask(String id,String name,String description,PropertyConfig propertyConfig) {
+		this.id=id;
+		this.name=name;
+		this.description=description;
+		this.propertyConfig=propertyConfig;
 	}
 	
-	void executeLanguageTask(String languageName,String languageVersion,File basePath) throws MojoExecutionException {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
-		writer.setBasePath(basePath);
-		writer.setLanguageName(languageName);
-		writer.setLanguageVersion(languageVersion);
-		try {
-			writer.execute();
-		} catch (ElementException e) {
-			throw new MojoExecutionException(e.getMessage(),e);
-		}
+	/**
+	 * @see org.x4o.xml.lang.task.X4OLanguageTask#createTaskConfig()
+	 */
+	public PropertyConfig createTaskConfig() {
+		return propertyConfig.clone();
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.task.X4OLanguageTask#getId()
+	 */
+	public String getId() {
+		return id;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.task.X4OLanguageTask#getName()
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.task.X4OLanguageTask#getDescription()
+	 */
+	public String getDescription() {
+		return description;
+	}
+	
+	/**
+	 * @see org.x4o.xml.lang.task.X4OLanguageTask#getTaskConfig()
+	 */
+	public PropertyConfig getTaskConfig() {
+		return propertyConfig;
 	}
 }

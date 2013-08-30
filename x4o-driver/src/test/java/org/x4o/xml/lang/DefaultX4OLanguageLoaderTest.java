@@ -26,6 +26,11 @@ import org.x4o.xml.X4ODriver;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageLoader;
 import org.x4o.xml.lang.X4OLanguageLocal;
+import org.x4o.xml.lang.phase.DefaultX4OPhaseManager;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageInit;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageRead;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageWrite;
+import org.x4o.xml.lang.phase.X4OPhaseManager;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 
@@ -39,20 +44,40 @@ import junit.framework.TestCase;
  */
 public class DefaultX4OLanguageLoaderTest extends TestCase {
 
-	X4OLanguage language;
+	X4ODriver<TestObjectRoot> driver;
 	X4OLanguageLoader loader;
 	
 	public void setUp() throws Exception {
-		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
+		driver = TestDriver.getInstance();
 		//X4OReader<TestObjectRoot> reader = driver.createReader();
 		//reader.readResource("tests/namespace/uri-simple.xml");
-		language = driver.createLanguage();
+		X4OLanguage language = driver.createLanguage();
 		loader = (X4OLanguageLoader)language.getLanguageConfiguration().getDefaultLanguageLoader().newInstance();
 		
 	}
 
+	X4OLanguageConfiguration buildLanguageConfiguration() {
+		DefaultX4OLanguageConfiguration config = new DefaultX4OLanguageConfiguration();
+		config.fillDefaults();
+		X4OLanguageConfiguration result = config.createProxy();
+		return result;
+	}
+	X4OPhaseManager buildPhaseManager() {
+		DefaultX4OPhaseManager manager = new DefaultX4OPhaseManager();
+		new X4OPhaseLanguageInit().createPhases(manager);
+		new X4OPhaseLanguageRead().createPhases(manager);
+		new X4OPhaseLanguageWrite().createPhases(manager);
+		return manager;
+	}
+	
 	public void testLanguageURINameSpaceTest() throws Exception {
-		loader.loadLanguage((X4OLanguageLocal)language, "test", "1.0");
+		DefaultX4OLanguage result = new DefaultX4OLanguage(
+				buildLanguageConfiguration(),
+				buildPhaseManager(),
+				driver.getLanguageName(),
+				"1.0"
+			);
+		loader.loadLanguage((X4OLanguageLocal)result, "test", "1.0");
 	}
 	
 	/*

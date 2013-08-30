@@ -39,7 +39,7 @@ import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
-import org.x4o.xml.lang.X4OLanguageSession;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
 
@@ -81,19 +81,19 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	public void writePageContent(ApiDocWriteEvent<ApiDocPage> e) throws SAXException {
 		//selectRootNode(e.getDoc()); // create
 		ApiDoc doc = e.getDoc();
-		X4OLanguageSession context = (X4OLanguageSession)doc.getRootNode().getUserData();
+		X4OLanguage language = (X4OLanguage)doc.getRootNode().getUserData();
 		
 		String pathPrefix = "language/";
 		
 		// temp print old way
 		List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
-		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:language.getLanguageModules()) {
 			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				if (ns.getLanguageRoot()!=null && ns.getLanguageRoot()) {
 					// found language root elements.
 					for (ElementClass ec:ns.getElementClasses()) {
 						TreeNode node = new TreeNode();
-						node.context=context;
+						node.language=language;
 						node.module=mod;
 						node.namespace=ns;
 						node.elementClass=ec;
@@ -137,17 +137,17 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	
 	private ApiDocNode createXTree(ApiDoc doc) throws SAXException {
 		
-		X4OLanguageSession context = (X4OLanguageSession)doc.getRootNode().getUserData();
-		ApiDocNode root = new ApiDocNode(context,"root","Root","Language root");
+		X4OLanguage language = (X4OLanguage)doc.getRootNode().getUserData();
+		ApiDocNode root = new ApiDocNode(language,"root","Root","Language root");
 		
 		List<TreeNode> rootNodes = new ArrayList<TreeNode>(3);
-		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:language.getLanguageModules()) {
 			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				if (ns.getLanguageRoot()!=null && ns.getLanguageRoot()) {
 					// found language root elements.
 					for (ElementClass ec:ns.getElementClasses()) {
 						TreeNode node = new TreeNode();
-						node.context=context;
+						node.language=language;
 						node.module=mod;
 						node.namespace=ns;
 						node.elementClass=ec;
@@ -175,7 +175,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	
 	
 	class TreeNode {
-		X4OLanguageSession context;
+		X4OLanguage language;
 		X4OLanguageModule module;
 		ElementNamespace namespace;
 		ElementClass elementClass;
@@ -189,14 +189,14 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 		if (node.indent>20) {
 			return result; // hard fail limit
 		}
-		for (X4OLanguageModule mod:node.context.getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:node.language.getLanguageModules()) {
 			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				for (ElementClass ec:ns.getElementClasses()) {
 					TreeNode n=null;
 					List<String> tags = ec.getElementParents(node.namespace.getUri());
 					if (tags!=null && tags.contains(node.elementClass.getId())) {
 						n = new TreeNode();
-						n.context=node.context;
+						n.language=node.language;
 						n.module=mod;
 						n.namespace=ns;
 						n.elementClass=ec;
@@ -207,11 +207,11 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 							continue;
 						}
 						// Check interfaces of parent , and see if child tag is there.
-						for (ElementInterface ei:node.context.getLanguage().findElementInterfaces(ec.getObjectClass())) {
+						for (ElementInterface ei:node.language.findElementInterfaces(ec.getObjectClass())) {
 							List<String> eiTags = ei.getElementParents(node.namespace.getUri());
 							if (eiTags!=null && eiTags.contains(node.elementClass.getId())) {
 								n = new TreeNode();
-								n.context=node.context;
+								n.language=node.language;
 								n.module=mod;
 								n.namespace=ns;
 								n.elementClass=ec;
@@ -224,10 +224,10 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 						if (node.elementClass.getObjectClass()==null) {
 							continue;
 						}
-						List<ElementBindingHandler> binds = node.context.getLanguage().findElementBindingHandlers(node.elementClass.getObjectClass(), ec.getObjectClass());
+						List<ElementBindingHandler> binds = node.language.findElementBindingHandlers(node.elementClass.getObjectClass(), ec.getObjectClass());
 						if (binds.isEmpty()==false) {
 							n = new TreeNode();
-							n.context=node.context;
+							n.language=node.language;
 							n.module=mod;
 							n.namespace=ns;
 							n.elementClass=ec;
@@ -261,7 +261,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 	public List<TreeNode> findParents(TreeNode node) {
 		List<TreeNode> result = new ArrayList<TreeNode>(10);
 		TreeNode n=null;
-		for (X4OLanguageModule mod:node.context.getLanguage().getLanguageModules()) {
+		for (X4OLanguageModule mod:node.language.getLanguageModules()) {
 			for (ElementNamespace ns:mod.getElementNamespaces()) {
 				
 				List<String> tags = node.elementClass.getElementParents(ns.getUri());
@@ -269,7 +269,7 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 					for (ElementClass ec:ns.getElementClasses()) {
 						if (tags.contains(ec.getId())) {
 							n = new TreeNode();
-							n.context=node.context;
+							n.language=node.language;
 							n.module=mod;
 							n.namespace=ns;
 							n.elementClass=ec;
@@ -283,11 +283,11 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 
 					// Check interfaces of parent , and see if child tag is there.
 					if (node.elementClass.getObjectClass()!=null) {
-						for (ElementInterface ei:node.context.getLanguage().findElementInterfaces(node.elementClass.getObjectClass())) {
+						for (ElementInterface ei:node.language.findElementInterfaces(node.elementClass.getObjectClass())) {
 							List<String> eiTags = ei.getElementParents(ns.getUri());
 							if (eiTags!=null && eiTags.contains(ec.getId())) {
 								n = new TreeNode();
-								n.context=node.context;
+								n.language=node.language;
 								n.module=mod;
 								n.namespace=ns;
 								n.elementClass=ec;
@@ -304,10 +304,10 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 					if (node.elementClass.getObjectClass()==null) {
 						continue;
 					}
-					List<ElementBindingHandler> binds = node.context.getLanguage().findElementBindingHandlers(ec.getObjectClass(),node.elementClass.getObjectClass());
+					List<ElementBindingHandler> binds = node.language.findElementBindingHandlers(ec.getObjectClass(),node.elementClass.getObjectClass());
 					if (binds.isEmpty()==false) {
 						n = new TreeNode();
-						n.context=node.context;
+						n.language=node.language;
 						n.module=mod;
 						n.namespace=ns;
 						n.elementClass=ec;

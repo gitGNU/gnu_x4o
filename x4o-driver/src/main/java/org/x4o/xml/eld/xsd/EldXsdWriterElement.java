@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
@@ -54,7 +53,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Willem Cazander
  * @version 1.0 Aug 8, 2012
  */
-public class EldXsdXmlWriter {
+public class EldXsdWriterElement {
 	
 	
 	static public final String SCHEMA_URI = XMLConstants.XML_SCHEMA_NS_URI;
@@ -64,7 +63,7 @@ public class EldXsdXmlWriter {
 	protected String writeNamespace = null;
 	protected Map<String, String> namespaces = null;
 	
-	public EldXsdXmlWriter(ContentWriterXsd xmlWriter,X4OLanguage language) {
+	public EldXsdWriterElement(ContentWriterXsd xmlWriter,X4OLanguage language) {
 		this.xmlWriter=xmlWriter;
 		this.language=language;
 		this.namespaces=new HashMap<String,String>(10);

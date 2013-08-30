@@ -28,52 +28,63 @@
 	<property name="test.dir" value="${basedir}/target/test-schemas/"/>
 
 	<target name="init">
-		<taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask"/>
+		<taskdef name="x4oTask" classname="org.x4o.plugin.ant.X4OTask"/>
 		<mkdir dir="${test.dir}"/>
 		<mkdir dir="${test.dir}/test"/>
 	</target>
 	
 	<target name="test-cel-schema-full" depends="init">
 		<mkdir dir="${test.dir}/cel-full"/>
-		<writeLanguageSchema
-			destdir="${test.dir}/cel-full"
-			languageName="eld"
+		<x4oTask languageName="cel" taskId="eld-xsd">
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-xsd/output/path"
+				value="${test.dir}/cel-full"
 			/>
+		</x4oTask>
 	</target>
 	
 	<target name="test-cel-schema-single" depends="init">
 		<mkdir dir="${test.dir}/cel-single"/>
-		<writeLanguageSchema
-			destdir="${test.dir}/cel-single"
-			languageName="cel"
-			nsuri="http://cel.x4o.org/xml/ns/cel-core"
+		<x4oTask languageName="cel" taskId="eld-xsd">
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-xsd/output/path"
+				value="${test.dir}/cel-single"
 			/>
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-xsd/filter/namespace"
+				value="http://cel.x4o.org/xml/ns/cel-core"
+			/>
+		</x4oTask>
 	</target>
 	
 	<target name="test-cel-schema-verbose" depends="init">
-		<mkdir dir="${test.dir}/cel-single"/>
-		<writeLanguageSchema
-			verbose="true"
-			destdir="${test.dir}/cel-single"
-			languageName="cel"
-			nsuri="http://cel.x4o.org/xml/ns/cel-core"
+		<mkdir dir="${test.dir}/cel-single-verbose"/>
+		<x4oTask languageName="cel" taskId="eld-xsd" verbose="true">
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-xsd/output/path"
+				value="${test.dir}/cel-single-verbose"
 			/>
+			<x4oTaskProperty
+				key="http://language.x4o.org/xml/properties/eld-xsd/filter/namespace"
+				value="http://cel.x4o.org/xml/ns/cel-core"
+			/>
+		</x4oTask>
 	</target>
 	
 	<target name="test-fail-all" depends="init">
-		<writeLanguageSchema/>
+		<x4oTask/>
 	</target>
 	<target name="test-fail-destdir" depends="init">
-		<writeLanguageSchema languageName="cel"/>
+		<x4oTask languageName="cel"/>
 	</target>
 	<target name="test-fail-destdir-error" depends="init">
-		<writeLanguageSchema languageName="cel" destdir="${test.dir}/no-dir"/>
+		<x4oTask languageName="cel" destdir="${test.dir}/no-dir"/>
 	</target>
 	<target name="test-fail-language" depends="init">
-		<writeLanguageSchema destdir="${test.dir}/test"/>
+		<x4oTask destdir="${test.dir}/test"/>
 	</target>
 	<target name="test-fail-language-error" depends="init">
-		<writeLanguageSchema destdir="${test.dir}/test" languageName="eld-error"/>
+		<x4oTask destdir="${test.dir}/test" languageName="eld-error"/>
 	</target>
 	
 </project>

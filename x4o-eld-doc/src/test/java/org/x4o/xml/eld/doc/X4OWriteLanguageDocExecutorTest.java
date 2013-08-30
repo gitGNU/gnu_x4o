@@ -24,11 +24,13 @@ package org.x4o.xml.eld.doc;
 
 import java.io.File;
 
+import org.x4o.xml.X4ODriver;
+import org.x4o.xml.X4ODriverManager;
 import org.x4o.xml.eld.CelDriver;
 import org.x4o.xml.eld.EldDriver;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.lang.task.X4OLanguageTask;
 import org.x4o.xml.test.TestDriver;
-import org.x4o.xml.test.swixml.SwiXmlDriver;
-
 
 import junit.framework.TestCase;
 
@@ -40,42 +42,41 @@ import junit.framework.TestCase;
  */
 public class X4OWriteLanguageDocExecutorTest extends TestCase {
 	
-	private File createOutputTargetPath(String dir) throws Exception {
-		File tempFile = new File("target/path");
-		//File tempFile = File.createTempFile("junit", "test");
-		String absolutePath = tempFile.getAbsolutePath();
-		String tempPath = absolutePath.substring(0,absolutePath.lastIndexOf(File.separator)+1);
-		tempFile.delete();
-		File result = new File(tempPath+File.separator+dir);
+	private File createOutputPath(String dir) throws Exception {
+		File result = new File("target/tests"+File.separator+dir);
 		if (result.exists()==false) {
-			result.mkdir();
+			result.mkdirs();
 		}
 		return result;
 	}
 	
-	public void testCelDoc() throws Exception {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
-		writer.setBasePath(createOutputTargetPath("junit-cel"));
-		writer.setLanguageName(CelDriver.LANGUAGE_NAME);
-		writer.execute();
+	public void testDoc(String language,String outputPostfix) throws Exception {
+		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(language);
+		X4OLanguageTask task = driver.getLanguageTask(EldDocLanguageTask.TASK_ID);
+		PropertyConfig config = task.createTaskConfig();
+		File outputPath = createOutputPath(outputPostfix);
+		config.setProperty(EldDocWriter.OUTPUT_PATH,outputPath);
+		task.createTaskExecutor(config).execute(driver.createLanguage());
+		assertTrue(outputPath.exists());
+		assertTrue(outputPath.list()!=null);
+		assertTrue(outputPath.list().length>2);
 	}
 	
+	public void testCelDoc() throws Exception {
+		testDoc(CelDriver.LANGUAGE_NAME,"junit-doc-cel");
+	}
+
 	public void testEldDoc() throws Exception {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
-		writer.setBasePath(createOutputTargetPath("junit-eld"));
-		writer.setLanguageName(EldDriver.LANGUAGE_NAME);
-		writer.execute();
+		testDoc(EldDriver.LANGUAGE_NAME,"junit-doc-eld");
 	}
 	
 	public void testUnitDoc() throws Exception {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
-		writer.setBasePath(createOutputTargetPath("junit-test"));
-		writer.setLanguageName(TestDriver.LANGUAGE_NAME);
-		writer.execute();
+		testDoc(TestDriver.LANGUAGE_NAME,"junit-doc-test");
 	}
-
+/*
 	public void testSwiXml2Doc() throws Exception {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
+		testDoc(EldDriver.LANGUAGE_NAME,"junit-doc-eld");
+		EldDocLanguageTask writer = new EldDocLanguageTask();
 		writer.setBasePath(createOutputTargetPath("junit-swixml2"));
 		writer.setLanguageName(SwiXmlDriver.LANGUAGE_NAME);
 		writer.setLanguageVersion(SwiXmlDriver.LANGUAGE_VERSION_2);
@@ -83,15 +84,12 @@ public class X4OWriteLanguageDocExecutorTest extends TestCase {
 	}
 	
 	public void testSwiXml3Doc() throws Exception {
-		X4OWriteLanguageDocExecutor writer = new X4OWriteLanguageDocExecutor();
+		testDoc(EldDriver.LANGUAGE_NAME,"junit-doc-eld");
+		EldDocLanguageTask writer = new EldDocLanguageTask();
 		writer.setBasePath(createOutputTargetPath("junit-swixml3"));
 		writer.setLanguageName(SwiXmlDriver.LANGUAGE_NAME);
 		writer.setLanguageVersion(SwiXmlDriver.LANGUAGE_VERSION_3);
 		writer.execute();
 	}
-	
-	
-	public void testEldDocMain() throws Exception {
-		X4OWriteLanguageDocExecutor.main(new String[] {"-p",createOutputTargetPath("junit-test-main").getAbsolutePath(),"-l",EldDriver.LANGUAGE_NAME});
-	}
+	*/
 }

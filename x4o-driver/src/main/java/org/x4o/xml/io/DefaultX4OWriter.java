@@ -62,20 +62,18 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	private final PropertyConfig propertyConfig;
 	
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_WRITER;
-	private final static String PROPERTY_OUTPUT_STREAM      = "output/stream";
-	private final static String PROPERTY_SCHEMA_PRINT       = "schema/print";
-	private final static String PROPERTY_SCHEMA_ROOT_URI    = "schema/root-uri";
-	
+
 	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
-	public final static String OUTPUT_STREAM                = PROPERTY_CONTEXT_PREFIX+PROPERTY_OUTPUT_STREAM;
-	public final static String SCHEMA_PRINT                 = PROPERTY_CONTEXT_PREFIX+PROPERTY_SCHEMA_PRINT;
-	public final static String SCHEMA_ROOT_URI              = PROPERTY_CONTEXT_PREFIX+PROPERTY_SCHEMA_ROOT_URI;
+	
+	public final static String OUTPUT_STREAM                = PROPERTY_CONTEXT_PREFIX+"output/stream";
+	public final static String SCHEMA_PRINT                 = PROPERTY_CONTEXT_PREFIX+"schema/print";
+	public final static String SCHEMA_ROOT_URI              = PROPERTY_CONTEXT_PREFIX+"schema/root-uri";
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
-				new PropertyConfigItem(PROPERTY_OUTPUT_STREAM,OutputStream.class),
-				new PropertyConfigItem(PROPERTY_SCHEMA_PRINT,Boolean.class,true),
-				new PropertyConfigItem(PROPERTY_SCHEMA_ROOT_URI,String.class)
+				new PropertyConfigItem(true,OUTPUT_STREAM,OutputStream.class),
+				new PropertyConfigItem(SCHEMA_PRINT,Boolean.class,true),
+				new PropertyConfigItem(SCHEMA_ROOT_URI,String.class)
 				);
 	}
 	

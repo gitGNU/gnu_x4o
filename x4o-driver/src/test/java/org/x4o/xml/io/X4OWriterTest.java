@@ -111,7 +111,7 @@ public class X4OWriterTest extends TestCase {
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 		assertTrue(text.contains("http://test.x4o.org/xml/ns/test-root"));
-		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
+//		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
 		assertTrue(text.contains("<test-lang:testBean"));
 	}
 	
@@ -128,7 +128,7 @@ public class X4OWriterTest extends TestCase {
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 		assertTrue(text.contains("http://test.x4o.org/xml/ns/test-root"));
-		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
+//		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
 		assertTrue(text.contains("<test-lang:testBean"));
 	}
 	
@@ -152,7 +152,7 @@ public class X4OWriterTest extends TestCase {
 
 		assertTrue(text.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 		assertTrue(text.contains("http://test.x4o.org/xml/ns/test-root"));
-		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
+//		assertTrue(text.contains("<test-lang:parent name=\"test-bean.xml\"/>"));
 		assertTrue(text.contains("<test-lang:testBean"));
 	}
 }

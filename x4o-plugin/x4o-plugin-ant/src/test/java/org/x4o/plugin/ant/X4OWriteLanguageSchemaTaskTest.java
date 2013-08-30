@@ -42,7 +42,7 @@ public class X4OWriteLanguageSchemaTaskTest extends BuildFileTest {
 		executeTarget("test-cel-schema-full");
 		File testDir = new File("target/test-schemas/cel-full");
 		int files = testDir.listFiles().length;
-		assertEquals("Should created only 3 files", 3, files);
+		assertEquals("Should created only 2 files", 2, files);
 	}
 	
 	public void testCelSchemaSingle() {

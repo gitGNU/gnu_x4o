@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.x4o.xml.eld.doc.api.ApiDocWriter;
 import org.x4o.xml.eld.doc.api.DefaultPageWriterHelp;
@@ -35,6 +36,7 @@ import org.x4o.xml.eld.doc.api.DefaultPageWriterTree;
 import org.x4o.xml.eld.doc.api.dom.ApiDoc;
 import org.x4o.xml.eld.doc.api.dom.ApiDocConcept;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNode;
+import org.x4o.xml.eld.doc.api.dom.ApiDocRemoteClass;
 import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
@@ -44,6 +46,10 @@ import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementNamespace;
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.SAXException;
@@ -56,8 +62,8 @@ import org.xml.sax.SAXException;
  */
 public class EldDocWriter {
 	
-	// The context to write doc over.
-	private X4OLanguageSession context = null;
+	private final static String DEFAULT_NAME = "X4O ELD DOC";
+	private final static String DEFAULT_DESCRIPTION = "X4O Meta Language Documentation.";
 	
 	// Core concepts
 	private static final String[] C_CONTEXT			= {"language","Overview","All language modules.","The loaded language modules.."};
@@ -73,12 +79,51 @@ public class EldDocWriter {
 	private static final String[] CC_CONFIGURATOR_G = {"configurator-global","ConfiguratorGlobal","The global configurator.","The global configurator."};
 	private static final String[] CC_BINDING		= {"binding","Binding","The element binding.","The element binding."};
 	
+	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_ELD_DOC;
+	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
+	
+	public final static String OUTPUT_PATH              = PROPERTY_CONTEXT_PREFIX+"output/path";
+	public final static String DOC_NAME                 = PROPERTY_CONTEXT_PREFIX+"doc/name";
+	public final static String DOC_DESCRIPTION          = PROPERTY_CONTEXT_PREFIX+"doc/description";
+	public final static String DOC_ABOUT                = PROPERTY_CONTEXT_PREFIX+"doc/about";
+	public final static String DOC_COPYRIGHT            = PROPERTY_CONTEXT_PREFIX+"doc/copyright";
+	public final static String DOC_PAGE_SUB_TITLE       = PROPERTY_CONTEXT_PREFIX+"doc/page-sub-title";
+	public final static String META_KEYWORDS            = PROPERTY_CONTEXT_PREFIX+"meta/keywords";
+	public final static String META_STYLESHEET          = PROPERTY_CONTEXT_PREFIX+"meta/stylesheet";
+	public final static String META_STYLESHEET_THEMA    = PROPERTY_CONTEXT_PREFIX+"meta/stylesheet-thema";
+	public final static String JAVADOC_LINK             = PROPERTY_CONTEXT_PREFIX+"javadoc/link";
+	public final static String JAVADOC_LINK_OFFLINE     = PROPERTY_CONTEXT_PREFIX+"javadoc/link-offline";
+	
+	static {
+		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
+				new PropertyConfigItem(true,OUTPUT_PATH,File.class),
+				new PropertyConfigItem(false,DOC_NAME,String.class),
+				new PropertyConfigItem(false,DOC_DESCRIPTION,String.class),
+				new PropertyConfigItem(false,DOC_ABOUT,String.class),
+				new PropertyConfigItem(false,DOC_COPYRIGHT,String.class),
+				new PropertyConfigItem(false,DOC_PAGE_SUB_TITLE,String.class),
+				new PropertyConfigItem(false,META_KEYWORDS,List.class),
+				new PropertyConfigItem(false,META_STYLESHEET,File.class),
+				new PropertyConfigItem(false,META_STYLESHEET_THEMA,String.class),
+				new PropertyConfigItem(false,JAVADOC_LINK,List.class),
+				new PropertyConfigItem(false,JAVADOC_LINK_OFFLINE,Map.class)
+				);
+	}
+	
+	/** The config of this writer. */
+	private final PropertyConfig propertyConfig;
+	
+	/** The language to write doc over. */
+	private final X4OLanguage language;
+	
 	/**
 	 * Creates an EldDocGenerator for this langauge context.
-	 * @param context	The language context to generate doc for.
+	 * @param language	The language to generate doc for.
 	 */
-	public EldDocWriter(X4OLanguageSession context) {
-		this.context=context;
+	public EldDocWriter(X4OLanguage language,PropertyConfig parentConfig) {
+		this.language=language;
+		this.propertyConfig=new PropertyConfig(DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX);
+		this.propertyConfig.copyParentProperties(parentConfig);
 	}
 	
 	/**
@@ -86,8 +131,9 @@ public class EldDocWriter {
 	 * @param basePath	The path to write to documentation to.
 	 * @throws ElementException	Is thrown when error is done.
 	 */
-	public void writeDoc(File basePath) throws ElementException {
+	public void writeDocumentation() throws ElementException {
 		try {
+			File basePath = propertyConfig.getPropertyFile(OUTPUT_PATH);
 			ApiDocWriter writer = new ApiDocWriter();
 			ApiDoc doc = buildLanguageDoc();
 			writer.write(doc, basePath);
@@ -98,24 +144,47 @@ public class EldDocWriter {
 		}
 	}
 	
+	/**
+	 * Creates a fully configured ApiDco object.
+	 * @return	The ApiDoc configured to write eld documentation.
+	 */
 	private ApiDoc buildLanguageDoc() {
+		
+		// Generic config
 		ApiDoc doc = new ApiDoc();
-		doc.setName("X4O ELD DOC");
-		doc.setDescription("X4O Meta Language Description");
-		doc.setDocAbout(createLanguageAbout());
-		doc.setDocCopyright(createLanguageCopyright());
-		doc.setDocPageSubTitle(createPageSubTitle());
-		doc.addDocKeywordAll(createLanguageKeywords());
+		doc.setName(				propertyConfig.getPropertyStringOrValue(DOC_NAME, DEFAULT_NAME));
+		doc.setDescription(			propertyConfig.getPropertyStringOrValue(DOC_DESCRIPTION, DEFAULT_DESCRIPTION));
+		doc.setDocAbout(			propertyConfig.getPropertyStringOrValue(DOC_ABOUT, createLanguageAbout()));
+		doc.setDocCopyright(		propertyConfig.getPropertyStringOrValue(DOC_COPYRIGHT, createLanguageCopyright()));
+		doc.setDocPageSubTitle(		propertyConfig.getPropertyStringOrValue(DOC_PAGE_SUB_TITLE, createPageSubTitle()));
+		doc.setMetaStyleSheetThema(	propertyConfig.getPropertyString(META_STYLESHEET_THEMA));
+		doc.setMetaStyleSheet(		propertyConfig.getPropertyFile(META_STYLESHEET));
+		List<String> keywords =		propertyConfig.getPropertyList(META_KEYWORDS);
+		if (keywords==null) {
+			keywords = createLanguageKeywords();
+		}
+		doc.addMetaKeywordAll(keywords);
 		doc.setNoFrameAllName("All Elements");
 		doc.setFrameNavPrintParent(true);
 		doc.setFrameNavPrintParentId(true);
 		doc.setGroupTypeName("summary", "Summary");
 		doc.setGroupTypeName("overview", "Overview");
 		
-		// TODO: add config bean to task launcher 
-		//doc.addRemoteClass(new ApiDocRemoteClass("file:///home/willemc/devv/git/x4o/x4o-driver/target/apidocs"));
-		//doc.addRemoteClass(new ApiDocRemoteClass("http://docs.oracle.com/javase/7/docs/api/"));
+		// Javadoc linking config
+		List<String> javadocLinkList = propertyConfig.getPropertyList(JAVADOC_LINK);
+		Map<String,String> javadocLinkOfflineMap = propertyConfig.getPropertyMap(JAVADOC_LINK_OFFLINE);
+		if (javadocLinkList!=null) {
+			for (String javadocUrl:javadocLinkList) {
+				doc.addRemoteClass(new ApiDocRemoteClass(javadocUrl));
+			}
+		}
+		if (javadocLinkOfflineMap!=null) {
+			for (Map.Entry<String,String> offlineLink:javadocLinkOfflineMap.entrySet()) {
+				doc.addRemoteClass(new ApiDocRemoteClass(offlineLink.getKey(),offlineLink.getValue()));
+			}
+		}
 		
+		// Tree and navagation config
 		doc.setFrameNavConceptClass(ElementClass.class);
 		
 		doc.addTreeNodePageModeClass(X4OLanguageSession.class);
@@ -129,7 +198,7 @@ public class EldDocWriter {
 		doc.addAnnotatedClasses(EldDocWriterElementNamespace.class);
 		doc.addAnnotatedClasses(EldDocWriterElementInterface.class);
 		
-		ApiDocConcept adcRoot = doc.addConcept(new ApiDocConcept(null,C_CONTEXT,X4OLanguageSession.class));
+		ApiDocConcept adcRoot = doc.addConcept(new ApiDocConcept(null,C_CONTEXT,X4OLanguage.class));
 		ApiDocConcept adcMod = doc.addConcept(new ApiDocConcept(adcRoot,C_MODULE,X4OLanguageModule.class));
 		ApiDocConcept adcIface = doc.addConcept(new ApiDocConcept(adcMod,C_INTERFACE,ElementInterface.class));
 		ApiDocConcept adcNs = doc.addConcept(new ApiDocConcept(adcMod,C_NAMESPACE,ElementNamespace.class));
@@ -144,14 +213,16 @@ public class EldDocWriter {
 		adcEc.addChildConcepts(new ApiDocConcept(adcEc,CC_CONFIGURATOR,ElementConfigurator.class));
 		adcEc.addChildConcepts(new ApiDocConcept(adcEc,CC_ATTRIBUTE,ElementClassAttribute.class));
 		
+		// Non-tree pages config
 		doc.addDocPage(EldDocXTreePageWriter.createDocPage());
 		doc.addDocPage(DefaultPageWriterTree.createDocPage());
 		doc.addDocPage(DefaultPageWriterIndexAll.createDocPage());
 		doc.addDocPage(DefaultPageWriterHelp.createDocPage());
 		
-		ApiDocNode rootNode = new ApiDocNode(context,"language",getLanguageNameUpperCase()+" Language","The X4O "+getLanguageNameUpperCase()+" Language");
+		// Doc tree config
+		ApiDocNode rootNode = new ApiDocNode(language,"language",getLanguageNameUpperCase()+" Language","The X4O "+getLanguageNameUpperCase()+" Language");
 		doc.setRootNode(rootNode);
-		for (X4OLanguageModule mod:context.getLanguage().getLanguageModules())			{	ApiDocNode modNode = rootNode.addNode(createNodeLanguageModule(mod));
+		for (X4OLanguageModule mod:language.getLanguageModules())						{	ApiDocNode modNode = rootNode.addNode(createNodeLanguageModule(mod));
 			for (ElementBindingHandler bind:mod.getElementBindingHandlers())			{		modNode.addNode(createNodeElementBindingHandler(bind));			}
 			for (ElementConfiguratorGlobal conf:mod.getElementConfiguratorGlobals())	{		modNode.addNode(createNodeElementConfiguratorGlobal(conf));		}
 			for (ElementInterface iface:mod.getElementInterfaces())						{		ApiDocNode ifaceNode = modNode.addNode(createNodeElementInterface(iface));
@@ -196,9 +267,9 @@ public class EldDocWriter {
 	
 	private String createPageSubTitle() {
 		StringBuffer buf = new StringBuffer(100);
-		buf.append(context.getLanguage().getLanguageName());
+		buf.append(language.getLanguageName());
 		buf.append(" ");// note use real space as 'html/header/title' will not always escape entities. TODO: add to html writer
-		buf.append(context.getLanguage().getLanguageVersion());
+		buf.append(language.getLanguageVersion());
 		buf.append(" API");
 		return buf.toString();
 	}
@@ -206,9 +277,9 @@ public class EldDocWriter {
 	private String createLanguageAbout() {
 		StringBuffer buf = new StringBuffer(100);
 		buf.append("XML X4O Language\n");
-		buf.append(context.getLanguage().getLanguageName().toUpperCase());
+		buf.append(language.getLanguageName().toUpperCase());
 		buf.append("&trade;&nbsp;");
-		buf.append(context.getLanguage().getLanguageVersion());
+		buf.append(language.getLanguageVersion());
 		return buf.toString();
 	}
 	
@@ -226,15 +297,18 @@ public class EldDocWriter {
 	
 	private List<String> createLanguageKeywords() {
 		List<String> keywords = new ArrayList<String>(10);
-		keywords.add(context.getLanguage().getLanguageName());
+		keywords.add(language.getLanguageName());
 		keywords.add("x4o");
+		keywords.add("eld");
 		keywords.add("xml");
+		keywords.add("xsd");
+		keywords.add("schema");
 		keywords.add("language");
 		keywords.add("documentation");
 		return keywords;
 	}
 	
 	private String getLanguageNameUpperCase() {
-		return context.getLanguage().getLanguageName().toUpperCase();
+		return language.getLanguageName().toUpperCase();
 	}
 }

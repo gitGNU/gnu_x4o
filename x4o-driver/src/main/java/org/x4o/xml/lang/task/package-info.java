@@ -20,20 +20,9 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.xml.io;
-
-import java.io.File;
-
-import org.x4o.xml.element.ElementException;
-
 /**
- * X4OSchemaWriter can write the schema for the language.
- * 
- * @author Willem Cazander
- * @version 1.0 Apr 6, 2013
+ * The task package defines classses and interfaces to create generic x4o language tasks.
+ *
+ * @since 1.0
  */
-public interface X4OSchemaWriter extends X4OConnection {
-
-	void writeSchema(File basePath) throws ElementException;
-	void writeSchema(File basePath,String namespace) throws ElementException;
-}
+package org.x4o.xml.lang.task;

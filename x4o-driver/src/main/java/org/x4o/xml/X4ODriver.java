@@ -22,18 +22,19 @@
  */
 package org.x4o.xml;
 
+import java.util.List;
+
 import org.x4o.xml.io.DefaultX4OReader;
-import org.x4o.xml.io.DefaultX4OSchemaWriter;
 import org.x4o.xml.io.DefaultX4OWriter;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.io.X4OReaderContext;
-import org.x4o.xml.io.X4OSchemaWriter;
 import org.x4o.xml.io.X4OWriter;
 import org.x4o.xml.io.X4OWriterContext;
-
 import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
+import org.x4o.xml.lang.task.X4OLanguageTask;
+import org.x4o.xml.lang.task.X4OLanguageTaskExecutor;
 
 /**
  * X4ODriver Is the x4o language driver to interact with xml.
@@ -76,27 +77,6 @@ public abstract class X4ODriver<T> {
 	
 	protected X4OLanguageConfiguration buildLanguageConfiguration() {
 		return X4ODriverManager.getDefaultBuildLanguageConfiguration();
-	}
-	
-	
-	
-	// =============== SchemaWriter
-	
-	/**
-	 * Creates a schema writer for the default language version.
-	 * @return	The schema writer for this language.
-	 */
-	public X4OSchemaWriter createSchemaWriter() {
-		return createSchemaWriter(getLanguageVersionDefault());
-	}
-	
-	/**
-	 * Creates a schema writer for a version of the language.
-	 * @param version	The version of the language.
-	 * @return	The schema writer for this language.
-	 */
-	public X4OSchemaWriter createSchemaWriter(String version) {
-		return new DefaultX4OSchemaWriter(createLanguage(version));
 	}
 	
 	
@@ -184,4 +164,22 @@ public abstract class X4ODriver<T> {
 	final public X4OLanguageSession createLanguageSession(String version) {
 		return createLanguage(version).createLanguageSession();
 	}*/
+	
+	
+	// =============== Language Tasks
+
+	final public X4OLanguageTask getLanguageTask(String taskId) {
+		return X4ODriverManager.getX4OLanguageTask(taskId);
+	}
+	
+	final public List<X4OLanguageTask> getLanguageTasks() {
+		return X4ODriverManager.getX4OLanguageTasks();
+	}
+	
+	public void t() {
+		X4OLanguageTask t = null;
+		//PropertyConfig conf = t.createTaskConfig();
+		//X4OLanguageTaskExecutor exe = t.createTaskExecutor(conf);
+		//exe.execute(language);
+	}
 }

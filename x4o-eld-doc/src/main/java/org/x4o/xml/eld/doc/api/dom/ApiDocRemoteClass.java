@@ -47,15 +47,27 @@ public class ApiDocRemoteClass {
 	private String packageListUrl = null;
 	private List<String> packageList = null;
 	
+	/**
+	 * Creates the ApiDocRemoteClass.
+	 */
 	private ApiDocRemoteClass() {
 		packageList = new ArrayList<String>(100);
 	}
 	
+	/**
+	 * Creates the ApiDocRemoteClass with a javadoc url to fetch the package-list from.
+	 * @param docUrl	The remote javadoc base url.
+	 */
 	public ApiDocRemoteClass(String docUrl) {
 		this();
 		setDocUrl(docUrl);
 	}
 	
+	/**
+	 * Creates the ApiDocRemoteClass with a javadoc url. but fetched the package-list from the packageListUrl.
+	 * @param docUrl	The remote javadoc base url.
+	 * @param packageListUrl	The remote/local package-list url.
+	 */
 	public ApiDocRemoteClass(String docUrl,String packageListUrl) {
 		this(docUrl);
 		setPackageListUrl(packageListUrl);
@@ -87,6 +99,10 @@ public class ApiDocRemoteClass {
 		return null;
 	}
 	
+	/**
+	 * Cleans the docUrl by sometimes appending postfix slash. 
+	 * @return	The cleaned doc url.
+	 */
 	private String getDocUrlClean() {
 		String baseUrl = getDocUrl();
 		if (baseUrl.endsWith("/")==false) {
@@ -95,6 +111,10 @@ public class ApiDocRemoteClass {
 		return baseUrl;
 	}
 	
+	/**
+	 * Fetches and parses the package-list file.
+	 * @throws IOException	If error happend.
+	 */
 	public void parseRemotePackageList() throws IOException {
 		packageList.clear();
 		String baseUrl = getDocUrlClean();
@@ -106,6 +126,12 @@ public class ApiDocRemoteClass {
 		parseRemoteFile(conn.getInputStream(), conn.getContentEncoding());
 	}
 	
+	/**
+	 * Parsed the inputStream into the packagList values.
+	 * @param in	The inputStream.
+	 * @param enc	The encoding of the inputStream.
+	 * @throws IOException	When error on inputStream.
+	 */
 	private void parseRemoteFile(InputStream in,String enc) throws IOException {
 		if (enc==null) {
 			enc = "UTF-8";
@@ -129,7 +155,7 @@ public class ApiDocRemoteClass {
 	public String getDocUrl() {
 		return docUrl;
 	}
-
+	
 	/**
 	 * @param docUrl the docUrl to set
 	 */

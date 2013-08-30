@@ -64,13 +64,6 @@
 			</conv:stringSplitConverter>
 		</eld:attribute>
 	</eld:elementInterface>
-
-	<eld:elementInterface id="JComponent" interfaceClass="javax.swing.JComponent">
-		<eld:description>Configs the JComponent based objects.</eld:description>
-		<eld:classBindingHandler id="JComponent-JComponent" parentClass="javax.swing.JComponent" childClass="javax.swing.JComponent" addMethod="add" getMethod="getComponents">
-			<eld:description>Binds the JComponent to the JComponent.</eld:description>
-		</eld:classBindingHandler>
-	</eld:elementInterface>
 	
 	<eld:namespace
 		uri="http://test.x4o.org/xml/ns/test-root"

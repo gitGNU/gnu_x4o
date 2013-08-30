@@ -20,45 +20,43 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.plugin.maven;
+package org.x4o.xml.eld.doc;
 
-import java.io.File;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-
-import org.x4o.xml.eld.xsd.X4OWriteLanguageSchemaExecutor;
 import org.x4o.xml.element.ElementException;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
+import org.x4o.xml.lang.X4OLanguage;
+import org.x4o.xml.lang.task.AbstractX4OLanguageTask;
+import org.x4o.xml.lang.task.X4OLanguageTaskException;
+import org.x4o.xml.lang.task.X4OLanguageTaskExecutor;
 
 /**
- * X4OWriteLanguageSchemaMojo creates schema for language.
+ * X4OWriteLanguageDoc is support class to write html documentation from the eld.
  * 
  * @author Willem Cazander
- * @version 1.0 Apr 10, 2013
+ * @version 1.0 Aug 22, 2012
  */
-@Mojo( name = X4OWriteLanguageSchemaMojo.GOAL,requiresProject=true,requiresDependencyResolution=ResolutionScope.COMPILE)
-public class X4OWriteLanguageSchemaMojo extends AbstractX4OLanguageMojo {
+public class EldDocLanguageTask extends AbstractX4OLanguageTask {
+
+	public  static final String TASK_ID   = "eld-doc";
+	private static final String TASK_NAME = "ELD DOC Writer Task";
+	private static final String TASK_DESC = "Writes out the documentation of the language elements.";
 	
-	static public final String GOAL = "write-language-schema"; 
-	
-	String getLanguageTaskDirectoryLabel() {
-		return "xsd";
+	public EldDocLanguageTask() {
+		super(TASK_ID,TASK_NAME,TASK_DESC,EldDocWriter.DEFAULT_PROPERTY_CONFIG);
 	}
 	
-	String getLanguageTaskName() {
-		return "X4O Write language schema";
-	}
-	
-	void executeLanguageTask(String languageName,String languageVersion,File basePath) throws MojoExecutionException {
-		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
-		writer.setBasePath(basePath);
-		writer.setLanguageName(languageName);
-		writer.setLanguageVersion(languageVersion);
-		try {
-			writer.execute();
-		} catch (ElementException e) {
-			throw new MojoExecutionException(e.getMessage(),e);
-		}
+	/**
+	 * Executes this language task.
+	 */
+	public X4OLanguageTaskExecutor createTaskExecutor(final PropertyConfig config) {
+		return new X4OLanguageTaskExecutor() {
+			public void execute(X4OLanguage language) throws X4OLanguageTaskException {
+				try {
+					new EldDocWriter(language,config).writeDocumentation();
+				} catch (ElementException e) {
+					throw new X4OLanguageTaskException(config,e.getMessage(),e);
+				}
+			}
+		};
 	}
 }

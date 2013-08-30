@@ -20,64 +20,32 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.plugin.ant;
+package	org.x4o.xml.lang.task;
 
-import java.io.File;
-
-import org.apache.tools.ant.BuildException;
-import org.x4o.xml.eld.xsd.X4OWriteLanguageSchemaExecutor;
-import org.x4o.xml.element.ElementException;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 
 /**
- * X4OWriteSchemaTask creates schema for language.
+ * X4OLanguageTaskException addes the property config to the exception.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 23, 2012
+ * @version 1.0 Aug 26, 2013
  */
-public class X4OWriteLanguageSchemaTask extends AbstractX4OLanguageTask {
-
-	private String nsuri = null;
+public class X4OLanguageTaskException extends Exception {
 	
-	/**
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#getLanguageTaskName()
-	 */
-	@Override
-	String getLanguageTaskName() {
-		return "X4O Write language schema";
+	private static final long serialVersionUID = 8490969221732950292L;
+	private PropertyConfig propertyConfig = null;
+	
+	public X4OLanguageTaskException(PropertyConfig propertyConfig,String message) {
+		super(message);
+		this.propertyConfig=propertyConfig;
+	}
+	
+	public X4OLanguageTaskException(PropertyConfig propertyConfig,String message,Exception exception) {
+		super(message,exception);
+		this.propertyConfig=propertyConfig;
 	}
 
-	/**
-	 * Config and start schema writer
-	 * @see org.x4o.plugin.ant.AbstractX4OLanguageTask#executeLanguageTask(java.io.File)
-	 */
-	@Override
-	void executeLanguageTask(File basePath) throws BuildException {
-		if (isVerbose() && getNsuri()!=null) {
-			log("Namespace uri: "+getNsuri());
-		}
-		X4OWriteLanguageSchemaExecutor writer = new X4OWriteLanguageSchemaExecutor();
-		writer.setBasePath(basePath);
-		writer.setLanguageName(getLanguageName());
-		writer.setLanguageVersion(getLanguageVersion());
-		writer.setLanguageNamespaceUri(getNsuri()); // null is all namespaces
-		try {
-			writer.execute();
-		} catch (ElementException e) {
-			throw new BuildException(e);
-		}
-	}
-
-	/**
-	 * @return the nsuri
-	 */
-	public String getNsuri() {
-		return nsuri;
-	}
-
-	/**
-	 * @param nsuri the nsuri to set
-	 */
-	public void setNsuri(String nsuri) {
-		this.nsuri = nsuri;
+	public PropertyConfig getPropertyConfig() {
+		return propertyConfig;
 	}
 }

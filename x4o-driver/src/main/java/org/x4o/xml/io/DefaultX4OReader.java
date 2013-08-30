@@ -67,50 +67,37 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	private final PropertyConfig propertyConfig;
 	
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_READER;
-	private final static String PROPERTY_SAX_ERROR_HANDLER            = "sax/error-handler";
-	private final static String PROPERTY_SAX_ENTITY_RESOLVER          = "sax/entity-resolver";
-	private final static String PROPERTY_DOC_EMPTY_NAMESPACE_URI      = "doc/empty-namespace-uri";
-	private final static String PROPERTY_DOC_BUFFER_SIZE              = "doc/buffer-size";
-	private final static String PROPERTY_INPUT_STREAM                 = "input/stream";
-	private final static String PROPERTY_INPUT_ENCODING               = "input/encoding";
-	private final static String PROPERTY_INPUT_SOURCE                 = "input/source";
-	private final static String PROPERTY_INPUT_SYSTEM_ID              = "input/system-id";
-	private final static String PROPERTY_INPUT_BASE_PATH              = "input/base-path";
-	private final static String PROPERTY_VALIDATION_SCHEMA_AUTO_WRITE = "validation/schema-auto-write";
-	private final static String PROPERTY_VALIDATION_SCHEMA_PATH       = "validation/schema-path";
-	private final static String PROPERTY_VALIDATION_INPUT_DOC         = "validation/input-doc";
-	private final static String PROPERTY_VALIDATION_INPUT_SCHEMA      = "validation/input-schema";
 	
 	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
-	public final static String SAX_ERROR_HANDLER            = PROPERTY_CONTEXT_PREFIX+PROPERTY_SAX_ERROR_HANDLER;
-	public final static String SAX_ENTITY_RESOLVER          = PROPERTY_CONTEXT_PREFIX+PROPERTY_SAX_ENTITY_RESOLVER;
-	public final static String DOC_EMPTY_NAMESPACE_URI      = PROPERTY_CONTEXT_PREFIX+PROPERTY_DOC_EMPTY_NAMESPACE_URI;
-	public final static String DOC_BUFFER_SIZE              = PROPERTY_CONTEXT_PREFIX+PROPERTY_DOC_BUFFER_SIZE;
-	public final static String INPUT_STREAM                 = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_STREAM;
-	public final static String INPUT_ENCODING               = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_ENCODING;
-	public final static String INPUT_SOURCE                 = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_SOURCE;
-	public final static String INPUT_SYSTEM_ID              = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_SYSTEM_ID;
-	public final static String INPUT_BASE_PATH              = PROPERTY_CONTEXT_PREFIX+PROPERTY_INPUT_BASE_PATH;
-	public final static String VALIDATION_SCHEMA_AUTO_WRITE = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_SCHEMA_AUTO_WRITE;
-	public final static String VALIDATION_SCHEMA_PATH       = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_SCHEMA_PATH;
-	public final static String VALIDATION_INPUT_DOC         = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_INPUT_DOC;
-	public final static String VALIDATION_INPUT_SCHEMA      = PROPERTY_CONTEXT_PREFIX+PROPERTY_VALIDATION_INPUT_SCHEMA;
+	public final static String SAX_ERROR_HANDLER            = PROPERTY_CONTEXT_PREFIX + "sax/error-handler";
+	public final static String SAX_ENTITY_RESOLVER          = PROPERTY_CONTEXT_PREFIX + "sax/entity-resolver";
+	public final static String DOC_EMPTY_NAMESPACE_URI      = PROPERTY_CONTEXT_PREFIX + "doc/empty-namespace-uri";
+	public final static String DOC_BUFFER_SIZE              = PROPERTY_CONTEXT_PREFIX + "doc/buffer-size";
+	public final static String INPUT_STREAM                 = PROPERTY_CONTEXT_PREFIX + "input/stream";
+	public final static String INPUT_ENCODING               = PROPERTY_CONTEXT_PREFIX + "input/encoding";
+	public final static String INPUT_SOURCE                 = PROPERTY_CONTEXT_PREFIX + "input/source";
+	public final static String INPUT_SYSTEM_ID              = PROPERTY_CONTEXT_PREFIX + "input/system-id";
+	public final static String INPUT_BASE_PATH              = PROPERTY_CONTEXT_PREFIX + "input/base-path";
+	public final static String VALIDATION_SCHEMA_AUTO_WRITE = PROPERTY_CONTEXT_PREFIX + "validation/schema-auto-write";
+	public final static String VALIDATION_SCHEMA_PATH       = PROPERTY_CONTEXT_PREFIX + "validation/schema-path";
+	public final static String VALIDATION_INPUT_DOC         = PROPERTY_CONTEXT_PREFIX + "validation/input-doc";
+	public final static String VALIDATION_INPUT_SCHEMA      = PROPERTY_CONTEXT_PREFIX + "validation/input-schema";
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,null,PROPERTY_CONTEXT_PREFIX,
-				new PropertyConfigItem(PROPERTY_SAX_ERROR_HANDLER,ErrorHandler.class),
-				new PropertyConfigItem(PROPERTY_SAX_ENTITY_RESOLVER,EntityResolver.class),
-				new PropertyConfigItem(PROPERTY_DOC_EMPTY_NAMESPACE_URI,String.class),
-				new PropertyConfigItem(PROPERTY_DOC_BUFFER_SIZE,Integer.class,4096*2),
-				new PropertyConfigItem(PROPERTY_INPUT_STREAM,InputStream.class),
-				new PropertyConfigItem(PROPERTY_INPUT_ENCODING,String.class,XMLConstants.XML_DEFAULT_ENCODING),
-				new PropertyConfigItem(PROPERTY_INPUT_SOURCE,InputSource.class),
-				new PropertyConfigItem(PROPERTY_INPUT_SYSTEM_ID,String.class),
-				new PropertyConfigItem(PROPERTY_INPUT_BASE_PATH,URL.class),
-				new PropertyConfigItem(PROPERTY_VALIDATION_SCHEMA_AUTO_WRITE,Boolean.class,true),
-				new PropertyConfigItem(PROPERTY_VALIDATION_SCHEMA_PATH,File.class),
-				new PropertyConfigItem(PROPERTY_VALIDATION_INPUT_DOC,Boolean.class,false),
-				new PropertyConfigItem(PROPERTY_VALIDATION_INPUT_SCHEMA,Boolean.class,false)
+				new PropertyConfigItem(SAX_ERROR_HANDLER,ErrorHandler.class),
+				new PropertyConfigItem(SAX_ENTITY_RESOLVER,EntityResolver.class),
+				new PropertyConfigItem(DOC_EMPTY_NAMESPACE_URI,String.class),
+				new PropertyConfigItem(DOC_BUFFER_SIZE,Integer.class,4096*2),
+				new PropertyConfigItem(INPUT_STREAM,InputStream.class),
+				new PropertyConfigItem(INPUT_ENCODING,String.class,XMLConstants.XML_DEFAULT_ENCODING),
+				new PropertyConfigItem(INPUT_SOURCE,InputSource.class),
+				new PropertyConfigItem(true,INPUT_SYSTEM_ID,String.class),
+				new PropertyConfigItem(true,INPUT_BASE_PATH,URL.class),
+				new PropertyConfigItem(VALIDATION_SCHEMA_AUTO_WRITE,Boolean.class,true),
+				new PropertyConfigItem(VALIDATION_SCHEMA_PATH,File.class),
+				new PropertyConfigItem(VALIDATION_INPUT_DOC,Boolean.class,false),
+				new PropertyConfigItem(VALIDATION_INPUT_SCHEMA,Boolean.class,false)
 				);
 	}
 	

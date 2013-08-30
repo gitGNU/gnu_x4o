@@ -392,6 +392,7 @@
             <exclude>**/*.png</exclude>
             <exclude>**/*.pom</exclude>
             <exclude>**/.empty</exclude>
+            <exclude>**/.directory</exclude>
             <exclude>**/empty-real.xml</exclude>
             <exclude>**/empty-test.xml</exclude>
             <exclude>**/empty-x4o.xml</exclude>
@@ -406,6 +407,7 @@
             <apt>DOUBLETILDE_STYLE</apt>
             <properties>SCRIPT_STYLE</properties>
             <sh>SCRIPT_STYLE</sh>
+            <css>SLASHSTAR_STYLE</css>
           </mapping>
         </configuration>
         <executions>
