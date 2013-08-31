@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * @author Willem Cazander
  * @version 1.0 Apr 6, 2013
  */
-public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> implements X4OWriter<T> {
+public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterSession<T> implements X4OWriter<T> {
 
 	public AbstractX4OWriter(X4OLanguage language) {
 		super(language);
@@ -63,18 +63,18 @@ public abstract class AbstractX4OWriter<T> extends AbstractX4OWriterContext<T> i
 	}
 	
 	public void write(T object,OutputStream output) throws X4OConnectionException,SAXException,IOException {
-		writeContext(toObjectContext(object), output);
+		writeSession(toObjectContext(object), output);
 	}
 	
 	public void writeFile(T object,String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
-		writeFileContext(toObjectContext(object), fileName);
+		writeFileSession(toObjectContext(object), fileName);
 	}
 	
 	public void writeFile(T object,File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
-		writeFileContext(toObjectContext(object), file);
+		writeFileSession(toObjectContext(object), file);
 	}
 	
 	public String writeString(T object) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
-		return writeStringContext(toObjectContext(object));
+		return writeStringSession(toObjectContext(object));
 	}
 }

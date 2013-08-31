@@ -37,7 +37,7 @@
 		<mkdir dir="${test.dir}/cel"/>
 		<x4oTask languageName="cel" taskId="eld-doc">
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				key="http://x4o.org/properties/eld-doc/output/path"
 				value="${test.dir}/cel"
 			/>
 		</x4oTask>
@@ -47,7 +47,7 @@
 		<mkdir dir="${test.dir}/cel-verbose"/>
 		<x4oTask languageName="cel" taskId="eld-doc" verbose="true">
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				key="http://x4o.org/properties/eld-doc/output/path"
 				value="${test.dir}/cel-verbose"
 			/>
 		</x4oTask>
@@ -57,7 +57,7 @@
 		<mkdir dir="${test.dir}/eld"/>
 		<x4oTask languageName="eld" taskId="eld-doc">
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				key="http://x4o.org/properties/eld-doc/output/path"
 				value="${test.dir}/eld"
 			/>
 		</x4oTask>
@@ -67,24 +67,24 @@
 		<mkdir dir="${test.dir}/eld-custom"/>
 		<x4oTask languageName="eld" taskId="eld-doc">
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-doc/output/path"
+				key="http://x4o.org/properties/eld-doc/output/path"
 				value="${test.dir}/eld-custom"
 			/>
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/content/output/charTab"
+				key="http://x4o.org/properties/content/output/charTab"
 				value=" "
 			/>
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-doc/meta/stylesheet-thema"
+				key="http://x4o.org/properties/eld-doc/meta/stylesheet-thema"
 				value="jdk6"
 			/>
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-doc/javadoc/link"
+				key="http://x4o.org/properties/eld-doc/javadoc/link"
 				value="http://docs.oracle.com/javase/7/docs/api/"
 			/>
 			<!-- fixme map type property config
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-doc/javadoc/link-offline"
+				key="http://x4o.org/properties/eld-doc/javadoc/link-offline"
 				value="http://www.x4o.org/apidocs/,file:///home/willemc/devv/git/x4o/x4o-driver/target/apidocs"
 			/>
 			-->

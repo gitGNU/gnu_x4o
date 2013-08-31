@@ -38,12 +38,12 @@ import org.xml.sax.SAXException;
 import junit.framework.TestCase;
 
 /**
- * X4OWriterContextTest.
+ * X4OWriterSessionTest.
  * 
  * @author Willem Cazander
  * @version 1.0 Apr 28, 2013
  */
-public class X4OWriterContextTest extends TestCase {
+public class X4OWriterSessionTest extends TestCase {
 	
 	private File createOutputFile() throws IOException {
 		File outputFile = File.createTempFile("test-writer-context", ".xml");
@@ -72,9 +72,9 @@ public class X4OWriterContextTest extends TestCase {
 	public void testWriteFile() throws Exception {
 		File outputFile = createOutputFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
-		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+		X4OWriterSession<TestObjectRoot> writer = driver.createWriterSession();
 
-		writer.writeFileContext(createContext(), outputFile);
+		writer.writeFileSession(createContext(), outputFile);
 		String text = X4OWriterTest.readFile( outputFile );
 		outputFile.delete();
 
@@ -86,11 +86,11 @@ public class X4OWriterContextTest extends TestCase {
 	
 	public void testWriteFileNull() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+		X4OWriterSession<TestObjectRoot> writer = driver.createWriterSession();
 		Exception e = null;
 		File nullFile = null;
 		try {
-			writer.writeFileContext(createContext(), nullFile);
+			writer.writeFileSession(createContext(), nullFile);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -103,9 +103,9 @@ public class X4OWriterContextTest extends TestCase {
 	public void testWriteFileName() throws Exception {
 		File outputFile = createOutputFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
-		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+		X4OWriterSession<TestObjectRoot> writer = driver.createWriterSession();
 		
-		writer.writeFileContext(createContext(), outputFile.getAbsolutePath());
+		writer.writeFileSession(createContext(), outputFile.getAbsolutePath());
 		String text = X4OWriterTest.readFile( outputFile );
 		outputFile.delete();
 
@@ -117,11 +117,11 @@ public class X4OWriterContextTest extends TestCase {
 	
 	public void testWriteFileNameNull() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+		X4OWriterSession<TestObjectRoot> writer = driver.createWriterSession();
 		Exception e = null;
 		String nullFileName = null;
 		try {
-			writer.writeFileContext(createContext(), nullFileName);
+			writer.writeFileSession(createContext(), nullFileName);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -134,11 +134,11 @@ public class X4OWriterContextTest extends TestCase {
 	public void testWriteStream() throws Exception {
 		File outputFile = createOutputFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
-		X4OWriterContext<TestObjectRoot> writer = driver.createWriterContext();
+		X4OWriterSession<TestObjectRoot> writer = driver.createWriterSession();
 		
 		OutputStream outputStream = new FileOutputStream(outputFile);
 		try {
-			writer.writeContext(createContext(),outputStream);
+			writer.writeSession(createContext(),outputStream);
 		} finally {
 			outputStream.close();
 		}

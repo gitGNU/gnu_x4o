@@ -27,14 +27,13 @@ import java.util.List;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.DefaultX4OWriter;
 import org.x4o.xml.io.X4OReader;
-import org.x4o.xml.io.X4OReaderContext;
+import org.x4o.xml.io.X4OReaderSession;
 import org.x4o.xml.io.X4OWriter;
-import org.x4o.xml.io.X4OWriterContext;
+import org.x4o.xml.io.X4OWriterSession;
 import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 import org.x4o.xml.lang.task.X4OLanguageTask;
-import org.x4o.xml.lang.task.X4OLanguageTaskExecutor;
 
 /**
  * X4ODriver Is the x4o language driver to interact with xml.
@@ -84,18 +83,18 @@ public abstract class X4ODriver<T> {
 	// =============== Reader
 	
 	public X4OReader<T> createReader() {
-		return createReaderContext();
+		return createReaderSession();
 	}
 	
 	public X4OReader<T> createReader(String version) {
-		return createReaderContext(version);
+		return createReaderSession(version);
 	}
 	
-	public X4OReaderContext<T> createReaderContext() {
-		return createReaderContext(getLanguageVersionDefault());
+	public X4OReaderSession<T> createReaderSession() {
+		return createReaderSession(getLanguageVersionDefault());
 	}
 	
-	public X4OReaderContext<T> createReaderContext(String version) {
+	public X4OReaderSession<T> createReaderSession(String version) {
 		return new DefaultX4OReader<T>(createLanguage(version));
 	}
 	
@@ -104,18 +103,18 @@ public abstract class X4ODriver<T> {
 	// =============== Writer
 	
 	public X4OWriter<T> createWriter() {
-		return createWriterContext();
+		return createWriterSession();
 	}
 	
 	public X4OWriter<T> createWriter(String version) {
-		return createWriterContext(version);
+		return createWriterSession(version);
 	}
 	
-	public X4OWriterContext<T> createWriterContext() {
-		return createWriterContext(getLanguageVersionDefault());
+	public X4OWriterSession<T> createWriterSession() {
+		return createWriterSession(getLanguageVersionDefault());
 	}
 	
-	public X4OWriterContext<T> createWriterContext(String version) {
+	public X4OWriterSession<T> createWriterSession(String version) {
 		return new DefaultX4OWriter<T>(createLanguage(version));
 	}
 	
@@ -174,12 +173,5 @@ public abstract class X4ODriver<T> {
 	
 	final public List<X4OLanguageTask> getLanguageTasks() {
 		return X4ODriverManager.getX4OLanguageTasks();
-	}
-	
-	public void t() {
-		X4OLanguageTask t = null;
-		//PropertyConfig conf = t.createTaskConfig();
-		//X4OLanguageTaskExecutor exe = t.createTaskExecutor(conf);
-		//exe.execute(language);
 	}
 }

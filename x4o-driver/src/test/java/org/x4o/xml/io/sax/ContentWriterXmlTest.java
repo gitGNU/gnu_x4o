@@ -235,7 +235,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- foobar -->"));
+		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!--foobar-->"));
 	}
 	
 	public void testCommentEscape() throws Exception {
@@ -243,7 +243,7 @@ public class ContentWriterXmlTest extends TestCase {
 		ContentWriterXml writer = new ContentWriterXml(outputWriter);
 		
 		writer.startDocument();
-		writer.comment("<!--foobar-->");
+		writer.comment("<!-- foobar -->");
 		writer.endDocument();
 		
 		String output = outputWriter.toString();

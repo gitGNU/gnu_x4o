@@ -61,7 +61,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readFile(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
 	
@@ -72,7 +72,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readFile(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException;
 	
@@ -82,7 +82,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readResource(String resourceName) throws X4OConnectionException,SAXException,IOException;
 	
@@ -92,7 +92,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception.
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readString(String xmlString) throws X4OConnectionException,SAXException,IOException;
 	
@@ -102,7 +102,7 @@ public interface X4OReader<T> extends X4OConnection {
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception.
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	T readUrl(URL url) throws X4OConnectionException,SAXException,IOException;
 }

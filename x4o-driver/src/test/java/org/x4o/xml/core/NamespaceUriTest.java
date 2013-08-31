@@ -23,7 +23,7 @@
 package org.x4o.xml.core;
 
 import org.x4o.xml.io.DefaultX4OReader;
-import org.x4o.xml.io.X4OReaderContext;
+import org.x4o.xml.io.X4OReaderSession;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.test.TestDriver;
@@ -42,40 +42,40 @@ public class NamespaceUriTest extends TestCase {
 	public void testSimpleUri() throws Exception {
 		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
-			context = reader.readResourceContext("tests/namespace/uri-simple.xml");
+			context = reader.readResourceSession("tests/namespace/uri-simple.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);
 		} finally {
-			reader.releaseContext(context);
+			reader.releaseSession(context);
 		}
 	}
 	
 	public void testEmptyUri() throws Exception {
 		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		reader.setProperty(DefaultX4OReader.DOC_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
 		try {
-			context = reader.readResourceContext("tests/namespace/uri-empty.xml");
+			context = reader.readResourceSession("tests/namespace/uri-empty.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);
 		} finally {
-			reader.releaseContext(context);
+			reader.releaseSession(context);
 		}
 	}
 	
 	public void testSchemaUri() throws Exception {
 		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
-			context = reader.readResourceContext("tests/namespace/uri-schema.xml");
+			context = reader.readResourceSession("tests/namespace/uri-schema.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);
 		} finally {
-			reader.releaseContext(context);
+			reader.releaseSession(context);
 		}
 	}
 }

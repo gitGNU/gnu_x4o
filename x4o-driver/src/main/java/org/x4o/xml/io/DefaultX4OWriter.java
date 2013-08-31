@@ -98,9 +98,9 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	}
 	
 	/**
-	 * @see org.x4o.xml.io.X4OWriterContext#writeContext(org.x4o.xml.lang.X4OLanguageSession, java.io.OutputStream)
+	 * @see org.x4o.xml.io.X4OWriterSession#writeSession(org.x4o.xml.lang.X4OLanguageSession, java.io.OutputStream)
 	 */
-	public void writeContext(X4OLanguageSession languageSession,OutputStream output) throws X4OConnectionException,SAXException,IOException {
+	public void writeSession(X4OLanguageSession languageSession,OutputStream output) throws X4OConnectionException,SAXException,IOException {
 		setProperty(OUTPUT_STREAM, output);
 		addPhaseSkip(X4OPhase.WRITE_RELEASE);
 		try {

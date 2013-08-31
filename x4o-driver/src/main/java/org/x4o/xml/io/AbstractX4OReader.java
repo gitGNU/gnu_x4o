@@ -38,14 +38,14 @@ import org.xml.sax.SAXException;
  * @version 1.0 Aug 11, 2005
  */
 @SuppressWarnings("unchecked")
-abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> implements X4OReader<T> {
+abstract public class AbstractX4OReader<T> extends AbstractX4OReaderSession<T> implements X4OReader<T> {
 	
 	public AbstractX4OReader(X4OLanguage language) {
 		super(language);
 	}
 	
 	public T read(InputStream input, String systemId, URL basePath) throws X4OConnectionException,SAXException,IOException {
-		return (T)readContext(input, systemId, basePath).getRootElement().getElementObject();
+		return (T)readSession(input, systemId, basePath).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -55,10 +55,10 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readFile(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
-		return (T)readFileContext(fileName).getRootElement().getElementObject();
+		return (T)readFileSession(fileName).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -68,10 +68,10 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readFile(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
-		return (T)readFileContext(file).getRootElement().getElementObject();
+		return (T)readFileSession(file).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -80,10 +80,10 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readResource(String resourceName) throws X4OConnectionException,SAXException,IOException {
-		return (T)readResourceContext(resourceName).getRootElement().getElementObject();
+		return (T)readResourceSession(resourceName).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -92,10 +92,10 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readString(String xmlString) throws X4OConnectionException,SAXException,IOException {
-		return (T)readStringContext(xmlString).getRootElement().getElementObject();
+		return (T)readStringSession(xmlString).getRootElement().getElementObject();
 	}
 	
 	/**
@@ -104,9 +104,9 @@ abstract public class AbstractX4OReader<T> extends AbstractX4OReaderContext<T> i
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
 	public T readUrl(URL url) throws X4OConnectionException,SAXException,IOException {
-		return (T)readUrlContext(url).getRootElement().getElementObject();
+		return (T)readUrlSession(url).getRootElement().getElementObject();
 	}
 }

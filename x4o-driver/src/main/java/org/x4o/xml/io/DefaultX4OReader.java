@@ -113,7 +113,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		return propertyConfig;
 	}
 	
-	public X4OLanguageSession readContext(InputStream input, String systemId, URL basePath) throws X4OConnectionException, SAXException, IOException {
+	public X4OLanguageSession readSession(InputStream input, String systemId, URL basePath) throws X4OConnectionException, SAXException, IOException {
 		setProperty(INPUT_STREAM, input);
 		setProperty(INPUT_SYSTEM_ID, systemId);
 		setProperty(INPUT_BASE_PATH, basePath);
@@ -247,7 +247,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		}
 	}
 
-	public void releaseContext(X4OLanguageSession context) throws X4OPhaseException {
+	public void releaseSession(X4OLanguageSession context) throws X4OPhaseException {
 		if (context==null) {
 			return;
 		}

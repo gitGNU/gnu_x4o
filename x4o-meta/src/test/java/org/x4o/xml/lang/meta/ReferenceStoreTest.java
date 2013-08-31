@@ -24,7 +24,7 @@ package org.x4o.xml.lang.meta;
 
 import java.util.Date;
 
-import org.x4o.xml.io.X4OReaderContext;
+import org.x4o.xml.io.X4OReaderSession;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.phase.X4OPhase;
 
@@ -41,42 +41,42 @@ public class ReferenceStoreTest extends TestCase {
 	public void testMetaGeneric() throws Exception {
 		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
-		X4OReaderContext<?> reader = driver.createReaderContext();
+		X4OReaderSession<?> reader = driver.createReaderSession();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
-			context = reader.readResourceContext("junit/test-meta-generic.xml");
+			context = reader.readResourceSession("junit/test-meta-generic.xml");
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(0).getElementObject().getClass().getName());
 		} finally {
-			reader.releaseContext(context);
+			reader.releaseSession(context);
 		}
 	}
 	
 	public void testLoadClass() throws Exception {
 		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
-		X4OReaderContext<?> reader = driver.createReaderContext();
+		X4OReaderSession<?> reader = driver.createReaderSession();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
-			context = reader.readResourceContext("junit/test-meta-reference.xml");
+			context = reader.readResourceSession("junit/test-meta-reference.xml");
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(0).getElementObject().getClass().getName());
 		} finally {
-			reader.releaseContext(context);
+			reader.releaseSession(context);
 		}
 	}
 	
 	public void testStoreRef() throws Exception {
 		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
-		X4OReaderContext<?> reader = driver.createReaderContext();
+		X4OReaderSession<?> reader = driver.createReaderSession();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
-			context = reader.readResourceContext("junit/test-meta-reference.xml");
+			context = reader.readResourceSession("junit/test-meta-reference.xml");
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(0).getElementObject().getClass().getName());
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(1).getElementObject().getClass().getName());
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(2).getElementObject().getClass().getName());
 			assertEquals(Date.class.getName(),context.getRootElement().getChilderen().get(3).getElementObject().getClass().getName());
 		} finally {
-			reader.releaseContext(context);
+			reader.releaseSession(context);
 		}
 	}
 

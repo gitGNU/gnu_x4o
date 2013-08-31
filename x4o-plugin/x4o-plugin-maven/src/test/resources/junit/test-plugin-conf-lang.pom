@@ -49,7 +49,7 @@
           <languageName>cel</languageName>
           <taskId>eld-xsd</taskId>
           <taskPropertyValues>
-            <taskPropertyValue>http://language.x4o.org/xml/properties/eld-xsd/output/path=target/jtest/test-plugin-conf-lang/cel</taskPropertyValue>
+            <taskPropertyValue>http://x4o.org/properties/eld-xsd/output/path=target/jtest/test-plugin-conf-lang/cel</taskPropertyValue>
           </taskPropertyValues>
         </configuration>
       </plugin>

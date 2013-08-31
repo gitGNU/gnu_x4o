@@ -37,12 +37,12 @@ import org.x4o.xml.test.models.TestObjectRoot;
 import junit.framework.TestCase;
 
 /**
- * X4OReaderContextTest.
+ * X4OReaderSessionTest.
  * 
  * @author Willem Cazander
  * @version 1.0 Apr 15, 2013
  */
-public class X4OReaderContextTest extends TestCase {
+public class X4OReaderSessionTest extends TestCase {
 	
 	private File copyResourceToTempFile() throws IOException {
 		File tempFile = File.createTempFile("test-resource", ".xml");
@@ -60,9 +60,9 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadFileName() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		File xmlFile = copyResourceToTempFile();
-		X4OLanguageSession context = reader.readFileContext(xmlFile.getAbsolutePath());
+		X4OLanguageSession context = reader.readFileSession(xmlFile.getAbsolutePath());
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
@@ -72,11 +72,11 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadFileNameNull() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		Exception e = null;
 		try {
 			String nullFileName = null;
-			reader.readFileContext(nullFileName);
+			reader.readFileSession(nullFileName);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -88,9 +88,9 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadFile() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		File xmlFile = copyResourceToTempFile();
-		X4OLanguageSession context = reader.readFileContext(xmlFile);
+		X4OLanguageSession context = reader.readFileSession(xmlFile);
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
@@ -100,11 +100,11 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadFileNull() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		Exception e = null;
 		try {
 			File nullFile = null;
-			reader.readFileContext(nullFile);
+			reader.readFileSession(nullFile);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -116,12 +116,12 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadFileNotExists() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		Exception e = null;
 		try {
 			File tempFile = File.createTempFile("test-file", ".xml");
 			tempFile.delete();
-			reader.readFileContext(tempFile);
+			reader.readFileSession(tempFile);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -136,10 +136,10 @@ public class X4OReaderContextTest extends TestCase {
 			return; // only test on real os.
 		}
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		Exception e = null;
 		try {
-			reader.readFileContext(new File("/etc/shadow"));
+			reader.readFileSession(new File("/etc/shadow"));
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -152,18 +152,18 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadResource() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		X4OLanguageSession context = reader.readResourceContext("tests/attributes/test-bean.xml");
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
+		X4OLanguageSession context = reader.readResourceSession("tests/attributes/test-bean.xml");
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 	}
 	
 	public void testReadResourceNull() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		Exception e = null;
 		try {
-			reader.readResourceContext(null);
+			reader.readResourceSession(null);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -175,8 +175,8 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadString() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
-		X4OLanguageSession context = reader.readStringContext(
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
+		X4OLanguageSession context = reader.readStringSession(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
 				"<root:root xmlns:root=\"http://test.x4o.org/xml/ns/test-root\" xmlns=\"http://test.x4o.org/xml/ns/test-lang\">"+
 				"<testBean privateIntegerTypeField=\"987654321\"/>"+
@@ -192,10 +192,10 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadStringNull() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		Exception e = null;
 		try {
-			reader.readStringContext(null);
+			reader.readStringSession(null);
 		} catch (Exception catchE) {
 			e = catchE;
 		}
@@ -207,9 +207,9 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadUrl() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		URL xmlUrl = Thread.currentThread().getContextClassLoader().getResource("tests/attributes/test-bean.xml");
-		X4OLanguageSession context = reader.readUrlContext(xmlUrl);
+		X4OLanguageSession context = reader.readUrlSession(xmlUrl);
 		TestObjectRoot root = (TestObjectRoot)context.getRootElement().getElementObject();
 		assertNotNull(root);
 		assertTrue(root.getTestBeans().size()>0);
@@ -219,10 +219,10 @@ public class X4OReaderContextTest extends TestCase {
 	
 	public void testReadUrlNull() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		Exception e = null;
 		try {
-			reader.readUrlContext(null);
+			reader.readUrlSession(null);
 		} catch (Exception catchE) {
 			e = catchE;
 		}

@@ -26,7 +26,7 @@ import javax.swing.JLabel;
 
 import org.x4o.xml.element.DefaultElement;
 import org.x4o.xml.element.Element;
-import org.x4o.xml.io.X4OReaderContext;
+import org.x4o.xml.io.X4OReaderSession;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.phase.X4OPhase;
 
@@ -43,16 +43,16 @@ public class ParentObjectTest extends TestCase {
 	public void testParentElement() throws Exception {
 		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
-		X4OReaderContext<?> reader = driver.createReaderContext();
+		X4OReaderSession<?> reader = driver.createReaderSession();
 		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
 		try {
-			context = reader.readResourceContext("junit/test-meta-parent-element.xml");
+			context = reader.readResourceSession("junit/test-meta-parent-element.xml");
 			assertEquals(1,context.getRootElement().getChilderen().size());
 			Element childElement = context.getRootElement().getChilderen().get(0);
 			JLabel test = (JLabel)childElement.getElementObject();
 			assertEquals("parentTest",test.getText());
 		} finally {
-			reader.releaseContext(context);
+			reader.releaseSession(context);
 		}
 	}
 	

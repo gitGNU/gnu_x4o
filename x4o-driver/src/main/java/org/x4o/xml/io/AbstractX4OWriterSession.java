@@ -22,26 +22,52 @@
  */
 package org.x4o.xml.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
+import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.xml.sax.SAXException;
 
 /**
- * X4OWriterContext is writer with language context.
+ * AbstractX4OWriterSession.
  * 
  * @author Willem Cazander
  * @version 1.0 Apr 6, 2013
  */
-public interface X4OWriterContext<T> extends X4OWriter<T> {
+public abstract class AbstractX4OWriterSession<T> extends AbstractX4OConnection implements X4OWriterSession<T> {
 
-	void writeContext(X4OLanguageSession context,OutputStream out) throws X4OConnectionException,SAXException,IOException;
+	public AbstractX4OWriterSession(X4OLanguage language) {
+		super(language);
+	}
 	
-	void writeFileContext(X4OLanguageSession context,String fileName) throws X4OConnectionException,SAXException,IOException;
+	public void writeFileSession(X4OLanguageSession languageSession,String fileName) throws X4OConnectionException,SAXException,IOException {
+		if (fileName==null) {
+			throw new NullPointerException("Can't convert null fileName to file object.");
+		}		
+		writeFileSession(languageSession,new File(fileName));
+	}
 	
-	void writeFileContext(X4OLanguageSession context,File file) throws X4OConnectionException,SAXException,IOException;
+	public void writeFileSession(X4OLanguageSession languageSession,File file) throws X4OConnectionException,SAXException,IOException {
+		if (file==null) {
+			throw new NullPointerException("Can't read null file.");
+		}
+		OutputStream outputStream = new FileOutputStream(file);
+		try {
+			writeSession(languageSession,outputStream);
+		} finally {
+			outputStream.close();
+		}
+	}
 	
-	String writeStringContext(X4OLanguageSession context) throws X4OConnectionException,SAXException,IOException;
+	public String writeStringSession(X4OLanguageSession languageSession) throws X4OConnectionException,SAXException,IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream(4096);
+		writeSession(languageSession, out);
+		String encoding = (String)getProperty(ContentWriterXml.OUTPUT_ENCODING);
+		return out.toString(encoding);
+	}
 }

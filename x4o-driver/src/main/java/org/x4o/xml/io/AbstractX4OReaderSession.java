@@ -36,15 +36,14 @@ import	org.x4o.xml.lang.X4OLanguageSession;
 import	org.xml.sax.SAXException;
 
 /**
- * AbstractX4OContextReader
-
+ * AbstractX4OReaderSession
  * 
  * @author Willem Cazander
  * @version 1.0 Apr 6, 2013
  */
-abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection implements X4OReaderContext<T> {
+abstract public class AbstractX4OReaderSession<T> extends AbstractX4OConnection implements X4OReaderSession<T> {
 	
-	public AbstractX4OReaderContext(X4OLanguage language) {
+	public AbstractX4OReaderSession(X4OLanguage language) {
 		super(language);
 	}
 
@@ -55,13 +54,13 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageSession readFileContext(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
+	public X4OLanguageSession readFileSession(String fileName) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
 		if (fileName==null) {
 			throw new NullPointerException("Can't convert null fileName to file object.");
 		}		
-		return readFileContext(new File(fileName));
+		return readFileSession(new File(fileName));
 	}
 	
 	/**
@@ -71,9 +70,9 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception. 
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageSession readFileContext(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
+	public X4OLanguageSession readFileSession(File file) throws X4OConnectionException,SAXException,IOException,FileNotFoundException {
 		if (file==null) {
 			throw new NullPointerException("Can't read null file.");
 		}
@@ -86,7 +85,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 		URL basePath = new File(file.getAbsolutePath()).toURI().toURL();
 		InputStream inputStream = new FileInputStream(file);
 		try {
-			return readContext(inputStream,file.getAbsolutePath(),basePath);
+			return readSession(inputStream,file.getAbsolutePath(),basePath);
 		} finally {
 			inputStream.close();
 		}
@@ -98,9 +97,9 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception.
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageSession readResourceContext(String resourceName) throws X4OConnectionException,SAXException,IOException {
+	public X4OLanguageSession readResourceSession(String resourceName) throws X4OConnectionException,SAXException,IOException {
 		if (resourceName==null) {
 			throw new NullPointerException("Can't read null resourceName from classpath.");
 		}
@@ -116,7 +115,7 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 		URL basePath = new URL(baseUrl);
 		InputStream inputStream = X4OLanguageClassLoader.getResourceAsStream(resourceName);
 		try {
-			return readContext(inputStream,url.toExternalForm(),basePath);
+			return readSession(inputStream,url.toExternalForm(),basePath);
 		} finally {
 			inputStream.close();
 		}
@@ -128,15 +127,15 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception.
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageSession readStringContext(String xmlString) throws X4OConnectionException,SAXException,IOException {
+	public X4OLanguageSession readStringSession(String xmlString) throws X4OConnectionException,SAXException,IOException {
 		if (xmlString==null) {
 			throw new NullPointerException("Can't read null xml string.");
 		}
 		URL basePath = new File(System.getProperty("user.dir")).toURI().toURL();
 		String encoding = (String)getProperty(DefaultX4OReader.INPUT_ENCODING);
-		return readContext(new ByteArrayInputStream(xmlString.getBytes(encoding)),"inline-xml",basePath);
+		return readSession(new ByteArrayInputStream(xmlString.getBytes(encoding)),"inline-xml",basePath);
 	}
 	
 	/**
@@ -145,13 +144,13 @@ abstract public class AbstractX4OReaderContext<T> extends AbstractX4OConnection 
 	 * @throws X4OConnectionException	Is thrown after x4o exception.
 	 * @throws SAXException	Is thrown after sax xml exception.
 	 * @throws IOException	Is thrown after io exception.
-	 * @see org.x4o.xml.io.X4OReaderContext#readContext(java.io.InputStream,java.lang.String,java.net.URL)
+	 * @see org.x4o.xml.io.X4OReaderSession#readSession(java.io.InputStream,java.lang.String,java.net.URL)
 	 */
-	public X4OLanguageSession readUrlContext(URL url) throws X4OConnectionException,SAXException,IOException {
+	public X4OLanguageSession readUrlSession(URL url) throws X4OConnectionException,SAXException,IOException {
 		if (url==null) {
 			throw new NullPointerException("Can't read null url.");
 		}
 		URL basePath = new URL(url.toExternalForm().substring(0,url.toExternalForm().length()-url.getFile().length()));
-		return readContext(url.openStream(),url.toExternalForm(),basePath);
+		return readSession(url.openStream(),url.toExternalForm(),basePath);
 	}
 }

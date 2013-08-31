@@ -37,7 +37,7 @@
 		<mkdir dir="${test.dir}/cel-full"/>
 		<x4oTask languageName="cel" taskId="eld-xsd">
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-xsd/output/path"
+				key="http://x4o.org/properties/eld-xsd/output/path"
 				value="${test.dir}/cel-full"
 			/>
 		</x4oTask>
@@ -47,11 +47,11 @@
 		<mkdir dir="${test.dir}/cel-single"/>
 		<x4oTask languageName="cel" taskId="eld-xsd">
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-xsd/output/path"
+				key="http://x4o.org/properties/eld-xsd/output/path"
 				value="${test.dir}/cel-single"
 			/>
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-xsd/filter/namespace"
+				key="http://x4o.org/properties/eld-xsd/filter/namespace"
 				value="http://cel.x4o.org/xml/ns/cel-core"
 			/>
 		</x4oTask>
@@ -61,11 +61,11 @@
 		<mkdir dir="${test.dir}/cel-single-verbose"/>
 		<x4oTask languageName="cel" taskId="eld-xsd" verbose="true">
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-xsd/output/path"
+				key="http://x4o.org/properties/eld-xsd/output/path"
 				value="${test.dir}/cel-single-verbose"
 			/>
 			<x4oTaskProperty
-				key="http://language.x4o.org/xml/properties/eld-xsd/filter/namespace"
+				key="http://x4o.org/properties/eld-xsd/filter/namespace"
 				value="http://cel.x4o.org/xml/ns/cel-core"
 			/>
 		</x4oTask>

@@ -60,7 +60,7 @@ public class X4OReaderTest extends TestCase {
 	
 	public void testReadInputStream() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
-		X4OReaderContext<TestObjectRoot> reader = driver.createReaderContext();
+		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
 		File xmlFile = copyResourceToTempFile();
 		URL basePath = new File(xmlFile.getAbsolutePath()).toURI().toURL();
 		InputStream inputStream = new FileInputStream(xmlFile);

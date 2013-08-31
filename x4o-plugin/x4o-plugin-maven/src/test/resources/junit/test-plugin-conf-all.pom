@@ -46,10 +46,11 @@
       <plugin>
         <artifactId>x4o-plugin-maven</artifactId>
         <configuration>
-          <outputDirectory>target/jtest/test-plugin-conf-all</outputDirectory>
-          <languages>
-            <eld>1.0</eld>
-          </languages>
+          <languageName>cel</languageName>
+          <taskId>eld-xsd</taskId>
+          <taskPropertyValues>
+            <taskPropertyValue>http://x4o.org/properties/eld-xsd/output/path=target/jtest/test-plugin-conf-all/cel</taskPropertyValue>
+          </taskPropertyValues>
           <verbose>false</verbose>
           <failOnError>false</failOnError>
         </configuration>
