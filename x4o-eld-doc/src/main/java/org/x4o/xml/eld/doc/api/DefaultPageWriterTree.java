@@ -22,12 +22,12 @@
  */
 package org.x4o.xml.eld.doc.api;
 
+import org.x4o.html.ContentWriterHtml.Tag;
 import org.x4o.xml.eld.doc.api.dom.ApiDoc;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNode;
 import org.x4o.xml.eld.doc.api.dom.ApiDocPage;
 import org.x4o.xml.eld.doc.api.dom.ApiDocPageWriter;
 import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
-import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
 import org.xml.sax.SAXException;
 
 /**

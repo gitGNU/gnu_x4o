@@ -1,10 +1,17 @@
 
 === X4O versions ===
 
+Version 0.8.7:
+- Created jdk7(CSS) javadoc compatible documentation.
+- Create language task api and converted the current tasks.
+- Renamed X4OLanguageContext to X4OLanguageSession.
+- Renamed ElementNamespaceContext to ElementNamespace.
+- Removed binding handler from element interface.
+- Refactored all property keys with PropertyConfig bean.
 
 Version 0.8.6:
 - Changed to X4ODriver interface.
-- Added write support
+- Added (simple) write support
 - Added ant and maven plugins
 
 Version 0.8.5:
@@ -12,12 +19,11 @@ Version 0.8.5:
 - Added eld to schema generator.
 - Added eld to html generator.
 - Cleaned xml uri nameing.
-- Cleaned language properties.
 - refactored ELD tag names.
 - Made elddoc ~working.
 - Changed phase enum to text phases. 
 
-Version 0.8.2:
+Version 0.8.0:
 - Changed packages to org.x4o
 - Made converter two way 
 - Added debug writer

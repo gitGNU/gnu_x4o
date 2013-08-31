@@ -20,11 +20,12 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package	org.x4o.xml.io.sax.ext;
+package	org.x4o.html;
 
 import java.io.Writer;
 import java.util.Calendar;
 
+import org.x4o.xml.io.sax.ext.ContentWriterXmlTag;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 

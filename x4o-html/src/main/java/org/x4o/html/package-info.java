@@ -20,40 +20,9 @@
  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.x4o.xml.eld.doc.api;
-
-import org.x4o.html.ContentWriterHtml.Tag;
-import org.x4o.xml.eld.doc.api.dom.ApiDocPage;
-import org.x4o.xml.eld.doc.api.dom.ApiDocPageWriter;
-import org.x4o.xml.eld.doc.api.dom.ApiDocWriteEvent;
-import org.xml.sax.SAXException;
-
 /**
- * DefaultPageWriterIndexAll creates the index-all page content.
- * 
- * @author Willem Cazander
- * @version 1.0 May 22, 2013
+ * The html writer and supper classes and resources.
+ *
+ * @since 1.0
  */
-public class DefaultPageWriterIndexAll implements ApiDocPageWriter {
-	
-	public static ApiDocPage createDocPage() {
-		return new ApiDocPage("index-all","Index","Index of all api ketwords.",new DefaultPageWriterIndexAll());
-	}
-	
-	public void writePageContent(ApiDocWriteEvent<ApiDocPage> e) throws SAXException {
-	//	ApiDoc doc = e.getDoc();
-	//	ApiDocPage page = e.getEvent();
-		ApiDocContentWriter writer = e.getWriter();
-		writer.docPageContentStart();
-		for (char i='A';i<='Z';i++) {
-			writer.printHref("#_"+i+"_", ""+i);
-			writer.characters("&nbsp;");
-		}
-		for (char i='A';i<='Z';i++) {
-			writer.printHrefNamed("_"+i+"_");
-			writer.printTagCharacters(Tag.h2, ""+i);
-			writer.characters("TODO");
-		}
-		writer.docPageContentEnd();
-	}
-}
+package org.x4o.html;

@@ -50,6 +50,7 @@
     <module>x4o-eld-doc</module>
     <module>x4o-meta</module>
     <module>x4o-plugin</module>
+    <module>x4o-html</module>
   </modules>
   <distributionManagement>
     <site>
@@ -397,6 +398,28 @@
             <exclude>**/empty-test.xml</exclude>
             <exclude>**/empty-x4o.xml</exclude>
             <exclude>**/empty-xml.xml</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-3.2/HTML32.dcl</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-3.2/HTML32.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-3.2/ISOlat1.ent</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-3.2/html32.soc</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/HTML4.cat</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/HTML4.decl</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/HTMLlat1.ent</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/HTMLspecial.ent</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/HTMLsymbol.ent</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/frameset.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/loose.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-4.01/strict.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml-lat1.ent</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml-special.ent</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml-symbol.ent</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml.soc</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1-frameset.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1-strict.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1-transitional.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1.dcl</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-5.draft/html5dtd.org-draft.dtd</exclude>
+            <exclude>**/src/main/resources/org/x4o/html/spec/html-5.draft/entities.json</exclude>
           </excludes>
           <mapping>
             <java>SLASHSTAR_STYLE</java>
@@ -404,10 +427,16 @@
             <eld>XML_STYLE</eld>
             <fml>XML_STYLE</fml>
             <xsd>XML_STYLE</xsd>
+            <dtd>XML_STYLE</dtd>
+            <ent>XML_STYLE</ent>
             <apt>DOUBLETILDE_STYLE</apt>
             <properties>SCRIPT_STYLE</properties>
             <sh>SCRIPT_STYLE</sh>
             <css>SLASHSTAR_STYLE</css>
+            <soc>DOUBLEDASHES_STYLE</soc>
+            <cat>DOUBLEDASHES_STYLE</cat>
+            <dcl>XML_STYLE</dcl><!-- this is not correct need SGML_STYLE !! -->
+            <decl>XML_STYLE</decl><!-- this is not correct need SGML_STYLE !! -->
           </mapping>
         </configuration>
         <executions>

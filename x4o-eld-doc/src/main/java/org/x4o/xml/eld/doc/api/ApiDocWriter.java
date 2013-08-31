@@ -40,6 +40,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.x4o.html.ContentWriterHtml.DocType;
+import org.x4o.html.ContentWriterHtml.Tag;
 import org.x4o.xml.eld.doc.api.dom.ApiDoc;
 import org.x4o.xml.eld.doc.api.dom.ApiDocConcept;
 import org.x4o.xml.eld.doc.api.dom.ApiDocNavLink;
@@ -52,8 +54,6 @@ import org.x4o.xml.eld.doc.api.dom.ApiDocNodeWriter;
 import org.x4o.xml.eld.doc.api.dom.ApiDocPage;
 import org.x4o.xml.eld.doc.api.dom.ApiDocPageWriter;
 import org.x4o.xml.io.XMLConstants;
-import org.x4o.xml.io.sax.ext.ContentWriterHtml.DocType;
-import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;

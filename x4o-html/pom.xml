@@ -1,23 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>x4o</artifactId>
     <groupId>org.x4o</groupId>
+    <artifactId>x4o</artifactId>
     <version>0.8.7-SNAPSHOT</version>
   </parent>
-  <artifactId>x4o-eld-doc</artifactId>
-  <packaging>jar</packaging>
-  <name>x4o-eld-doc</name>
-  <description>x4o-eld-doc</description>
+  <artifactId>x4o-html</artifactId>
+  <name>x4o-html</name>
+  <description>x4o-html writer and support.</description>
   <dependencies>
     <dependency>
       <groupId>org.x4o</groupId>
       <artifactId>x4o-driver</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.x4o</groupId>
-      <artifactId>x4o-html</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -30,13 +24,6 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
-      <scope>test</scope>
-  	</dependency>
-    <dependency>
-      <groupId>org.x4o</groupId>
-      <artifactId>x4o-driver</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -26,7 +26,7 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.List;
 
-import org.x4o.xml.io.sax.ext.ContentWriterHtml;
+import org.x4o.html.ContentWriterHtml;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 

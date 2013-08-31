@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.x4o.html.ContentWriterHtml.Tag;
 import org.x4o.xml.eld.doc.api.ApiDocContentWriter;
 import org.x4o.xml.eld.doc.api.DefaultPageWriterTree;
 import org.x4o.xml.eld.doc.api.dom.ApiDoc;
@@ -38,7 +39,6 @@ import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
-import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;

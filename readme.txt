@@ -63,5 +63,35 @@ the license terms described in the license.txt file.
 
 === External licensed binary files ===
 
-None.
+x4o-html/src/main/resources/org/x4o/html/spec/html-5.draft/html5dtd.org-draft.dtd
 
+The text files in the above listing fall all under the licence terms
+described in the licence file of html5dtd.org on; http://html5dtd.org/
+
+x4o-html/src/main/resources/org/x4o/html/spec/html-3.2/HTML32.dcl
+x4o-html/src/main/resources/org/x4o/html/spec/html-3.2/HTML32.dtd
+x4o-html/src/main/resources/org/x4o/html/spec/html-3.2/ISOlat1.ent
+x4o-html/src/main/resources/org/x4o/html/spec/html-3.2/html32.soc
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/HTML4.cat
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/HTML4.decl
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/HTMLlat1.ent
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/HTMLspecial.ent
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/HTMLsymbol.ent
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/frameset.dtd
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/loose.dtd
+x4o-html/src/main/resources/org/x4o/html/spec/html-4.01/strict.dtd
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml-lat1.ent
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml-special.ent
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml-symbol.ent
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml.soc
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1-frameset.dtd
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1-strict.dtd
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1-transitional.dtd
+x4o-html/src/main/resources/org/x4o/html/spec/xhtml-1.0/xhtml1.dcl
+x4o-html/src/main/resources/org/x4o/html/spec/html-5.draft/entities.json
+
+The text files in the above listing fall all under the licence terms
+described in the licence file of World Wide Web Consortium on;
+http://www.w3.org/Consortium/Legal/2002/copyright-documents-20021231
+
+=== EOF ===

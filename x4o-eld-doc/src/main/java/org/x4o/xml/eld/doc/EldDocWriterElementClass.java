@@ -24,6 +24,7 @@ package org.x4o.xml.eld.doc;
 
 import java.util.List;
 
+import org.x4o.html.ContentWriterHtml.Tag;
 import org.x4o.xml.eld.doc.EldDocXTreePageWriter.TreeNode;
 import org.x4o.xml.eld.doc.api.AbstractApiDocWriter;
 import org.x4o.xml.eld.doc.api.ApiDocContentWriter;
@@ -38,7 +39,6 @@ import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementNamespace;
-import org.x4o.xml.io.sax.ext.ContentWriterHtml.Tag;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.xml.sax.SAXException;
