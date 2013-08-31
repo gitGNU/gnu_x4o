@@ -43,7 +43,8 @@ public final class PropertyConfig implements Cloneable {
 	private final String keyPrefix;
 	
 	// TODO: move to ?
-	public final static String X4O_PROPERTIES_PREFIX      = "http://language.x4o.org/xml/properties/";
+//	public final static String X4O_PROPERTIES_PREFIX      = "http://language.x4o.org/xml/properties/";
+	public final static String X4O_PROPERTIES_PREFIX      = "http://x4o.org/properties/";
 	public final static String X4O_PROPERTIES_READER      = "reader/x4o/";
 	//public final static String X4O_PROPERTIES_READER_DTD  = "reader/dtd/";
 	public final static String X4O_PROPERTIES_WRITER      = "writer/x4o/";
@@ -206,6 +207,10 @@ public final class PropertyConfig implements Cloneable {
 		return keyPrefix;
 	}
 	
+	public final boolean isPropertyRequired(String key) {
+		return getPropertyKeysRequired().contains(key);
+	}
+	
 	public final Collection<String> getPropertyKeysRequired() {
 		return findPropertyKeysRequired(false);
 	}
@@ -242,6 +247,11 @@ public final class PropertyConfig implements Cloneable {
 		}
 		PropertyConfigItem item = getPropertyConfigItem(key);
 		item.setValue(value);
+	}
+	
+	public final Object getPropertyDefault(String key) {
+		PropertyConfigItem item = getPropertyConfigItem(key);
+		return item.getValueDefault();
 	}
 	
 	public final Object getProperty(String key) {

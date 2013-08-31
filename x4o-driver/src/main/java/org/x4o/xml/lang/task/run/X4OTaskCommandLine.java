@@ -178,13 +178,38 @@ public class X4OTaskCommandLine {
 				PropertyConfig config = task.createTaskConfig();
 				for (String key:config.getPropertyKeys()) {
 					Class<?> keyType = config.getPropertyType(key);
-					System.out.println(key+"\t\t- "+keyType.getSimpleName());
+					Object valueDefault = config.getPropertyDefault(key);
+					String def = "";
+					if (valueDefault!=null) {
+						def = "(default=\""+unescapeDefault(valueDefault.toString())+"\")";
+					}
+					if (config.isPropertyRequired(key)) {
+						def = "(required=\"true\")";
+					}
+					System.out.println(String.format("%1$-60s - %2$-8s %3$s", key,keyType.getSimpleName(),def));
 				}
 				System.out.println();
 				System.exit(0);
 				return;
 			}
 		}
+	}
+	
+	private String unescapeDefault(String defaultValue) {
+		StringBuffer buf = new StringBuffer(defaultValue.length()+10);
+		for (char c:defaultValue.toCharArray()) {
+			if (c=='\n') {
+				buf.append("\\n");continue;
+			}
+			if (c=='\t') {
+				buf.append("\\t");continue;
+			}
+			if (c=='\r') {
+				buf.append("\\r");continue;
+			}
+			buf.append(c);
+		}
+		return buf.toString();
 	}
 	
 	private void findDriver(Iterator<String> arguIterator) {

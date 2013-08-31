@@ -88,6 +88,7 @@
 		<element objectClass="javax.swing.JFrame"/>
 	</namespace>
 	<namespace id="lang">
+		<namespaceAttribute attributeName="fxid" bean.class="org.x4o.xml.test.element.TestElementNamespaceAttribute" id="fxid-test"></namespaceAttribute>
 		<element objectClass="javax.swing.JMenuBar"/>
 		<element objectClass="javax.swing.JMenu"/>
 		<element objectClass="javax.swing.JMenuItem">

@@ -93,6 +93,10 @@ public class EldDocWriter {
 	public final static String META_STYLESHEET_THEMA    = PROPERTY_CONTEXT_PREFIX+"meta/stylesheet-thema";
 	public final static String JAVADOC_LINK             = PROPERTY_CONTEXT_PREFIX+"javadoc/link";
 	public final static String JAVADOC_LINK_OFFLINE     = PROPERTY_CONTEXT_PREFIX+"javadoc/link-offline";
+	public final static String PAGE_PRINT_TREE          = PROPERTY_CONTEXT_PREFIX+"page/print-tree";
+	public final static String PAGE_PRINT_XTREE         = PROPERTY_CONTEXT_PREFIX+"page/print-xtree";
+	public final static String PAGE_PRINT_INDEX_ALL     = PROPERTY_CONTEXT_PREFIX+"page/print-index-all";
+	public final static String PAGE_PRINT_HELP          = PROPERTY_CONTEXT_PREFIX+"page/print-help";
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
@@ -106,7 +110,11 @@ public class EldDocWriter {
 				new PropertyConfigItem(false,META_STYLESHEET,File.class),
 				new PropertyConfigItem(false,META_STYLESHEET_THEMA,String.class),
 				new PropertyConfigItem(false,JAVADOC_LINK,List.class),
-				new PropertyConfigItem(false,JAVADOC_LINK_OFFLINE,Map.class)
+				new PropertyConfigItem(false,JAVADOC_LINK_OFFLINE,Map.class),
+				new PropertyConfigItem(PAGE_PRINT_TREE,Boolean.class,true),
+				new PropertyConfigItem(PAGE_PRINT_XTREE,Boolean.class,true),
+				new PropertyConfigItem(PAGE_PRINT_INDEX_ALL,Boolean.class,true),
+				new PropertyConfigItem(PAGE_PRINT_HELP,Boolean.class,true)
 				);
 	}
 	
@@ -214,10 +222,10 @@ public class EldDocWriter {
 		adcEc.addChildConcepts(new ApiDocConcept(adcEc,CC_ATTRIBUTE,ElementClassAttribute.class));
 		
 		// Non-tree pages config
-		doc.addDocPage(EldDocXTreePageWriter.createDocPage());
-		doc.addDocPage(DefaultPageWriterTree.createDocPage());
-		doc.addDocPage(DefaultPageWriterIndexAll.createDocPage());
-		doc.addDocPage(DefaultPageWriterHelp.createDocPage());
+		if (propertyConfig.getPropertyBoolean(PAGE_PRINT_XTREE)) {     doc.addDocPage(EldDocXTreePageWriter.createDocPage()); }
+		if (propertyConfig.getPropertyBoolean(PAGE_PRINT_TREE)) {      doc.addDocPage(DefaultPageWriterTree.createDocPage()); }
+		if (propertyConfig.getPropertyBoolean(PAGE_PRINT_INDEX_ALL)) { doc.addDocPage(DefaultPageWriterIndexAll.createDocPage()); }
+		if (propertyConfig.getPropertyBoolean(PAGE_PRINT_HELP)) {      doc.addDocPage(DefaultPageWriterHelp.createDocPage()); }
 		
 		// Doc tree config
 		ApiDocNode rootNode = new ApiDocNode(language,"language",getLanguageNameUpperCase()+" Language","The X4O "+getLanguageNameUpperCase()+" Language");

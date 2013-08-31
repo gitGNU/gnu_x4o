@@ -488,9 +488,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		write(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 		writeIndent();
 		write(XMLConstants.COMMENT_START);
-		write(" ");
 		write(XMLConstants.escapeCharactersComment(text,getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB),indent));
-		write(" ");
 		write(XMLConstants.COMMENT_END);
 		printReturn = true;
 	}
