@@ -48,9 +48,9 @@
   <modules>
     <module>x4o-driver</module>
     <module>x4o-eld-doc</module>
-    <module>x4o-meta</module>
-    <module>x4o-plugin</module>
     <module>x4o-html</module>
+    <module>x4o-meta</module>
+    <module>x4o-tool</module>
   </modules>
   <distributionManagement>
     <site>
