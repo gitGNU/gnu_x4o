@@ -45,16 +45,16 @@ public class X4OLanguageTaskMojo extends AbstractMojo {
 	
 	static public final String GOAL = "x4o-language-task"; 
 	
-	@Parameter
+	@Parameter(property="languageName")
 	private String languageName = null;
 	
-	@Parameter
+	@Parameter(property="languageVersion")
 	private String languageVersion = null;
 	
-	@Parameter
+	@Parameter(property="taskId")
 	private String taskId = null;
 	
-	@Parameter
+	@Parameter(property="taskPropertyValues")
 	private List<String> taskPropertyValues;
 	
 	@Parameter(defaultValue="false",property="verbose")
@@ -85,7 +85,11 @@ public class X4OLanguageTaskMojo extends AbstractMojo {
 			throw new MojoExecutionException("Error while running task: "+getTaskId()+" error: "+e.getMessage(),e);
 		}
 		long stopTime = System.currentTimeMillis();
-		getLog().info("Done "+getTaskId()+" for "+languageName+":"+languageVersion+" in "+(stopTime-startTime)+" ms.");
+		String ver = "";
+		if (languageVersion!=null) {
+			ver = ":"+languageVersion;
+		}
+		getLog().info("Done "+getTaskId()+" for "+languageName+ver+" in "+(stopTime-startTime)+" ms.");
 	}
 	
 	public void execute() throws MojoExecutionException {

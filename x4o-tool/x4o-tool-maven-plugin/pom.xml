@@ -23,26 +23,26 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>3.0</version>
+      <version>${maven-plugin-api.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.2</version>
+      <version>${maven-plugin-annotations.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.plugin-testing</groupId>
       <artifactId>maven-plugin-testing-harness</artifactId>
-      <version>2.0</version>
+      <version>${maven-plugin-testing-harness.version}</version>
       <scope>test</scope>
     </dependency>
     <!-- generated help mojo has a dependency to plexus-utils -->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.0.1</version>
+      <version>${plexus-utils.version}</version>
     </dependency>
   </dependencies>
   <build>
@@ -50,7 +50,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.2</version>
+        <version>${maven-plugin-plugin.version}</version>
         <configuration>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
@@ -67,66 +67,4 @@
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>build-site-x4o-support</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.x4o.plugin</groupId>
-            <artifactId>x4o-plugin-maven</artifactId>
-            <version>${project.version}</version>
-            <executions>
-              <execution>
-                <id>build-site-x4o-support</id>
-                <phase>pre-site</phase>
-                <configuration>
-                  <languageName>cel</languageName>
-                  <taskId>eld-xsd</taskId>
-                  <taskPropertyValues>
-                    <taskPropertyValue>http://language.x4o.org/xml/properties/eld-xsd/output/path=${basedir}/../../target/site/x4o-support</taskPropertyValue>
-                  </taskPropertyValues>
-                  <!-- TODO: add exe'ids
-                  <outputDirectory>${basedir}/../../target/site/x4o-support</outputDirectory>
-                  <languages>
-                    <cel>ALL</cel>
-                    <eld>ALL</eld>
-                    <test>ALL</test>
-                    <swixml>2.0-3.0</swixml>
-                  </languages>
-                   -->
-                </configuration>
-                <goals>
-                  <goal>x4o-language-task</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <dependency>
-                <groupId>org.x4o</groupId>
-                <artifactId>x4o-driver</artifactId>
-                <version>${project.version}</version>
-              </dependency>
-              <dependency>
-                <groupId>org.x4o</groupId>
-                <artifactId>x4o-driver</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-              </dependency>
-              <dependency>
-                <groupId>org.x4o</groupId>
-                <artifactId>x4o-eld-doc</artifactId>
-                <version>${project.version}</version>
-              </dependency>
-              <dependency>
-                <groupId>de.odysseus.juel</groupId>
-                <artifactId>juel</artifactId>
-                <version>${juel.version}</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

@@ -23,21 +23,18 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<!--  ====================================================================  -->
-
-<!--  =====  Automatic generated schema for language: cel            =====  -->
-
-<!--  ====================================================================  -->
-
-<!-- 
-	ID:		cel-module
-	ProviderName:	Core Element Languag Module
-	ProviderHost:	cel.x4o.org
-	Namespaces:		2
-	Uri:			http://cel.x4o.org/xml/ns/cel-core
-	Uri schema:	http://cel.x4o.org/xml/ns/cel-core-1.0.xsd
-	Created on:		Sat Aug 24 22:02:08 CEST 2013
- -->
+<!-- ==================================================================== -->
+<!-- =====  Automatic generated schema for language: cel            ===== -->
+<!-- ==================================================================== -->
+<!--
+	Id:                  cel-module
+	ProviderName:        Core Element Languag Module
+	ProviderHost:        cel.x4o.org
+	Namespaces:          2
+	Uri:                 http://cel.x4o.org/xml/ns/cel-core
+	Uri schema           http://cel.x4o.org/xml/ns/cel-core-1.0.xsd
+	Created on:          Sun Sep 01 12:08:48 CEST 2013
+-->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://cel.x4o.org/xml/ns/cel-core"
  version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://cel.x4o.org/xml/ns/cel-core">
@@ -49,9 +46,9 @@
 		</choice>
 		<attribute name="required" type="boolean"/>
 		<attribute name="defaultValue" type="string"/>
+		<attribute name="objectConverter" type="string"/>
 		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="runConverters" type="boolean"/>
-		<attribute name="objectConverter" type="string"/>
 		<attribute name="runBeanValue" type="boolean"/>
 		<attribute name="writeOrder" type="integer"/>
 		<attribute name="description" type="string"/>
@@ -75,12 +72,12 @@
 		</choice>
 		<attribute name="uri" type="string" use="required"/>
 		<attribute name="name" type="string"/>
+		<attribute name="prefixMapping" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
 		<attribute name="languageRoot" type="boolean"/>
 		<attribute name="schemaPrefix" type="string"/>
 		<attribute name="elementNamespaceInstanceProvider" type="string"/>
-		<attribute name="prefixMapping" type="string"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>
@@ -108,10 +105,10 @@
 		</choice>
 		<attribute name="objectClass" type="string"/>
 		<attribute name="elementClass" type="string"/>
+		<attribute name="schemaContentMixed" type="boolean"/>
 		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
-		<attribute name="schemaContentMixed" type="boolean"/>
 		<attribute name="description" type="string"/>
 		<attribute name="id" type="string"/>
 	</complexType>

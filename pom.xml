@@ -102,6 +102,13 @@
     <!-- Application lib versions -->
     <jasper-el.version>6.0.20</jasper-el.version>
     <juel.version>2.1.0</juel.version>
+    
+    <!-- Maven plugin building -->
+    <maven-plugin-api.version>3.0</maven-plugin-api.version>
+    <maven-plugin-annotations.version>3.2</maven-plugin-annotations.version>
+    <maven-plugin-testing-harness.version>2.0</maven-plugin-testing-harness.version>
+    <plexus-utils.version>3.0.1</plexus-utils.version>
+    <maven-plugin-plugin.version>3.2</maven-plugin-plugin.version>
   </properties>
   <build>
     <plugins>
@@ -339,25 +346,38 @@
   </reporting>
   <profiles>
     <profile>
-      <id>notest</id>
+      <id>x4o-test-none</id>
       <properties>
         <skipTests>true</skipTests>
+      </properties>
+    </profile>
+    <profile>
+      <id>x4o-test-speed</id>
+      <properties>
+        <skipTests>false</skipTests>
+        <make-work>todo</make-work>
       </properties>
     </profile> 
     <profile>
-      <id>update-schema-cel</id>
+      <id>x4o-update-schema-cel</id>
       <properties>
         <skipTests>true</skipTests>
       </properties>
     </profile>
     <profile>
-      <id>update-schema-eld</id>
+      <id>x4o-update-schema-eld</id>
       <properties>
         <skipTests>true</skipTests>
       </properties>
     </profile>
     <profile>
-      <id>check-license</id>
+      <id>x4o-build-site-doc</id>
+      <properties>
+        <skipTests>true</skipTests>
+      </properties>
+    </profile>
+    <profile>
+      <id>x4o-check-license</id>
       <properties>
         <skipTests>true</skipTests>
       </properties>

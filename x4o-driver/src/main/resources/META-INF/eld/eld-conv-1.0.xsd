@@ -23,21 +23,18 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<!--  ====================================================================  -->
-
-<!--  =====  Automatic generated schema for language: eld            =====  -->
-
-<!--  ====================================================================  -->
-
-<!-- 
-	ID:		eld-module
-	ProviderName:	Element Language Definition
-	ProviderHost:	eld.x4o.org
-	Namespaces:		3
-	Uri:			http://eld.x4o.org/xml/ns/eld-conv
-	Uri schema:	http://eld.x4o.org/xml/ns/eld-conv-0.8.xsd
-	Created on:		Sat Aug 24 21:57:18 CEST 2013
- -->
+<!-- ==================================================================== -->
+<!-- =====  Automatic generated schema for language: eld            ===== -->
+<!-- ==================================================================== -->
+<!--
+	Id:                  eld-module
+	ProviderName:        Element Language Definition
+	ProviderHost:        eld.x4o.org
+	Namespaces:          3
+	Uri:                 http://eld.x4o.org/xml/ns/eld-conv
+	Uri schema           http://eld.x4o.org/xml/ns/eld-conv-0.8.xsd
+	Created on:          Sun Sep 01 12:13:10 CEST 2013
+-->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:this="http://eld.x4o.org/xml/ns/eld-conv"
  xmlns:lang="http://eld.x4o.org/xml/ns/eld-lang"

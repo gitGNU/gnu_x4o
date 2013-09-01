@@ -19,15 +19,15 @@ mvn clean install;
 
 
 -- Update schemas in src --
--- note; rm after auto schema creation
+-- note; only needed after change in eld or cel langauge.
+-- note2; maybe rm/mv after auto schema creation
 
 cd project-root/;
 mvn clean install;
-mvn -Pant-update-schema-cel package;
-mvn -Pant-update-schema-eld package;
-- Add the license as manual step in xsd files. (todo in ant task)
+mvn -Px4o-update-schema-cel compile;
+mvn -Px4o-update-schema-eld compile;
 
-note: the do 'install' is because of circle plugins.
+note: the do 'install' is (once) because of circle plugins.
 
 
 -- Run multi jvm test --
@@ -53,7 +53,7 @@ src/main/build/gnu-up.sh <scm_username> <version>
 
 cd project-root/;
 mvn clean install; # (installs the snapshots plugins so we can run the current eld-doc task in site phase)
-MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" mvn -Pbuild-site-x4o-support clean package site site:stage;
+MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m" mvn -Px4o-build-site-doc clean package site site:stage;
 cp -r target/staging/x4o-* target/site/;
 cp -r target/site/ ~/public_html/site-x4o;
 
@@ -66,10 +66,10 @@ mvn checkstyle:checkstyle
 -- Check for licenses --
 
 cd project-root/;
-mvn -Pcheck-license license:check
+mvn -Px4o-check-license license:check
 
 To update all files from check output;
-mvn -Pcheck-license license:format
+mvn -Px4o-check-license license:format
 
 -- Check for versions-updates --
 
@@ -78,10 +78,21 @@ mvn versions:display-plugin-updates;
 mvn versions:display-dependency-updates;
 
 
--- Run x4o-plugin-maven from cmd --
+-- Run x4o task from cmd --
+
+cd project-root/;
+mvn clean compile;
+cd x4o-driver;
+mvn exec:java -Dexec.mainClass="org.x4o.xml.lang.task.X4OLanguageTaskCommandLine" -Dexec.args="-h"
+mvn exec:java -Dexec.mainClass="org.x4o.xml.lang.task.X4OLanguageTaskCommandLine" -Dexec.args="-ll"
+mvn exec:java -Dexec.mainClass="org.x4o.xml.lang.task.X4OLanguageTaskCommandLine" -Dexec.args="-llt"
+mvn exec:java -Dexec.mainClass="org.x4o.xml.lang.task.X4OLanguageTaskCommandLine" -Dexec.args="-l eld -t eld-xsd -p http://language.x4o.org/xml/properties/eld-xsd/output/path=/tmp/test-task-cmd"
+
+
+-- Run x4o-tool-maven-plugin from cmd --
 
 cd project-root/;
 mvn clean install;
-mvn org.x4o.plugin:x4o-plugin-maven:help
-mvn org.x4o.plugin:x4o-plugin-maven:write-language-doc -DoutputDirectory=/tmp/doc1 
-mvn org.x4o.plugin:x4o-plugin-maven:write-language-doc -DoutputDirectory=/tmp/doc2 -Dlanguages={eld=ALL,swixml=1.0-2.0} -Dverbose=true
+mvn org.x4o.tool:x4o-tool-maven-plugin:help
+mvn org.x4o.tool:x4o-tool-maven-plugin:x4o-language-task -Dverbose=true -DtaskId=eld-xsd -DlanguageName=cel -DtaskPropertyValues=http://x4o.org/properties/eld-xsd/output/path=/tmp/test-maven-cmd
+

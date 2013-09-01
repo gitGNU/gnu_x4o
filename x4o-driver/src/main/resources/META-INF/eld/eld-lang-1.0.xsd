@@ -23,21 +23,18 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<!--  ====================================================================  -->
-
-<!--  =====  Automatic generated schema for language: eld            =====  -->
-
-<!--  ====================================================================  -->
-
-<!-- 
-	ID:		eld-module
-	ProviderName:	Element Language Definition
-	ProviderHost:	eld.x4o.org
-	Namespaces:		3
-	Uri:			http://eld.x4o.org/xml/ns/eld-lang
-	Uri schema:	http://eld.x4o.org/xml/ns/eld-lang-0.8.xsd
-	Created on:		Sat Aug 24 21:57:18 CEST 2013
- -->
+<!-- ==================================================================== -->
+<!-- =====  Automatic generated schema for language: eld            ===== -->
+<!-- ==================================================================== -->
+<!--
+	Id:                  eld-module
+	ProviderName:        Element Language Definition
+	ProviderHost:        eld.x4o.org
+	Namespaces:          3
+	Uri:                 http://eld.x4o.org/xml/ns/eld-lang
+	Uri schema           http://eld.x4o.org/xml/ns/eld-lang-0.8.xsd
+	Created on:          Sun Sep 01 12:13:10 CEST 2013
+-->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:conv="http://eld.x4o.org/xml/ns/eld-conv"
  xmlns:this="http://eld.x4o.org/xml/ns/eld-lang"
@@ -68,9 +65,9 @@
 		</attribute>
 		<attribute name="name" type="string"/>
 		<attribute name="required" type="boolean"/>
+		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="defaultValue" type="string"/>
 		<attribute name="objectConverter" type="string"/>
-		<attribute name="runResolveEL" type="boolean"/>
 		<attribute name="runConverters" type="boolean"/>
 		<attribute name="runBeanValue" type="boolean"/>
 		<attribute name="writeOrder" type="integer"/>
@@ -110,13 +107,13 @@
 			</annotation>
 		</attribute>
 		<attribute name="name" type="string"/>
-		<attribute name="languageRoot" type="boolean"/>
-		<attribute name="schemaPrefix" type="string"/>
+		<attribute name="elementNamespaceInstanceProvider" type="string"/>
 		<attribute name="prefixMapping" type="string"/>
+		<attribute name="uri" type="string"/>
 		<attribute name="schemaUri" type="string"/>
 		<attribute name="schemaResource" type="string"/>
-		<attribute name="elementNamespaceInstanceProvider" type="string"/>
-		<attribute name="uri" type="string"/>
+		<attribute name="languageRoot" type="boolean"/>
+		<attribute name="schemaPrefix" type="string"/>
 		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="descriptionType">
@@ -177,10 +174,10 @@
 				<documentation xml:lang="en">An custom element class to config object.</documentation>
 			</annotation>
 		</attribute>
+		<attribute name="schemaContentMixed" type="boolean"/>
 		<attribute name="autoAttributes" type="boolean"/>
 		<attribute name="schemaContentBase" type="string"/>
 		<attribute name="schemaContentComplex" type="boolean"/>
-		<attribute name="schemaContentMixed" type="boolean"/>
 		<attribute name="description" type="string"/>
 	</complexType>
 	<complexType name="attributeAliasType">

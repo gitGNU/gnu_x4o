@@ -22,6 +22,8 @@
  */
 package	org.x4o.xml.lang.task;
 
+import java.util.List;
+
 import org.x4o.xml.io.sax.ext.PropertyConfig;
 
 /**
@@ -46,6 +48,34 @@ public abstract class AbstractX4OLanguageTask implements X4OLanguageTask {
 		this.name=name;
 		this.description=description;
 		this.propertyConfig=propertyConfig;
+	}
+	
+	protected abstract X4OLanguageTaskExecutor createTaskExecutorChecked(PropertyConfig config);
+	
+	/**
+	 * @see org.x4o.xml.lang.task.X4OLanguageTask#createTaskExecutor(org.x4o.xml.io.sax.ext.PropertyConfig)
+	 */
+	public X4OLanguageTaskExecutor createTaskExecutor(PropertyConfig config) {
+		return createTaskExecutorChecked(checkConfig(config));
+	}
+	
+	private PropertyConfig checkConfig(PropertyConfig config) {
+		List<String> keys = config.getPropertyKeysRequiredValues();
+		if (keys.isEmpty()) {
+			return config;
+		}
+		StringBuffer buf = new StringBuffer(100);
+		buf.append("Error missing value(s) for key(s) {");
+		for (int i=0;i<keys.size();i++) {
+			buf.append('"');
+			buf.append(keys.get(i));
+			buf.append('"');
+			if (i<keys.size()-1) {
+				buf.append(',');
+			}
+			buf.append('}');
+		}
+		throw new IllegalArgumentException(buf.toString());
 	}
 	
 	/**

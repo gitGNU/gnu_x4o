@@ -23,21 +23,18 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<!--  ====================================================================  -->
-
-<!--  =====  Automatic generated schema for language: cel            =====  -->
-
-<!--  ====================================================================  -->
-
-<!-- 
-	ID:		cel-module
-	ProviderName:	Core Element Languag Module
-	ProviderHost:	cel.x4o.org
-	Namespaces:		2
-	Uri:			http://cel.x4o.org/xml/ns/cel-root
-	Uri schema:	http://cel.x4o.org/xml/ns/cel-root-1.0.xsd
-	Created on:		Sat Aug 24 22:02:08 CEST 2013
- -->
+<!-- ==================================================================== -->
+<!-- =====  Automatic generated schema for language: cel            ===== -->
+<!-- ==================================================================== -->
+<!--
+	Id:                  cel-module
+	ProviderName:        Core Element Languag Module
+	ProviderHost:        cel.x4o.org
+	Namespaces:          2
+	Uri:                 http://cel.x4o.org/xml/ns/cel-root
+	Uri schema           http://cel.x4o.org/xml/ns/cel-root-1.0.xsd
+	Created on:          Sun Sep 01 12:08:48 CEST 2013
+-->
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
  xmlns:cel-core="http://cel.x4o.org/xml/ns/cel-core"
  version="1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://cel.x4o.org/xml/ns/cel-root">

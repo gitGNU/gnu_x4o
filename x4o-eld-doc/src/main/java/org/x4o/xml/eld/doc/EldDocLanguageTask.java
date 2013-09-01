@@ -48,7 +48,7 @@ public class EldDocLanguageTask extends AbstractX4OLanguageTask {
 	/**
 	 * Executes this language task.
 	 */
-	public X4OLanguageTaskExecutor createTaskExecutor(final PropertyConfig config) {
+	protected X4OLanguageTaskExecutor createTaskExecutorChecked(final PropertyConfig config) {
 		return new X4OLanguageTaskExecutor() {
 			public void execute(X4OLanguage language) throws X4OLanguageTaskException {
 				try {

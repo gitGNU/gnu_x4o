@@ -71,7 +71,7 @@
   </build>
   <profiles>
     <profile>
-      <id>ant-update-schema-cel</id>
+      <id>x4o-update-schema-cel</id>
       <build>
         <plugins>
           <plugin>
@@ -80,13 +80,17 @@
             <version>${maven-antrun-plugin.version}</version>
             <executions>
               <execution>
-                <id>update-schema-cel-ant</id>
+                <id>x4o-update-schema-cel-run-ant</id>
                 <phase>generate-resources</phase>
                 <configuration>
                   <target>
                     <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF" />
-                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath" />
-                    <writeLanguageSchema destdir="${coredir}/cel" languageName="cel" />
+                    <property name="licesefile" value="${basedir}/../../license.txt"/>
+                    <taskdef name="x4oTask" classname="org.x4o.tool.ant.plugin.X4OTask" classpathref="maven.plugin.classpath"/>
+                    <x4oTask languageName="cel" taskId="eld-xsd">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/cel"/>
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/prolog/licence-file" value="${licesefile}"/>
+                    </x4oTask>
                   </target>
                 </configuration>
                 <goals>
@@ -96,8 +100,8 @@
             </executions>
             <dependencies>
               <dependency>
-                <groupId>org.x4o.plugin</groupId>
-                <artifactId>x4o-plugin-ant</artifactId>
+                <groupId>org.x4o.tool</groupId>
+                <artifactId>x4o-tool-ant-plugin</artifactId>
                 <version>${project.version}</version>
               </dependency>
             </dependencies>
@@ -106,7 +110,7 @@
       </build>
     </profile>
     <profile>
-      <id>ant-update-schema-eld</id>
+      <id>x4o-update-schema-eld</id>
       <build>
         <plugins>
           <plugin>
@@ -115,13 +119,17 @@
             <version>${maven-antrun-plugin.version}</version>
             <executions>
               <execution>
-                <id>update-schema-eld-ant</id>
+                <id>x4o-update-schema-eld-run-ant</id>
                 <phase>generate-resources</phase>
                 <configuration>
                   <target>
                     <property name="coredir" value="${basedir}/../../x4o-driver/src/main/resources/META-INF" />
-                    <taskdef name="writeLanguageSchema" classname="org.x4o.plugin.ant.X4OWriteLanguageSchemaTask" classpathref="maven.plugin.classpath" />
-                    <writeLanguageSchema destdir="${coredir}/eld" languageName="eld" />
+                    <property name="licesefile" value="${basedir}/../../license.txt"/>
+                    <taskdef name="x4oTask" classname="org.x4o.tool.ant.plugin.X4OTask" classpathref="maven.plugin.classpath"/>
+                    <x4oTask languageName="eld" taskId="eld-xsd">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/eld"/>
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/prolog/licence-file" value="${licesefile}"/>
+                    </x4oTask>
                   </target>
                 </configuration>
                 <goals>
@@ -131,8 +139,8 @@
             </executions>
             <dependencies>
               <dependency>
-                <groupId>org.x4o.plugin</groupId>
-                <artifactId>x4o-plugin-ant</artifactId>
+                <groupId>org.x4o.tool</groupId>
+                <artifactId>x4o-tool-ant-plugin</artifactId>
                 <version>${project.version}</version>
               </dependency>
             </dependencies>
@@ -141,7 +149,7 @@
       </build>
     </profile>
     <profile>
-      <id>ant-site-elddoc</id>
+      <id>x4o-build-site-doc</id>
       <build>
         <plugins>
           <plugin>
@@ -150,22 +158,46 @@
             <version>${maven-antrun-plugin.version}</version>
             <executions>
               <execution>
-                <id>site-elddoc-ant</id>
+                <id>x4o-build-site-doc-run-ant</id>
                 <phase>pre-site</phase>
                 <configuration>
                   <target>
-                    <property name="coredir" value="${basedir}/../../target/site/elddocs" />
-                    <mkdir dir="${coredir}/cel" />
-                    <mkdir dir="${coredir}/eld" />
-                    <mkdir dir="${coredir}/junit-test" />
-                    <mkdir dir="${coredir}/junit-swixml2" />
-                    <mkdir dir="${coredir}/junit-swixml3" />
-                    <taskdef name="writeLanguageDoc" classname="org.x4o.plugin.ant.X4OWriteLanguageDocTask" classpathref="maven.plugin.classpath" />
-                    <writeLanguageDoc destdir="${coredir}/cel" languageName="cel" />
-                    <writeLanguageDoc destdir="${coredir}/eld" languageName="eld" />
-                    <writeLanguageDoc destdir="${coredir}/junit-test" languageName="test" />
-                    <writeLanguageDoc destdir="${coredir}/junit-swixml2" languageName="swixml" languageVersion="2.0" />
-                    <writeLanguageDoc destdir="${coredir}/junit-swixml3" languageName="swixml" />
+                    <property name="coredir" value="${basedir}/../../target/site/x4o-support" />
+                    <taskdef name="x4oTask" classname="org.x4o.tool.ant.plugin.X4OTask" classpathref="maven.plugin.classpath"/>
+                    
+                    <x4oTask languageName="cel" taskId="eld-doc">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-doc/output/path" value="${coredir}/doc-cel-1.0"/>
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-doc/javadoc/link" value="http://docs.oracle.com/javase/7/docs/api/"/>
+                    </x4oTask>
+                    <x4oTask languageName="eld" taskId="eld-doc">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-doc/output/path" value="${coredir}/doc-eld-1.0"/>
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-doc/javadoc/link" value="http://docs.oracle.com/javase/7/docs/api/"/>
+                    </x4oTask>
+                    <x4oTask languageName="test" taskId="eld-doc">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-doc/output/path" value="${coredir}/doc-test-1.0"/>
+                    </x4oTask>
+                    <x4oTask languageName="swixml" taskId="eld-doc" languageVersion="2.0">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-doc/output/path" value="${coredir}/doc-swixml-2.0"/>
+                    </x4oTask>
+                    <x4oTask languageName="swixml" taskId="eld-doc">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-doc/output/path" value="${coredir}/doc-swixml-3.0"/>
+                    </x4oTask>
+                    
+                    <x4oTask languageName="cel" taskId="eld-xsd">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/xsd-cel-1.0"/>
+                    </x4oTask>
+                    <x4oTask languageName="eld" taskId="eld-xsd">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/xsd-eld-1.0"/>
+                    </x4oTask>
+                    <x4oTask languageName="test" taskId="eld-xsd">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/xsd-test-1.0"/>
+                    </x4oTask>
+                    <x4oTask languageName="swixml" taskId="eld-xsd" languageVersion="2.0">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/xsd-swixml-2.0"/>
+                    </x4oTask>
+                    <x4oTask languageName="swixml" taskId="eld-xsd">
+                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/xsd-swixml-3.0"/>
+                    </x4oTask>
                   </target>
                 </configuration>
                 <goals>
@@ -175,8 +207,8 @@
             </executions>
             <dependencies>
               <dependency>
-                <groupId>org.x4o.plugin</groupId>
-                <artifactId>x4o-plugin-ant</artifactId>
+                <groupId>org.x4o.tool</groupId>
+                <artifactId>x4o-tool-ant-plugin</artifactId>
                 <version>${project.version}</version>
               </dependency>
               <dependency>

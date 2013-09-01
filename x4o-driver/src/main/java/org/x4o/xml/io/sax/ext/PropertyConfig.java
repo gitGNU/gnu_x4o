@@ -211,15 +211,15 @@ public final class PropertyConfig implements Cloneable {
 		return getPropertyKeysRequired().contains(key);
 	}
 	
-	public final Collection<String> getPropertyKeysRequired() {
+	public final List<String> getPropertyKeysRequired() {
 		return findPropertyKeysRequired(false);
 	}
 	
-	public final Collection<String> getPropertyKeysRequiredValues() {
+	public final List<String> getPropertyKeysRequiredValues() {
 		return findPropertyKeysRequired(true);
 	}
 	
-	private final Collection<String> findPropertyKeysRequired(boolean checkValue) {
+	private final List<String> findPropertyKeysRequired(boolean checkValue) {
 		List<String> result = new ArrayList<String>(10);
 		for (String key:getPropertyKeys()) {
 			PropertyConfigItem item = getPropertyConfigItem(key);
