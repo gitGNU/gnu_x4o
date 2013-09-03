@@ -66,12 +66,16 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	private static final String PP_CEL_XSD_FILE = "-1.0.xsd";
 	private static final String CEL_CORE = "cel-core";
 	private static final String CEL_ROOT = "cel-root";
-	private static final String CEL_CORE_URI = PP_CEL_XMLNS+CEL_CORE;
-	private static final String CEL_ROOT_URI = PP_CEL_XMLNS+CEL_ROOT;
-	private static final String CEL_CORE_XSD_URI = CEL_CORE_URI+PP_CEL_XSD_FILE;
-	private static final String CEL_ROOT_XSD_URI = CEL_ROOT_URI+PP_CEL_XSD_FILE;
 	private static final String CEL_CORE_XSD_FILE = CEL_CORE+PP_CEL_XSD_FILE;
 	private static final String CEL_ROOT_XSD_FILE = CEL_ROOT+PP_CEL_XSD_FILE;
+	/** The cel core namespace uri. */
+	public  static final String CEL_CORE_URI = PP_CEL_XMLNS+CEL_CORE;
+	/** The cel root namespace uri. */
+	public  static final String CEL_ROOT_URI = PP_CEL_XMLNS+CEL_ROOT;
+	/** The cel core schema namespace uri. */
+	public  static final String CEL_CORE_XSD_URI = CEL_CORE_URI+PP_CEL_XSD_FILE;
+	/** The cel root schema namespace uri. */
+	public  static final String CEL_ROOT_XSD_URI = CEL_ROOT_URI+PP_CEL_XSD_FILE;
 	
 	/**
 	 * Creates the CEL module loader.

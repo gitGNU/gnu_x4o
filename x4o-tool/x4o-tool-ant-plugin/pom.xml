@@ -89,7 +89,7 @@
                     <taskdef name="x4oTask" classname="org.x4o.tool.ant.plugin.X4OTask" classpathref="maven.plugin.classpath"/>
                     <x4oTask languageName="cel" taskId="eld-xsd">
                       <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/cel"/>
-                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/prolog/licence-file" value="${licesefile}"/>
+                      <x4oTaskProperty key="http://x4o.org/properties/content/prolog/licence-file" value="${licesefile}"/>
                     </x4oTask>
                   </target>
                 </configuration>
@@ -128,7 +128,7 @@
                     <taskdef name="x4oTask" classname="org.x4o.tool.ant.plugin.X4OTask" classpathref="maven.plugin.classpath"/>
                     <x4oTask languageName="eld" taskId="eld-xsd">
                       <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/output/path" value="${coredir}/eld"/>
-                      <x4oTaskProperty key="http://x4o.org/properties/eld-xsd/prolog/licence-file" value="${licesefile}"/>
+                      <x4oTaskProperty key="http://x4o.org/properties/content/prolog/licence-file" value="${licesefile}"/>
                     </x4oTask>
                   </target>
                 </configuration>

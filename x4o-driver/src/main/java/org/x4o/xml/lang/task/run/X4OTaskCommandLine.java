@@ -186,7 +186,7 @@ public class X4OTaskCommandLine {
 					if (config.isPropertyRequired(key)) {
 						def = "(required=\"true\")";
 					}
-					System.out.println(String.format("%1$-60s - %2$-8s %3$s", key,keyType.getSimpleName(),def));
+					System.out.println(String.format("%1$-65s - %2$-8s %3$s", key,keyType.getSimpleName(),def));
 				}
 				System.out.println();
 				System.exit(0);

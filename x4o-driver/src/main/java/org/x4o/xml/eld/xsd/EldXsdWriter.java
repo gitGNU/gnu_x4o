@@ -49,31 +49,23 @@ public class EldXsdWriter {
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_ELD_XSD;
 	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
 	
-	public final static String OUTPUT_PATH              = PROPERTY_CONTEXT_PREFIX+"output/path";
-	public final static String OUTPUT_DOCUMENTATION     = PROPERTY_CONTEXT_PREFIX+"output/documentation";
-	public final static String FILTER_NAMESPACE         = PROPERTY_CONTEXT_PREFIX+"filter/namespace";
-	public final static String FILTER_ELEMENT           = PROPERTY_CONTEXT_PREFIX+"filter/element";
-	public final static String PROLOG_LICENCE_FILE      = PROPERTY_CONTEXT_PREFIX+"prolog/licence-file";
-	public final static String PROLOG_LICENCE_RESOURCE  = PROPERTY_CONTEXT_PREFIX+"prolog/licence-resource";
-	public final static String PROLOG_LICENCE_ENCODING  = PROPERTY_CONTEXT_PREFIX+"prolog/licence-encoding";
-	public final static String PROLOG_PRINT_LICENCE     = PROPERTY_CONTEXT_PREFIX+"prolog/print-licence";
-	public final static String PROLOG_PRINT_GENERATOR   = PROPERTY_CONTEXT_PREFIX+"prolog/print-generator";
-	public final static String PROLOG_PRINT_PROVIDER    = PROPERTY_CONTEXT_PREFIX+"prolog/print-provider";
-	public final static String PROLOG_USER_COMMENT      = PROPERTY_CONTEXT_PREFIX+"prolog/user-comment";
+	public final static String OUTPUT_PATH                 = PROPERTY_CONTEXT_PREFIX+"output/path";
+	public final static String OUTPUT_DOCUMENTATION        = PROPERTY_CONTEXT_PREFIX+"output/documentation";
+	public final static String FILTER_NAMESPACE            = PROPERTY_CONTEXT_PREFIX+"filter/namespace";
+	public final static String FILTER_ELEMENT              = PROPERTY_CONTEXT_PREFIX+"filter/element";
+	public final static String PROLOG_GENERATED_BY         = PROPERTY_CONTEXT_PREFIX+"prolog/generated-by";
+	public final static String PROLOG_GENERATED_BY_ENABLE  = PROPERTY_CONTEXT_PREFIX+"prolog/generated-by-enable";
+	public final static String PROLOG_PROVIDER_INFO_ENABLE = PROPERTY_CONTEXT_PREFIX+"prolog/provider-info-enable";
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
-				new PropertyConfigItem(true,OUTPUT_PATH,File.class),
-				new PropertyConfigItem(OUTPUT_DOCUMENTATION,Boolean.class,true),
-				new PropertyConfigItem(false,FILTER_NAMESPACE,String.class),
-				new PropertyConfigItem(false,FILTER_ELEMENT,String.class),
-				new PropertyConfigItem(false,PROLOG_LICENCE_ENCODING,String.class),
-				new PropertyConfigItem(false,PROLOG_LICENCE_FILE,File.class),
-				new PropertyConfigItem(false,PROLOG_LICENCE_RESOURCE,String.class),
-				new PropertyConfigItem(PROLOG_PRINT_LICENCE,Boolean.class,true),
-				new PropertyConfigItem(PROLOG_PRINT_GENERATOR,Boolean.class,true),
-				new PropertyConfigItem(PROLOG_PRINT_PROVIDER,Boolean.class,true),
-				new PropertyConfigItem(false,PROLOG_USER_COMMENT,String.class)
+				new PropertyConfigItem(true,OUTPUT_PATH,            File.class       ),
+				new PropertyConfigItem(OUTPUT_DOCUMENTATION,        Boolean.class,   true),
+				new PropertyConfigItem(FILTER_NAMESPACE,            String.class     ),
+				new PropertyConfigItem(FILTER_ELEMENT,              String.class     ),
+				new PropertyConfigItem(PROLOG_GENERATED_BY,         String.class     ),
+				new PropertyConfigItem(PROLOG_GENERATED_BY_ENABLE,  Boolean.class,   true),
+				new PropertyConfigItem(PROLOG_PROVIDER_INFO_ENABLE, Boolean.class,   true)
 				);
 	}
 	
@@ -143,14 +135,20 @@ public class EldXsdWriter {
 		if (ns==null) {
 			throw new NullPointerException("Could not find namespace: "+namespaceUri);
 		}
-		
+		String filterElement = propertyConfig.getPropertyString(FILTER_ELEMENT);
 		EldXsdWriterElement xsdWriterElement = new EldXsdWriterElement(xsdWriter,language,propertyConfig);
 		xsdWriterElement.startNamespaces(namespaceUri);
 		xsdWriterElement.startSchema(ns);
 		for (ElementClass ec:ns.getElementClasses()) {
+			if (filterElement!=null && !ec.getId().equals(filterElement)) {
+				continue;
+			}
 			xsdWriterElement.writeElementClass(ec,ns);
 		}
 		for (ElementClass ec:ns.getElementClasses()) {
+			if (filterElement!=null && !ec.getId().equals(filterElement)) {
+				continue;
+			}
 			xsdWriterElement.writeElement(ec,ns);
 		}
 		xsdWriterElement.endSchema();

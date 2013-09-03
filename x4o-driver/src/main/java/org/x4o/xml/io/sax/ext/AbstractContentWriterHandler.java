@@ -22,8 +22,15 @@
  */
 package	org.x4o.xml.io.sax.ext;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +40,7 @@ import java.util.Stack;
 
 import org.x4o.xml.io.XMLConstants;
 import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
+import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -60,15 +68,39 @@ public class AbstractContentWriterHandler implements ContentHandler {
 
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_WRITER_XML;
 	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
-	public final static String OUTPUT_ENCODING = PROPERTY_CONTEXT_PREFIX+"output/encoding";
-	public final static String OUTPUT_CHAR_TAB = PROPERTY_CONTEXT_PREFIX+"output/charTab";
-	public final static String OUTPUT_CHAR_NEWLINE = PROPERTY_CONTEXT_PREFIX+"output/newLine";
+	public final static String OUTPUT_ENCODING            = PROPERTY_CONTEXT_PREFIX+"output/encoding";
+	public final static String OUTPUT_CHAR_TAB            = PROPERTY_CONTEXT_PREFIX+"output/char-tab";
+	public final static String OUTPUT_CHAR_NEWLINE        = PROPERTY_CONTEXT_PREFIX+"output/char-newline";
+	public final static String OUTPUT_COMMENT_ENABLE      = PROPERTY_CONTEXT_PREFIX+"output/comment-enable";
+	public final static String OUTPUT_COMMENT_AUTO_SPACE  = PROPERTY_CONTEXT_PREFIX+"output/comment-auto-space";
+	//public final static String OUTPUT_LINE_BREAK_WIDTH    = PROPERTY_CONTEXT_PREFIX+"output/line-break-width";
+	//public final static String OUTPUT_LINE_PER_ATTRIBUTE  = PROPERTY_CONTEXT_PREFIX+"output/line-per-attribute";
+	public final static String PROLOG_LICENCE_FILE        = PROPERTY_CONTEXT_PREFIX+"prolog/licence-file";
+	public final static String PROLOG_LICENCE_RESOURCE    = PROPERTY_CONTEXT_PREFIX+"prolog/licence-resource";
+	public final static String PROLOG_LICENCE_ENCODING    = PROPERTY_CONTEXT_PREFIX+"prolog/licence-encoding";
+	public final static String PROLOG_LICENCE_ENABLE      = PROPERTY_CONTEXT_PREFIX+"prolog/licence-enable";
+	public final static String PROLOG_USER_COMMENT        = PROPERTY_CONTEXT_PREFIX+"prolog/user-comment";
+	public final static String PROLOG_USER_COMMENT_ENABLE = PROPERTY_CONTEXT_PREFIX+"prolog/user-comment-enable";
+	public final static String ROOT_END_APPEND_NEWLINE    = PROPERTY_CONTEXT_PREFIX+"root/end-append-newline";
+	public final static String ROOT_START_NAMESPACE_ALL   = PROPERTY_CONTEXT_PREFIX+"root/start-namespace-all";
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,null,PROPERTY_CONTEXT_PREFIX,
-				new PropertyConfigItem(OUTPUT_ENCODING,String.class,XMLConstants.XML_DEFAULT_ENCODING),
-				new PropertyConfigItem(OUTPUT_CHAR_TAB,String.class,XMLConstants.CHAR_TAB+""),
-				new PropertyConfigItem(OUTPUT_CHAR_NEWLINE,String.class,XMLConstants.CHAR_NEWLINE+"")
+				new PropertyConfigItem(OUTPUT_ENCODING,            String.class,    XMLConstants.XML_DEFAULT_ENCODING),
+				new PropertyConfigItem(OUTPUT_CHAR_TAB,            String.class,    XMLConstants.CHAR_TAB+""),
+				new PropertyConfigItem(OUTPUT_CHAR_NEWLINE,        String.class,    XMLConstants.CHAR_NEWLINE+""),
+				new PropertyConfigItem(OUTPUT_COMMENT_ENABLE,      Boolean.class,   true),
+				new PropertyConfigItem(OUTPUT_COMMENT_AUTO_SPACE,  Boolean.class,   true),
+// TODO				new PropertyConfigItem(OUTPUT_LINE_BREAK_WIDTH,    Integer.class,   -1),
+// TODO				new PropertyConfigItem(OUTPUT_LINE_PER_ATTRIBUTE,  Boolean.class,   false),
+				new PropertyConfigItem(PROLOG_LICENCE_ENCODING,    String.class,    XMLConstants.XML_DEFAULT_ENCODING),
+				new PropertyConfigItem(PROLOG_LICENCE_FILE,        File.class       ),
+				new PropertyConfigItem(PROLOG_LICENCE_RESOURCE,    String.class     ),
+				new PropertyConfigItem(PROLOG_LICENCE_ENABLE,      Boolean.class,   true),
+				new PropertyConfigItem(PROLOG_USER_COMMENT,        String.class     ),
+				new PropertyConfigItem(PROLOG_USER_COMMENT_ENABLE, Boolean.class,   true),
+				new PropertyConfigItem(ROOT_END_APPEND_NEWLINE,    Boolean.class,   true),
+				new PropertyConfigItem(ROOT_START_NAMESPACE_ALL,   Boolean.class,   true)
 				);
 	}
 	
@@ -113,6 +145,80 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	public void startDocument() throws SAXException {
 		indent = 0;
 		write(XMLConstants.getDocumentDeclaration(getPropertyConfig().getPropertyString(OUTPUT_ENCODING)));
+		prologWriteLicence();
+		prologWriteUserComment();
+	}
+	
+	private void prologWriteLicence() throws SAXException {
+		if (!propertyConfig.getPropertyBoolean(PROLOG_LICENCE_ENABLE)) {
+			return;
+		}
+		InputStream licenceInput = null;
+		String licenceEncoding = propertyConfig.getPropertyString(PROLOG_LICENCE_ENCODING);
+		String licenceResource = propertyConfig.getPropertyString(PROLOG_LICENCE_RESOURCE);
+		if (licenceResource!=null) {
+			licenceInput = X4OLanguageClassLoader.getResourceAsStream(licenceResource);
+			if (licenceInput==null) {
+				throw new NullPointerException("Could not load licence resource from: "+licenceResource);
+			}
+		}
+		if (licenceInput==null) {
+			File licenceFile = propertyConfig.getPropertyFile(PROLOG_LICENCE_FILE);
+			if (licenceFile==null) {
+				return;
+			}
+			try {
+				licenceInput = new FileInputStream(licenceFile);
+			} catch (FileNotFoundException e) {
+				throw new SAXException(e);
+			}
+		}
+		String licenceText;
+		try {
+			licenceText = readLicenceStream(licenceInput,licenceEncoding);
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
+		comment(licenceText);
+	}
+	
+	private String readLicenceStream(InputStream inputStream,String encoding) throws IOException {
+		if (encoding==null) {
+			encoding = XMLConstants.XML_DEFAULT_ENCODING;
+		}
+		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream,Charset.forName(encoding)));
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append('\n'); // like plugin
+			sb.append('\n'); // like plugin
+			String line = br.readLine();
+			while (line != null) {
+				if (line.length()>0) {
+					sb.append("    "); // like plugin
+				}
+				sb.append(line);
+				sb.append('\n');
+				line = br.readLine();
+			}
+			sb.append('\n'); // like plugin
+			String out = sb.toString();
+			return out;
+		} finally {
+			br.close();
+		}
+	}
+	
+	private void prologWriteUserComment() throws SAXException {
+		if (!propertyConfig.getPropertyBoolean(PROLOG_USER_COMMENT_ENABLE)) {
+			return;
+		}
+		String userComment = propertyConfig.getPropertyString(PROLOG_USER_COMMENT);
+		if (userComment==null) {
+			return;
+		}
+		ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		comment(" "+userComment+" ");
+		ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
 	}
 	
 	/**
@@ -195,6 +301,9 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	}
 	
 	public void startElementNamespaceAll(String uri) throws SAXException {
+		if (!propertyConfig.getPropertyBoolean(ROOT_START_NAMESPACE_ALL)) {
+			return;
+		}
 		String prefix = null;
 		boolean first = true;
 		for (String uri2:prefixMapping.keySet()) {
@@ -303,8 +412,11 @@ public class AbstractContentWriterHandler implements ContentHandler {
 			write(localName);
 		}
 		write(XMLConstants.TAG_CLOSE);
+		if (elements.isEmpty() && propertyConfig.getPropertyBoolean(ROOT_END_APPEND_NEWLINE)) {
+			ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		}
 	}
-		
+	
 	/**
 	 * Starts the prefix mapping of an xml namespace uri.
 	 * @param prefix	The xml prefix of this xml namespace uri.
@@ -482,6 +594,19 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	public void comment(String text) throws SAXException {
 		if (text==null) {
 			return;
+		}
+		if (!propertyConfig.getPropertyBoolean(OUTPUT_COMMENT_ENABLE)) {
+			return;
+		}
+		if (propertyConfig.getPropertyBoolean(OUTPUT_COMMENT_AUTO_SPACE)) {
+			char textStart = text.charAt(0);
+			char textEnd = text.charAt(text.length()-1);
+			if (textStart!=' ' && textStart!='\t' && textStart!='\n') {
+				text = " "+text;
+			}
+			if (textEnd!=' ' && textEnd!='\t' && textEnd!='\n') {
+				text = text + " ";
+			}
 		}
 		autoCloseStartElement();
 		checkPrintedReturn(text);

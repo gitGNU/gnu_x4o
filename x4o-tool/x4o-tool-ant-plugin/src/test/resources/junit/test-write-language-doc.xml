@@ -71,8 +71,12 @@
 				value="${test.dir}/eld-custom"
 			/>
 			<x4oTaskProperty
-				key="http://x4o.org/properties/content/output/charTab"
+				key="http://x4o.org/properties/content/output/char-tab"
 				value=" "
+			/>
+			<x4oTaskProperty
+				key="http://x4o.org/properties/content/output/comment-enable"
+				value="false"
 			/>
 			<x4oTaskProperty
 				key="http://x4o.org/properties/eld-doc/meta/stylesheet-thema"

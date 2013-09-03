@@ -22,14 +22,7 @@
  */
 package	org.x4o.xml.eld.xsd;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -50,7 +43,6 @@ import org.x4o.xml.io.XMLConstants;
 import org.x4o.xml.io.sax.ext.ContentWriterXsd;
 import org.x4o.xml.io.sax.ext.ContentWriterXsd.Tag;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
-import org.x4o.xml.lang.X4OLanguageClassLoader;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
@@ -155,68 +147,23 @@ public class EldXsdWriterElement {
 		}
 	}
 	
-	private String readLicenceStream(InputStream inputStream,String encoding) throws IOException {
-		if (encoding==null) {
-			encoding = XMLConstants.XML_DEFAULT_ENCODING;
-		}
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream,Charset.forName(encoding)));
-		try {
-			StringBuilder sb = new StringBuilder();
-			sb.append('\n'); // like plugin
-			sb.append('\n'); // like plugin
-			String line = br.readLine();
-			while (line != null) {
-				if (line.length()>0) {
-					sb.append("    "); // like plugin
-				}
-				sb.append(line);
-				sb.append('\n');
-				line = br.readLine();
-			}
-			sb.append('\n'); // like plugin
-			String out = sb.toString();
-			return out;
-		} finally {
-			br.close();
-		}
-	}
-	
 	private static final String COMMENT_SEPERATOR = " ==================================================================== ";
 	private static final String COMMENT_TEXT = "=====";
 	
-	private void prologWriteLicence() throws SAXException, IOException {
-		if (!propertyConfig.getPropertyBoolean(EldXsdWriter.PROLOG_PRINT_LICENCE)) {
-			return;
-		}
-		InputStream licenceInput = null;
-		String licenceEncoding = propertyConfig.getPropertyString(EldXsdWriter.PROLOG_LICENCE_ENCODING);
-		String licenceResource = propertyConfig.getPropertyString(EldXsdWriter.PROLOG_LICENCE_RESOURCE);
-		if (licenceResource!=null) {
-			licenceInput = X4OLanguageClassLoader.getResourceAsStream(licenceResource);
-			if (licenceInput==null) {
-				throw new NullPointerException("Could not load licence resource from: "+licenceResource);
-			}
-		}
-		if (licenceInput==null) {
-			File licenceFile = propertyConfig.getPropertyFile(EldXsdWriter.PROLOG_LICENCE_FILE);
-			if (licenceFile==null) {
-				return;
-			}
-			licenceInput = new FileInputStream(licenceFile);
-		}
-		String licenceText = readLicenceStream(licenceInput,licenceEncoding);
-		xsdWriter.comment(licenceText);
-	}
-	
 	private void prologWriteGenerator() throws SAXException {
-		if (!propertyConfig.getPropertyBoolean(EldXsdWriter.PROLOG_PRINT_GENERATOR)) {
+		if (!propertyConfig.getPropertyBoolean(EldXsdWriter.PROLOG_GENERATED_BY_ENABLE)) {
 			return;
 		}
 		//xsdWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		xsdWriter.comment(COMMENT_SEPERATOR);
 
+		String byValue = propertyConfig.getPropertyStringOrValue(EldXsdWriter.PROLOG_GENERATED_BY, EldXsdWriter.class.getSimpleName());
+		if (!byValue.endsWith(".")) {
+			byValue += '.';
+		}
+		
 		// this is a mess;
-		String desc = "Automatic generated schema for language: "+language.getLanguageName();
+		String desc = "Automatic generated schema for language: "+language.getLanguageName()+" by "+byValue;
 		int space = COMMENT_SEPERATOR.length()-desc.length()-(2*COMMENT_TEXT.length())-4;
 		StringBuffer b = new StringBuffer(COMMENT_SEPERATOR.length());
 		b.append(" ");
@@ -233,7 +180,7 @@ public class EldXsdWriterElement {
 	}
 	
 	private void prologWriteProvider(ElementNamespace ns) throws SAXException {
-		if (!propertyConfig.getPropertyBoolean(EldXsdWriter.PROLOG_PRINT_PROVIDER)) {
+		if (!propertyConfig.getPropertyBoolean(EldXsdWriter.PROLOG_PROVIDER_INFO_ENABLE)) {
 			return;
 		}
 		X4OLanguageModule module = null;
@@ -258,28 +205,12 @@ public class EldXsdWriterElement {
 		xsdWriter.comment(b.toString());
 	}
 	
-	private void prologWriteUserComment() throws SAXException {
-		String userComment = propertyConfig.getPropertyString(EldXsdWriter.PROLOG_USER_COMMENT);
-		if (userComment==null) {
-			return;
-		}
-		xsdWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
-		xsdWriter.comment(" "+userComment+" ");
-		xsdWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
-	}
-	
 	public void startSchema(ElementNamespace ns) throws SAXException {
 		
 		xsdWriter.startDocument();
 		
-		try {
-			prologWriteLicence();
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
 		prologWriteGenerator();
 		prologWriteProvider(ns);
-		prologWriteUserComment();
 		
 		xsdWriter.startPrefixMapping("", SCHEMA_URI);
 		for (String uri:namespaces.keySet()) {

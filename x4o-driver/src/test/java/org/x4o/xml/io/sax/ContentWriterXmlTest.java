@@ -50,7 +50,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>foobar"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>foobar"));
 	}
 	
 	public void testCDATANoneTagEscape() throws Exception {
@@ -64,7 +64,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>foobar&lt;test/&gt;"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>foobar&lt;test/&gt;"));
 	}
 	
 	public void testCDATANormal() throws Exception {
@@ -80,7 +80,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
 	}
 	
 	public void testCDATAEscapeTag() throws Exception {
@@ -96,7 +96,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar<test/>]]>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar<test/>]]>"));
 	}
 	
 	public void testCDATAEscapeStart() throws Exception {
@@ -112,7 +112,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
 	}
 	
 	public void testCDATAEscapeEnd() throws Exception {
@@ -128,7 +128,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
 	}
 	
 	public void testCDATAEscapeInvalid() throws Exception {
@@ -144,7 +144,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[tokens like \'\' are <invalid>]]>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[tokens like \'\' are <invalid>]]>"));
 	}
 	
 	public void testCDATAEscapeValid() throws Exception {
@@ -174,7 +174,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>test is foobar!"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>test is foobar!"));
 	}
 	
 	public void testCharactersEscape() throws Exception {
@@ -188,7 +188,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>&lt;test/&gt; &amp; &apos;foobar&apos; is &quote;quoted&quote;!"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>&lt;test/&gt; &amp; &apos;foobar&apos; is &quote;quoted&quote;!"));
 	}
 
 	public void testAttributeNormal() throws Exception {
@@ -204,7 +204,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test attr=\"foobar\"/>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test attr=\"foobar\"/>"));
 	}
 	
 	public void testAttributeEscape() throws Exception {
@@ -220,7 +220,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test attr=\"&lt;test/&gt; &amp; &apos;foobar&apos; is &quote;quoted&quote;!\"/>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test attr=\"&lt;test/&gt; &amp; &apos;foobar&apos; is &quote;quoted&quote;!\"/>"));
 	}
 	
 	
@@ -235,7 +235,7 @@ public class ContentWriterXmlTest extends TestCase {
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!--foobar-->"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- foobar -->"));
 	}
 	
 	public void testCommentEscape() throws Exception {
@@ -246,10 +246,16 @@ public class ContentWriterXmlTest extends TestCase {
 		writer.comment("<!-- foobar -->");
 		writer.endDocument();
 		
+		// note two space because auto-space is before escaping and places spaces over comment tags.
+		// 1) "<!-- foobar -->"   - argu
+		// 2) " <!-- foobar --> " - auto-space (default enabled)
+		// 3) "  foobar  "        - escapes
+		// 4) "<!--  foobar  -->" - printed
+		
 		String output = outputWriter.toString();
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- foobar -->"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!--  foobar  -->")); 
 	}
 	
 	public void testXmlInvalid() throws Exception {
@@ -313,7 +319,7 @@ public class ContentWriterXmlTest extends TestCase {
 		assertNull(e);
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?target data?>\n<test/>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?target data?>\n<test/>"));
 	}
 	
 	public void testProcessingInstructionInline() throws Exception {
@@ -336,7 +342,7 @@ public class ContentWriterXmlTest extends TestCase {
 		assertNull(e);
 		assertNotNull(output);
 		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?target data?>\n<test>\n\t<?target-doc data-doc?>\n</test>"));
+		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?target data?>\n<test>\n\t<?target-doc data-doc?>\n</test>\n"));
 	}
 	
 	public void testProcessingInstructionTargetXmlPrefix() throws Exception {
