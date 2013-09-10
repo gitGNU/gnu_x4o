@@ -79,6 +79,7 @@
     <maven-changelog-plugin.version>2.2</maven-changelog-plugin.version>
     <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
     <maven-license-plugin.version>1.10.b1</maven-license-plugin.version>
+    <maven-clean-plugin.version>2.4.1</maven-clean-plugin.version>
     
     <!-- Build non-maven plugin versions -->
     <webstart-maven-plugin.version>1.0-beta-1</webstart-maven-plugin.version>
@@ -112,6 +113,31 @@
   </properties>
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${maven-clean-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>default-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <!-- only clean childeren of target not folder itself. -->
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${project.build.directory}</directory>
+                  <includes>
+                    <include>**/*</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
