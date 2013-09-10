@@ -50,19 +50,18 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 	public Class<?> getBindParentClass() {
 		return parentClass;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindChildClasses()
 	 */
 	public Class<?>[] getBindChildClasses() {
 		return new Class[] {childClass};
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
 	public void bindChild(Element childElement, Object parentObject, Object childObject) throws ElementBindingHandlerException {
-
 		if (parentClass==null | childClass==null | addMethod==null) {
 			throw new IllegalStateException("Missing property: parentClass="+parentClass+" childClass="+childClass+" addMethod="+addMethod+".");
 		}
@@ -89,7 +88,7 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 		}
 		throw new ElementBindingHandlerException("Could not find method: "+addMethod+" on: "+childClass+" id:"+getId());
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
 	 */
@@ -114,7 +113,7 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 				throw new ElementBindingHandlerException("Invoke error: "+e.getMessage()+" from: "+getMethod+" on: "+parentObject+" id:"+getId(),e);
 			} 
 			if (result==null) {
-				break;
+				return; // null is no childeren
 			}
 			if (result instanceof List) {
 				for (Object o:(List)result) {
@@ -135,13 +134,17 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 				createSafeChild(parentElement, result);
 				return;
 			} else {
-				throw new ElementBindingHandlerException("Unsuported return type: "+result.getClass()+" need: "+childClass+" from: "+getMethod+" on: "+parentObject+" id:"+getId());
+				throw new ElementBindingHandlerException("Unsupported return type: "+result.getClass()+" need: "+childClass+" from: "+getMethod+" on: "+parentObject+" id:"+getId());
 			}
 		}
 		throw new ElementBindingHandlerException("Could not find method: "+getMethod+" on: "+parentObject+" id:"+getId());
 	}
 	
-	
+	/**
+	 * Only create child when class matches and regex doesn't exclude it.
+	 * @param parentElement	The element to create childeren for.
+	 * @param childObject	The childObject.
+	 */
 	protected void createSafeChild(Element parentElement,Object childObject) {
 		if (childClass.isAssignableFrom(childObject.getClass())==false) {
 			return;
@@ -152,70 +155,69 @@ public class ElementRefectionBindingHandler extends AbstractElementBindingHandle
 		createChild(parentElement,childObject);
 	}
 	
-	
 	/**
 	 * @return the parentClass
 	 */
 	public Class<?> getParentClass() {
 		return parentClass;
 	}
-
+	
 	/**
 	 * @param parentClass the parentClass to set
 	 */
 	public void setParentClass(Class<?> parentClass) {
 		this.parentClass = parentClass;
 	}
-
+	
 	/**
 	 * @return the childClass
 	 */
 	public Class<?> getChildClass() {
 		return childClass;
 	}
-
+	
 	/**
 	 * @param childClass the childClass to set
 	 */
 	public void setChildClass(Class<?> childClass) {
 		this.childClass = childClass;
 	}
-
+	
 	/**
 	 * @return the addMethod
 	 */
 	public String getAddMethod() {
 		return addMethod;
 	}
-
+	
 	/**
 	 * @param addMethod the addMethod to set
 	 */
 	public void setAddMethod(String addMethod) {
 		this.addMethod = addMethod;
 	}
-
+	
 	/**
 	 * @return the getMethod
 	 */
 	public String getGetMethod() {
 		return getMethod;
 	}
-
+	
 	/**
 	 * @param getMethod the getMethod to set
 	 */
 	public void setGetMethod(String getMethod) {
 		this.getMethod = getMethod;
 	}
-
+	
 	/**
 	 * @return the skipChilderenClassRegex
 	 */
 	public String getSkipChilderenClassRegex() {
 		return skipChilderenClassRegex;
 	}
-
+	
 	/**
 	 * @param skipChilderenClassRegex the skipChilderenClassRegex to set
 	 */
