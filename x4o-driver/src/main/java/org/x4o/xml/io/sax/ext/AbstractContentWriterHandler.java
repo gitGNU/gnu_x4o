@@ -71,10 +71,11 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	public final static String OUTPUT_ENCODING            = PROPERTY_CONTEXT_PREFIX+"output/encoding";
 	public final static String OUTPUT_CHAR_TAB            = PROPERTY_CONTEXT_PREFIX+"output/char-tab";
 	public final static String OUTPUT_CHAR_NEWLINE        = PROPERTY_CONTEXT_PREFIX+"output/char-newline";
+	public final static String OUTPUT_CHAR_NULL           = PROPERTY_CONTEXT_PREFIX+"output/char-null";
 	public final static String OUTPUT_COMMENT_ENABLE      = PROPERTY_CONTEXT_PREFIX+"output/comment-enable";
 	public final static String OUTPUT_COMMENT_AUTO_SPACE  = PROPERTY_CONTEXT_PREFIX+"output/comment-auto-space";
-	//public final static String OUTPUT_LINE_BREAK_WIDTH    = PROPERTY_CONTEXT_PREFIX+"output/line-break-width";
-	//public final static String OUTPUT_LINE_PER_ATTRIBUTE  = PROPERTY_CONTEXT_PREFIX+"output/line-per-attribute";
+	public final static String OUTPUT_LINE_BREAK_WIDTH    = PROPERTY_CONTEXT_PREFIX+"output/line-break-width";
+	public final static String OUTPUT_LINE_PER_ATTRIBUTE  = PROPERTY_CONTEXT_PREFIX+"output/line-per-attribute";
 	public final static String PROLOG_LICENCE_FILE        = PROPERTY_CONTEXT_PREFIX+"prolog/licence-file";
 	public final static String PROLOG_LICENCE_RESOURCE    = PROPERTY_CONTEXT_PREFIX+"prolog/licence-resource";
 	public final static String PROLOG_LICENCE_ENCODING    = PROPERTY_CONTEXT_PREFIX+"prolog/licence-encoding";
@@ -89,10 +90,11 @@ public class AbstractContentWriterHandler implements ContentHandler {
 				new PropertyConfigItem(OUTPUT_ENCODING,            String.class,    XMLConstants.XML_DEFAULT_ENCODING),
 				new PropertyConfigItem(OUTPUT_CHAR_TAB,            String.class,    XMLConstants.CHAR_TAB+""),
 				new PropertyConfigItem(OUTPUT_CHAR_NEWLINE,        String.class,    XMLConstants.CHAR_NEWLINE+""),
+				new PropertyConfigItem(OUTPUT_CHAR_NULL,           String.class,    "null"), // TODO: or "" ?? (or skip)
 				new PropertyConfigItem(OUTPUT_COMMENT_ENABLE,      Boolean.class,   true),
 				new PropertyConfigItem(OUTPUT_COMMENT_AUTO_SPACE,  Boolean.class,   true),
-// TODO				new PropertyConfigItem(OUTPUT_LINE_BREAK_WIDTH,    Integer.class,   -1),
-// TODO				new PropertyConfigItem(OUTPUT_LINE_PER_ATTRIBUTE,  Boolean.class,   false),
+				new PropertyConfigItem(OUTPUT_LINE_BREAK_WIDTH,    Integer.class,   -1),
+				new PropertyConfigItem(OUTPUT_LINE_PER_ATTRIBUTE,  Boolean.class,   false),
 				new PropertyConfigItem(PROLOG_LICENCE_ENCODING,    String.class,    XMLConstants.XML_DEFAULT_ENCODING),
 				new PropertyConfigItem(PROLOG_LICENCE_FILE,        File.class       ),
 				new PropertyConfigItem(PROLOG_LICENCE_RESOURCE,    String.class     ),
@@ -289,7 +291,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 			startElement.append(' ');
 			startElement.append(XMLConstants.XMLNS_ATTRIBUTE);
 			if ("".equals(prefix)==false) {
-				startElement.append(':');
+				startElement.append(XMLConstants.XMLNS_ASSIGN);
 				startElement.append(prefix);
 			}
 			startElement.append("=\"");
@@ -333,17 +335,32 @@ public class AbstractContentWriterHandler implements ContentHandler {
 		}
 	}
 	
+	private void printElementAttributeNewLineSpace() {
+		startElement.append(XMLConstants.CHAR_NEWLINE);
+		for (int ii = 0; ii < indent+1; ii++) {
+			startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB));
+		}
+	}
+	
 	private void startElementAttributes(Attributes atts) throws SAXException {
+		int prevChars = 0;
 		for (int i=0;i<atts.getLength();i++) {
 			String attributeUri = atts.getURI(i);
 			String attributeName = XMLConstants.escapeAttributeName(atts.getLocalName(i));
 			String attributeValue = atts.getValue(i);
 			if (attributeValue==null) {
-				attributeValue = "null"; // TODO: Add null value key to config.
+				attributeValue = propertyConfig.getPropertyString(OUTPUT_CHAR_NULL);
 			}
 			String attributeValueSafe = XMLConstants.escapeAttributeValue(attributeValue);
 			
-			startElement.append(' ');
+			if (propertyConfig.getPropertyBoolean(OUTPUT_LINE_PER_ATTRIBUTE)) {
+				if (i==0) {
+					printElementAttributeNewLineSpace();
+				}
+			} else {
+				startElement.append(' ');
+			}
+			
 			if (XMLConstants.NULL_NS_URI.equals(attributeUri) | attributeUri ==null) {
 				startElement.append(attributeName);
 			} else {
@@ -354,11 +371,20 @@ public class AbstractContentWriterHandler implements ContentHandler {
 			startElement.append("=\"");
 			startElement.append(attributeValueSafe);
 			startElement.append('"');
-			boolean printNewLine = attributeValueSafe.length()>80; // TODO add config
-			if (printNewLine) {
-				startElement.append(XMLConstants.CHAR_NEWLINE);
-				for (int ii = 0; ii < indent+1; ii++) {
-					startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB));
+			
+			if (propertyConfig.getPropertyBoolean(OUTPUT_LINE_PER_ATTRIBUTE)) {
+				printElementAttributeNewLineSpace();
+			}
+			
+			int breakLines = propertyConfig.getPropertyInteger(OUTPUT_LINE_BREAK_WIDTH);
+			if (breakLines>0) {
+				if (prevChars==0 && startElement.length() > breakLines) {
+					printElementAttributeNewLineSpace();
+					prevChars = startElement.length();
+				}
+				if (prevChars>0 && (startElement.length()-prevChars) > breakLines) {
+					printElementAttributeNewLineSpace();
+					prevChars = startElement.length();
 				}
 			}
 		}

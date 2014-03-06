@@ -39,130 +39,6 @@ import junit.framework.TestCase;
  */
 public class ContentWriterXmlTest extends TestCase {
 	
-	public void testCDATANone() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.characters("foobar");
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>foobar"));
-	}
-	
-	public void testCDATANoneTagEscape() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.characters("foobar<test/>");
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>foobar&lt;test/&gt;"));
-	}
-	
-	public void testCDATANormal() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.startCDATA();
-		writer.characters("foobar");
-		writer.endCDATA();
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
-	}
-	
-	public void testCDATAEscapeTag() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.startCDATA();
-		writer.characters("foobar<test/>");
-		writer.endCDATA();
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar<test/>]]>"));
-	}
-	
-	public void testCDATAEscapeStart() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.startCDATA();
-		writer.characters("<![CDATA[foobar");
-		writer.endCDATA();
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
-	}
-	
-	public void testCDATAEscapeEnd() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.startCDATA();
-		writer.characters("foobar]]>");
-		writer.endCDATA();
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[foobar]]>"));
-	}
-	
-	public void testCDATAEscapeInvalid() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.startCDATA();
-		writer.characters("<![CDATA[tokens like ']]>' are <invalid>]]>");
-		writer.endCDATA();
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[tokens like \'\' are <invalid>]]>"));
-	}
-	
-	public void testCDATAEscapeValid() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		writer.startCDATA();
-		writer.characters("<![CDATA[tokens like ']]]]><![CDATA[>' are <valid>]]>");
-		writer.endCDATA();
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><![CDATA[tokens like \']]>\' are <valid>]]>"));
-	}
-	
 	public void testCharactersNormal() throws Exception {
 		StringWriter outputWriter = new StringWriter();
 		ContentWriterXml writer = new ContentWriterXml(outputWriter);
@@ -190,39 +66,6 @@ public class ContentWriterXmlTest extends TestCase {
 		assertTrue(output.length()>0);
 		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>&lt;test/&gt; &amp; &apos;foobar&apos; is &quote;quoted&quote;!"));
 	}
-
-	public void testAttributeNormal() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		AttributesImpl atts = new AttributesImpl();
-		atts.addAttribute ("", "attr", "", "", "foobar");
-		writer.startElementEnd("", "test", "", atts);
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test attr=\"foobar\"/>"));
-	}
-	
-	public void testAttributeEscape() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-		
-		writer.startDocument();
-		AttributesImpl atts = new AttributesImpl();
-		atts.addAttribute ("", "attr", "", "", "<test/> & 'foobar' is \"quoted\"!");
-		writer.startElementEnd("", "test", "", atts);
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.length()>0);
-		assertTrue(output,output.equals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<test attr=\"&lt;test/&gt; &amp; &apos;foobar&apos; is &quote;quoted&quote;!\"/>"));
-	}
-	
 	
 	public void testCommentNormal() throws Exception {
 		StringWriter outputWriter = new StringWriter();
@@ -393,27 +236,5 @@ public class ContentWriterXmlTest extends TestCase {
 		assertTrue(e.getMessage().contains("instruction"));
 		assertTrue(e.getMessage().contains("invalid char"));
 		assertTrue(e.getMessage().contains("isInvalidChar=55296"));
-	}
-	
-	public void testAttributeValueLongData() throws Exception {
-		StringWriter outputWriter = new StringWriter();
-		ContentWriterXml writer = new ContentWriterXml(outputWriter);
-
-		AttributesImpl atts = new AttributesImpl();
-		String data = "_FOR_FOO_BAR";
-		String dataValue = "LOOP";
-		for (int i=0;i<15;i++) {
-			atts.addAttribute("", "attr"+i, "", "", dataValue+=data);
-		}
-		writer.startDocument();
-		writer.startElement("", "test", "", atts);
-		writer.startElement("", "testNode", "", new AttributesImpl());
-		writer.endElement("", "testNode", "");
-		writer.endElement("", "test", "");
-		writer.endDocument();
-		
-		String output = outputWriter.toString();
-		assertNotNull(output);
-		assertTrue(output.split("\n").length==13);
 	}
 }

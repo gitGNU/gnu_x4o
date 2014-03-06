@@ -175,8 +175,8 @@ public class EldDocWriter {
 		doc.setNoFrameAllName("All Elements");
 		doc.setFrameNavPrintParent(true);
 		doc.setFrameNavPrintParentId(true);
-		doc.setGroupTypeName("summary", "Summary");
-		doc.setGroupTypeName("overview", "Overview");
+		doc.setGroupTypeName("summary", "Summary",1);
+		doc.setGroupTypeName("overview", "Overview",2);
 		
 		// Javadoc linking config
 		List<String> javadocLinkList = propertyConfig.getPropertyList(JAVADOC_LINK);

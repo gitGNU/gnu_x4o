@@ -94,13 +94,13 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 		writeAllFrameNav(true);
 		writeAllFrameNav(false);
 		
-		// Write pages
+		// Write api doc tree
+		writeNode(doc.getRootNode());
+		
+		// Write pages last
 		for (ApiDocPage page:doc.getDocPages()) {
 			writePage(page);
 		}
-		
-		// Write api doc tree
-		writeNode(doc.getRootNode());
 	}
 	
 	private void writeNode(ApiDocNode node) throws SAXException {
@@ -371,7 +371,11 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 	
 	private void configSubNavLinks(ApiDocNode node) {
 		ApiDocNodeData conf = doc.getNodeData();
-		for (ApiDocNodeWriter writer:findNodeBodyWriters(node, null)) {
+		List<ApiDocNodeWriter> orderedWriters = new ArrayList<ApiDocNodeWriter>(10);
+		for (ApiDocNodeBody bodyType:ApiDocNodeBody.values()) {
+			orderedWriters.addAll(findNodeBodyWriters(node,bodyType)); // enum order is oke
+		}
+		for (ApiDocNodeWriter writer:orderedWriters) {
 			String group = writer.getContentGroup();
 			String groupTypeKey = writer.getContentGroupType();
 			if (group==null | groupTypeKey==null) {
@@ -464,10 +468,16 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 	}
 	
 	private List<ApiDocNodeWriter> findNodeBodyWriters(ApiDocNode node,ApiDocNodeBody nodeBody) {
+		if (node==null) {
+			throw new NullPointerException("Can't search writers on null node.");
+		}
+		if (nodeBody==null) {
+			throw new NullPointerException("Can't search writers with null nodeBody."); // for sorting rules
+		}
 		List<ApiDocNodeWriter> result = new ArrayList<ApiDocNodeWriter>();
 		final Class<?> objClass = node.getUserData().getClass();
 		for (ApiDocNodeWriter writer:doc.getNodeBodyWriters()) {
-			if (nodeBody!=null && !nodeBody.equals(writer.getNodeBody())) {
+			if (!nodeBody.equals(writer.getNodeBody())) {
 				continue;
 			}
 			for (Class<?> c:writer.getTargetClasses()) {
@@ -476,46 +486,45 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 				}
 			}
 		}
-		Collections.sort(result, new Comparator<ApiDocNodeWriter>() {
-			public int compare(ApiDocNodeWriter o1, ApiDocNodeWriter o2) {
-				int index1 = -1;
-				int index2 = -1;
-				for (int i=0;i<o1.getTargetClasses().size();i++) {
-					Class<?> c = o1.getTargetClasses().get(i);
-					if (c.isAssignableFrom(objClass)) {
-						index1 = i;
-						break;
-					}
+		Collections.sort(result, new ApiDocNodeWriterComparator(objClass));
+		return result;
+	}
+	
+	private class ApiDocNodeWriterComparator implements Comparator<ApiDocNodeWriter> {
+		final Class<?> objClass;
+		public ApiDocNodeWriterComparator(Class<?> objClass) {
+			this.objClass=objClass;
+		}
+		public int compare(ApiDocNodeWriter o1, ApiDocNodeWriter o2) {
+			int index1 = -1;
+			int index2 = -1;
+			for (int i=0;i<o1.getTargetClasses().size();i++) {
+				Class<?> c = o1.getTargetClasses().get(i);
+				if (c.isAssignableFrom(objClass)) {
+					index1 = i;
+					break;
 				}
-				for (int i=0;i<o2.getTargetClasses().size();i++) {
-					Class<?> c = o2.getTargetClasses().get(i);
-					if (c.isAssignableFrom(objClass)) {
-						index1 = i;
-						break;
-					}
+			}
+			for (int i=0;i<o2.getTargetClasses().size();i++) {
+				Class<?> c = o2.getTargetClasses().get(i);
+				if (c.isAssignableFrom(objClass)) {
+					index2 = i;
+					break;
 				}
-				// TODO: note check return value if are oke in order..
-				if (index1==-1 && index2==-1) {
-					return 0;
-				}
-				if (index1==-1) {
-					return 1;
-				}
-				if (index2==-1) {
-					return -1;
-				}
-				int orderValue1 = o1.getNodeBodyOrders().get(index1);
-				int orderValue2 = o2.getNodeBodyOrders().get(index2);
-				if (orderValue1==orderValue2) {
-					return 0;
-				}
-				if (orderValue1 > orderValue2) {
-					return -1;
-				}
+			}
+			if (index1==-1 && index2==-1) {
+				return 0;
+			}
+			if (index1==-1) {
 				return 1;
 			}
-		});
-		return result;
+			if (index2==-1) {
+				return -1;
+			}
+			Integer orderValue1 = o1.getNodeBodyOrders().get(index1);
+			Integer orderValue2 = o2.getNodeBodyOrders().get(index2);
+			return orderValue1.compareTo(orderValue2);
+		}
 	}
 
 	private List<ApiDocNodeDataConfigurator> findDataConfigurators(ApiDocNode node) {
@@ -980,6 +989,7 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 			atts.addAttribute ("", "href", "", "", "#skip-"+barId);
 			atts.addAttribute ("", "title", "", "", "Skip navigation links");
 			writer.startElement("", "a", "", atts);
+			writer.comment(" ");
 			writer.endElement("", "a", "");
 			writer.printHrefNamed(barId+"_firstrow");
 			
@@ -1055,18 +1065,27 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 					}
 				writer.printTagEnd(Tag.div);
 			}
-			
 			String tabSpace = "&nbsp;|&nbsp;";
-			List<String> groupKeys = conf.getGroupTypeKeys();
-			boolean printLink = groupKeys.isEmpty()==false;
+			boolean printLink = conf.getGroupTypeKeys().isEmpty()==false;
 			if (printLink) {
-				writer.printTagStart(Tag.div);
-				writer.printTagStart(Tag.ul,ApiDocContentCss.subNavList);
+				List<String> groupKeys = new ArrayList<String>(5);
+				for (String groupKey:doc.getGroupTypesOrdered()) {
+					if (!conf.getGroupTypeKeys().contains(groupKey)) {
+						continue;
+					}
+					groupKeys.add(groupKey);
+				}
+				boolean printDiv = false;
 				for (int i=0;i<groupKeys.size();i++) {
 					String groupKey = groupKeys.get(i);
 					String groupName = doc.getGroupTypeName(groupKey);
 					List<ApiDocNavLink> links = conf.getGroupTypeLinks(groupKey);
 					if (links.isEmpty()==false) {
+						if (!printDiv) {
+							printDiv = true;
+							writer.printTagStart(Tag.div); // don't print empty div
+						}
+						writer.printTagStart(Tag.ul,ApiDocContentCss.subNavList);
 						writer.printTagStart(Tag.li);writer.characters(groupName+":&nbsp;");writer.printTagEnd(Tag.li);
 						for (int l=0;l<links.size();l++) {
 							ApiDocNavLink link = links.get(l);
@@ -1083,15 +1102,15 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 									writer.characters(tab);
 								}
 							}
-							
 							writer.printTagEnd(Tag.li);
 						}
+						writer.printTagEnd(Tag.ul);
 					}
 				}
-				writer.printTagEnd(Tag.ul);
-				writer.printTagEnd(Tag.div);
+				if (printDiv) {
+					writer.printTagEnd(Tag.div);
+				}
 			}
-			
 			writer.printHrefNamed("skip-"+barId);
 			writer.printTagEnd(Tag.div);
 		writer.comment("========= END OF "+barComment+" NAVBAR =======");

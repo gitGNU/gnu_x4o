@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.x4o.xml.eld.doc.api.ApiDocNodeDataConfiguratorBean;
 import org.x4o.xml.eld.doc.api.ApiDocNodeWriterBean;
@@ -75,6 +76,7 @@ public class ApiDoc {
 	private boolean printConceptTitle = true;
 	private boolean printConceptPrevNext = true;
 	private Map<String,String> groupTypeNames = null;
+	private Map<String,Integer> groupTypeOrder = null;
 	private String docPageSubTitle = null;
 	
 	public ApiDoc() {
@@ -88,6 +90,7 @@ public class ApiDoc {
 		annotatedClasses = new ArrayList<Class<?>>(5);
 		remoteClasses = new ArrayList<ApiDocRemoteClass>(5);
 		groupTypeNames = new HashMap<String,String>(3);
+		groupTypeOrder = new HashMap<String,Integer>(3);
 	}
 	
 	public void checkModel() throws NullPointerException,IllegalArgumentException {
@@ -671,6 +674,15 @@ public class ApiDoc {
 		this.printConceptPrevNext = printConceptPrevNext;
 	}
 	
+	public List<String> getGroupTypesOrdered() {
+		Map<Integer,String> orderedMap = new TreeMap<Integer,String>();
+		for (String key:groupTypeOrder.keySet()) {
+			Integer order = groupTypeOrder.get(key);
+			orderedMap.put(order, key);
+		}
+		return new ArrayList<String>(orderedMap.values());
+	}
+	
 	public String getGroupTypeName(String groupTypeKey) {
 		String result = groupTypeNames.get(groupTypeKey);
 		if (result==null) {
@@ -679,8 +691,9 @@ public class ApiDoc {
 		return result;
 	}
 	
-	public void setGroupTypeName(String groupTypeKey,String name) {
+	public void setGroupTypeName(String groupTypeKey,String name,int order) {
 		groupTypeNames.put(groupTypeKey,name);
+		groupTypeOrder.put(groupTypeKey, order);
 	}
 	
 	/**

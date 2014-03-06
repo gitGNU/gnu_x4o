@@ -43,11 +43,21 @@ public class ApiDocNodeData {
 	private String nextLink = null;
 	private String framePath = null;;
 	private List<ApiDocNavLink> navLinks = null;
+	private List<ApiDocIndexItem> indexItems = null;
 	
 	public ApiDocNodeData() {
 		navLinks = new ArrayList<ApiDocNavLink>(12);
 		groupTypeKeys = new ArrayList<String>(navLinks.size()/3);
 		groupTypeLinks = new HashMap<String,List<ApiDocNavLink>>(groupTypeKeys.size());
+		indexItems = new ArrayList<ApiDocIndexItem>(500);
+	}
+	
+	public List<ApiDocIndexItem> getIndexItems() {
+		return indexItems;
+	}
+	
+	public void addIndexItem(ApiDocIndexItem indexItem) {
+		indexItems.add(indexItem);
 	}
 	
 	public void addGroupTypeKey(String groupTypeKey) {

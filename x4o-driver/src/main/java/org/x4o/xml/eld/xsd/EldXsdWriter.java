@@ -39,7 +39,7 @@ import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
 
 /**
- * EldSchemaGenerator Creates XML Schema for a namespace uri from a x4o language driver. 
+ * EldXsdWriter creates XML Schema files fom a x4o language. 
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 8, 2012

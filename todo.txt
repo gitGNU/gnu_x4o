@@ -1,14 +1,12 @@
 
 -- x4o TODO list --
 
+-- Fix debug output
 -- RM function methods from Element interface.
--- Change global attr to namespace attributes.
 - finish eld doc-output content.
 - Make generic/safe? config bean.
 	- Make language config done by driver xml parser.
-	- Add langauge task api + reg via driver conf or service
-	- Convert ant/mvn plugin to single task executor.
-- change x4o language to "x4o-" prefix so; x4o-cel,x4o-eld,x4o-meta 
+- change (internal) x4o language to "x4o-" prefix so; x4o-cel,x4o-eld,x4o-meta 
 - Add language locking, and lock eld/cel and add <lang>-eld wrap language for eld extentions per language. 
 
 - Add doc version upgrade handler;
@@ -43,6 +41,14 @@
 - custom and merga'ble parse phases for speed
 - make element tree jdom api compatible
 - Test if possible to use threadpool for executing phases
+
+?? v2;
+x4o-driver
+x4o-s4j-jaxp (dom,sax,stax,xslt) (jsr; 5,63,173)
+x4o-s4j-sax
+x4o-s4j-stax
+x4o-s4j-jaxb (jsr; 222)
+
 
 -- TODO for version 1.0 --
 

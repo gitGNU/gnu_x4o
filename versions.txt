@@ -8,6 +8,10 @@ Version 0.8.7:
 - Renamed ElementNamespaceContext to ElementNamespace.
 - Removed binding handler from element interface.
 - Refactored all property keys with PropertyConfig bean.
+- Change global attr to namespace attributes.
+- Updated ant/maven plugins to new task and properties.
+- Added options to xml writer like OUTPUT_LINE_BREAK_WIDTH.
+
 
 Version 0.8.6:
 - Changed to X4ODriver interface.
