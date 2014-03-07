@@ -22,10 +22,13 @@
  */
 package org.x4o.xml.lang;
 
+import java.io.InputStream;
+import java.util.List;
+
 import org.x4o.xml.X4ODriver;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageLoader;
 import org.x4o.xml.lang.X4OLanguageLocal;
+import org.x4o.xml.lang.DefaultX4OLanguageLoader.VersionedResources;
 import org.x4o.xml.lang.phase.DefaultX4OPhaseManager;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageInit;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageRead;
@@ -80,27 +83,69 @@ public class DefaultX4OLanguageLoaderTest extends TestCase {
 		loader.loadLanguage((X4OLanguageLocal)result, "test", "1.0");
 	}
 	
-	public void testLanguag() throws Exception {
-//		loader.loadModulesXml(in);
+	public void testModulesSimple() throws Exception {
+		InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream("tests/modules/test-modules-simple.xml");
+		assertNotNull(in);
+		List<VersionedResources> result = loader.loadLanguageModulesXml(in, "test-modules-simple.xml");
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+		assertTrue("Simple test returned non-one result: "+result.size(),result.size()==1);
 	}
 	
-	/*
-	public void testLanguageURINameSpaceTest() throws Exception {
-		Map<String,String> languageMap = loader.loadLanguageModules(parser.getElementLanguage(), "test");
-		assertTrue("No uri for test.eld", languageMap.containsKey("eld.http://test.x4o.org/eld/test.eld"));
-		assertEquals("test.eld", languageMap.get("eld.http://test.x4o.org/eld/test.eld"));
+	public void testModulesFull() throws Exception {
+		InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream("tests/modules/test-modules-full.xml");
+		assertNotNull(in);
+		List<VersionedResources> result = loader.loadLanguageModulesXml(in, "test-modules-full.xml");
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+		VersionedResources vr = result.get(0);
+		assertTrue(vr.eldResources.size()>1);
+		assertTrue(vr.moduleLoaders.size()>1);
+		assertTrue(vr.elbResources.size()>1);
+		assertTrue(vr.siblingLoaders.size()==1);
 	}
 	
-	public void testLanguageURINameSpaceX4O() throws Exception {
-		Map<String,String> languageMap = loader.loadLanguageModules(parser.getElementLanguage(), "x4o");
-		assertTrue("No uri for x4o-lang.eld", languageMap.containsKey("eld.http://eld.x4o.org/eld/x4o-lang.eld"));
-		assertEquals("x4o-lang.eld", languageMap.get("eld.http://eld.x4o.org/eld/x4o-lang.eld"));
+	public void testModulesDuplicateLoaderNoError() throws Exception {
+		InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream("tests/modules/test-modules-err-loader.xml");
+		assertNotNull(in);
+		List<VersionedResources> result = loader.loadLanguageModulesXml(in, "test-modules-err-loader.xml");
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
 	}
 	
-	public void testLanguageURINameSpaceELD() throws Exception {
-		Map<String,String> languageMap = loader.loadLanguageModules(parser.getElementLanguage(), "eld");
-		assertTrue("No uri for eld-lang.eld", languageMap.containsKey("eld.http://eld.x4o.org/eld/eld-lang.eld"));
-		assertEquals("eld-lang.eld", languageMap.get("eld.http://eld.x4o.org/eld/eld-lang.eld"));
+	public void testModulesDuplicateLoader() throws Exception {
+		InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream("tests/modules/test-modules-err-loader.xml");
+		assertNotNull(in);
+		List<VersionedResources> result = loader.loadLanguageModulesXml(in, "test-modules-err-loader.xml");
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+		
+		Exception e=null;
+		try {
+			loader.validateModules(result);
+		} catch (Exception ee) {
+			e=ee;
+		}
+		assertNotNull(e);
+		assertTrue("No 'Duplicate' found in message: "+e.getMessage(),e.getMessage().contains("Duplicate"));
+		assertTrue("No 'module-loader' found in message: "+e.getMessage(),e.getMessage().contains("module-loader"));
 	}
-	*/
+	
+	public void testModulesDuplicateSiblingLoader() throws Exception {
+		InputStream in  = Thread.currentThread().getContextClassLoader().getResourceAsStream("tests/modules/test-modules-err-sibling.xml");
+		assertNotNull(in);
+		List<VersionedResources> result = loader.loadLanguageModulesXml(in, "test-modules-err-sibling.xml");
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+		
+		Exception e=null;
+		try {
+			loader.validateModules(result);
+		} catch (Exception ee) {
+			e=ee;
+		}
+		assertNotNull(e);
+		assertTrue("No 'Duplicate' found in message: "+e.getMessage(),e.getMessage().contains("Duplicate"));
+		assertTrue("No 'sibling-loader' found in message: "+e.getMessage(),e.getMessage().contains("sibling-loader"));
+	}
 }

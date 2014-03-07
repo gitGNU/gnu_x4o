@@ -51,14 +51,12 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 
 	private Logger logger = null;
-	protected List<VersionedResources> modulesAll = null;
 	
 	/**
 	 * Creates the DefaultX4OLanguageLoader.
 	 */
 	public DefaultX4OLanguageLoader() {
 		logger = Logger.getLogger(DefaultX4OLanguageLoader.class.getName());
-		modulesAll = new ArrayList<VersionedResources>(20);
 	}
 	
 	/**
@@ -84,31 +82,12 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 	 */
 	public void loadLanguage(X4OLanguageLocal languageLocal, String language,String languageVersion) throws X4OLanguageLoaderException {
 		logger.finer("Loading all modules for language: "+language);
-		try {
-			loadLanguageModules(languageLocal,language);
-		} catch (IOException e) {
-			throw new X4OLanguageLoaderException(e);
-		} catch (SAXException e) {
-			throw new X4OLanguageLoaderException(e);
-		}
+		List<VersionedResources> modulesAll = loadLanguageModules(languageLocal,language);
+		modulesAll = filterVersionModules(modulesAll,languageLocal,languageVersion);
+		validateModules(modulesAll);
 		
-		X4OLanguageVersionFilter lvf;
-		try {
-			lvf = (X4OLanguageVersionFilter)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultLanguageVersionFilter());
-		} catch (InstantiationException e) {
-			throw new X4OLanguageLoaderException(e);
-		} catch (IllegalAccessException e) {
-			throw new X4OLanguageLoaderException(e);
-		}
 		int loaded = 0;
 		for (VersionedResources versionedResources:modulesAll) {
-			List<String> versions = new ArrayList<String>();
-			versions.add(versionedResources.version); // FIXME
-			String modulesVersion = lvf.filterVersion(languageVersion, versions);
-			if (modulesVersion==null) {
-				continue;
-			}
-			
 			X4OLanguageModuleLoader loader;
 			for (String value:versionedResources.eldResources) {
 				String languagePrefix = languageLocal.getLanguageConfiguration().getLanguageResourcePathPrefix();
@@ -151,7 +130,51 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 			throw new X4OLanguageLoaderException("No modules defined for version: "+languageVersion);
 		}
 	}
-
+	
+	private List<VersionedResources> filterVersionModules(List<VersionedResources> resources,X4OLanguageLocal languageLocal,String languageVersion) throws X4OLanguageLoaderException {
+		List<VersionedResources> result = new ArrayList<VersionedResources>(resources.size());
+		X4OLanguageVersionFilter lvf;
+		try {
+			lvf = (X4OLanguageVersionFilter)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultLanguageVersionFilter());
+		} catch (InstantiationException e) {
+			throw new X4OLanguageLoaderException(e);
+		} catch (IllegalAccessException e) {
+			throw new X4OLanguageLoaderException(e);
+		}
+		for (VersionedResources versionedResources:resources) {
+			List<String> versions = new ArrayList<String>();
+			versions.add(versionedResources.version); // FIXME
+			String modulesVersion = lvf.filterVersion(languageVersion, versions);
+			if (modulesVersion==null) {
+				continue;
+			}
+			result.add(versionedResources);
+		}
+		return result;
+	}
+	
+	protected void validateModules(List<VersionedResources> resources) throws X4OLanguageLoaderException {
+		List<String> eldResources = new ArrayList<String>(5);
+		List<String> moduleLoaders = new ArrayList<String>(5);
+		List<String> elbResources = new ArrayList<String>(5);
+		List<String> siblingLoaders = new ArrayList<String>(5);
+		for (VersionedResources vr:resources) {
+			validateModuleList(eldResources,vr.eldResources,"eld-resource");
+			validateModuleList(moduleLoaders,vr.moduleLoaders,"module-loader");
+			validateModuleList(elbResources,vr.elbResources,"elb-resource");
+			validateModuleList(siblingLoaders,vr.siblingLoaders,"sibling-loader");
+		}
+	}
+	
+	private void validateModuleList(List<String> data,List<String> values,String xmlTag) throws X4OLanguageLoaderException {
+		for (String value:values) {
+			if (data.contains(value)) {
+				throw new X4OLanguageLoaderException("Duplicate "+xmlTag+" entry detected; "+value);
+			}
+			data.add(value);
+		}
+	}
+	
 	private void loadModule(X4OLanguageLocal languageLocal,X4OLanguageModuleLoader loader,String resource,VersionedResources versionedResources) throws X4OLanguageLoaderException {
 		X4OLanguageModuleLocal module;
 		try {
@@ -187,7 +210,8 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 	 * @param languageLocal	The ElementLanguage to load for.
 	 * @param language The language to load.
 	 */
-	protected void loadLanguageModules(X4OLanguageLocal languageLocal,String language) throws IOException, SAXException {
+	protected List<VersionedResources> loadLanguageModules(X4OLanguageLocal languageLocal,String language) throws X4OLanguageLoaderException {
+		List<VersionedResources> result = new ArrayList<VersionedResources>(15);
 		StringBuilder buf = new StringBuilder(150);
 		buf.append(languageLocal.getLanguageConfiguration().getLanguageResourcePathPrefix());
 		buf.append('/');
@@ -197,18 +221,25 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 		buf.append(languageLocal.getLanguageConfiguration().getLanguageResourceModulesFileName());
 		
 		logger.finer("loading X4O language: "+language);
-		Enumeration<URL> e = Thread.currentThread().getContextClassLoader().getResources(buf.toString());
-		while(e.hasMoreElements()) {
-			URL u = e.nextElement();
-			logMessage(languageLocal,"Loading relative modules: "+u+" for: "+language);
-			loadModulesXml(u.openStream(),u.toString());
-		}
-		
-		e = Thread.currentThread().getContextClassLoader().getResources("/"+buf.toString());
-		while(e.hasMoreElements()) {
-			URL u = e.nextElement();
-			logMessage(languageLocal,"Loading root modules: "+u+" for: "+language);
-			loadModulesXml(u.openStream(),u.toString());
+		try {
+			Enumeration<URL> e = Thread.currentThread().getContextClassLoader().getResources(buf.toString());
+			while(e.hasMoreElements()) {
+				URL u = e.nextElement();
+				logMessage(languageLocal,"Loading relative modules: "+u+" for: "+language);
+				result.addAll(loadLanguageModulesXml(u.openStream(),u.toString()));
+			}
+			
+			e = Thread.currentThread().getContextClassLoader().getResources("/"+buf.toString());
+			while(e.hasMoreElements()) {
+				URL u = e.nextElement();
+				logMessage(languageLocal,"Loading root modules: "+u+" for: "+language);
+				result.addAll(loadLanguageModulesXml(u.openStream(),u.toString()));
+			}
+			return result;
+		} catch (IOException e) {
+			throw new X4OLanguageLoaderException(e);
+		} catch (SAXException e) {
+			throw new X4OLanguageLoaderException(e);
 		}
 	}
 	
@@ -218,7 +249,7 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	protected void loadModulesXml(InputStream in,String loadedFrom) throws IOException, SAXException {
+	protected List<VersionedResources> loadLanguageModulesXml(InputStream in,String loadedFrom) throws IOException, SAXException {
 		if (in==null) {
 			throw new NullPointerException("Can't parse null input stream");
 		}
@@ -229,24 +260,32 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 		saxParser.setProperty("http://xml.org/sax/properties/declaration-handler",xth);
 		try {
 			saxParser.parse(new InputSource(in));
+			return xth.getResult();
 		} finally {
 			in.close();
 		}
 	}
-
+	
 	private class ModulesTagHandler extends DefaultHandler2 {
 		private StringBuffer buf = new StringBuffer();
 		private String loadedFrom = null;
 		private VersionedResources versionedResources = null;
+		private List<VersionedResources> result = null;
 		
 		public ModulesTagHandler(String loadedFrom) {
 			this.loadedFrom=loadedFrom;
+			this.result = new ArrayList<VersionedResources>(5);
 		}
-
+		
+		public List<VersionedResources> getResult()
+		{
+			return result;
+		}
+		
 		@Override
 		public void startDocument() throws SAXException {
 		}
-
+		
 		@Override
 		public void startElement(String namespaceUri, String tag, String qName,Attributes attr) throws SAXException {
 			if ("language".equals(tag)) {
@@ -257,7 +296,7 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 				logger.finest("Version attribute: "+version);
 			}
 		}
-
+		
 		@Override
 		public void endElement(String namespaceUri, String tag,String qName) throws SAXException {
 			
@@ -270,7 +309,7 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 				return;
 			}
 			if ("language".equals(tag)) {
-				modulesAll.add(versionedResources);
+				result.add(versionedResources);
 				versionedResources = null;
 				return;
 			}
@@ -300,7 +339,7 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 		}
 	}
 	
-	private class VersionedResources {
+	protected class VersionedResources {
 		public String version;
 		public String loadedFrom;
 		public List<String> eldResources = new ArrayList<String>(5);
