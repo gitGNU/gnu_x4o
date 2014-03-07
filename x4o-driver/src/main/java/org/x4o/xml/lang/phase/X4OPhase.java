@@ -36,17 +36,6 @@ import org.x4o.xml.lang.X4OLanguageSession;
  */
 public interface X4OPhase {
 	
-	public final static String INIT_BEGIN    = "INIT_BEGIN";
-	public final static String INIT_END      = "INIT_END";
-	
-	public final static String READ_BEGIN    = "READ_BEGIN";
-	public final static String READ_END      = "READ_END";
-	public final static String READ_RELEASE  = "READ_RELEASE";
-	
-	public final static String WRITE_BEGIN   = "WRITE_BEGIN";
-	public final static String WRITE_END     = "WRITE_END";
-	public final static String WRITE_RELEASE = "WRITE_RELEASE";
-	
 	X4OPhaseType getType();
 	
 	/**

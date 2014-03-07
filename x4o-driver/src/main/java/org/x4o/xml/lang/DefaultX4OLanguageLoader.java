@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.eld.EldModuleLoader;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageInit;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageInit.X4OPhaseInitLanguageSiblings;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -135,8 +136,8 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 				}
 				loadModule(languageLocal,loader,value,versionedResources);
 				if (loader instanceof X4OLanguageModuleLoaderSibling) {
-					
-					X4OPhaseInitLanguageSiblings sibPhase = (X4OPhaseInitLanguageSiblings)languageLocal.getPhaseManager().getPhase("INIT_LANG_SIB");
+					// mmm
+					X4OPhaseInitLanguageSiblings sibPhase = (X4OPhaseInitLanguageSiblings)languageLocal.getPhaseManager().getPhase(X4OPhaseLanguageInit.INIT_LANG_SIB);
 					sibPhase.addLanguageModuleLoaderSibling((X4OLanguageModuleLoaderSibling)loader);
 				}
 			}

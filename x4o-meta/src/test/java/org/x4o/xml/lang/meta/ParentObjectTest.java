@@ -28,7 +28,7 @@ import org.x4o.xml.element.DefaultElement;
 import org.x4o.xml.element.Element;
 import org.x4o.xml.io.X4OReaderSession;
 import org.x4o.xml.lang.X4OLanguageSession;
-import org.x4o.xml.lang.phase.X4OPhase;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageRead;
 
 import junit.framework.TestCase;
 
@@ -44,7 +44,7 @@ public class ParentObjectTest extends TestCase {
 		X4OLanguageSession context = null;
 		MTestDriver driver = new MTestDriver();
 		X4OReaderSession<?> reader = driver.createReaderSession();
-		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
+		reader.addPhaseSkip(X4OPhaseLanguageRead.READ_RELEASE);
 		try {
 			context = reader.readResourceSession("junit/test-meta-parent-element.xml");
 			assertEquals(1,context.getRootElement().getChilderen().size());

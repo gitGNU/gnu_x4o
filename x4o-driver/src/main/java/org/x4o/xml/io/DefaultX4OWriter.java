@@ -47,6 +47,7 @@ import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.lang.phase.X4OPhaseException;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageWrite;
 import org.x4o.xml.lang.phase.X4OPhaseType;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -102,7 +103,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	 */
 	public void writeSession(X4OLanguageSession languageSession,OutputStream output) throws X4OConnectionException,SAXException,IOException {
 		setProperty(OUTPUT_STREAM, output);
-		addPhaseSkip(X4OPhase.WRITE_RELEASE);
+		addPhaseSkip(X4OPhaseLanguageWrite.WRITE_RELEASE);
 		try {
 			languageSession.getLanguage().getPhaseManager().runPhases(languageSession, X4OPhaseType.XML_WRITE);
 		} catch (X4OPhaseException e) {

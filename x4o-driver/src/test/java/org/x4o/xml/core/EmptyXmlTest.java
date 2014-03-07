@@ -29,7 +29,6 @@ import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import junit.framework.TestCase;
 
 /**

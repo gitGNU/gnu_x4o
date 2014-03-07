@@ -209,11 +209,11 @@ PHASE_ORDER = {	*startupX4OPhase,
 	public void doReleasePhaseManual(X4OLanguageSession languageSession) throws X4OPhaseException {
 		List<String> phaseSkip = languageSession.getPhaseSkip();
 		String releaseRequested = null;
-		if (phaseSkip.contains(X4OPhase.READ_RELEASE)) {
-			releaseRequested = X4OPhase.READ_RELEASE;
+		if (phaseSkip.contains(X4OPhaseLanguageRead.READ_RELEASE)) {
+			releaseRequested = X4OPhaseLanguageRead.READ_RELEASE;
 		}
-		if (phaseSkip.contains(X4OPhase.WRITE_RELEASE)) {
-			releaseRequested = X4OPhase.WRITE_RELEASE;
+		if (phaseSkip.contains(X4OPhaseLanguageWrite.WRITE_RELEASE)) {
+			releaseRequested = X4OPhaseLanguageWrite.WRITE_RELEASE;
 		}
 		if (releaseRequested==null) {
 			throw new IllegalStateException("No manual release requested.");

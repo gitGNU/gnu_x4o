@@ -42,6 +42,10 @@ import org.x4o.xml.lang.X4OLanguageLocal;
 public class X4OPhaseLanguageInit {
 
 	private Logger logger = null;
+	public static final String INIT_START = "INIT_START";
+	public static final String INIT_LANG = "INIT_LANG";
+	public static final String INIT_LANG_SIB = "INIT_LANG_SIB";
+	public static final String INIT_END = "INIT_END";
 	
 	public X4OPhaseLanguageInit() {
 		logger = Logger.getLogger(X4OPhaseLanguageInit.class.getName());
@@ -62,7 +66,7 @@ public class X4OPhaseLanguageInit {
 			return X4OPhaseType.INIT;
 		}
 		public String getId() {
-			return "INIT_START";
+			return INIT_START;
 		}
 		public String[] getPhaseDependencies() {
 			return new String[]{};
@@ -86,10 +90,10 @@ public class X4OPhaseLanguageInit {
 			return X4OPhaseType.INIT;
 		}
 		public String getId() {
-			return "INIT_LANG";
+			return INIT_LANG;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[]{"INIT_START"};
+			return new String[]{INIT_START};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -124,10 +128,10 @@ public class X4OPhaseLanguageInit {
 			return X4OPhaseType.INIT;
 		}
 		public String getId() {
-			return "INIT_LANG_SIB";
+			return INIT_LANG_SIB;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"INIT_LANG"};
+			return new String[] {INIT_LANG};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -161,10 +165,10 @@ public class X4OPhaseLanguageInit {
 			return X4OPhaseType.INIT;
 		}
 		public String getId() {
-			return "INIT_END";
+			return INIT_END;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[]{"INIT_LANG_SIB"};
+			return new String[]{INIT_LANG_SIB};
 		}
 		public boolean isElementPhase() {
 			return false;

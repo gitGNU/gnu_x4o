@@ -25,7 +25,7 @@ package org.x4o.xml.core;
 import org.x4o.xml.io.DefaultX4OReader;
 import org.x4o.xml.io.X4OReaderSession;
 import org.x4o.xml.lang.X4OLanguageSession;
-import org.x4o.xml.lang.phase.X4OPhase;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageRead;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 
@@ -43,7 +43,7 @@ public class NamespaceUriTest extends TestCase {
 		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
-		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
+		reader.addPhaseSkip(X4OPhaseLanguageRead.READ_RELEASE);
 		try {
 			context = reader.readResourceSession("tests/namespace/uri-simple.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);
@@ -56,7 +56,7 @@ public class NamespaceUriTest extends TestCase {
 		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
-		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
+		reader.addPhaseSkip(X4OPhaseLanguageRead.READ_RELEASE);
 		reader.setProperty(DefaultX4OReader.DOC_EMPTY_NAMESPACE_URI, "http://test.x4o.org/xml/ns/test-lang");
 		try {
 			context = reader.readResourceSession("tests/namespace/uri-empty.xml");
@@ -70,7 +70,7 @@ public class NamespaceUriTest extends TestCase {
 		X4OLanguageSession context = null;
 		TestDriver driver = TestDriver.getInstance();
 		X4OReaderSession<TestObjectRoot> reader = driver.createReaderSession();
-		reader.addPhaseSkip(X4OPhase.READ_RELEASE);
+		reader.addPhaseSkip(X4OPhaseLanguageRead.READ_RELEASE);
 		try {
 			context = reader.readResourceSession("tests/namespace/uri-schema.xml");
 			assertEquals(true,context.getRootElement().getChilderen().size()==1);

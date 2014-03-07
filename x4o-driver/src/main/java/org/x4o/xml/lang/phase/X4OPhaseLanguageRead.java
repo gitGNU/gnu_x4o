@@ -58,6 +58,21 @@ import org.xml.sax.helpers.AttributesImpl;
 public class X4OPhaseLanguageRead {
 
 	private Logger logger = null;
+	public static final String READ_BEGIN = "READ_BEGIN";
+	public static final String READ_CONFIG_ELEMENT = "READ_CONFIG_ELEMENT";
+	public static final String READ_CONFIG_ELEMENT_INTERFACE = "READ_CONFIG_ELEMENT_INTERFACE";
+	public static final String READ_CONFIG_GLOBAL_ELEMENT = "READ_CONFIG_GLOBAL_ELEMENT";
+	public static final String READ_CONFIG_GLOBAL_ATTRIBUTE = "READ_CONFIG_GLOBAL_ATTRIBUTE";
+	public static final String READ_RUN_ATTRIBUTE = "READ_RUN_ATTRIBUTE";
+	public static final String READ_FILL_TEMPLATE = "READ_FILL_TEMPLATE";
+	public static final String READ_TRANSFORM = "READ_TRANSFORM";
+	public static final String READ_RUN_DIRTY = "READ_RUN_DIRTY";
+	public static final String READ_BIND_ELEMENT = "READ_BIND_ELEMENT";
+	public static final String READ_RUN = "READ_RUN";
+	public static final String READ_RUN_CONFIGURATOR = "READ_RUN_CONFIGURATOR";
+	public static final String READ_RUN_DIRTY_LAST = "READ_RUN_DIRTY_LAST";
+	public static final String READ_END = "READ_END";
+	public static final String READ_RELEASE = "READ_RELEASE";
 	
 	public X4OPhaseLanguageRead() {
 		logger = Logger.getLogger(X4OPhaseLanguageRead.class.getName());
@@ -136,7 +151,7 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return X4OPhase.READ_BEGIN;
+			return READ_BEGIN;
 		}
 		public String[] getPhaseDependencies() {
 			return new String[]{};
@@ -172,10 +187,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_CONFIG_ELEMENT";
+			return READ_CONFIG_ELEMENT;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {X4OPhase.READ_BEGIN};
+			return new String[] {READ_BEGIN};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			
@@ -213,10 +228,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_CONFIG_ELEMENT_INTERFACE";
+			return READ_CONFIG_ELEMENT_INTERFACE;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_CONFIG_ELEMENT"};
+			return new String[] {READ_CONFIG_ELEMENT};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			if (element.getElementObject()==null) {
@@ -244,10 +259,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_CONFIG_GLOBAL_ELEMENT";
+			return READ_CONFIG_GLOBAL_ELEMENT;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_CONFIG_ELEMENT","READ_CONFIG_ELEMENT_INTERFACE"};
+			return new String[] {READ_CONFIG_ELEMENT,READ_CONFIG_ELEMENT_INTERFACE};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			for (X4OLanguageModule mod:element.getLanguageSession().getLanguage().getLanguageModules()) {
@@ -272,10 +287,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_CONFIG_GLOBAL_ATTRIBUTE";
+			return READ_CONFIG_GLOBAL_ATTRIBUTE;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_CONFIG_GLOBAL_ELEMENT"};
+			return new String[] {READ_CONFIG_GLOBAL_ELEMENT};
 		}
 		@SuppressWarnings("unchecked")
 		public void runElementPhase(Element element) throws X4OPhaseException {
@@ -317,10 +332,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_RUN_ATTRIBUTE";
+			return READ_RUN_ATTRIBUTE;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_CONFIG_GLOBAL_ATTRIBUTE"};
+			return new String[] {READ_CONFIG_GLOBAL_ATTRIBUTE};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			// we only can config ElementObjects
@@ -393,10 +408,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_FILL_TEMPLATE";
+			return READ_FILL_TEMPLATE;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_RUN_ATTRIBUTE"};
+			return new String[] {READ_RUN_ATTRIBUTE};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 		}
@@ -410,10 +425,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_TRANSFORM";
+			return READ_TRANSFORM;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_FILL_TEMPLATE"};
+			return new String[] {READ_FILL_TEMPLATE};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			if (element.isTransformingTree()==false) {
@@ -442,10 +457,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_RUN_DIRTY";
+			return READ_RUN_DIRTY;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_TRANSFORM"};
+			return new String[] {READ_TRANSFORM};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			Map<Element,X4OPhase> dirtyElements = element.getLanguageSession().getDirtyElements();
@@ -473,10 +488,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_RUN_DIRTY_LAST";
+			return READ_RUN_DIRTY_LAST;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_RUN"};
+			return new String[] {READ_RUN};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			Map<Element,X4OPhase> dirtyElements = element.getLanguageSession().getDirtyElements();
@@ -500,10 +515,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_BIND_ELEMENT";
+			return READ_BIND_ELEMENT;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_RUN_DIRTY"};
+			return new String[] {READ_RUN_DIRTY};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			Element parentElement = element.getParent();
@@ -545,10 +560,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_RUN";
+			return READ_RUN;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_BIND_ELEMENT"};
+			return new String[] {READ_BIND_ELEMENT};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
 			if (element.isTransformingTree()) {
@@ -574,10 +589,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return "READ_RUN_CONFIGURATOR";
+			return READ_RUN_CONFIGURATOR;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {"READ_RUN"};
+			return new String[] {READ_RUN};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -634,10 +649,10 @@ public class X4OPhaseLanguageRead {
 			return X4OPhaseType.XML_READ;
 		}
 		public String getId() {
-			return X4OPhase.READ_END;
+			return READ_END;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[]{"READ_RUN_CONFIGURATOR"};
+			return new String[]{READ_RUN_CONFIGURATOR};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -701,10 +716,10 @@ public class X4OPhaseLanguageRead {
 				return X4OPhaseType.XML_READ;
 			}
 			public String getId() {
-				return X4OPhase.READ_RELEASE;
+				return READ_RELEASE;
 			}
 			public String[] getPhaseDependencies() {
-				return new String[] {X4OPhase.READ_END};
+				return new String[] {READ_END};
 			}
 			public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException {
 			}

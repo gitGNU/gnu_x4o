@@ -43,6 +43,10 @@ import org.x4o.xml.lang.X4OLanguageSession;
 public class X4OPhaseLanguageWrite {
 
 	private Logger logger = null;
+	public static final String WRITE_BEGIN = "WRITE_BEGIN";
+	public static final String WRITE_FILL_TREE = "WRITE_FILL_TREE";
+	public static final String WRITE_END = "WRITE_END";
+	public static final String WRITE_RELEASE = "WRITE_RELEASE";
 	
 	public X4OPhaseLanguageWrite() {
 		logger = Logger.getLogger(X4OPhaseLanguageWrite.class.getName());
@@ -63,7 +67,7 @@ public class X4OPhaseLanguageWrite {
 			return X4OPhaseType.XML_WRITE;
 		}
 		public String getId() {
-			return X4OPhase.WRITE_BEGIN;
+			return WRITE_BEGIN;
 		}
 		public String[] getPhaseDependencies() {
 			return new String[]{};
@@ -86,10 +90,10 @@ public class X4OPhaseLanguageWrite {
 			return X4OPhaseType.XML_WRITE;
 		}
 		public String getId() {
-			return "WRITE_FILL_TREE";
+			return WRITE_FILL_TREE;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[]{X4OPhase.WRITE_BEGIN};
+			return new String[]{WRITE_BEGIN};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -164,10 +168,10 @@ public class X4OPhaseLanguageWrite {
 			return X4OPhaseType.XML_WRITE;
 		}
 		public String getId() {
-			return X4OPhase.WRITE_END;
+			return WRITE_END;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[]{"WRITE_FILL_TREE"};
+			return new String[]{WRITE_FILL_TREE};
 		}
 		public boolean isElementPhase() {
 			return false;
@@ -184,10 +188,10 @@ public class X4OPhaseLanguageWrite {
 			return X4OPhaseType.XML_WRITE;
 		}
 		public String getId() {
-			return X4OPhase.WRITE_RELEASE;
+			return WRITE_RELEASE;
 		}
 		public String[] getPhaseDependencies() {
-			return new String[] {X4OPhase.WRITE_END};
+			return new String[] {WRITE_END};
 		}
 		public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException {
 		}
