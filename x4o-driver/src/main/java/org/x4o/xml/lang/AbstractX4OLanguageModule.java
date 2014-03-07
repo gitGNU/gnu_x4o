@@ -40,18 +40,17 @@ import org.x4o.xml.element.ElementNamespace;
  * @author Willem Cazander
  * @version 1.0 Aug 2, 2012
  */
-public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase implements X4OLanguageModule {
+public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase implements X4OLanguageModuleLocal {
 
 	private Logger logger = null;
 	private String providerName=null;
 	private String providerHost=null;
-	private String sourceResource = null;
 	
 	private List<ElementBindingHandler> elementBindingHandlers = null;
 	private List<ElementConfiguratorGlobal> elementConfiguratorGlobals = null;
 	private List<ElementInterface> elementInterfaces = null;
 	private Map<String,ElementNamespace> elementNamespaces = null;
-	private X4OLanguageModuleLoader elementLanguageModuleLoader = null;
+	private Map<X4OLanguageModuleLoaderResult,String> loaderResults = null;
 
 	/**
 	 * Creates a new empty ElementLanguage.
@@ -63,6 +62,7 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		elementConfiguratorGlobals = new ArrayList<ElementConfiguratorGlobal>(4);
 		elementInterfaces = new ArrayList<ElementInterface>(20);
 		elementNamespaces = new HashMap<String,ElementNamespace>(10);
+		loaderResults = new HashMap<X4OLanguageModuleLoaderResult,String>(10);
 	}
 	
 	/**
@@ -113,14 +113,14 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		logger.finer("Adding ElementBindingHandler: "+elementBindingHandler);
 		elementBindingHandlers.add(elementBindingHandler);
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementBindingHandlers()
 	 */
 	public List<ElementBindingHandler> getElementBindingHandlers() {
 		return elementBindingHandlers;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#addElementConfiguratorGlobal(ElementConfiguratorGlobal)
 	 */
@@ -141,7 +141,7 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 	public List<ElementConfiguratorGlobal> getElementConfiguratorGlobals() {
 		return elementConfiguratorGlobals;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#addElementInterface(org.x4o.xml.element.ElementInterface)
 	 */
@@ -157,14 +157,14 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		}
 		elementInterfaces.add(elementInterface);
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementInterfaces()
 	 */
 	public List<ElementInterface> getElementInterfaces() {
 		return elementInterfaces;
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#addElementNamespace(org.x4o.xml.element.ElementNamespace)
 	 */
@@ -178,57 +178,32 @@ public abstract class AbstractX4OLanguageModule extends AbstractElementMetaBase 
 		logger.fine("Adding namespaceUri: "+elementNamespace.getUri());
 		elementNamespaces.put(elementNamespace.getUri(), elementNamespace);
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementNamespace(java.lang.String)
 	 */
 	public ElementNamespace getElementNamespace(String namespaceUri) {
 		return elementNamespaces.get(namespaceUri);
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageModule#getElementNamespaces()
 	 */
 	public List<ElementNamespace> getElementNamespaces() {
 		return new ArrayList<ElementNamespace>(elementNamespaces.values());
 	}
-
+	
 	/**
-	 * @return the elementLanguageModuleLoader
+	 * @see org.x4o.xml.lang.X4OLanguageModule#getLoaderResult(org.x4o.xml.lang.X4OLanguageModuleLoaderResult)
 	 */
-	public X4OLanguageModuleLoader getLanguageModuleLoader() {
-		return elementLanguageModuleLoader;
-	}
-
-	/**
-	 * @param elementLanguageModuleLoader the elementLanguageModuleLoader to set
-	 */
-	public void setLanguageModuleLoader(X4OLanguageModuleLoader elementLanguageModuleLoader) {
-		this.elementLanguageModuleLoader = elementLanguageModuleLoader;
-	}
-
-	/**
-	 * @return the sourceResource
-	 */
-	public String getSourceResource() {
-		return sourceResource;
-	}
-
-	/**
-	 * @param sourceResource the sourceResource to set
-	 */
-	public void setSourceResource(String sourceResource) {
-		this.sourceResource = sourceResource;
+	public String getLoaderResult(X4OLanguageModuleLoaderResult key) {
+		return loaderResults.get(key);
 	}
 	
 	/**
-	 * Reloads the module, experiment !!
+	 * @see org.x4o.xml.lang.X4OLanguageModuleLocal#putLoaderResult(org.x4o.xml.lang.X4OLanguageModuleLoaderResult, java.lang.String)
 	 */
-	public void reloadModule(X4OLanguageLocal elementLanguage,X4OLanguageModule elementLanguageModule) throws X4OLanguageModuleLoaderException {
-		elementBindingHandlers.clear();
-		elementInterfaces.clear();
-		elementNamespaces.clear();
-		
-		getLanguageModuleLoader().loadLanguageModule(elementLanguage, elementLanguageModule);
+	public void putLoaderResult(X4OLanguageModuleLoaderResult key, String value) {
+		loaderResults.put(key, value);
 	}
 }

@@ -33,6 +33,7 @@ import org.x4o.xml.io.X4OConnectionException;
 import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguageModuleLocal;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModuleLoader;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
@@ -78,7 +79,7 @@ public class EldModuleLoader implements X4OLanguageModuleLoader {
 	 * @throws X4OLanguageModuleLoaderException When eld language could not be loaded.
 	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModuleLocal languageModule) throws X4OLanguageModuleLoaderException {
 		logger.fine("Loading name eld file from resource: "+eldResource);
 		try {
 			X4ODriver<?> driver = null;

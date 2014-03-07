@@ -32,9 +32,9 @@ import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
-import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
+import org.x4o.xml.lang.X4OLanguageModuleLocal;
 
 /**
  * An ParentLanguageElementConfigurator.
@@ -44,7 +44,7 @@ import org.x4o.xml.lang.X4OLanguageClassLoader;
  * @author Willem Cazander
  * @version 1.0 Jan 19, 2007
  */
-public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<X4OLanguageModule> {
+public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<X4OLanguageModuleLocal> {
 	
 	private final static Class<?>[] CLASSES_CHILD = new Class[] {
 		ElementInterface.class,
@@ -58,7 +58,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 	 * @see org.x4o.xml.element.ElementBindingHandler#getBindParentClass()
 	 */
 	public Class<?> getBindParentClass() {
-		return X4OLanguageModule.class;
+		return X4OLanguageModuleLocal.class;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 	/**
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#bindChild(org.x4o.xml.element.Element, java.lang.Object, java.lang.Object)
 	 */
-	public void bindChild(Element childElement,X4OLanguageModule languageModule, Object childObject) throws ElementBindingHandlerException {
+	public void bindChild(Element childElement,X4OLanguageModuleLocal languageModule, Object childObject) throws ElementBindingHandlerException {
 		
 		X4OLanguage x4oParsingContext = EldModuleLoader.getLanguage(childElement.getLanguageSession());
 		if (x4oParsingContext==null) {
@@ -159,7 +159,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 	/**
 	 * @see org.x4o.xml.element.AbstractElementBindingHandler#createChilderen(org.x4o.xml.element.Element, java.lang.Object)
 	 */
-	public void createChilderen(Element parentElement,X4OLanguageModule parent) throws ElementBindingHandlerException {
+	public void createChilderen(Element parentElement,X4OLanguageModuleLocal parent) throws ElementBindingHandlerException {
 		for (ElementInterface child:parent.getElementInterfaces()) {
 			createChild(parentElement, child);
 		}

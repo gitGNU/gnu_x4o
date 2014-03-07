@@ -22,70 +22,58 @@
  */
 package	org.x4o.xml.lang;
 
-import java.util.List;
-
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
 import org.x4o.xml.element.ElementInterface;
+import org.x4o.xml.element.ElementMetaBase;
 import org.x4o.xml.element.ElementNamespace;
 
 /**
- * The ElementLanguageModule.<br>
- * This is an central store to element interfaces from one language module
+ * The ElementLanguageModuleLocal is for local loading of the object.
  * 
  * @author Willem Cazander
- * @version 1.0 Aug 2, 2012
+ * @version 1.0 Mar 7, 2014
  */
-public interface X4OLanguageModule /* extends ElementMetaBase TODO add local layer? */ {
-
-	// temp here see local
-	String getId();
-	String getDescription();
+public interface X4OLanguageModuleLocal extends X4OLanguageModule,ElementMetaBase {
 	
 	/**
-	 * @return the providerName.
+	 * @param providerName the providerName to set.
 	 */
-	String getProviderName();
+	void setProviderName(String providerName);
 	
 	/**
-	 * @return the providerHost
+	 * @param providerHost the providerHost to set
 	 */
-	String getProviderHost();
+	void setProviderHost(String providerHost);
 	
 	/**
-	 * Gets all ElementBindingHandlers.
-	 * @return	Returns an List with all ElementBindingHandlers.
+	 * Adds an ElementBindingHanlder.
+	 * @param elementBindingHandler	The ElementBindingHandler to add.
 	 */
-	List<ElementBindingHandler> getElementBindingHandlers();
+	void addElementBindingHandler(ElementBindingHandler elementBindingHandler);
 	
 	/**
-	 * Gets all ElementConfiguratorGlobals.
-	 * @return	All gloval ElementConfigurators.
+	 * Adds an ElementConfiguratorGlobal.
+	 * @param elementConfigurator	The ElementConfigurtor to add.
 	 */
-	List<ElementConfiguratorGlobal> getElementConfiguratorGlobals();
+	void addElementConfiguratorGlobal(ElementConfiguratorGlobal elementConfigurator);
 	
 	/**
-	 * Returns list of ElementInterfaces in this context.
-	 * @return	The list of elementInterfaces.
+	 * Adds an ElementInterface.
+	 * @param elementInterface	The elementInterface to add.
 	 */
-	List<ElementInterface> getElementInterfaces();
+	void addElementInterface(ElementInterface elementInterface);
 	
 	/**
-	 * Returns the namespace context for an namespace uri.
-	 * @param namespaceUri the namespace uri.
-	 * @return	The ElementNamespace.
+	 * Adds an namespace to this langauge module.
+	 * @param elementNamespace Adds an ElementNamespace to this langauge module.
 	 */
-	ElementNamespace getElementNamespace(String namespaceUri);
+	void addElementNamespace(ElementNamespace elementNamespace);
 	
 	/**
-	 * @return Returns a list of all namespaces defined in this language.
+	 * Sets module loader meta result info.
+	 * @param key	The key of the info.
+	 * @param value	The value of the info.
 	 */
-	List<ElementNamespace> getElementNamespaces();
-	
-	/**
-	 * Gets module loader meta result info. 
-	 * @param key	The key to get info of.
-	 * @return	The value of the info.
-	 */
-	String getLoaderResult(X4OLanguageModuleLoaderResult key);
+	void putLoaderResult(X4OLanguageModuleLoaderResult key,String value);
 }

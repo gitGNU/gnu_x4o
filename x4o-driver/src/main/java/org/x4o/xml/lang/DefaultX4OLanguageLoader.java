@@ -26,14 +26,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.x4o.xml.eld.EldDriver;
 import org.x4o.xml.eld.EldModuleLoader;
+import org.x4o.xml.lang.phase.X4OPhaseLanguageInit.X4OPhaseInitLanguageSiblings;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -50,14 +50,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class DefaultX4OLanguageLoader implements X4OLanguageLoader {
 
 	private Logger logger = null;
-	protected List<Map<String,Map<String,String>>> modulesAll = null;
+	protected List<VersionedResources> modulesAll = null;
 	
 	/**
 	 * Creates the DefaultX4OLanguageLoader.
 	 */
 	public DefaultX4OLanguageLoader() {
 		logger = Logger.getLogger(DefaultX4OLanguageLoader.class.getName());
-		modulesAll = new ArrayList<Map<String,Map<String,String>>>(20);
+		modulesAll = new ArrayList<VersionedResources>(20);
 	}
 	
 	/**
@@ -82,77 +82,105 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 	 * @see org.x4o.xml.lang.X4OLanguageLoader#loadLanguage(org.x4o.xml.lang.X4OLanguageLocal, java.lang.String, java.lang.String)
 	 */
 	public void loadLanguage(X4OLanguageLocal languageLocal, String language,String languageVersion) throws X4OLanguageLoaderException {
+		logger.finer("Loading all modules for language: "+language);
 		try {
-			logger.finer("Loading all modules for language: "+language);
 			loadLanguageModules(languageLocal,language);
+		} catch (IOException e) {
+			throw new X4OLanguageLoaderException(e);
+		} catch (SAXException e) {
+			throw new X4OLanguageLoaderException(e);
+		}
+		
+		X4OLanguageVersionFilter lvf;
+		try {
+			lvf = (X4OLanguageVersionFilter)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultLanguageVersionFilter());
+		} catch (InstantiationException e) {
+			throw new X4OLanguageLoaderException(e);
+		} catch (IllegalAccessException e) {
+			throw new X4OLanguageLoaderException(e);
+		}
+		int loaded = 0;
+		for (VersionedResources versionedResources:modulesAll) {
+			List<String> versions = new ArrayList<String>();
+			versions.add(versionedResources.version); // FIXME
+			String modulesVersion = lvf.filterVersion(languageVersion, versions);
+			if (modulesVersion==null) {
+				continue;
+			}
 			
-			X4OLanguageVersionFilter lvf = (X4OLanguageVersionFilter)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultLanguageVersionFilter());
-			
-			for (Map<String,Map<String,String>> map:modulesAll) {
-				List<String> versions = new ArrayList<String>(map.keySet());
-				String modulesVersion = lvf.filterVersion(languageVersion, versions);
-				if (modulesVersion==null) {
-					throw new X4OLanguageLoaderException("No modules config for version: "+languageVersion);
+			X4OLanguageModuleLoader loader;
+			for (String value:versionedResources.eldResources) {
+				String languagePrefix = languageLocal.getLanguageConfiguration().getLanguageResourcePathPrefix();
+				String resource = languagePrefix+"/"+language+"/"+value;
+				if (language.equals(EldDriver.LANGUAGE_NAME)) {
+					loader = new EldModuleLoader(resource,true); // load cel
+				} else {
+					loader = new EldModuleLoader(resource,false); // load eld
 				}
-				Map<String,String> modules = map.get(modulesVersion);
-				logger.finer("Filtered modules to version: "+modulesVersion);
-				if (modules==null) {
-					throw new X4OLanguageLoaderException("No modules defined for version: "+modulesVersion);
+				loadModule(languageLocal,loader,value,versionedResources);
+			}
+			for (String value:versionedResources.moduleLoaders) {
+				try {
+					loader = (X4OLanguageModuleLoader)X4OLanguageClassLoader.loadClass(value).newInstance();
+				} catch (Exception ee) {
+					throw new X4OLanguageLoaderException("Could not load class: "+value+" error: "+ee.getMessage(),ee);
 				}
-	
-				for (String key:modules.keySet()) {
-					String value = modules.get(key);
-					X4OLanguageModule module = (X4OLanguageModule)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultElementLanguageModule());
-					module.setSourceResource(value);
+				loadModule(languageLocal,loader,value,versionedResources);
+			}
+			for (String value:versionedResources.siblingLoaders) {
+				try {
+					loader = (X4OLanguageModuleLoader)X4OLanguageClassLoader.loadClass(value).newInstance();
+				} catch (Exception ee) {
+					throw new X4OLanguageLoaderException("Could not load class: "+value+" error: "+ee.getMessage(),ee);
+				}
+				loadModule(languageLocal,loader,value,versionedResources);
+				if (loader instanceof X4OLanguageModuleLoaderSibling) {
 					
-					logMessage(languageLocal,"Parsing language config key: "+key+" value: "+value);
-					
-					if ("module-loader".equals(key)) {
-						try {
-							module.setLanguageModuleLoader( (X4OLanguageModuleLoader)X4OLanguageClassLoader.loadClass(value).newInstance() );
-						} catch (Exception ee) {
-							throw new SAXException("Could not load: "+value+" error: "+ee.getMessage(),ee);
-						}
-						
-					} else if ("eld-resource".equals(key)) {
-						String languagePrefix = languageLocal.getLanguageConfiguration().getLanguageResourcePathPrefix();
-						String resource = languagePrefix+"/"+language+"/"+value; 
-						if (language.equals(EldDriver.LANGUAGE_NAME)) {
-							module.setLanguageModuleLoader(new EldModuleLoader(resource,true)); // load cel
-						} else {
-							module.setLanguageModuleLoader(new EldModuleLoader(resource,false)); // load eld
-						}
-						module.setSourceResource(resource);
-					} else if ("elb-resource".equals(key)) {
-						
-						// todo
-						logger.finer("elb-resources are not done yet.");
-						
-					} else if ("sibling-loader".equals(key)) {
-						try {
-							module.setLanguageModuleLoader( (X4OLanguageModuleLoaderSibling)X4OLanguageClassLoader.loadClass(value).newInstance() );
-						} catch (Exception ee) {
-							throw new SAXException("Could not load: "+value+" error: "+ee.getMessage(),ee);
-						}
-					}
-					
-					if (module.getLanguageModuleLoader()==null) {
-						logger.warning("module with null loader: "+module+" tag: "+key+" chars: "+value);
-						continue;
-					}
-					
-					// mmm start in order ?
-					logMessage(languageLocal,"Starting modules: "+module+" for language: "+language);
-					module.getLanguageModuleLoader().loadLanguageModule(languageLocal, module);
-					
-					languageLocal.addLanguageModule(module);
+					X4OPhaseInitLanguageSiblings sibPhase = (X4OPhaseInitLanguageSiblings)languageLocal.getPhaseManager().getPhase("INIT_LANG_SIB");
+					sibPhase.addLanguageModuleLoaderSibling((X4OLanguageModuleLoaderSibling)loader);
 				}
 			}
-		} catch (Exception e1) {
-			throw new X4OLanguageLoaderException(e1.getMessage()+" for language: "+language,e1);
+			for (String value:versionedResources.elbResources) {
+				// TODO: add elb support
+				logger.finer("elb-resources are not done yet; "+value);
+			}
+			loaded++;
+		}
+		if (loaded==0) {
+			throw new X4OLanguageLoaderException("No modules defined for version: "+languageVersion);
 		}
 	}
 
+	private void loadModule(X4OLanguageLocal languageLocal,X4OLanguageModuleLoader loader,String resource,VersionedResources versionedResources) throws X4OLanguageLoaderException {
+		X4OLanguageModuleLocal module;
+		try {
+			module = (X4OLanguageModuleLocal)X4OLanguageClassLoader.newInstance(languageLocal.getLanguageConfiguration().getDefaultElementLanguageModule());
+		} catch (InstantiationException e) {
+			throw new X4OLanguageLoaderException(e);
+		} catch (IllegalAccessException e) {
+			throw new X4OLanguageLoaderException(e);
+		}
+		logMessage(languageLocal,"Created module: "+module);
+		long startTime = System.currentTimeMillis();
+		try {
+			logMessage(languageLocal,"Starting modules: "+module+" for language: "+languageLocal.getLanguageName());
+			loader.loadLanguageModule(languageLocal, module);
+		} catch (X4OLanguageModuleLoaderException e) {
+			throw new X4OLanguageLoaderException(e); // FIXME info 
+		}
+		long totalTime = System.currentTimeMillis() - startTime;
+		module.putLoaderResult(X4OLanguageModuleLoaderResult.LOAD_TIME, ""+totalTime);
+		module.putLoaderResult(X4OLanguageModuleLoaderResult.LOAD_VERSION, versionedResources.version);
+		module.putLoaderResult(X4OLanguageModuleLoaderResult.LOAD_CLASS, loader.getClass().getName());
+		module.putLoaderResult(X4OLanguageModuleLoaderResult.LOAD_DATE, ""+new Date());
+		if (resource!=null) {
+			module.putLoaderResult(X4OLanguageModuleLoaderResult.LOAD_MODULE_RESOURCE, resource);
+		}
+		module.putLoaderResult(X4OLanguageModuleLoaderResult.LOAD_FROM_RESOURCE, versionedResources.loadedFrom);
+		
+		languageLocal.addLanguageModule(module);
+	}
+	
 	/**
 	 * Loads all modules of an language.
 	 * @param languageLocal	The ElementLanguage to load for.
@@ -172,14 +200,14 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 		while(e.hasMoreElements()) {
 			URL u = e.nextElement();
 			logMessage(languageLocal,"Loading relative modules: "+u+" for: "+language);
-			loadModulesXml(u.openStream());
+			loadModulesXml(u.openStream(),u.toString());
 		}
 		
 		e = Thread.currentThread().getContextClassLoader().getResources("/"+buf.toString());
 		while(e.hasMoreElements()) {
 			URL u = e.nextElement();
 			logMessage(languageLocal,"Loading root modules: "+u+" for: "+language);
-			loadModulesXml(u.openStream());
+			loadModulesXml(u.openStream(),u.toString());
 		}
 	}
 	
@@ -189,11 +217,11 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	private void loadModulesXml(InputStream in) throws IOException, SAXException {
+	protected void loadModulesXml(InputStream in,String loadedFrom) throws IOException, SAXException {
 		if (in==null) {
 			throw new NullPointerException("Can't parse null input stream");
 		}
-		ModulesTagHandler xth = new ModulesTagHandler();
+		ModulesTagHandler xth = new ModulesTagHandler(loadedFrom);
 		XMLReader saxParser = XMLReaderFactory.createXMLReader();
 		saxParser.setContentHandler(xth);
 		saxParser.setProperty("http://xml.org/sax/properties/lexical-handler", xth);
@@ -207,17 +235,24 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 
 	private class ModulesTagHandler extends DefaultHandler2 {
 		private StringBuffer buf = new StringBuffer();
-		private String version = null;
+		private String loadedFrom = null;
+		private VersionedResources versionedResources = null;
+		
+		public ModulesTagHandler(String loadedFrom) {
+			this.loadedFrom=loadedFrom;
+		}
 
 		@Override
 		public void startDocument() throws SAXException {
-			modulesAll.add(new HashMap<String,Map<String,String>>(20));
 		}
 
 		@Override
 		public void startElement(String namespaceUri, String tag, String qName,Attributes attr) throws SAXException {
 			if ("language".equals(tag)) {
-				version = attr.getValue("version");
+				String version = attr.getValue("version");
+				versionedResources = new VersionedResources();
+				versionedResources.version=version;
+				versionedResources.loadedFrom=loadedFrom;
 				logger.finest("Version attribute: "+version);
 			}
 		}
@@ -234,19 +269,23 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 				return;
 			}
 			if ("language".equals(tag)) {
+				modulesAll.add(versionedResources);
+				versionedResources = null;
 				return;
 			}
-			if (version==null) {
+			if (versionedResources==null) {
 				return;
 			}
 			
-			// Store in key map
-			Map<String,String> modules = modulesAll.get(modulesAll.size()-1).get(version);
-			if (modules==null) {
-				modules = new HashMap<String,String>(20);
-				modulesAll.get(modulesAll.size()-1).put(version, modules);
+			if ("eld-resource".equals(tag)) {
+				versionedResources.eldResources.add(value);
+			} else if ("module-loader".equals(tag)) {
+				versionedResources.moduleLoaders.add(value);
+			} else if ("elb-resource".equals(tag)) {
+				versionedResources.elbResources.add(value);
+			} else if ("sibling-loader".equals(tag)) {
+				versionedResources.siblingLoaders.add(value);
 			}
-			modules.put(tag, value);
 			logger.finest("Stored tag: "+tag+" value: "+value);
 		}
 		
@@ -258,5 +297,14 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 			}
 			buf.append(text);
 		}
+	}
+	
+	private class VersionedResources {
+		public String version;
+		public String loadedFrom;
+		public List<String> eldResources = new ArrayList<String>(5);
+		public List<String> moduleLoaders = new ArrayList<String>(5);
+		public List<String> elbResources = new ArrayList<String>(5);
+		public List<String> siblingLoaders = new ArrayList<String>(5);
 	}
 }

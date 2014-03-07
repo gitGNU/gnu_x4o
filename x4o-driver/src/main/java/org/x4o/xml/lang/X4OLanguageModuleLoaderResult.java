@@ -23,19 +23,17 @@
 package org.x4o.xml.lang;
 
 /**
- * X4OLanguageModuleLoader Loads all elements and other options
- * into the X4OLanguageModule for the X4OLanguageLocal language.
+ * X4OLanguageModuleLoaderResult are keys of meta info results from the loader which loaded the module.
  * 
  * @author Willem Cazander
- * @version 1.0 Jul 8, 2006
+ * @version 1.0 Mar 7, 2014
  */
-public interface X4OLanguageModuleLoader {
+public enum X4OLanguageModuleLoaderResult {
 	
-	/**
-	 * Starts the ElementProvider.
-	 * @param language The ElementLanguage to load for.
-	 * @param module The ElementLanguageModule to load it into.
-	 * @throws X4OLanguageModuleLoaderException	Gets thrown when modules could not be correctly loaded.
-	 */
-	void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModuleLocal module) throws X4OLanguageModuleLoaderException;
+	LOAD_MODULE_RESOURCE,
+	LOAD_FROM_RESOURCE,
+	LOAD_VERSION,
+	LOAD_CLASS,
+	LOAD_TIME,
+	LOAD_DATE;
 }

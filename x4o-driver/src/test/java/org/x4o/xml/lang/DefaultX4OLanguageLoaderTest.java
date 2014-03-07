@@ -45,14 +45,14 @@ import junit.framework.TestCase;
 public class DefaultX4OLanguageLoaderTest extends TestCase {
 
 	X4ODriver<TestObjectRoot> driver;
-	X4OLanguageLoader loader;
+	DefaultX4OLanguageLoader loader;
 	
 	public void setUp() throws Exception {
 		driver = TestDriver.getInstance();
 		//X4OReader<TestObjectRoot> reader = driver.createReader();
 		//reader.readResource("tests/namespace/uri-simple.xml");
 		X4OLanguage language = driver.createLanguage();
-		loader = (X4OLanguageLoader)language.getLanguageConfiguration().getDefaultLanguageLoader().newInstance();
+		loader = (DefaultX4OLanguageLoader)language.getLanguageConfiguration().getDefaultLanguageLoader().newInstance();
 		
 	}
 
@@ -78,6 +78,10 @@ public class DefaultX4OLanguageLoaderTest extends TestCase {
 				"1.0"
 			);
 		loader.loadLanguage((X4OLanguageLocal)result, "test", "1.0");
+	}
+	
+	public void testLanguag() throws Exception {
+//		loader.loadModulesXml(in);
 	}
 	
 	/*

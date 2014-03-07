@@ -22,12 +22,12 @@
  */
 package org.x4o.xml.lang.meta;
 
-import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderSibling;
 import org.x4o.xml.lang.X4OLanguageLoader;
 import org.x4o.xml.lang.X4OLanguageLoaderException;
 import org.x4o.xml.lang.X4OLanguageLocal;
+import org.x4o.xml.lang.X4OLanguageModuleLocal;
 
 /**
  * MetaLanguageSiblingLoader loads the generic x4o meta language into defined language. 
@@ -56,7 +56,7 @@ public class MetaLanguageSiblingLoader implements X4OLanguageModuleLoaderSibling
 	 * @throws X4OLanguageModuleLoaderException Is thrown when meta language could not be loaded.
 	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModuleLocal languageModule) throws X4OLanguageModuleLoaderException {
 		languageModule.setId(META_LANGUAGE);
 		languageModule.setProviderHost(META_LANGUAGE_HOST);
 		languageModule.setProviderName(MetaLanguageSiblingLoader.class.getSimpleName());

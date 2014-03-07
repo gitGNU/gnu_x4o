@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 import org.x4o.xml.conv.ObjectConverter;
 import org.x4o.xml.conv.text.ClassConverter;
-
 import org.x4o.xml.eld.lang.AttributeAliasElement;
 import org.x4o.xml.eld.lang.BeanElement;
 import org.x4o.xml.eld.lang.DescriptionElement;
@@ -37,20 +36,18 @@ import org.x4o.xml.eld.lang.ElementInterfaceBindingHandler;
 import org.x4o.xml.eld.lang.ElementModuleBindingHandler;
 import org.x4o.xml.eld.lang.ElementNamespaceBindingHandler;
 import org.x4o.xml.eld.lang.ModuleElement;
-
 import org.x4o.xml.element.ElementBindingHandler;
 import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.element.ElementNamespaceInstanceProviderException;
-
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageLocal;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
-import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageModuleLoader;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderException;
+import org.x4o.xml.lang.X4OLanguageModuleLocal;
 
 /** 
  * EldModuleLoaderCore provides a few basic elements for the core eld x4o language.
@@ -90,7 +87,7 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	 * @param languageModule The module to load it in.
 	 * @see org.x4o.xml.lang.X4OLanguageModuleLoader#loadLanguageModule(org.x4o.xml.lang.X4OLanguageLocal, org.x4o.xml.lang.X4OLanguageModule)
 	 */
-	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModule languageModule) throws X4OLanguageModuleLoaderException {
+	public void loadLanguageModule(X4OLanguageLocal language,X4OLanguageModuleLocal languageModule) throws X4OLanguageModuleLoaderException {
 		
 		// Config module meta data
 		configLanguageModule(languageModule);
@@ -193,15 +190,14 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 		namespace.addElementClass(ec);
 	}
 	
-	private void configLanguageModule(X4OLanguageModule languageModule) {
+	private void configLanguageModule(X4OLanguageModuleLocal languageModule) {
 		languageModule.setId("cel-module");
 		languageModule.setProviderName("Core Element Languag Module");
 		languageModule.setProviderHost(PP_CEL_PROVIDER_HOST);
 		languageModule.setDescription("Core Element Language Module Loader");
-		languageModule.setSourceResource(this.getClass().getSimpleName()); //TODO: check if oke.
 	}
 	
-	private void startAndAddNamespace(X4OLanguageLocal language,X4OLanguageModule languageModule,ElementNamespace namespace) throws X4OLanguageModuleLoaderException {
+	private void startAndAddNamespace(X4OLanguageLocal language,X4OLanguageModuleLocal languageModule,ElementNamespace namespace) throws X4OLanguageModuleLoaderException {
 		try {
 			namespace.getElementNamespaceInstanceProvider().start(language, namespace);
 		} catch (ElementNamespaceInstanceProviderException e) {
@@ -287,7 +283,7 @@ public class EldModuleLoaderCore implements X4OLanguageModuleLoader {
 	 * @param id	The handler id.
 	 * @param description	The handler descripion.
 	 */
-	private void addBindingHandler(X4OLanguageModule languageModule,ElementBindingHandler handler,String id,String description) {
+	private void addBindingHandler(X4OLanguageModuleLocal languageModule,ElementBindingHandler handler,String id,String description) {
 		handler.setId(id);
 		handler.setDescription(description);
 		languageModule.addElementBindingHandler(handler);

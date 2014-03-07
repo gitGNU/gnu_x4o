@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.x4o.xml.element.Element;
-import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderSibling;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
@@ -115,7 +114,12 @@ public class X4OPhaseLanguageInit {
 	/**
 	 * Loads all sibling languages.
 	 */
-	class X4OPhaseInitLanguageSiblings extends AbstractX4OPhase {
+	public class X4OPhaseInitLanguageSiblings extends AbstractX4OPhase {
+		private List<X4OLanguageModuleLoaderSibling> siblingLoaders = new ArrayList<X4OLanguageModuleLoaderSibling>(2);
+		// mmmm think of better then cast
+		public void addLanguageModuleLoaderSibling(X4OLanguageModuleLoaderSibling loader) {
+			siblingLoaders.add(loader);
+		}
 		public X4OPhaseType getType() {
 			return X4OPhaseType.INIT;
 		}
@@ -132,12 +136,6 @@ public class X4OPhaseLanguageInit {
 		}
 		public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException {
 			try {
-				List<X4OLanguageModuleLoaderSibling> siblingLoaders = new ArrayList<X4OLanguageModuleLoaderSibling>(3);
-				for (X4OLanguageModule module:languageSession.getLanguage().getLanguageModules()) {	
-					if (module.getLanguageModuleLoader() instanceof X4OLanguageModuleLoaderSibling) {
-						siblingLoaders.add((X4OLanguageModuleLoaderSibling)module.getLanguageModuleLoader());
-					}
-				}
 				if (siblingLoaders.isEmpty()==false) {
 					X4OLanguageLoader loader = (X4OLanguageLoader)X4OLanguageClassLoader.newInstance(languageSession.getLanguage().getLanguageConfiguration().getDefaultLanguageLoader());
 					for (X4OLanguageModuleLoaderSibling siblingLoader:siblingLoaders) {
@@ -147,6 +145,7 @@ public class X4OPhaseLanguageInit {
 					if (languageSession.hasX4ODebugWriter()) {
 						languageSession.getX4ODebugWriter().debugElementLanguageModules(languageSession);
 					}
+					siblingLoaders.clear();
 				}
 			} catch (Exception e) {
 				throw new X4OPhaseException(this,e);

@@ -42,6 +42,7 @@ import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
+import org.x4o.xml.lang.X4OLanguageModuleLoaderResult;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageConfiguration;
 import org.x4o.xml.lang.phase.X4OPhase;
@@ -223,12 +224,19 @@ public class X4ODebugWriter {
 				atts.addAttribute ("", "id", "", "", module.getId());
 				atts.addAttribute ("", "providerName", "", "", module.getProviderName());
 				atts.addAttribute ("", "providerHost", "", "", module.getProviderHost());
-				if (module.getLanguageModuleLoader()==null) {
-					atts.addAttribute ("", "elementLanguageModuleLoaderClassName", "", "", "null");
-				} else {
-					atts.addAttribute ("", "elementLanguageModuleLoaderClassName", "", "", module.getLanguageModuleLoader().getClass().getName());
-				}
 				contentWriter.startElement (DEBUG_URI, "ElementLanguageModule", "", atts);
+				
+				for (X4OLanguageModuleLoaderResult result:X4OLanguageModuleLoaderResult.values()) {
+					String value = module.getLoaderResult(result);
+					if (value==null) {
+						continue;
+					}
+					atts = new AttributesImpl();
+					atts.addAttribute ("", "resultKey", "", "", result.name());
+					atts.addAttribute ("", "resultValue", "", "", value);
+					contentWriter.startElement (DEBUG_URI, "ElementLanguageModuleResult", "", atts);
+					contentWriter.endElement(DEBUG_URI, "ElementLanguageModuleResult", "");
+				}
 				
 				debugElementConfiguratorGlobal(module.getElementConfiguratorGlobals());
 				debugElementBindingHandler(module.getElementBindingHandlers());
