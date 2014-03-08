@@ -23,6 +23,7 @@
 package	org.x4o.xml.io.sax;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
+import org.x4o.xml.io.AbstractX4OConnection;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderResult;
@@ -88,6 +90,7 @@ public class X4ODebugWriter {
 			startTime = System.currentTimeMillis();
 			try {
 				AttributesImpl atts = new AttributesImpl();
+				atts.addAttribute("", "phaseId","","", phase.getId());
 				if (elementLanguage!=null) {
 					atts.addAttribute("", "language","","", elementLanguage.getLanguage().getLanguageName());
 				}
@@ -95,15 +98,15 @@ public class X4ODebugWriter {
 			} catch (SAXException e) {
 				throw new X4OPhaseException(phase,e);
 			}
-			debugPhase(phase);
 		}
 		
 		public void endRunPhase(X4OPhase phase,X4OLanguageSession elementLanguage) throws X4OPhaseException {
 			long stopTime = System.currentTimeMillis();
 			try {
 				AttributesImpl atts = new AttributesImpl();
-				atts.addAttribute ("", "id", "", "", phase.getId());
-				atts.addAttribute ("", "speed", "", "", (stopTime-startTime)+" ms");
+				atts.addAttribute ("", "phaseId", "", "", phase.getId());
+				atts.addAttribute ("", "time", "", "", (stopTime-startTime)+"");
+				atts.addAttribute ("", "timeUnit", "", "", "ms");
 				contentWriter.startElement (DEBUG_URI, "executePhaseDone", "", atts);
 				contentWriter.endElement (DEBUG_URI, "executePhaseDone" , "");
 				
@@ -114,53 +117,89 @@ public class X4ODebugWriter {
 		}
 	}
 	
-	/*
-	public void debugLanguageProperties(X4OLanguageSession ec) throws ElementException {
-		try {
-			AttributesImpl atts = new AttributesImpl();
-			contentWriter.startElement (DEBUG_URI, "X4OLanguageProperties", "", atts);
-			for (X4OLanguageProperty p:X4OLanguageProperty.values()) {
-				Object value = ec.getLanguageProperty(p);
-				if (value==null) {
-					continue;
-				}
-				AttributesImpl atts2 = new AttributesImpl();
-				atts2.addAttribute ("", "uri", "", "", p.toUri());
-				atts2.addAttribute ("", "value", "", "", value.toString());
-				contentWriter.startElement (DEBUG_URI, "X4OLanguageProperty", "", atts2);
-				contentWriter.endElement(DEBUG_URI, "X4OLanguageProperty", "");
+	private String convertCharToHex(String newline) {
+		StringBuilder buf = new StringBuilder();
+		buf.append("0x");
+		for (char c:newline.toCharArray()) {
+			Integer i = new Integer(c);
+			if (i<16) {
+				buf.append('0');
 			}
-			contentWriter.endElement(DEBUG_URI, "X4OLanguageProperties", "");
-		} catch (SAXException e) {
-			throw new ElementException(e);
-		}		
+			buf.append(Integer.toHexString(i).toUpperCase());
+		}
+		return buf.toString();
 	}
-	*/
+	
+	public void debugConnectionStart(X4OLanguageSession languageSession,AbstractX4OConnection ec) throws SAXException {
+		AttributesImpl atts = new AttributesImpl();
+		atts.addAttribute ("", "language", "", "", languageSession.getLanguage().getLanguageName());
+		atts.addAttribute ("", "languageVersion", "", "", languageSession.getLanguage().getLanguageVersion());
+		atts.addAttribute ("", "className", "", "", ec.getClass().getName());
+		atts.addAttribute ("", "currentTimeMillis", "", "", System.currentTimeMillis()+"");
+		contentWriter.startElement(X4ODebugWriter.DEBUG_URI, "X4OConnection", "", atts);
+		
+		atts = new AttributesImpl();
+		atts.addAttribute ("", "phaseStop", "", "", languageSession.getPhaseStop());
+		atts.addAttribute ("", "className", "", "", languageSession.getClass().getName());
+		contentWriter.startElement (DEBUG_URI, "X4OLanguageSession", "", atts);
+		for (String skipPhase:languageSession.getPhaseSkip()) {
+			atts = new AttributesImpl();
+			contentWriter.startElement (DEBUG_URI, "X4OLanguageSessionSkipPhase", "", atts);
+			contentWriter.characters(skipPhase);
+			contentWriter.endElement(DEBUG_URI, "X4OLanguageSessionSkipPhase", "");
+		}
+		contentWriter.endElement(DEBUG_URI, "X4OLanguageSession", "");
+		
+		atts = new AttributesImpl();
+		contentWriter.startElement (DEBUG_URI, "X4OConnectionProperties", "", atts);
+		for (String key:ec.getPropertyKeys()) {
+			Object value = ec.getProperty(key);
+			AttributesImpl atts2 = new AttributesImpl();
+			atts2.addAttribute ("", "key", "", "", key);
+			if (value==null) {
+				atts2.addAttribute ("", "valueIsNull", "", "", "true");
+			} else {
+				if (key.endsWith("char-newline") | key.endsWith("char-tab")) {
+					value = convertCharToHex(value.toString());
+				}
+				atts2.addAttribute ("", "value", "", "", value.toString());
+			}
+			
+			contentWriter.startElement (DEBUG_URI, "X4OConnectionProperty", "", atts2);
+			contentWriter.endElement(DEBUG_URI, "X4OConnectionProperty", "");
+		}
+		contentWriter.endElement(DEBUG_URI, "X4OConnectionProperties", "");
+	}
+	
+	
+	public void debugConnectionEnd() throws SAXException {
+		contentWriter.endElement(X4ODebugWriter.DEBUG_URI, "X4OConnection", "");
+	}
 	
 	public void debugLanguageDefaultClasses(X4OLanguageSession ec) throws ElementException {
 		try {
 			AttributesImpl atts = new AttributesImpl();
 			contentWriter.startElement (DEBUG_URI, "X4OLanguageDefaultClasses", "", atts);
 			X4OLanguageConfiguration conf = ec.getLanguage().getLanguageConfiguration();
-
-			debugLanguageDefaultClass("getDefaultElementNamespace",conf.getDefaultElementNamespace());
-			debugLanguageDefaultClass("getDefaultElementInterface",conf.getDefaultElementInterface());
-			debugLanguageDefaultClass("getDefaultElement",conf.getDefaultElement());
-			debugLanguageDefaultClass("getDefaultElementClass",conf.getDefaultElementClass());
-			debugLanguageDefaultClass("getDefaultElementClassAttribute",conf.getDefaultElementClassAttribute());
-			debugLanguageDefaultClass("getDefaultElementLanguageModule",conf.getDefaultElementLanguageModule());
-			debugLanguageDefaultClass("getDefaultElementBodyComment",conf.getDefaultElementBodyComment());
-			debugLanguageDefaultClass("getDefaultElementBodyCharacters",conf.getDefaultElementBodyCharacters());
-			debugLanguageDefaultClass("getDefaultElementBodyWhitespace",conf.getDefaultElementBodyWhitespace());
-			debugLanguageDefaultClass("getDefaultElementNamespaceInstanceProvider",conf.getDefaultElementNamespaceInstanceProvider());
-			debugLanguageDefaultClass("getDefaultElementAttributeValueParser",conf.getDefaultElementAttributeValueParser());
-			debugLanguageDefaultClass("getDefaultElementObjectPropertyValue",conf.getDefaultElementObjectPropertyValue());
-			debugLanguageDefaultClass("getDefaultElementNamespaceAttributeComparator",conf.getDefaultElementNamespaceAttributeComparator());
-							
+			
+			debugLanguageDefaultClass("defaultElementNamespace",conf.getDefaultElementNamespace());
+			debugLanguageDefaultClass("defaultElementInterface",conf.getDefaultElementInterface());
+			debugLanguageDefaultClass("defaultElement",conf.getDefaultElement());
+			debugLanguageDefaultClass("defaultElementClass",conf.getDefaultElementClass());
+			debugLanguageDefaultClass("defaultElementClassAttribute",conf.getDefaultElementClassAttribute());
+			debugLanguageDefaultClass("defaultElementLanguageModule",conf.getDefaultElementLanguageModule());
+			debugLanguageDefaultClass("defaultElementBodyComment",conf.getDefaultElementBodyComment());
+			debugLanguageDefaultClass("defaultElementBodyCharacters",conf.getDefaultElementBodyCharacters());
+			debugLanguageDefaultClass("defaultElementBodyWhitespace",conf.getDefaultElementBodyWhitespace());
+			debugLanguageDefaultClass("defaultElementNamespaceInstanceProvider",conf.getDefaultElementNamespaceInstanceProvider());
+			debugLanguageDefaultClass("defaultElementAttributeValueParser",conf.getDefaultElementAttributeValueParser());
+			debugLanguageDefaultClass("defaultElementObjectPropertyValue",conf.getDefaultElementObjectPropertyValue());
+			debugLanguageDefaultClass("defaultElementNamespaceAttributeComparator",conf.getDefaultElementNamespaceAttributeComparator());
+			
 			contentWriter.endElement(DEBUG_URI, "X4OLanguageDefaultClasses", "");
 		} catch (SAXException e) {
 			throw new ElementException(e);
-		}		
+		}
 	}
 	
 	private void debugLanguageDefaultClass(String name,Class<?> clazz) throws SAXException {
@@ -197,6 +236,7 @@ public class X4ODebugWriter {
 		try {
 			AttributesImpl atts = new AttributesImpl();
 			atts.addAttribute ("", "id", "", "", phase.getId());
+			atts.addAttribute ("", "type", "", "", phase.getType().name());
 			atts.addAttribute ("", "runOnce", "", "", phase.isRunOnce()+"");
 			atts.addAttribute ("", "listenersSize", "", "", phase.getPhaseListeners().size()+"");
 			
@@ -207,10 +247,17 @@ public class X4ODebugWriter {
 				contentWriter.startElement (DEBUG_URI, "X4OPhaseListener", "", atts);
 				contentWriter.endElement(DEBUG_URI, "X4OPhaseListener", "");
 			}
+			for (String dep:phase.getPhaseDependencies()) {
+				atts = new AttributesImpl();
+				//atts.addAttribute ("", "dependency", "", "", dep);
+				contentWriter.startElement (DEBUG_URI, "X4OPhaseDependency", "", atts);
+				contentWriter.characters(dep);
+				contentWriter.endElement(DEBUG_URI, "X4OPhaseDependency", "");
+			}
 			contentWriter.endElement(DEBUG_URI, "phase", "");
 		} catch (SAXException e) {
 			throw new X4OPhaseException(phase,e);
-		}	
+		}
 	}
 	
 	public void debugElementLanguageModules(X4OLanguageSession elementLanguage) throws ElementException {
@@ -377,13 +424,30 @@ public class X4ODebugWriter {
 		return buff;
 	}
 	
+	public void debugSAXConfigStart() throws SAXException {
+		AttributesImpl atts = new AttributesImpl();
+		contentWriter.startElement (DEBUG_URI, "SAXConfig", "", atts);
+	}
+	
+	public void debugSAXConfigEnd() throws SAXException {
+		contentWriter.endElement(DEBUG_URI, "SAXConfig", "");
+	}
+	
+	public void debugSAXMessage(String type,String key,String value) throws SAXException {
+		AttributesImpl atts = new AttributesImpl();
+		atts.addAttribute ("", "key", "", "", key);
+		atts.addAttribute ("", "value", "", "", value);
+		atts.addAttribute ("", "type", "", "", type);
+		contentWriter.startElement (DEBUG_URI, "SAXConfigProperty", "", atts);
+		contentWriter.endElement(DEBUG_URI, "SAXConfigProperty", "");
+	}
+	
 	public void debugPhaseMessage(String message,Class<?> clazz) throws ElementException  {	
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "class", "", "", clazz.getName()+"");
 		try {
 			contentWriter.startElement (DEBUG_URI, "message", "", atts);
-			char[] msg = message.toCharArray();
-			contentWriter.characters(msg,0,msg.length);
+			contentWriter.characters(message);
 			contentWriter.endElement(DEBUG_URI, "message", "");
 		} catch (SAXException e) {
 			throw new ElementException(e);
@@ -422,17 +486,6 @@ public class X4ODebugWriter {
 		} catch (SAXException e) {
 			throw new ElementException(e);
 		}
-	}
-	
-	public void debugLanguageSession(X4OLanguageSession elementLanguage) throws SAXException {
-		AttributesImpl atts = new AttributesImpl();
-		//atts.addAttribute ("", key, "", "", value);
-		atts.addAttribute ("", "language", "", "", elementLanguage.getLanguage().getLanguageName());
-		atts.addAttribute ("", "languageVersion", "", "", elementLanguage.getLanguage().getLanguageVersion());
-		atts.addAttribute ("", "className", "", "", elementLanguage.getClass().getName()+"");
-		atts.addAttribute ("", "currentX4OPhase", "", "", elementLanguage.getPhaseCurrent().getId());
-		contentWriter.startElement (DEBUG_URI, "printElementLanguage", "", atts);
-		contentWriter.endElement(DEBUG_URI, "printElementLanguage", "");
 	}
 	
 	private void debugElementClass(ElementClass elementClass) throws SAXException {
@@ -536,5 +589,93 @@ public class X4ODebugWriter {
 			
 			contentWriter.endElement(DEBUG_URI, "elementBindingHandler", "");
 		}
+	}
+	
+	/**
+	 * Creates an debug phase
+	 * @return	The X4OPhaseHandler for this phase.
+	 */
+	public X4OPhaseListener createDebugPrintTreePhaseListener() {
+		return new X4OPhaseListener() {
+			List<String> startedPrefix = new ArrayList<String>(10);
+			public void preRunPhase(X4OPhase phase,X4OLanguageSession languageSession) throws X4OPhaseException {
+			}
+			public void endRunPhase(X4OPhase phase,X4OLanguageSession languageSession) throws X4OPhaseException {
+				if (languageSession.hasX4ODebugWriter()==false) {
+					throw new X4OPhaseException(phase,"Use debugPhase only when X4OParser.debugWriter is filled.");
+				}
+				try {
+					AttributesImpl atts = new AttributesImpl();
+					contentWriter.startElement (X4ODebugWriter.DEBUG_URI, "printElementTree", "", atts);
+					startedPrefix.clear();
+					printXML(languageSession.getRootElement());
+					for (String prefix:startedPrefix) {
+						contentWriter.endPrefixMapping(prefix);
+					}
+					contentWriter.endElement(X4ODebugWriter.DEBUG_URI, "printElementTree", "");
+					
+				} catch (SAXException e) {
+					throw new X4OPhaseException(phase,e);
+				}
+			}
+			
+			// note: slow version
+			private String getNamespaceForElement(Element e) {
+				for (X4OLanguageModule mod:e.getLanguageSession().getLanguage().getLanguageModules()) {
+					for (ElementNamespace enc:mod.getElementNamespaces()) {
+						List<ElementClass> l = enc.getElementClasses();
+						if (l.contains(e.getElementClass())) {
+							return enc.getUri();
+						}
+					}
+				}
+				return null;
+			}
+			
+			private void printXML(Element element) throws SAXException {
+				if (element==null) {
+					throw new SAXException("Can't print debug xml of null element.");
+				}
+				ContentWriter handler = contentWriter; //element.getLanguageSession().getX4ODebugWriter().getContentWriter();
+				if (element.getElementType().equals(Element.ElementType.comment)) {
+					handler.comment((String)element.getElementObject());
+					return;
+				}
+				if (element.getElementType().equals(Element.ElementType.characters)) {
+					handler.characters((String)element.getElementObject());
+					return;
+				}
+				if (element.getElementClass()==null) {
+					throw new SAXException("Element without ElementClass is not valid: "+element+" obj: "+element.getElementObject());
+				}
+				
+				AttributesImpl atts = new AttributesImpl();
+				for (String key:element.getAttributes().keySet()) {
+					String value = element.getAttributes().get(key);
+					//uri, localName, xml1.0name, type, value
+					atts.addAttribute ("", key, "", "", value);
+				}
+				
+				String nameSpace = getNamespaceForElement(element);
+				ElementNamespace en = element.getLanguageSession().getLanguage().findElementNamespace(nameSpace);
+				
+				String prefix = en.getPrefixMapping(); // TODO: note is for reading; getPrefixMapping 
+				if (prefix==null) {
+					prefix = en.getSchemaPrefix();
+				}
+				if (prefix==null) {
+					prefix = en.getId();
+				}
+				if (startedPrefix.contains(prefix)==false) {
+					handler.startPrefixMapping(prefix, nameSpace);
+					startedPrefix.add(prefix);
+				}
+				handler.startElement (nameSpace, element.getElementClass().getId(), "", atts);
+				for (Element e:element.getAllChilderen()) {
+					printXML(e);
+				}
+				handler.endElement (nameSpace, element.getElementClass().getId(), "");
+			}
+		};
 	}
 }

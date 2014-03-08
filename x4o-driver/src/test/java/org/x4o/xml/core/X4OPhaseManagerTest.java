@@ -26,11 +26,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.x4o.xml.lang.X4OLanguageSession;
+import org.x4o.xml.lang.phase.DefaultX4OPhaseManager;
 import org.x4o.xml.lang.phase.X4OPhase;
-import org.x4o.xml.lang.phase.X4OPhaseManager;
 import org.x4o.xml.lang.phase.X4OPhaseType;
 import org.x4o.xml.test.TestDriver;
-
 
 import junit.framework.TestCase;
 
@@ -51,7 +50,7 @@ public class X4OPhaseManagerTest extends TestCase {
 	public void testPhases() throws Exception {
 		TestDriver driver = TestDriver.getInstance();
 		X4OLanguageSession context = driver.createLanguage().createLanguageSession();
-		X4OPhaseManager manager = context.getLanguage().getPhaseManager();
+		DefaultX4OPhaseManager manager = (DefaultX4OPhaseManager)context.getLanguage().getPhaseManager();
 		Collection<X4OPhase> phasesAll = manager.getAllPhases();
 		List<X4OPhase> phases = manager.getOrderedPhases(X4OPhaseType.XML_READ);
 		assertNotNull(phases);

@@ -34,7 +34,6 @@ import org.x4o.xml.element.Element;
 import org.x4o.xml.element.ElementNamespaceAttribute;
 import org.x4o.xml.element.ElementAttributeValueParser;
 import org.x4o.xml.element.ElementBindingHandler;
-import org.x4o.xml.element.ElementClass;
 import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementConfigurator;
 import org.x4o.xml.element.ElementConfiguratorGlobal;
@@ -42,7 +41,6 @@ import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.io.sax.X4ODebugWriter;
-import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageClassLoader;
@@ -78,13 +76,10 @@ public class X4OPhaseLanguageRead {
 		logger = Logger.getLogger(X4OPhaseLanguageRead.class.getName());
 	}
 	
-
-	public void createPhases(DefaultX4OPhaseManager manager) {
-		manager.addX4OPhase(new X4OPhaseReadBegin());
+	public void createPhases(X4OPhaseManagerLocal manager) {
 		
 		// meta start point
-//		manager.addX4OPhase(factory.startX4OPhase());
-//		if (languageSession.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+		manager.addX4OPhase(new X4OPhaseReadBegin());
 		
 		// config
 		X4OPhaseReadRunConfigurator runConf = new X4OPhaseReadRunConfigurator();
@@ -95,40 +90,25 @@ public class X4OPhaseLanguageRead {
 		
 		// run all attribute events
 		manager.addX4OPhase(new X4OPhaseReadRunAttribute());
-//		if (languageSession.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
+		
 		// templating
 		manager.addX4OPhase(new X4OPhaseReadFillTemplate());
-//		if (languageSession.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
-
+		
 		// transforming
 		manager.addX4OPhase(new X4OPhaseReadTransform());
 		manager.addX4OPhase(new X4OPhaseReadRunDirty(manager));
-//		if (languageSession.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
 		
 		// binding elements
 		manager.addX4OPhase(new X4OPhaseReadBindElement());
 		
 		// runing and releasing
 		manager.addX4OPhase(new X4OPhaseReadRun());
-//		if (languageSession.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
-		
 		manager.addX4OPhase(runConf);
-		
 		manager.addX4OPhase(new X4OPhaseReadRunDirtyLast(manager));
-//		if (languageSession.hasX4ODebugWriter()) {manager.addX4OPhaseHandler(factory.debugPhase());}
-		
-		
 		manager.addX4OPhase(new X4OPhaseReadEnd());
 		
 		// after release phase Element Tree is not avible anymore
 		manager.addX4OPhase(releasePhase());
-		
-		// Add debug phase listener to all phases
-//		if (languageSession.hasX4ODebugWriter()) {
-			//for (X4OPhase h:manager.getOrderedPhases()) {
-//				h.addPhaseListener(languageSession.getX4ODebugWriter().createDebugX4OPhaseListener());
-			//}
-		//}
 		
 		// We are done
 	}
@@ -204,7 +184,7 @@ public class X4OPhaseLanguageRead {
 					if (element.getAttributes().containsKey(alias)) {
 						String attributeValue = element.getAttributes().get(alias);
 						element.getAttributes().put(eca.getId(), attributeValue);
-						element.getAttributes().remove(alias);		
+						element.getAttributes().remove(alias);
 					}
 				}
 			}
@@ -463,13 +443,13 @@ public class X4OPhaseLanguageRead {
 			return new String[] {READ_TRANSFORM};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
-			Map<Element,X4OPhase> dirtyElements = element.getLanguageSession().getDirtyElements();
+			List<Element> dirtyElements = element.getLanguageSession().getDirtyElements();
 			if (dirtyElements.isEmpty()) {
 				return;
 			}
 			debugPhaseMessage("Dirty elements: "+dirtyElements.size(), this,element.getLanguageSession());
-			for (Element e:dirtyElements.keySet()) {
-				X4OPhase p = dirtyElements.get(e);
+			X4OPhase p = phaseManager.getPhase(READ_BEGIN);
+			for (Element e:dirtyElements) {
 				phaseManager.runPhasesForElement(e,getType(), p);
 			}
 			element.getLanguageSession().getDirtyElements().clear();
@@ -494,13 +474,13 @@ public class X4OPhaseLanguageRead {
 			return new String[] {READ_RUN};
 		}
 		public void runElementPhase(Element element) throws X4OPhaseException {
-			Map<Element,X4OPhase> dirtyElements = element.getLanguageSession().getDirtyElements();
+			List<Element> dirtyElements = element.getLanguageSession().getDirtyElements();
 			if (dirtyElements.isEmpty()) {
 				return;
 			}
 			debugPhaseMessage("Dirty elements last: "+dirtyElements.size(), this,element.getLanguageSession());
-			for (Element e:dirtyElements.keySet()) {
-				X4OPhase p = dirtyElements.get(e);
+			X4OPhase p = phaseManager.getPhase(READ_BEGIN);
+			for (Element e:dirtyElements) {
 				phaseManager.runPhasesForElement(e,getType(), p);
 			}
 			element.getLanguageSession().getDirtyElements().clear();
@@ -734,103 +714,6 @@ public class X4OPhaseLanguageRead {
 			}
 		};
 		result.addPhaseListener(releaseCounter);
-		return result;
-	}
-	
-	/**
-	 * Creates an debug phase
-	 * @return	The X4OPhaseHandler for this phase.
-	 */
-	public X4OPhase debugPhase(final X4OPhase afterPhase) {
-		X4OPhase result = new AbstractX4OPhase() {
-			public X4OPhaseType getType() {
-				return X4OPhaseType.XML_READ;
-			}
-			public String getId() {
-				return "X4O_DEBUG_"+afterPhase.getId();
-			}
-			public String[] getPhaseDependencies() {
-				return new String[] {afterPhase.getId()};
-			}
-			public boolean isElementPhase() {
-				return false;
-			}
-			public void runElementPhase(Element element) throws X4OPhaseException {
-			}
-			public void runPhase(X4OLanguageSession languageSession) throws X4OPhaseException {
-				// safety check
-				if (languageSession.hasX4ODebugWriter()==false) {
-					throw new X4OPhaseException(this,"Use debugPhase only when X4OParser.debugWriter is filled.");
-				}
-				try {
-					AttributesImpl atts = new AttributesImpl();
-					//atts.addAttribute ("", key, "", "", value);
-					//atts.addAttribute ("", "verbose", "", "", "true");
-					languageSession.getX4ODebugWriter().getContentWriter().startElement (X4ODebugWriter.DEBUG_URI, "printElementTree", "", atts);
-					startedPrefix.clear();
-					printXML(languageSession.getRootElement());
-					for (String prefix:startedPrefix) {
-						languageSession.getX4ODebugWriter().getContentWriter().endPrefixMapping(prefix);
-					}
-					languageSession.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "printElementTree", "");
-					languageSession.getX4ODebugWriter().debugLanguageSession(languageSession);
-				} catch (SAXException e) {
-					throw new X4OPhaseException(this,e);
-				}
-			}
-			List<String> startedPrefix = new ArrayList<String>(10);
-			
-			// note: slow version
-			private String getNamespaceForElement(Element e) {
-				for (X4OLanguageModule mod:e.getLanguageSession().getLanguage().getLanguageModules()) {
-					for (ElementNamespace enc:mod.getElementNamespaces()) {
-						List<ElementClass> l = enc.getElementClasses();
-						if (l.contains(e.getElementClass())) {
-							return enc.getUri();
-						}
-					}
-				}
-				return null;
-			}
-			
-			private void printXML(Element element) throws SAXException {
-				if (element==null) {
-					throw new SAXException("Can't print debug xml of null element.");
-				}
-				ContentWriter handler = element.getLanguageSession().getX4ODebugWriter().getContentWriter();
-				if (element.getElementType().equals(Element.ElementType.comment)) {
-					handler.comment((String)element.getElementObject());
-					return;
-				}
-				if (element.getElementType().equals(Element.ElementType.characters)) {
-					handler.characters((String)element.getElementObject());
-					return;
-				}
-				if (element.getElementClass()==null) {
-					throw new SAXException("Element without ElementClass is not valid: "+element+" obj: "+element.getElementObject());
-				}
-				
-				AttributesImpl atts = new AttributesImpl();
-				for (String key:element.getAttributes().keySet()) {
-					String value = element.getAttributes().get(key);
-					//uri, localName, xml1.0name, type, value
-					atts.addAttribute ("", key, "", "", value);
-				}
-				
-				String nameSpace = getNamespaceForElement(element);
-				String prefix = element.getLanguageSession().getLanguage().findElementNamespace(nameSpace).getPrefixMapping();
-				
-				if (startedPrefix.contains(prefix)==false) {
-					handler.startPrefixMapping(prefix, nameSpace);
-					startedPrefix.add(prefix);
-				}
-				handler.startElement (nameSpace, element.getElementClass().getId(), "", atts);
-				for (Element e:element.getAllChilderen()) {
-					printXML(e);
-				}
-				handler.endElement (nameSpace, element.getElementClass().getId(), "");
-			}
-		};
 		return result;
 	}
 }

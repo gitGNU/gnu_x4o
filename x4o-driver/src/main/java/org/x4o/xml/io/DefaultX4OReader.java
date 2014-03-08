@@ -26,18 +26,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import javax.el.ValueExpression;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.x4o.xml.io.sax.X4OContentParser;
-import org.x4o.xml.io.sax.X4ODebugWriter;
 import org.x4o.xml.io.sax.ext.ContentWriter;
-import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
 import org.x4o.xml.lang.X4OLanguage;
@@ -49,7 +44,6 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * DefaultX4OReader can read and parse the xml language.
@@ -58,9 +52,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version 1.0 Aug 9, 2012
  */
 public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
-	
-	/** The logger to log to. */
-	private Logger logger = null;
 	
 	private X4OLanguageSession languageSession = null;
 	
@@ -82,6 +73,8 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	public final static String VALIDATION_SCHEMA_PATH       = PROPERTY_CONTEXT_PREFIX + "validation/schema-path";
 	public final static String VALIDATION_INPUT_DOC         = PROPERTY_CONTEXT_PREFIX + "validation/input-doc";
 	public final static String VALIDATION_INPUT_SCHEMA      = PROPERTY_CONTEXT_PREFIX + "validation/input-schema";
+	public final static String DEBUG_OUTPUT_HANDLER         = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_HANDLER;
+	public final static String DEBUG_OUTPUT_STREAM          = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_STREAM;
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,null,PROPERTY_CONTEXT_PREFIX,
@@ -97,13 +90,14 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				new PropertyConfigItem(VALIDATION_SCHEMA_AUTO_WRITE,Boolean.class,true),
 				new PropertyConfigItem(VALIDATION_SCHEMA_PATH,File.class),
 				new PropertyConfigItem(VALIDATION_INPUT_DOC,Boolean.class,false),
-				new PropertyConfigItem(VALIDATION_INPUT_SCHEMA,Boolean.class,false)
+				new PropertyConfigItem(VALIDATION_INPUT_SCHEMA,Boolean.class,false),
+				new PropertyConfigItem(DEBUG_OUTPUT_HANDLER,ContentWriter.class),
+				new PropertyConfigItem(DEBUG_OUTPUT_STREAM,OutputStream.class)
 				);
 	}
 	
 	public DefaultX4OReader(X4OLanguage language) {
 		super(language);
-		logger = Logger.getLogger(DefaultX4OReader.class.getName());
 		languageSession = language.createLanguageSession();
 		propertyConfig = new PropertyConfig(DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX);
 	}
@@ -139,11 +133,12 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	 * Parses the input stream as a X4O document.
 	 */
 	protected void read() throws X4OConnectionException,SAXException,IOException {
+		// Extra check if we have a language
 		if (languageSession.getLanguage()==null) {
 			throw new X4OConnectionException("languageSession is broken getLanguage() returns null."); 
 		}
 		
-		
+		// Insert stop/skip phase if we allowed to. TODO: move layer ?
 		if (languageSession instanceof X4OLanguageSessionLocal) {
 			X4OLanguageSessionLocal ll = (X4OLanguageSessionLocal)languageSession;
 			if (phaseStop!=null) {
@@ -154,69 +149,22 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 			}
 		}
 		
-		// init debugWriter if enabled
-		boolean startedDebugWriter = false;
-		Object debugOutputHandler = null; //TODO: getProperty(X4OLanguageProperty.DEBUG_OUTPUT_HANDLER.name());
-		Object debugOutputStream = null; //getProperty(X4OLanguageProperty.DEBUG_OUTPUT_STREAM.name());
-		if (languageSession.getX4ODebugWriter()==null) {
-			ContentWriter xmlDebugWriter = null;
-			if (debugOutputHandler instanceof ContentWriter) {
-				xmlDebugWriter = (ContentWriter)debugOutputHandler;
-			} else if (debugOutputStream instanceof OutputStream) {
-				xmlDebugWriter = new ContentWriterXml((OutputStream)debugOutputStream);
-			}
-			if (xmlDebugWriter!=null) {
-				xmlDebugWriter.startDocument();
-				xmlDebugWriter.startPrefixMapping("debug", X4ODebugWriter.DEBUG_URI);
-				X4ODebugWriter debugWriter = new X4ODebugWriter(xmlDebugWriter);
-				X4OLanguageSessionLocal local = (X4OLanguageSessionLocal)languageSession;
-				local.setX4ODebugWriter(debugWriter);
-				startedDebugWriter = true;
-			}
-		}
+		// init debug
+		debugStart(languageSession, DEBUG_OUTPUT_HANDLER, DEBUG_OUTPUT_STREAM);
 		
-		// debug language
-		if (languageSession.hasX4ODebugWriter()) {
-			AttributesImpl atts = new AttributesImpl();
-			atts.addAttribute ("", "language", "", "", languageSession.getLanguage().getLanguageName());
-			atts.addAttribute ("", "currentTimeMillis", "", "", System.currentTimeMillis()+"");
-			languageSession.getX4ODebugWriter().getContentWriter().startElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "", atts);
-		}
-		
-		// start parsing language
 		try {
+			// Run document parsing
 			X4OContentParser parser = new X4OContentParser(propertyConfig);
 			parser.parse(languageSession);
 			
+			// Run phases to build object tree
 			getLanguage().getPhaseManager().runPhases(languageSession, X4OPhaseType.XML_READ);
 		} catch (Exception e) {
-
 			// also debug exceptions
-			if (languageSession.hasX4ODebugWriter()) {
-				try {
-					AttributesImpl atts = new AttributesImpl();
-					atts.addAttribute ("", "message", "", "", e.getMessage());
-					if (e instanceof X4OPhaseException) {
-						atts.addAttribute ("", "phase", "", "", ((X4OPhaseException)e).getX4OPhaseHandler().getId());
-					}
-					languageSession.getX4ODebugWriter().getContentWriter().startElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "", atts);
-					StringWriter writer = new StringWriter();
-					PrintWriter printer = new PrintWriter(writer);
-					printer.append('\n');
-					if (e.getCause()==null) {
-						e.printStackTrace(printer);
-					} else {
-						e.getCause().printStackTrace(printer);
-					}
-					char[] stack = writer.getBuffer().toString().toCharArray();
-					languageSession.getX4ODebugWriter().getContentWriter().characters(stack, 0, stack.length);
-					languageSession.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "exceptionStackTrace", "");
-				} catch (Exception ee) {
-					logger.warning(ee.getMessage());
-				}
-			}
+			debugException(languageSession, e);
 			
-			// unwrap exception
+			// unwrap exception 
+			// TODO: cleanup exceptions a bit more see X4OConnectionException
 			if (e.getCause() instanceof ParserConfigurationException) {
 				throw new X4OConnectionException((ParserConfigurationException)e.getCause());
 			}
@@ -232,21 +180,10 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				throw new SAXException((Exception)e.getCause());
 			}
 		} finally {
-			if (languageSession.hasX4ODebugWriter()) {
-				languageSession.getX4ODebugWriter().getContentWriter().endElement(X4ODebugWriter.DEBUG_URI, "X4ODriver", "");
-			}
-			if (startedDebugWriter && languageSession.hasX4ODebugWriter()) {
-				languageSession.getX4ODebugWriter().getContentWriter().endPrefixMapping("debug");
-				languageSession.getX4ODebugWriter().getContentWriter().endDocument();
-				if (debugOutputStream instanceof OutputStream) {
-					OutputStream outputStream = (OutputStream)debugOutputStream;
-					outputStream.flush();
-					outputStream.close(); // need this here ?
-				}
-			}
+			debugStop(languageSession);
 		}
 	}
-
+	
 	public void releaseSession(X4OLanguageSession context) throws X4OPhaseException {
 		if (context==null) {
 			return;

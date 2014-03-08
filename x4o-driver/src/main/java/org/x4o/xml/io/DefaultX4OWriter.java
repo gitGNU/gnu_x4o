@@ -39,13 +39,13 @@ import org.x4o.xml.element.ElementClassAttribute;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementObjectPropertyValueException;
+import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.x4o.xml.io.sax.ext.ContentWriterXml;
 import org.x4o.xml.io.sax.ext.PropertyConfig.PropertyConfigItem;
 import org.x4o.xml.lang.X4OLanguage;
 import org.x4o.xml.lang.X4OLanguageSession;
 import org.x4o.xml.lang.X4OLanguageModule;
-import org.x4o.xml.lang.phase.X4OPhase;
 import org.x4o.xml.lang.phase.X4OPhaseException;
 import org.x4o.xml.lang.phase.X4OPhaseLanguageWrite;
 import org.x4o.xml.lang.phase.X4OPhaseType;
@@ -69,12 +69,16 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	public final static String OUTPUT_STREAM                = PROPERTY_CONTEXT_PREFIX+"output/stream";
 	public final static String SCHEMA_PRINT                 = PROPERTY_CONTEXT_PREFIX+"schema/print";
 	public final static String SCHEMA_ROOT_URI              = PROPERTY_CONTEXT_PREFIX+"schema/root-uri";
+	public final static String DEBUG_OUTPUT_HANDLER         = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_HANDLER;
+	public final static String DEBUG_OUTPUT_STREAM          = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_STREAM;
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
 				new PropertyConfigItem(true,OUTPUT_STREAM,OutputStream.class),
 				new PropertyConfigItem(SCHEMA_PRINT,Boolean.class,true),
-				new PropertyConfigItem(SCHEMA_ROOT_URI,String.class)
+				new PropertyConfigItem(SCHEMA_ROOT_URI,String.class),
+				new PropertyConfigItem(DEBUG_OUTPUT_HANDLER,ContentWriter.class),
+				new PropertyConfigItem(DEBUG_OUTPUT_STREAM,OutputStream.class)
 				);
 	}
 	
@@ -104,6 +108,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	public void writeSession(X4OLanguageSession languageSession,OutputStream output) throws X4OConnectionException,SAXException,IOException {
 		setProperty(OUTPUT_STREAM, output);
 		addPhaseSkip(X4OPhaseLanguageWrite.WRITE_RELEASE);
+		debugStart(languageSession, DEBUG_OUTPUT_HANDLER, DEBUG_OUTPUT_STREAM);
 		try {
 			languageSession.getLanguage().getPhaseManager().runPhases(languageSession, X4OPhaseType.XML_WRITE);
 		} catch (X4OPhaseException e) {
@@ -153,8 +158,14 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 			out.flush();
 			
 		} catch (Exception e) {
+			debugException(languageSession, e);
 			throw new X4OConnectionException(e);
 		} finally {
+			try {
+				debugStop(languageSession);
+			} catch (Exception e1) {
+				// FIXME
+			} 
 			if (out!=null) {
 				try {
 					out.close();

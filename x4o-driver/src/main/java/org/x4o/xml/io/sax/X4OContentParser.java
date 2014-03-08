@@ -58,7 +58,20 @@ public class X4OContentParser {
 	}
 	
 	public void parse(X4OLanguageSession languageSession) throws SAXException, IOException {
-		
+		// Group debug config property messages
+		if (languageSession.hasX4ODebugWriter()) {
+			languageSession.getX4ODebugWriter().debugSAXConfigStart();
+		}
+		try {
+			parseSax(languageSession);
+		} finally {
+			if (languageSession.hasX4ODebugWriter()) {
+				languageSession.getX4ODebugWriter().debugSAXConfigEnd();
+			}
+		}
+	}
+	
+	private void parseSax(X4OLanguageSession languageSession) throws SAXException, IOException {
 		// If xsd caching is needed this should be the way 
 		//XMLParserConfiguration config = new XIncludeAwareParserConfiguration();
 		//config.setProperty("http://apache.org/xml/properties/internal/grammar-pool",myFullGrammarPool);
@@ -72,14 +85,14 @@ public class X4OContentParser {
 		saxParser.setContentHandler(xth);
 		saxParser.setProperty("http://xml.org/sax/properties/lexical-handler", xth);
 		saxParser.setProperty("http://xml.org/sax/properties/declaration-handler",xth);
-
+		
 		// Set properties and optional 
 		Map<String,Object> saxParserProperties = getSAXParserProperties(languageSession);
 		for (Map.Entry<String,Object> entry:saxParserProperties.entrySet()) {
 			String name = entry.getKey();
 			Object value= entry.getValue();
 			saxParser.setProperty(name, value);
-			debugMessage("Set SAX property: "+name+" to: "+value,languageSession);
+			debugMessage("property",name,value,languageSession);
 		}
 		Map<String,Object> saxParserPropertiesOptional = getSAXParserPropertiesOptional(languageSession);
 		for (Map.Entry<String,Object> entry:saxParserPropertiesOptional.entrySet()) {
@@ -87,9 +100,9 @@ public class X4OContentParser {
 			Object value= entry.getValue();
 			try {
 				saxParser.setProperty(name, value);
-				debugMessage("Set SAX optional property: "+name+" to: "+value,languageSession);
+				debugMessage("optional-property",name,value,languageSession);
 			} catch (SAXException e) {
-				debugMessage("Could not set optional SAX property: "+name+" to: "+value+" error: "+e.getMessage(),languageSession);
+				debugMessageLog("Could not set optional SAX property: "+name+" to: "+value+" error: "+e.getMessage(),languageSession);
 			}
 		}
 		
@@ -98,26 +111,26 @@ public class X4OContentParser {
 		for (String key:features.keySet()) {
 			Boolean value=features.get(key);
 			saxParser.setFeature(key, value);
-			debugMessage("Set SAX feature: "+key+" to: "+value,languageSession);
+			debugMessage("feature",key,value,languageSession);
 		}
 		Map<String, Boolean> featuresOptional = getSAXParserFeaturesOptional(languageSession);
 		for (String key:featuresOptional.keySet()) {
 			Boolean value=featuresOptional.get(key);
 			try {
 				saxParser.setFeature(key, value);
-				debugMessage("Set SAX optional feature: "+key+" to: "+value,languageSession);
+				debugMessage("optional-feature",key,value,languageSession);
 			} catch (SAXException e) {
-				debugMessage("Could not set optional SAX feature: "+key+" to: "+value+" error: "+e.getMessage(),languageSession);
+				debugMessageLog("Could not set optional SAX feature: "+key+" to: "+value+" error: "+e.getMessage(),languageSession);
 			}
 		}
 		
 		// check for required features
 		List<String> requiredFeatures = getSAXParserFeaturesRequired(languageSession);
 		for (String requiredFeature:requiredFeatures) {
-			debugMessage("Checking required SAX feature: "+requiredFeature,languageSession);
 			if (saxParser.getFeature(requiredFeature)==false) {
 				throw new IllegalStateException("Missing required feature: "+requiredFeature);
-			}	
+			}
+			debugMessage("required",requiredFeature,"true",languageSession);
 		}
 		
 		// Finally start parsing the xml input stream
@@ -149,13 +162,19 @@ public class X4OContentParser {
 		}
 	}
 	
-	private void debugMessage(String message,X4OLanguageSession languageSession) throws SAXException {
+	private void debugMessageLog(String message,X4OLanguageSession languageSession) throws SAXException {
 		if (languageSession.hasX4ODebugWriter()) {
 			try {
-				languageSession.getX4ODebugWriter().debugPhaseMessage(message, X4OContentParser.class);
-			} catch (ElementException ee) {
-				throw new SAXException(ee);
+				languageSession.getX4ODebugWriter().debugPhaseMessage(message, getClass());
+			} catch (ElementException e) {
+				throw new SAXException(e);
 			}
+		}
+	}
+	
+	private void debugMessage(String type,String key,Object value,X4OLanguageSession languageSession) throws SAXException {
+		if (languageSession.hasX4ODebugWriter()) {
+			languageSession.getX4ODebugWriter().debugSAXMessage(type,key,""+value);
 		}
 	}
 	

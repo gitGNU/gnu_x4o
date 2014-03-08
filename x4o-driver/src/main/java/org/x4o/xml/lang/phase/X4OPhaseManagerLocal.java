@@ -22,31 +22,14 @@
  */
 package	org.x4o.xml.lang.phase;
 
-import org.x4o.xml.lang.X4OLanguageSession;
-
 
 /**
- * An X4OPhaseListener can be placed on an X4OPhaseHandler and is called
- * before and after the phase has runned.
+ * X4OPhaseManagerLocal has the local config methods. 
  * 
  * @author Willem Cazander
- * @version 1.0 Dec 31, 2008
+ * @version 1.0 Mrt 8, 2014
  */
-public interface X4OPhaseListener {
+public interface X4OPhaseManagerLocal extends X4OPhaseManager {
 	
-	/**
-	 * Gets called before the X4OPhaseHandler is run.
-	 * @param phase	The phase to be run.
-	 * @param elementLanguage	The elementLanguage of the driver.
-	 * @throws X4OPhaseException	Is throws when listeners has error.
-	 */
-	void preRunPhase(X4OPhase phase,X4OLanguageSession languageSession) throws X4OPhaseException;
-	
-	/**
-	 * Gets called after the X4OPhaseHandler is runned.
-	 * @param phase	The phase just run.
-	 * @param elementLanguage	The elementLanguage of the driver.
-	 * @throws X4OPhaseException	Is throws when listeners has error.
-	 */
-	void endRunPhase(X4OPhase phase,X4OLanguageSession languageSession) throws X4OPhaseException;
+	void addX4OPhase(X4OPhase phase);
 }

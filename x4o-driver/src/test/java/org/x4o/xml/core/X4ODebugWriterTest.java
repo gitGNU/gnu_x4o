@@ -22,11 +22,19 @@
  */
 package org.x4o.xml.core;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import org.x4o.xml.X4ODriver;
+import org.x4o.xml.io.DefaultX4OReader;
+import org.x4o.xml.io.DefaultX4OWriter;
 import org.x4o.xml.io.X4OReader;
+import org.x4o.xml.io.X4OWriter;
 import org.x4o.xml.test.TestDriver;
 import org.x4o.xml.test.models.TestObjectRoot;
 
@@ -40,33 +48,67 @@ import junit.framework.TestCase;
  */
 public class X4ODebugWriterTest extends TestCase {
 	
-
 	private File createDebugFile() throws IOException {
 		File debugFile = File.createTempFile("test-debug", ".xml");
 		debugFile.deleteOnExit();
 		return debugFile;
 	}
 	
-	public void testDebugOutput() throws Exception {
+	static public String readFile(File file) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),Charset.forName("UTF-8")));
+		try {
+			StringBuilder sb = new StringBuilder();
+			String line = br.readLine();
+			while (line != null) {
+				sb.append(line);
+				sb.append('\n');
+				line = br.readLine();
+			}
+			String out = sb.toString();
+			//System.out.println(out);
+			return out;
+		} finally {
+			br.close();
+		}
+	}
+	
+	public void testDebugOutputReader() throws Exception {
 		File debugFile = createDebugFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
-		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
+		reader.setProperty(DefaultX4OReader.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
 		reader.readResource("tests/attributes/test-bean.xml");
 		
 		assertTrue("Debug file does not exists.",debugFile.exists());
+		String debug = readFile(debugFile);
+		assertNotNull(debug);
+		assertFalse("no debug content",debug.isEmpty());
+		assertTrue("debug content to small",debug.length()>20);
+		
+		//System.out.println("=================== Reader Output ======================");
+		//System.out.println(debug);
 		debugFile.delete();
 	}
-
-	public void testDebugOutputFull() throws Exception {
+	
+	public void testDebugOutputWriter() throws Exception {
 		File debugFile = createDebugFile();
+		File writeFile = createDebugFile();
 		X4ODriver<TestObjectRoot> driver = TestDriver.getInstance();
 		X4OReader<TestObjectRoot> reader = driver.createReader();
-		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
-		//reader.setProperty(X4OLanguagePropertyKeys.DEBUG_OUTPUT_ELD_PARSER, true);
-		reader.readResource("tests/attributes/test-bean.xml");
+		X4OWriter<TestObjectRoot> writer = driver.createWriter();
+		TestObjectRoot object = reader.readResource("tests/attributes/test-bean.xml");
+		
+		writer.setProperty(DefaultX4OWriter.DEBUG_OUTPUT_STREAM, new FileOutputStream(debugFile));
+		writer.writeFile(object, writeFile);
 		
 		assertTrue("Debug file does not exists.",debugFile.exists());
+		String debug = readFile(debugFile);
+		assertNotNull(debug);
+		assertFalse("no debug content",debug.isEmpty());
+		assertTrue("debug content to small",debug.length()>20);
+		
+		//System.out.println("=================== Writer Output ======================");
+		//System.out.println(debug);
 		debugFile.delete();
 	}
 }

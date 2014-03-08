@@ -52,7 +52,7 @@ public class X4OPhaseLanguageWrite {
 		logger = Logger.getLogger(X4OPhaseLanguageWrite.class.getName());
 	}
 	
-	public void createPhases(DefaultX4OPhaseManager manager) {
+	public void createPhases(X4OPhaseManagerLocal manager) {
 		manager.addX4OPhase(new X4OPhaseWriteBegin());
 		manager.addX4OPhase(new X4OPhaseWriteFillTree());
 		manager.addX4OPhase(new X4OPhaseWriteEnd());

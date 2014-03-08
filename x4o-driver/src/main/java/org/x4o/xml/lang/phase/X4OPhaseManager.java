@@ -22,12 +22,10 @@
  */
 package	org.x4o.xml.lang.phase;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.x4o.xml.element.Element;
 import org.x4o.xml.lang.X4OLanguageSession;
-
 
 /**
  * X4OPhaseManager stores the X4OPhaseHandler and puts them in the right order.
@@ -38,20 +36,24 @@ import org.x4o.xml.lang.X4OLanguageSession;
  */
 public interface X4OPhaseManager {
 	
+	/**
+	 * Gets an X4OPhase object by the phaseName.
+	 * @param phaseName	The phaseName to lookup.
+	 * @return	The X4OPhase requested or null.
+	 */
 	X4OPhase getPhase(String phaseName);
 	
 	/**
-	 * Returns all the X4OPhaseHandlers.
-	 * @return	Returns all X4OPhaseHandlers.
+	 * Gets all the keys of the phases registrated whith this phase manager.
+	 * @return	The phase keys.
 	 */
-	Collection<X4OPhase> getAllPhases();
-
+	List<String> getPhaseKeys();
+	
 	/**
-	 * Returns all the X4OPhaseHandlers in ordered list.
-	 * @return	Returns all X4OPhaseHandler is order.
+	 * Runs release phase if it was requested not to run it automaticly. 
+	 * @param languageSession	The session to release.
+	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
-	List<X4OPhase> getOrderedPhases(X4OPhaseType type);
-
 	void doReleasePhaseManual(X4OLanguageSession languageSession) throws X4OPhaseException;
 	
 	/**
@@ -59,7 +61,7 @@ public interface X4OPhaseManager {
 	 * @throws X4OPhaseException When a running handlers throws one.
 	 */
 	void runPhases(X4OLanguageSession elementContext,X4OPhaseType type) throws X4OPhaseException;
-
+	
 	/**
 	 * Runs phase on single element.
 	 * @param e	The Element to process.

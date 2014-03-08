@@ -38,7 +38,7 @@ import org.x4o.xml.lang.X4OLanguageSessionLocal;
  * @author Willem Cazander
  * @version 1.0 Jan 6, 2008
  */
-public class DefaultX4OPhaseManager implements X4OPhaseManager {
+public class DefaultX4OPhaseManager implements X4OPhaseManagerLocal {
 	
 	/** The X4OPhaseHandler */
 	private List<X4OPhase> x4oPhases = null;
@@ -76,6 +76,14 @@ PHASE_ORDER = {	*startupX4OPhase,
 		return null;
 	}
 	
+	public List<String> getPhaseKeys() {
+		List<String> result = new ArrayList<String>(x4oPhases.size());
+		for (X4OPhase phase:x4oPhases) {
+			result.add(phase.getId());
+		}
+		return result;
+	}
+	
 	/**
 	 * Adds an X4OPhaseHandler.
 	 * @param phase	The X4OPhaseHandler to add.
@@ -89,6 +97,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 //			throw new IllegalStateException("Can't add new phases after first phase is completed.");
 		//}
 		x4oPhases.add(phase);
+		
 	}
 	
 	/**
@@ -125,7 +134,7 @@ PHASE_ORDER = {	*startupX4OPhase,
 		
 		// debug output
 		if (languageSession.getX4ODebugWriter()!=null) {
-			languageSession.getX4ODebugWriter().debugPhaseOrder(x4oPhases);
+			languageSession.getX4ODebugWriter().debugPhaseOrder(x4oPhasesOrder);
 		}
 		
 		List<String> phaseSkip = languageSession.getPhaseSkip();

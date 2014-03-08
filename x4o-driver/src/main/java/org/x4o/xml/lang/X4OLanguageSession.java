@@ -23,7 +23,6 @@
 package	org.x4o.xml.lang;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.el.ELContext;
 import javax.el.ExpressionFactory;
@@ -70,15 +69,14 @@ public interface X4OLanguageSession {
 	 * Marks an (new) Element as dirty and run the phases from this start phase.
 	 * 
 	 * @param element	The Element which needs the magic.
-	 * @param phase		May be null, then it should defualt to configElementPhase
 	 */
-	void addDirtyElement(Element element,X4OPhase phase);
+	void addDirtyElement(Element element);
 
 	/**
 	 * Get all Dirty Elements.
-	 * @return	Returns Map with dirty elements.
+	 * @return	Returns List with dirty elements.
 	 */
-	Map<Element,X4OPhase> getDirtyElements();
+	List<Element> getDirtyElements();
 	
 	/**
 	 * Returns the root Element which starts the xml tree.

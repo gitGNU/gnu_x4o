@@ -24,8 +24,6 @@ package org.x4o.xml.lang;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 import javax.el.ELContext;
@@ -51,7 +49,7 @@ public abstract class AbstractX4OLanguageSession implements X4OLanguageSessionLo
 	private ELContext eLContext = null;
 	private ElementAttributeValueParser elementAttributeValueParser = null;
 	private ElementObjectPropertyValue elementObjectPropertyValue = null;
-	private Map<Element, X4OPhase> dirtyElements = null;
+	private List<Element> dirtyElements = null;
 	private Element rootElement = null;
 	private X4ODebugWriter debugWriter = null;
 	private X4OPhase phaseCurrent = null;
@@ -68,7 +66,7 @@ public abstract class AbstractX4OLanguageSession implements X4OLanguageSessionLo
 		logger = Logger.getLogger(AbstractX4OLanguageSession.class.getName());
 		logger.finest("Creating new ParsingContext");
 		this.language=language;
-		dirtyElements = new HashMap<Element, X4OPhase>(40);
+		dirtyElements = new ArrayList<Element>(20);
 		phaseSkip = new ArrayList<String>(5);
 	}
 	
@@ -145,19 +143,19 @@ public abstract class AbstractX4OLanguageSession implements X4OLanguageSessionLo
 	}
 	
 	/**
-	 * @see org.x4o.xml.lang.X4OLanguageSession#addDirtyElement(org.x4o.xml.element.Element, org.x4o.xml.lang.phase.X4OPhase)
+	 * @see org.x4o.xml.lang.X4OLanguageSession#addDirtyElement(org.x4o.xml.element.Element)
 	 */
-	public void addDirtyElement(Element element, X4OPhase phase) {
-		if (dirtyElements.containsKey(element)) {
+	public void addDirtyElement(Element element) {
+		if (dirtyElements.contains(element)) {
 			throw new IllegalArgumentException("Can't add an element twice.");
 		}
-		dirtyElements.put(element,phase);
+		dirtyElements.add(element);
 	}
 	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguageSession#getDirtyElements()
 	 */
-	public Map<Element, X4OPhase> getDirtyElements() {
+	public List<Element> getDirtyElements() {
 		return dirtyElements;
 	}
 	

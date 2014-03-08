@@ -51,7 +51,7 @@ public class X4OPhaseLanguageInit {
 		logger = Logger.getLogger(X4OPhaseLanguageInit.class.getName());
 	}
 	
-	public void createPhases(DefaultX4OPhaseManager manager) {
+	public void createPhases(X4OPhaseManagerLocal manager) {
 		manager.addX4OPhase(new X4OPhaseInitStart());
 		manager.addX4OPhase(new X4OPhaseInitLanguage());
 		manager.addX4OPhase(new X4OPhaseInitLanguageSiblings());
