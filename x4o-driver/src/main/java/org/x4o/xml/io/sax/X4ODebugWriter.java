@@ -396,7 +396,7 @@ public class X4ODebugWriter {
 				contentWriter.endElement(DEBUG_URI, "elementObject", "");
 			}
 			
-			StringBuffer elementPath = getElementPath(element,new StringBuffer());
+			StringBuilder elementPath = getElementPath(element,new StringBuilder());
 			atts.addAttribute ("", "elementPath", "", "", elementPath.toString());
 			
 			contentWriter.startElement (DEBUG_URI, "element", "", atts);
@@ -412,7 +412,7 @@ public class X4ODebugWriter {
 	 * @param buff		The buffer.
 	 * @return	Returns the buffer of the builf path.
 	 */
-	private StringBuffer getElementPath(Element element,StringBuffer buff) {
+	private StringBuilder getElementPath(Element element,StringBuilder buff) {
 		if (element.getParent()==null) {
 			buff.append('/'); // root slash
 			buff.append(element.getElementClass().getId());

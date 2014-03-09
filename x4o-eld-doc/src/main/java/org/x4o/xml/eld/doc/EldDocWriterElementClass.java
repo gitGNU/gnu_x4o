@@ -164,7 +164,7 @@ public class EldDocWriterElementClass extends AbstractApiDocWriter {
 	}
 	
 	private String toElementUri(String pathPrefix,X4OLanguageModule mod,ElementNamespace namespace,ElementClass ec) {
-		StringBuffer buf = new StringBuffer(100);
+		StringBuilder buf = new StringBuilder(100);
 		if (pathPrefix!=null) {
 			buf.append(pathPrefix);
 		}

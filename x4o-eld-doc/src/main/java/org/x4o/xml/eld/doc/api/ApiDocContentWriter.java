@@ -68,7 +68,7 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 		// ======= Write body
 		printTagStart(Tag.body);
 		
-		StringBuffer script = new StringBuffer();
+		StringBuilder script = new StringBuilder();
 		script.append("\n");
 		script.append("\tif (location.href.indexOf('is-external=true') == -1) {\n");
 		script.append("\t\tparent.document.title=\"");script.append(title);script.append("\";\n");
@@ -300,7 +300,7 @@ public class ApiDocContentWriter extends ContentWriterHtml {
 	}
 	
 	static public String toSafeUri(String...paths) {
-		StringBuffer result = new StringBuffer(100);
+		StringBuilder result = new StringBuilder(100);
 		for (int i=0;i<paths.length;i++) {
 			String path=paths[i];
 			result.append(toSafeUri(path));

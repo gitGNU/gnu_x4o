@@ -273,7 +273,7 @@ public final class XMLConstants {
 	static public String escapeAttributeName(String value) {
 		// Attribute	   ::=   	Name Eq AttValue
 		int length = value.length();
-		StringBuffer result = new StringBuffer(length);
+		StringBuilder result = new StringBuilder(length);
 		for (int i=0;i<length;i++) {
 			char c = value.charAt(i);
 			if (isNameChar(c)) {
@@ -315,7 +315,7 @@ public final class XMLConstants {
 		for (int i=0;i<length;i++) {
 			char c = value.charAt(i);
 			if (c=='&') {
-				StringBuffer buf = new StringBuffer(length);
+				StringBuilder buf = new StringBuilder(length);
 				int iOrg = i;
 				i = charEntityLookup(i,value,buf);
 				String entity = buf.toString();
@@ -382,8 +382,8 @@ public final class XMLConstants {
 		return false;
 	}
 	
-	static private int charEntityLookup(int iStart,String value,StringBuffer buf) {
-		StringBuffer result = new StringBuffer();
+	static private int charEntityLookup(int iStart,String value,StringBuilder buf) {
+		StringBuilder result = new StringBuilder();
 		int iMax = 10;
 		for (int i=iStart;i<value.length() && i<(iStart+iMax);i++) {
 			char c = value.charAt(i);
@@ -406,7 +406,7 @@ public final class XMLConstants {
 		value = value.replaceAll(COMMENT_START, "");
 		value = value.replaceAll(COMMENT_END,   "");
 		int length = value.length();
-		StringBuffer result = new StringBuffer(length);
+		StringBuilder result = new StringBuilder(length);
 		for (int i=0;i<length;i++) {
 			char c = value.charAt(i);
 			if (c=='\n') {

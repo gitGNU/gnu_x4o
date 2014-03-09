@@ -422,7 +422,7 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 			writer.printTagEnd(Tag.li);
 		} else {
 			writer.printTagStart(Tag.li);
-			StringBuffer buf = new StringBuffer(20);
+			StringBuilder buf = new StringBuilder(20);
 			for (int i=1;i<linkPrefixCount;i++) {
 				buf.append("../");
 			}
@@ -596,7 +596,7 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 	}
 	
 	private void writeStyleSheetResources(List<String> resources) throws IOException, SecurityException, InterruptedException {
-		StringBuffer cssData = new StringBuffer();
+		StringBuilder cssData = new StringBuilder();
 		for (String cssResource:resources) {
 			appendResourceToBuffer(cssData,cssResource);
 		}
@@ -891,7 +891,7 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 		}
 	}
 	
-	private void appendResourceToBuffer(StringBuffer buffer,String resource) throws IOException {
+	private void appendResourceToBuffer(StringBuilder buffer,String resource) throws IOException {
 		ClassLoader cl = X4OLanguageClassLoader.getClassLoader();
 		BufferedReader reader = null;
 		try {
@@ -948,7 +948,7 @@ public class ApiDocWriter extends AbstractApiDocWriter {
 	}
 	
 	private File createOutputPathFile(File basePath,String...argu) {
-		StringBuffer buf = new StringBuffer(200);
+		StringBuilder buf = new StringBuilder(200);
 		buf.append(basePath.getAbsolutePath());
 		buf.append(File.separatorChar);
 		for (int i=0;i<argu.length-1;i++) {

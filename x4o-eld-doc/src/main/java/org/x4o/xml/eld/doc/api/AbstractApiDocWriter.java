@@ -183,7 +183,7 @@ public abstract class AbstractApiDocWriter {
 			return "class "+cls.getName();
 		}
 		if (value instanceof List) {
-			StringBuffer buf = new StringBuffer(100);
+			StringBuilder buf = new StringBuilder(100);
 			buf.append("[L: ");
 			List<?> l = (List<?>)value;
 			if (l.isEmpty()) {
@@ -197,7 +197,7 @@ public abstract class AbstractApiDocWriter {
 			return buf.toString();
 		}
 		if (value instanceof Object[]) {
-			StringBuffer buf = new StringBuffer(100);
+			StringBuilder buf = new StringBuilder(100);
 			buf.append("[A: ");
 			Object[] l = (Object[])value;
 			if (l.length==0) {

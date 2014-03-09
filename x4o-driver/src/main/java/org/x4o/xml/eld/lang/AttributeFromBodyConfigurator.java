@@ -73,7 +73,7 @@ public class AttributeFromBodyConfigurator extends AbstractElementConfigurator {
 	}
 	
 	private String fetchBodyType(Element element,ElementType elementType) {
-		StringBuffer buf = new StringBuffer(300);
+		StringBuilder buf = new StringBuilder(300);
 		List<Element> childsAll = element.getAllChilderen();
 		List<Element> childs = ElementType.filterElements(childsAll, elementType);
 		for (int i=0;i<childs.size();i++) {

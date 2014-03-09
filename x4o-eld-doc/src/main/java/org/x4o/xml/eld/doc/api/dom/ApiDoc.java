@@ -347,7 +347,7 @@ public class ApiDoc {
 	 */
 	public void createDocCopyright(String owner) {
 		Calendar calendar = Calendar.getInstance();
-		StringBuffer buf = new StringBuffer(100);
+		StringBuilder buf = new StringBuilder(100);
 		buf.append("Copyright&nbsp;&#x00a9;&nbsp;");
 		buf.append(calendar.get(Calendar.YEAR));
 		buf.append("&nbsp;");

@@ -94,7 +94,7 @@ public class ElementModuleBindingHandler  extends AbstractElementBindingHandler<
 			}
 			// TODO: no language here so move to EL default on eld attribute tag
 			if (elementNamespace.getId()!=null) {
-				StringBuffer buf = new StringBuffer(30);
+				StringBuilder buf = new StringBuilder(30);
 				for (char c:elementNamespace.getId().toLowerCase().toCharArray()) {
 					if (Character.isLetter(c))	{buf.append(c);}
 					if (Character.isDigit(c))	{buf.append(c);}

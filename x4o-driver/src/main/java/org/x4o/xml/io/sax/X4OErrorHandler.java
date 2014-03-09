@@ -72,7 +72,7 @@ public class X4OErrorHandler implements ErrorHandler {
 	 * Prints the error message to string.
 	 */
 	private String printErrorString(boolean isError, SAXParseException exception) {
-		StringBuffer buf = new StringBuffer(50);
+		StringBuilder buf = new StringBuilder(50);
 		buf.append(exception.getSystemId());
 		buf.append(":");
 		buf.append(exception.getLineNumber());

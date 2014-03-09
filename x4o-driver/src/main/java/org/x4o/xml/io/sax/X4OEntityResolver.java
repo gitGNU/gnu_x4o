@@ -81,7 +81,7 @@ public class X4OEntityResolver implements EntityResolver {
 				if (ns.getSchemaResource()==null) {
 					continue;
 				}
-				StringBuffer buf = new StringBuffer(30);
+				StringBuilder buf = new StringBuilder(30);
 				buf.append(elementContext.getLanguage().getLanguageConfiguration().getLanguageResourcePathPrefix());
 				buf.append('/');
 				buf.append(elementContext.getLanguage().getLanguageName());
@@ -89,7 +89,7 @@ public class X4OEntityResolver implements EntityResolver {
 				buf.append(ns.getSchemaResource());
 				schemaResources.put( ns.getSchemaUri(), buf.toString() );
 				
-				buf = new StringBuffer(30);
+				buf = new StringBuilder(30);
 				buf.append(elementContext.getLanguage().getLanguageName());
 				buf.append(File.separatorChar);
 				buf.append(ns.getSchemaResource());

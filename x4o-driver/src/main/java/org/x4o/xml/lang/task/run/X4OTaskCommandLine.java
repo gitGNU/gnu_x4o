@@ -196,7 +196,7 @@ public class X4OTaskCommandLine {
 	}
 	
 	private String unescapeDefault(String defaultValue) {
-		StringBuffer buf = new StringBuffer(defaultValue.length()+10);
+		StringBuilder buf = new StringBuilder(defaultValue.length()+10);
 		for (char c:defaultValue.toCharArray()) {
 			if (c=='\n') {
 				buf.append("\\n");continue;

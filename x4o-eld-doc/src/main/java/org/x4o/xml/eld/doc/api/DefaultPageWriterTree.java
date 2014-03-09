@@ -69,7 +69,7 @@ public class DefaultPageWriterTree implements ApiDocPageWriter {
 			}
 		}
 		
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if (!doc.getRootNode().equals(node)) {
 			buildParentPath(node,buf);
 		}
@@ -92,7 +92,7 @@ public class DefaultPageWriterTree implements ApiDocPageWriter {
 		writer.printTagEnd(Tag.ul);
 	}
 	
-	private void buildParentPath(ApiDocNode node,StringBuffer buf) {
+	private void buildParentPath(ApiDocNode node,StringBuilder buf) {
 		if (node.getParent()==null) {
 			buf.append(ApiDocContentWriter.toSafeUri(node.getId()));
 			buf.append('/');

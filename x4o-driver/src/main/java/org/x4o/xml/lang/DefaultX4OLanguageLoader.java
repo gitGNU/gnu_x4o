@@ -267,7 +267,7 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 	}
 	
 	private class ModulesTagHandler extends DefaultHandler2 {
-		private StringBuffer buf = new StringBuffer();
+		private StringBuilder buf = new StringBuilder();
 		private String loadedFrom = null;
 		private VersionedResources versionedResources = null;
 		private List<VersionedResources> result = null;
@@ -302,7 +302,7 @@ TODO:		if (language.getLanguageConfiguration().hasX4ODebugWriter()) {
 			
 			// Get and clear text
 			String value = buf.toString();
-			buf = new StringBuffer();
+			buf = new StringBuilder();
 			
 			// Skip root and language and non versions
 			if ("modules".equals(tag)) {

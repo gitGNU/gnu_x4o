@@ -146,7 +146,7 @@ public class StringSplitConverter extends AbstractStringObjectConverter {
 			throw new ObjectConverterException(this,"Step size is wrong; "+steps.size()+" need: "+splitSize);
 		}
 		try {
-			StringBuffer buf = new StringBuffer(200);
+			StringBuilder buf = new StringBuilder(200);
 			for (int i=0;i<steps.size();i++) {
 				StringSplitConverterStep step = steps.get(i);
 				Method m = classTo.getMethod(step.getFromMethod(), new Class[] {});

@@ -64,7 +64,7 @@ public abstract class AbstractX4OLanguageTask implements X4OLanguageTask {
 		if (keys.isEmpty()) {
 			return config;
 		}
-		StringBuffer buf = new StringBuffer(100);
+		StringBuilder buf = new StringBuilder(100);
 		buf.append("Error missing value(s) for key(s) {");
 		for (int i=0;i<keys.size();i++) {
 			buf.append('"');

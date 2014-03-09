@@ -61,7 +61,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	private int indent = 0;
 	private Map<String,String> prefixMapping = null;
 	private List<String> printedMappings = null;
-	private StringBuffer startElement = null;
+	private StringBuilder startElement = null;
 	private boolean printReturn = false;
 	private String lastElement = null;
 	private Stack<String> elements = null;
@@ -248,7 +248,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 			throw new SAXException("LocalName of element is not valid in xml; '"+localName+"'");
 		}
 		autoCloseStartElement();
-		startElement = new StringBuffer(200);
+		startElement = new StringBuilder(200);
 		startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_NEWLINE));
 		for (int i = 0; i < indent; i++) {
 			startElement.append(getPropertyConfig().getPropertyString(OUTPUT_CHAR_TAB));

@@ -165,7 +165,7 @@ public class EldXsdWriterElement {
 		// this is a mess;
 		String desc = "Automatic generated schema for language: "+language.getLanguageName()+" by "+byValue;
 		int space = COMMENT_SEPERATOR.length()-desc.length()-(2*COMMENT_TEXT.length())-4;
-		StringBuffer b = new StringBuffer(COMMENT_SEPERATOR.length());
+		StringBuilder b = new StringBuilder(COMMENT_SEPERATOR.length());
 		b.append(" ");
 		b.append(COMMENT_TEXT);
 		b.append("  ");
@@ -191,7 +191,7 @@ public class EldXsdWriterElement {
 				break;
 			}
 		}
-		StringBuffer b = new StringBuffer(COMMENT_SEPERATOR.length());
+		StringBuilder b = new StringBuilder(COMMENT_SEPERATOR.length());
 		String formatLine = "\n\t%1$-20s %2$s";
 		b.append(String.format(formatLine,"Id:",module.getId()));
 		b.append(String.format(formatLine,"ProviderName:",module.getProviderName()));

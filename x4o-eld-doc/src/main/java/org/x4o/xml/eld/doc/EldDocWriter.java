@@ -274,7 +274,7 @@ public class EldDocWriter {
 	}
 	
 	private String createPageSubTitle() {
-		StringBuffer buf = new StringBuffer(100);
+		StringBuilder buf = new StringBuilder(100);
 		buf.append(language.getLanguageName());
 		buf.append(" ");// note use real space as 'html/header/title' will not always escape entities. TODO: add to html writer
 		buf.append(language.getLanguageVersion());
@@ -283,7 +283,7 @@ public class EldDocWriter {
 	}
 	
 	private String createLanguageAbout() {
-		StringBuffer buf = new StringBuffer(100);
+		StringBuilder buf = new StringBuilder(100);
 		buf.append("XML X4O Language\n");
 		buf.append(language.getLanguageName().toUpperCase());
 		buf.append("&trade;&nbsp;");
@@ -293,7 +293,7 @@ public class EldDocWriter {
 	
 	private String createLanguageCopyright() {
 		Calendar calendar = Calendar.getInstance();
-		StringBuffer buf = new StringBuffer(100);
+		StringBuilder buf = new StringBuilder(100);
 		buf.append("Copyright&nbsp;&#x00a9;&nbsp;");
 		buf.append(calendar.get(Calendar.YEAR));
 		buf.append("&nbsp;");
