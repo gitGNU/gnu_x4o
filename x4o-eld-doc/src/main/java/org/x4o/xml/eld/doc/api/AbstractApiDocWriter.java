@@ -94,13 +94,9 @@ public abstract class AbstractApiDocWriter {
 		}
 		return result;
 	}
-
-	public void printApiTableBean(ApiDocWriteEvent<ApiDocNode> event,String name,String...skipProperties) throws SAXException {
-		printApiTableBean(event, event.getEventObject().getUserData(), name, skipProperties);
-	}
 	
-	public void printApiTableBean(ApiDocWriteEvent<ApiDocNode> event,Object bean,String name,String...skipProperties) throws SAXException {
-		printApiTableBean(event.getDoc(), event.getWriter(), bean, name, skipProperties);
+	public void printApiTableBean(ApiDocWriteEvent<ApiDocNode> event,String name,String...skipProperties) throws SAXException {
+		printApiTableBean(event.getDoc(), event.getWriter(), event.getEventObject().getUserData(), name, skipProperties);
 	}
 	
 	public void printApiTableBean(ApiDoc doc,ApiDocContentWriter writer,Object bean,String name,String...skipProperties) throws SAXException {
