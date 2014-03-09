@@ -29,11 +29,11 @@ package org.x4o.xml.io;
  * @version 1.0 Mrt 31, 2012
  */
 public final class XMLConstants {
-
+	
 	/**
 	 * Lowcase xml.
 	 */
-	public static final String XML = "xml";
+	public static final String XML = javax.xml.XMLConstants.XML_NS_PREFIX; // "xml"
 	
 	/**
 	 * XML Default encoding is utf-8.
@@ -48,7 +48,7 @@ public final class XMLConstants {
 	/**
 	 * XML Namespace prefix attribute.
 	 */
-	public static final String XMLNS_ATTRIBUTE = "xmlns";
+	public static final String XMLNS_ATTRIBUTE = javax.xml.XMLConstants.XMLNS_ATTRIBUTE; // "xmlns"
 
 	/**
 	 * XML Namespace prefix seperator
@@ -58,18 +58,18 @@ public final class XMLConstants {
 	/**
 	 * XML Schema namespace URI.
 	 */
-	public static final String XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema";
+	public static final String XML_SCHEMA_NS_URI = javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI; //  "http://www.w3.org/2001/XMLSchema"
 
 	/**
 	 * XML Schema instance namespace URI.
 	 */
-	public static final String XML_SCHEMA_INSTANCE_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
+	public static final String XML_SCHEMA_INSTANCE_NS_URI = javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI; // "http://www.w3.org/2001/XMLSchema-instance"
 	
 	/**
 	 * Null or empty namespace uri.
 	 * @see <a href="http://www.w3.org/TR/REC-xml-names/#defaulting">Namespaces in XML, 5.2 Namespace Defaulting</a>
 	 */
-	public static final String NULL_NS_URI = "";
+	public static final String NULL_NS_URI = javax.xml.XMLConstants.NULL_NS_URI; // ""
 	
 	/**
 	 * (Start) Definition of DTD doctype.
@@ -246,7 +246,7 @@ public final class XMLConstants {
 		//	&#' [0-9]+ ';' | '&#x' [0-9a-fA-F]+ ';'
 	//}
 	
-	static private boolean escapeXMLValue(char c,StringBuffer result) {
+	static private boolean escapeXMLValue(char c,StringBuilder result) {
 		if (c=='<') {
 			result.append("&lt;");
 			return true;
@@ -291,7 +291,7 @@ public final class XMLConstants {
 		// Reference   ::=   	EntityRef | CharRef
 		// AttValue	   ::=   	'"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
 		int length = value.length();
-		StringBuffer result = new StringBuffer(length);
+		StringBuilder result = new StringBuilder(length);
 		for (int i=0;i<length;i++) {
 			char c = value.charAt(i);
 			if (escapeXMLValue(c,result)) {
@@ -311,7 +311,7 @@ public final class XMLConstants {
 	
 	static public String escapeCharacters(String value) {
 		int length = value.length();
-		StringBuffer result = new StringBuffer(length);
+		StringBuilder result = new StringBuilder(length);
 		for (int i=0;i<length;i++) {
 			char c = value.charAt(i);
 			if (c=='&') {
