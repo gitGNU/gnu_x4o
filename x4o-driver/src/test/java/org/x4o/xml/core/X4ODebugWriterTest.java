@@ -82,7 +82,7 @@ public class X4ODebugWriterTest extends TestCase {
 		assertTrue("Debug file does not exists.",debugFile.exists());
 		String debug = readFile(debugFile);
 		assertNotNull(debug);
-		assertFalse("no debug content",debug.isEmpty());
+		assertFalse("no debug content",debug.length()==0);
 		assertTrue("debug content to small",debug.length()>20);
 		
 		//System.out.println("=================== Reader Output ======================");
@@ -104,7 +104,7 @@ public class X4ODebugWriterTest extends TestCase {
 		assertTrue("Debug file does not exists.",debugFile.exists());
 		String debug = readFile(debugFile);
 		assertNotNull(debug);
-		assertFalse("no debug content",debug.isEmpty());
+		assertFalse("no debug content",debug.length()==0);
 		assertTrue("debug content to small",debug.length()>20);
 		
 		//System.out.println("=================== Writer Output ======================");
