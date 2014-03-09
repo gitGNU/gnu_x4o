@@ -23,26 +23,36 @@
 #
 
 # Config script
-# note: 3.0.3++ as in prev version there are some java6 classes. 
+#MVN=mvn;
 MVN=~/bin/mvn3/apache-maven-3.0.3/bin/mvn;
 MVN_ARG="clean test";
 JVMS="
   /usr/lib/jvm/java-6-openjdk-amd64/
   /usr/lib/jvm/java-7-openjdk-amd64/
-  /usr/lib/jvm/j2sdk1.6-oracle/
-  /usr/lib/jvm/j2sdk1.7-oracle/
-  /usr/lib/jvm/jdk1.5.0_22/"
-#/usr/lib/jvm/java-1.5.0-gcj-4.7/
+  /usr/lib/jvm/jdk-6-oracle-x64/
+  /usr/lib/jvm/jdk-7-oracle-x64/
+  /usr/lib/jvm/jdk1.5.0_22/
+";
+# Not working  /usr/lib/jvm/java-1.5.0-gcj-4.8-amd64/
 
 # Goto project root;
 cd `dirname $0`/../../..;
 
+# Test maven version
+MVN_VERSION=`mvn -v | grep Apache | awk '{print $3}'`;
+if [ "$MVN_VERSION" = "3.0.2" ]||[ "$MVN_VERSION" = "3.0.1" ]||[ "$MVN_VERSION" = "3.0.0" ]; then
+	echo "Need as least version 3.0.3 or higher because of java6 bytecode";
+	exit 1;
+fi;
+
 # Print meta data
 echo "Starting jvm tests";
-echo "Maven cmd: $MVN";
-echo "Maven arg: $MVN_ARG";
+echo "Maven command:  $MVN";
+echo "Maven verion:   $MVN_VERSION";
+echo "Maven argument: $MVN_ARG";
 
 # Check conditions
+JVMS_ORG=$JVMS;
 if [ "" != "$1" ]; then
   echo "Starting single jvm test;";
   JVMS=$1;
@@ -54,15 +64,25 @@ echo "";
 # Run tests per jvm
 for JVM in $JVMS; do
   JVM_KEY=`echo $JVM | sed 's/\/\|\-//g'|tr -d '.'`;
-  echo "Running in jvm: $JVM";
+  echo "";
   if [ -e $JVM ]; then
-    export JAVA_HOME=$JVM;
-    $MVN $MVN_ARG;
+    EXE_JVM=$JVM;
+    EXE_MVN_ARG=$MVN_ARG;
+    case "$JVM" in
+      *gcj*) EXE_JVM=`echo $JVMS_ORG|awk '{print $1}'`;EXE_MVN_ARG="$MVN_ARG -Djvm=$JVM"; ;;
+      *);;
+    esac
+    echo "==== Running next jvm ===";
+    echo "export JAVA_HOME=$EXE_JVM";
+    echo "$MVN $EXE_MVN_ARG";
+    echo "";
+    export JAVA_HOME=$EXE_JVM;
+    $MVN $EXE_MVN_ARG;
     RESULT=$?;
   else
     RESULT="JVM path not found";
   fi;
-  
+  echo "";
   export "JVM_RESULT""$JVM_KEY"="$RESULT";
 done;
 
@@ -71,6 +91,7 @@ echo "";
 echo "Test summary;";
 for JVM in $JVMS; do
   JVM_KEY=`echo $JVM | sed 's/\/\|\-//g'|tr -d '.'`;
+  JVM_VERSION=`$JVM/bin/java -version 2>&1 |grep "java version"|awk '{print $3}'`;
   RESULT=`eval echo \\${"JVM_RESULT""$JVM_KEY"}`;
   echo -n "Result; ";
   if [ "$RESULT" = "0" ]; then
@@ -79,7 +100,7 @@ for JVM in $JVMS; do
     echo -n "Failure";
     EXIT=1;
   fi;
-  echo " in jvm: $JVM (status:$RESULT)";
+  echo " in jvm: $JVM_VERSION \t$JVM (status:$RESULT)";
 done;
 
 echo "All done.";
