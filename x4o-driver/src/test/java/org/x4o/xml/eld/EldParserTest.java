@@ -29,7 +29,6 @@ import org.x4o.xml.io.X4OReader;
 import org.x4o.xml.io.X4OWriter;
 import org.x4o.xml.lang.DefaultX4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguage;
-import org.x4o.xml.lang.X4OLanguageLocal;
 import org.x4o.xml.lang.X4OLanguageModule;
 
 import junit.framework.TestCase;

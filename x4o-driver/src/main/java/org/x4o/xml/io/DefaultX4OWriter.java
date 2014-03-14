@@ -71,6 +71,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	public final static String SCHEMA_ROOT_URI              = PROPERTY_CONTEXT_PREFIX+"schema/root-uri";
 	public final static String DEBUG_OUTPUT_HANDLER         = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_HANDLER;
 	public final static String DEBUG_OUTPUT_STREAM          = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_STREAM;
+	public final static String DEBUG_OUTPUT_STREAM_CLOSE    = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_STREAM_CLOSE;
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,ContentWriterXml.DEFAULT_PROPERTY_CONFIG,PROPERTY_CONTEXT_PREFIX,
@@ -78,7 +79,8 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 				new PropertyConfigItem(SCHEMA_PRINT,Boolean.class,true),
 				new PropertyConfigItem(SCHEMA_ROOT_URI,String.class),
 				new PropertyConfigItem(DEBUG_OUTPUT_HANDLER,ContentWriter.class),
-				new PropertyConfigItem(DEBUG_OUTPUT_STREAM,OutputStream.class)
+				new PropertyConfigItem(DEBUG_OUTPUT_STREAM,OutputStream.class),
+				new PropertyConfigItem(DEBUG_OUTPUT_STREAM_CLOSE,Boolean.class,true)
 				);
 	}
 	
@@ -108,7 +110,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 	public void writeSession(X4OLanguageSession languageSession,OutputStream output) throws X4OConnectionException,SAXException,IOException {
 		setProperty(OUTPUT_STREAM, output);
 		addPhaseSkip(X4OPhaseLanguageWrite.WRITE_RELEASE);
-		debugStart(languageSession, DEBUG_OUTPUT_HANDLER, DEBUG_OUTPUT_STREAM);
+		debugStart(languageSession, DEBUG_OUTPUT_HANDLER, DEBUG_OUTPUT_STREAM, DEBUG_OUTPUT_STREAM_CLOSE);
 		try {
 			languageSession.getLanguage().getPhaseManager().runPhases(languageSession, X4OPhaseType.XML_WRITE);
 		} catch (X4OPhaseException e) {
@@ -161,11 +163,6 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 			debugException(languageSession, e);
 			throw new X4OConnectionException(e);
 		} finally {
-			try {
-				debugStop(languageSession);
-			} catch (Exception e1) {
-				// FIXME
-			} 
 			if (out!=null) {
 				try {
 					out.close();
@@ -173,6 +170,7 @@ public class DefaultX4OWriter<T> extends AbstractX4OWriter<T> {
 					//logger.warning(e.getMessage());
 				}
 			}
+			debugStop(languageSession);
 		}
 	}
 	

@@ -23,7 +23,10 @@
 package org.x4o.xml.lang;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.x4o.xml.el.X4OExpressionFactory;
@@ -52,6 +55,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	private String languageName = null;
 	private String languageVersion = null;
 	private X4OPhaseManager phaseManager = null;
+	private Map<String,ElementNamespace> keyedNamespaceLookup = null;
 	
 	public DefaultX4OLanguage(X4OLanguageConfiguration languageConfiguration,X4OPhaseManager phaseManager,String languageName,String languageVersion) {
 		if (languageName==null) {
@@ -62,6 +66,7 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 		}
 		logger = Logger.getLogger(DefaultX4OLanguage.class.getName());
 		elementLanguageModules = new ArrayList<X4OLanguageModule>(20);
+		keyedNamespaceLookup = new HashMap<String,ElementNamespace>(20);
 		this.languageConfiguration=languageConfiguration;
 		this.languageName=languageName;
 		this.languageVersion=languageVersion;
@@ -109,12 +114,16 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 			}
 		}
 		elementLanguageModules.add(elementLanguageModule);
+		
+		for (ElementNamespace ns:elementLanguageModule.getElementNamespaces()) {
+			keyedNamespaceLookup.put(ns.getUri(), ns);
+		}
 	}
-
+	
 	/**
 	 * @see org.x4o.xml.lang.X4OLanguage#getLanguageModules()
 	 */
-	public List<X4OLanguageModule> getLanguageModules() {
+	public Collection<X4OLanguageModule> getLanguageModules() {
 		return elementLanguageModules;
 	}
 	
@@ -255,16 +264,6 @@ public class DefaultX4OLanguage implements X4OLanguageLocal {
 	 * @see org.x4o.xml.lang.X4OLanguage#findElementNamespace(java.lang.String)
 	 */
 	public ElementNamespace findElementNamespace(String namespaceUri) {
-		
-		// TODO: refactor so no search for every tag !!
-		ElementNamespace result = null;
-		for (int i=0;i<elementLanguageModules.size();i++) {
-			X4OLanguageModule module = elementLanguageModules.get(i);
-			result = module.getElementNamespace(namespaceUri);
-			if (result!=null) {
-				return result;
-			}
-		}
-		return result;
+		return keyedNamespaceLookup.get(namespaceUri);
 	}
 }

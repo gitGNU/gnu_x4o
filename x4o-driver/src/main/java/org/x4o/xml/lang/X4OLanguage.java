@@ -22,6 +22,7 @@
  */
 package org.x4o.xml.lang;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.x4o.xml.element.Element;
@@ -103,7 +104,7 @@ public interface X4OLanguage {
 	ElementNamespace findElementNamespace(String namespaceUri);
 	
 	/**
-	 * @return Returns a list of element language modules in this defined and loaded language.
+	 * @return Returns a collection of element language modules in this defined and loaded language.
 	 */
-	List<X4OLanguageModule> getLanguageModules();
+	Collection<X4OLanguageModule> getLanguageModules();
 }

@@ -160,11 +160,11 @@ public class EldDocWriter {
 		
 		// Generic config
 		ApiDoc doc = new ApiDoc();
-		doc.setName(				propertyConfig.getPropertyStringOrValue(DOC_NAME, DEFAULT_NAME));
-		doc.setDescription(			propertyConfig.getPropertyStringOrValue(DOC_DESCRIPTION, DEFAULT_DESCRIPTION));
-		doc.setDocAbout(			propertyConfig.getPropertyStringOrValue(DOC_ABOUT, createLanguageAbout()));
-		doc.setDocCopyright(		propertyConfig.getPropertyStringOrValue(DOC_COPYRIGHT, createLanguageCopyright()));
-		doc.setDocPageSubTitle(		propertyConfig.getPropertyStringOrValue(DOC_PAGE_SUB_TITLE, createPageSubTitle()));
+		doc.setName(				propertyConfig.getPropertyString(DOC_NAME, DEFAULT_NAME));
+		doc.setDescription(			propertyConfig.getPropertyString(DOC_DESCRIPTION, DEFAULT_DESCRIPTION));
+		doc.setDocAbout(			propertyConfig.getPropertyString(DOC_ABOUT, createLanguageAbout()));
+		doc.setDocCopyright(		propertyConfig.getPropertyString(DOC_COPYRIGHT, createLanguageCopyright()));
+		doc.setDocPageSubTitle(		propertyConfig.getPropertyString(DOC_PAGE_SUB_TITLE, createPageSubTitle()));
 		doc.setMetaStyleSheetThema(	propertyConfig.getPropertyString(META_STYLESHEET_THEMA));
 		doc.setMetaStyleSheet(		propertyConfig.getPropertyFile(META_STYLESHEET));
 		List<String> keywords =		propertyConfig.getPropertyList(META_KEYWORDS);

@@ -157,7 +157,7 @@ public class EldXsdWriterElement {
 		//xsdWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		xsdWriter.comment(COMMENT_SEPERATOR);
 
-		String byValue = propertyConfig.getPropertyStringOrValue(EldXsdWriter.PROLOG_GENERATED_BY, EldXsdWriter.class.getSimpleName());
+		String byValue = propertyConfig.getPropertyString(EldXsdWriter.PROLOG_GENERATED_BY, EldXsdWriter.class.getSimpleName());
 		if (!byValue.endsWith(".")) {
 			byValue += '.';
 		}

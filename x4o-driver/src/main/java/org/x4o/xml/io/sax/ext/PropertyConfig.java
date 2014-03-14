@@ -299,7 +299,7 @@ public final class PropertyConfig implements Cloneable {
 		}
 		throw new IllegalStateException("Wrong value type: "+value.getClass()+" for key: "+key);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public final List<String> getPropertyList(String key) {
 		Object value = getProperty(key);
@@ -335,11 +335,10 @@ public final class PropertyConfig implements Cloneable {
 		throw new IllegalStateException("Wrong value type: "+value.getClass()+" for key: "+key);
 	}
 	
-	// TODO: better name this
-	public final String getPropertyStringOrValue(String key,String value) {
+	public final String getPropertyString(String key,String defaultValue) {
 		String propertyValue = getPropertyString(key);
 		if (propertyValue==null) {
-			return value;
+			return defaultValue;
 		} else {
 			return propertyValue;
 		}
@@ -403,9 +402,7 @@ public final class PropertyConfig implements Cloneable {
 				setProperty(key, result);
 			}
 			if (listValues.length!=2) {
-				System.err.println("Could not parse map value: "+value);
-				System.exit(1);
-				return;
+				throw new IllegalArgumentException("Coult not parse map value: '"+value+"' parsed length: "+listValues.length+" needs to be 2.");
 			}
 			String mKey = listValues[0];
 			String mValue = listValues[1];

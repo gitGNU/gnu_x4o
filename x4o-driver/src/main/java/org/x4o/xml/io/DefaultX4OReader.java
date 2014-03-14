@@ -75,6 +75,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 	public final static String VALIDATION_INPUT_SCHEMA      = PROPERTY_CONTEXT_PREFIX + "validation/input-schema";
 	public final static String DEBUG_OUTPUT_HANDLER         = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_HANDLER;
 	public final static String DEBUG_OUTPUT_STREAM          = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_STREAM;
+	public final static String DEBUG_OUTPUT_STREAM_CLOSE    = PROPERTY_CONTEXT_PREFIX + ABSTRACT_DEBUG_OUTPUT_STREAM_CLOSE;
 	
 	static {
 		DEFAULT_PROPERTY_CONFIG = new PropertyConfig(true,null,PROPERTY_CONTEXT_PREFIX,
@@ -92,7 +93,8 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 				new PropertyConfigItem(VALIDATION_INPUT_DOC,Boolean.class,false),
 				new PropertyConfigItem(VALIDATION_INPUT_SCHEMA,Boolean.class,false),
 				new PropertyConfigItem(DEBUG_OUTPUT_HANDLER,ContentWriter.class),
-				new PropertyConfigItem(DEBUG_OUTPUT_STREAM,OutputStream.class)
+				new PropertyConfigItem(DEBUG_OUTPUT_STREAM,OutputStream.class),
+				new PropertyConfigItem(DEBUG_OUTPUT_STREAM_CLOSE,Boolean.class,true)
 				);
 	}
 	
@@ -150,7 +152,7 @@ public class DefaultX4OReader<T> extends AbstractX4OReader<T> {
 		}
 		
 		// init debug
-		debugStart(languageSession, DEBUG_OUTPUT_HANDLER, DEBUG_OUTPUT_STREAM);
+		debugStart(languageSession, DEBUG_OUTPUT_HANDLER, DEBUG_OUTPUT_STREAM, DEBUG_OUTPUT_STREAM_CLOSE);
 		
 		try {
 			// Run document parsing

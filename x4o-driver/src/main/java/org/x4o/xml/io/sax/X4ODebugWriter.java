@@ -41,7 +41,7 @@ import org.x4o.xml.element.ElementException;
 import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
-import org.x4o.xml.io.AbstractX4OConnection;
+import org.x4o.xml.io.X4OConnection;
 import org.x4o.xml.io.sax.ext.ContentWriter;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderResult;
@@ -130,7 +130,7 @@ public class X4ODebugWriter {
 		return buf.toString();
 	}
 	
-	public void debugConnectionStart(X4OLanguageSession languageSession,AbstractX4OConnection ec) throws SAXException {
+	public void debugConnectionStart(X4OLanguageSession languageSession,X4OConnection ec) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "language", "", "", languageSession.getLanguage().getLanguageName());
 		atts.addAttribute ("", "languageVersion", "", "", languageSession.getLanguage().getLanguageVersion());
