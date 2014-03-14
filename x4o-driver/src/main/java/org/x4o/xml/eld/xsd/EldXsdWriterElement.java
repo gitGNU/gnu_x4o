@@ -58,9 +58,6 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class EldXsdWriterElement {
 	
-	
-	static public final String SCHEMA_URI = XMLConstants.XML_SCHEMA_NS_URI;
-
 	private PropertyConfig propertyConfig;
 	protected X4OLanguage language = null;
 	protected ContentWriterXsd xsdWriter = null;
@@ -155,7 +152,7 @@ public class EldXsdWriterElement {
 			return;
 		}
 		//xsdWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
-		xsdWriter.comment(COMMENT_SEPERATOR);
+		xsdWriter.printComment(COMMENT_SEPERATOR);
 
 		String byValue = propertyConfig.getPropertyString(EldXsdWriter.PROLOG_GENERATED_BY, EldXsdWriter.class.getSimpleName());
 		if (!byValue.endsWith(".")) {
@@ -175,8 +172,8 @@ public class EldXsdWriterElement {
 		}
 		b.append(COMMENT_TEXT);
 		b.append(" ");
-		xsdWriter.comment(b.toString());
-		xsdWriter.comment(COMMENT_SEPERATOR);
+		xsdWriter.printComment(b.toString());
+		xsdWriter.printComment(COMMENT_SEPERATOR);
 	}
 	
 	private void prologWriteProvider(ElementNamespace ns) throws SAXException {
@@ -202,7 +199,7 @@ public class EldXsdWriterElement {
 		b.append(String.format(formatLine,"Created on:",new Date()));
 		b.append("\n");
 		
-		xsdWriter.comment(b.toString());
+		xsdWriter.printComment(b.toString());
 	}
 	
 	public void startSchema(ElementNamespace ns) throws SAXException {
@@ -212,10 +209,9 @@ public class EldXsdWriterElement {
 		prologWriteGenerator();
 		prologWriteProvider(ns);
 		
-		xsdWriter.startPrefixMapping("", SCHEMA_URI);
 		for (String uri:namespaces.keySet()) {
 			String prefix = namespaces.get(uri);
-			xsdWriter.startPrefixMapping(prefix, uri);
+			xsdWriter.getContentWriterWrapped().startPrefixMapping(prefix, uri);
 		}
 		
 		AttributesImpl atts = new AttributesImpl();
@@ -223,7 +219,7 @@ public class EldXsdWriterElement {
 		atts.addAttribute ("", "elementFormDefault", "", "", "qualified");
 		atts.addAttribute ("", "attributeFormDefault", "", "", "unqualified");
 		atts.addAttribute ("", "targetNamespace", "", "", ns.getUri());
-		xsdWriter.startElement (SCHEMA_URI, "schema", "", atts);
+		xsdWriter.printTagStart(Tag.schema, atts);
 		
 		for (String uri:namespaces.keySet()) {
 			if (ns.getUri().equals(uri)) {
@@ -237,8 +233,8 @@ public class EldXsdWriterElement {
 	}
 	
 	public void endSchema() throws SAXException {
-		xsdWriter.endElement (SCHEMA_URI, "schema" , "");
-		xsdWriter.ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
+		xsdWriter.printTagEnd(Tag.schema);
+		xsdWriter.getContentWriterWrapped().ignorableWhitespace(XMLConstants.CHAR_NEWLINE);
 		xsdWriter.endDocument();
 	}
 	
@@ -256,13 +252,13 @@ public class EldXsdWriterElement {
 		AttributesImpl atts = new AttributesImpl();
 		if (nsWrite.getLanguageRoot()!=null && nsWrite.getLanguageRoot()) {
 			atts.addAttribute ("", "name", "", "", ec.getId());
-			xsdWriter.startElement (SCHEMA_URI, "element", "", atts);	// Only in the language root xsd there is an element.
+			xsdWriter.printTagStart(Tag.element, atts);// Only in the language root xsd there is an element.	
 			
 			atts = new AttributesImpl();
-			xsdWriter.startElement (SCHEMA_URI, "complexType", "", atts);
+			xsdWriter.printTagStart(Tag.complexType, atts);
 		} else {
 			atts.addAttribute ("", "name", "", "", ec.getId()+"Type");
-			xsdWriter.startElement (SCHEMA_URI, "complexType", "", atts);
+			xsdWriter.printTagStart(Tag.complexType, atts);
 		}
 		
 		if (ec.getSchemaContentBase()!=null) {
@@ -271,27 +267,27 @@ public class EldXsdWriterElement {
 				if (ec.getSchemaContentMixed()!=null && ec.getSchemaContentMixed()) {
 					atts.addAttribute ("", "mixed", "", "", "true");
 				}
-				xsdWriter.startElement (SCHEMA_URI, "complexContent", "", atts);
+				xsdWriter.printTagStart(Tag.complexContent, atts);
 			} else {
-				xsdWriter.startElement (SCHEMA_URI, "simpleContent", "", atts);
+				xsdWriter.printTagStart(Tag.simpleContent, atts);
 			}
 			atts = new AttributesImpl();
 			atts.addAttribute ("", "base", "", "", ec.getSchemaContentBase());
-			xsdWriter.startElement (SCHEMA_URI, "extension", "", atts);
+			xsdWriter.printTagStart(Tag.extension, atts);
 		}
 		
 		if (ec.getSchemaContentBase()==null) {
 			atts = new AttributesImpl();
 			atts.addAttribute ("", "minOccurs", "", "", "0"); // TODO: make unordered elements
 			atts.addAttribute ("", "maxOccurs", "", "", "unbounded");
-			xsdWriter.startElement (SCHEMA_URI, "choice", "", atts);
+			xsdWriter.printTagStart(Tag.choise, atts);
 			
 			for (X4OLanguageModule mod:language.getLanguageModules()) {
 				for (ElementNamespace ns:mod.getElementNamespaces()) {
 					writeElementClassNamespaces(ec,nsWrite,ns);
 				}
 			}
-			xsdWriter.endElement(SCHEMA_URI, "choice", "");
+			xsdWriter.printTagEnd(Tag.choise);
 		}
 		
 		List<String> attrNames = new ArrayList<String>(30);
@@ -316,7 +312,7 @@ public class EldXsdWriterElement {
 		
 		if (ec.getAutoAttributes()!=null && ec.getAutoAttributes()==false) {
 			// oke, reverse this if and rm whitespace.
-			xsdWriter.ignorableWhitespace(' ');
+			xsdWriter.getContentWriterWrapped().ignorableWhitespace(' ');
 			
 		} else {
 			
@@ -354,27 +350,25 @@ public class EldXsdWriterElement {
 						} else {
 							atts.addAttribute ("", "type", "", "", "string");
 						}
-						xsdWriter.startElement (SCHEMA_URI, "attribute", "", atts);
-						xsdWriter.endElement(SCHEMA_URI, "attribute", "");	
+						xsdWriter.printTagStartEnd(Tag.attribute, atts);
 					}
 				}
 			} else {
 				atts = new AttributesImpl();
-				xsdWriter.startElement (SCHEMA_URI, "anyAttribute", "", atts);
-				xsdWriter.endElement(SCHEMA_URI, "anyAttribute", "");
+				xsdWriter.printTagStartEnd(Tag.anyAttribute, atts);
 			}
 		}
 		if (ec.getSchemaContentBase()!=null) {
-			xsdWriter.endElement(SCHEMA_URI, "extension", "");
+			xsdWriter.printTagEnd(Tag.extension);
 			if (ec.getSchemaContentComplex()!=null && ec.getSchemaContentComplex()) {
-				xsdWriter.endElement(SCHEMA_URI, "complexContent", "");
+				xsdWriter.printTagEnd(Tag.complexContent);
 			} else {
-				xsdWriter.endElement(SCHEMA_URI, "simpleContent", "");
+				xsdWriter.printTagEnd(Tag.simpleContent);
 			}
 		}
-		xsdWriter.endElement(SCHEMA_URI, "complexType", "");
+		xsdWriter.printTagEnd(Tag.complexType);
 		if (nsWrite.getLanguageRoot()!=null && nsWrite.getLanguageRoot()) {
-			xsdWriter.endElement(SCHEMA_URI, "element", "");
+			xsdWriter.printTagEnd(Tag.element);
 		}
 	}
 	
@@ -426,8 +420,7 @@ public class EldXsdWriterElement {
 					atts.addAttribute ("", "name", "", "", refElement);
 					atts.addAttribute ("", "type", "", "", prefix+":"+refElement+"Type");
 				}
-				xsdWriter.startElement (SCHEMA_URI, "element", "", atts);
-				xsdWriter.endElement (SCHEMA_URI, "element", "");
+				xsdWriter.printTagStartEnd(Tag.element,atts);
 			}
 		}
 	}
@@ -440,9 +433,9 @@ public class EldXsdWriterElement {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "name", "", "", ec.getId());
 		atts.addAttribute ("", "type", "", "", "this:"+ec.getId()+"Type");
-		xsdWriter.startElement(SCHEMA_URI, "element", "", atts);
+		xsdWriter.printTagStart(Tag.element,atts);
 		writeElementMetaBase(ec);
-		xsdWriter.endElement(SCHEMA_URI, "element", "");
+		xsdWriter.printTagEnd(Tag.element);
 	}
 	
 	private void writeElementAttribute(ElementMetaBase base,AttributesImpl atts) throws SAXException {

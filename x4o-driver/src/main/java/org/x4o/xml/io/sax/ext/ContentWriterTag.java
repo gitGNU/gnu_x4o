@@ -31,19 +31,27 @@ import org.xml.sax.SAXException;
  * @author Willem Cazander
  * @version 1.0 May 3, 2013
  */
-public interface ContentWriterTag<T extends Enum<?>> extends ContentWriter {
+public interface ContentWriterTag<TAG extends Enum<?>> {
 	
 	String getTagNamespaceUri();
 	
-	void printTagStartEnd(T tag) throws SAXException;
+	void startDocument() throws SAXException;
 	
-	void printTagStartEnd(T tag,Attributes atts) throws SAXException;
+	void endDocument() throws SAXException;
 	
-	void printTagStart(T tag) throws SAXException;
+	void printTagStartEnd(TAG tag) throws SAXException;
 	
-	void printTagStart(T tag,Attributes atts) throws SAXException;
+	void printTagStartEnd(TAG tag,Attributes atts) throws SAXException;
 	
-	void printTagEnd(T tag) throws SAXException;
+	void printTagStart(TAG tag) throws SAXException;
 	
-	void printTagCharacters(T tag,String text) throws SAXException;
+	void printTagStart(TAG tag,Attributes atts) throws SAXException;
+	
+	void printTagEnd(TAG tag) throws SAXException;
+	
+	void printTagCharacters(TAG tag,String text) throws SAXException;
+	
+	void printCharacters(String text) throws SAXException;
+	
+	void printComment(String text) throws SAXException;
 }

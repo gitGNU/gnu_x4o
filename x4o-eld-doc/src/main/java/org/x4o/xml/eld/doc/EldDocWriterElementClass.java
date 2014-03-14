@@ -131,14 +131,14 @@ public class EldDocWriterElementClass extends AbstractApiDocWriter {
 			writer.printTagCharacters(Tag.dt,"All Element Parents:");
 			writer.printTagStart(Tag.dd);
 				if (parents.isEmpty()) {
-					writer.characters("No parent.");
+					writer.printCharacters("No parent.");
 				}
 				for (int i=0;i<parents.size();i++) {
 					TreeNode n = parents.get(i);
 					String uri = toElementUri(pathPrefix, n.module, n.namespace, n.elementClass);
 					writer.printHref(uri, n.namespace.getId()+":"+n.elementClass.getId());
 					if (i<parents.size()-1) {
-						writer.characters(",&nbsp;");
+						writer.printCharacters(",&nbsp;");
 					}
 				}
 			writer.printTagEnd(Tag.dd);
@@ -149,14 +149,14 @@ public class EldDocWriterElementClass extends AbstractApiDocWriter {
 			writer.printTagCharacters(Tag.dt,"All Element Childeren:");
 			writer.printTagStart(Tag.dd);
 				if (childs.isEmpty()) {
-					writer.characters("No childeren.");
+					writer.printCharacters("No childeren.");
 				}
 				for (int i=0;i<childs.size();i++) {
 					TreeNode n = childs.get(i);
 					String uri = toElementUri(pathPrefix, n.module, n.namespace, n.elementClass);
 					writer.printHref(uri, n.namespace.getId()+":"+n.elementClass.getId());
 					if (i<childs.size()-1) {
-						writer.characters(",&nbsp;");
+						writer.printCharacters(",&nbsp;");
 					}
 				}
 			writer.printTagEnd(Tag.dd);

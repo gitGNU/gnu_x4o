@@ -55,7 +55,6 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class AbstractContentWriterHandler implements ContentHandler { 
 	
-	protected final Attributes EMPTY_ATTRIBUTES = new AttributesImpl();
 	private final PropertyConfig propertyConfig;
 	private Writer out = null;
 	private int indent = 0;
@@ -65,7 +64,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 	private boolean printReturn = false;
 	private String lastElement = null;
 	private Stack<String> elements = null;
-
+	
 	private final static String PROPERTY_CONTEXT_PREFIX = PropertyConfig.X4O_PROPERTIES_PREFIX+PropertyConfig.X4O_PROPERTIES_WRITER_XML;
 	public final static PropertyConfig DEFAULT_PROPERTY_CONFIG;
 	public final static String OUTPUT_ENCODING            = PROPERTY_CONTEXT_PREFIX+"output/encoding";
@@ -90,7 +89,7 @@ public class AbstractContentWriterHandler implements ContentHandler {
 				new PropertyConfigItem(OUTPUT_ENCODING,            String.class,    XMLConstants.XML_DEFAULT_ENCODING),
 				new PropertyConfigItem(OUTPUT_CHAR_TAB,            String.class,    XMLConstants.CHAR_TAB+""),
 				new PropertyConfigItem(OUTPUT_CHAR_NEWLINE,        String.class,    XMLConstants.CHAR_NEWLINE+""),
-				new PropertyConfigItem(OUTPUT_CHAR_NULL,           String.class,    "null"), // TODO: or "" ?? (or skip)
+				new PropertyConfigItem(OUTPUT_CHAR_NULL,           String.class,    "NULL"),
 				new PropertyConfigItem(OUTPUT_COMMENT_ENABLE,      Boolean.class,   true),
 				new PropertyConfigItem(OUTPUT_COMMENT_AUTO_SPACE,  Boolean.class,   true),
 				new PropertyConfigItem(OUTPUT_LINE_BREAK_WIDTH,    Integer.class,   -1),

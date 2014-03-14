@@ -46,13 +46,38 @@ public interface ContentWriter extends ContentHandler,LexicalHandler {
 	 */
 	void startElementEnd(String uri, String localName, String name,Attributes atts) throws SAXException;
 	
+	/**
+	 * Writes a String as xml comment.
+	 * @param text	The text to have embedded as comment in xml.
+	 * @throws SAXException	On error.
+	 */
 	void comment(String text) throws SAXException;
 	
+	/**
+	 * Writes a whitespace String to the body.
+	 * @param text	The String of whitespace to write.
+	 * @throws SAXException	On error.
+	 */
 	void ignorableWhitespace(String text) throws SAXException;
 	
+	/**
+	 * Writes a whitespace character to the body.
+	 * @param c	The character to write.
+	 * @throws SAXException On error;
+	 */
 	void ignorableWhitespace(char c) throws SAXException;
-		
+	
+	/**
+	 * Writes a String in the body.
+	 * @param text	The text to write.
+	 * @throws SAXException	On error.
+	 */
 	void characters(String text) throws SAXException;
 	
+	/**
+	 * Writes a single character in the body body.
+	 * @param c	The character to write.
+	 * @throws SAXException	On error.
+	 */
 	void characters(char c) throws SAXException;
 }

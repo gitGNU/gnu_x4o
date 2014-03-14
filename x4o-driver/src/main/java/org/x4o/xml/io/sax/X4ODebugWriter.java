@@ -61,7 +61,6 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class X4ODebugWriter {
 	
-	
 	static public final String DEBUG_URI = "http://language.x4o.org/xml/ns/debug-output"; 
 	
 	protected ContentWriter contentWriter = null;
@@ -72,6 +71,12 @@ public class X4ODebugWriter {
 	
 	public ContentWriter getContentWriter() {
 		return contentWriter;
+	}
+	
+	enum X4ODebugTag {
+		execute222Phase,
+		testTasg,
+		stekel
 	}
 	
 	public X4OPhaseListener createDebugX4OPhaseListener() {
@@ -94,7 +99,7 @@ public class X4ODebugWriter {
 				if (elementLanguage!=null) {
 					atts.addAttribute("", "language","","", elementLanguage.getLanguage().getLanguageName());
 				}
-				contentWriter.startElement (DEBUG_URI, "executePhase", "", atts);
+				contentWriter.startElement (DEBUG_URI, X4ODebugTag.execute222Phase.name(), "", atts);
 			} catch (SAXException e) {
 				throw new X4OPhaseException(phase,e);
 			}
@@ -110,7 +115,7 @@ public class X4ODebugWriter {
 				contentWriter.startElement (DEBUG_URI, "executePhaseDone", "", atts);
 				contentWriter.endElement (DEBUG_URI, "executePhaseDone" , "");
 				
-				contentWriter.endElement (DEBUG_URI, "executePhase" , "");
+				contentWriter.endElement (DEBUG_URI, X4ODebugTag.execute222Phase.name() , "");
 			} catch (SAXException e) {
 				throw new X4OPhaseException(phase,e);
 			}

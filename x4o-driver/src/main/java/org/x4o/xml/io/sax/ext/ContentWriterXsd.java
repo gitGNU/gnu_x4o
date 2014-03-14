@@ -34,22 +34,21 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Willem Cazander
  * @version 1.0 May 3, 2013
  */
-public class ContentWriterXsd extends ContentWriterXmlTag<ContentWriterXsd.Tag> {
+public class ContentWriterXsd extends ContentWriterTagWrapper<ContentWriterXsd.Tag,ContentWriterXml> {
 	
 	public ContentWriterXsd(Writer out,String encoding) {
-		super(out,encoding);
+		super(new ContentWriterXml(out, encoding),XMLConstants.XML_SCHEMA_NS_URI, XMLConstants.NULL_NS_URI);
 	}
 	
-	public String getTagNamespaceUri() {
-		return XMLConstants.XML_SCHEMA_NS_URI;
+	public PropertyConfig getPropertyConfig() {
+		return getContentWriterWrapped().getPropertyConfig();
 	}
 	
 	public void printXsdImport(String namespace,String schemaLocation) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "namespace", "", "", namespace);
 		atts.addAttribute ("", "schemaLocation", "", "", schemaLocation);
-		startElement (getTagNamespaceUri(), "import", "", atts);
-		endElement (getTagNamespaceUri(), "import", ""); // import is keyword
+		printTagStartEnd(Tag._import, atts);
 	}
 	
 	public void printXsdDocumentation(String description) throws SAXException {
@@ -60,8 +59,8 @@ public class ContentWriterXsd extends ContentWriterXmlTag<ContentWriterXsd.Tag> 
 			AttributesImpl atts = new AttributesImpl();
 			atts.addAttribute ("", "xml:lang", "", "", "en");
 			printTagStart(Tag.documentation,atts);
-				characters(description);
-			printTagEnd(Tag.documentation);	
+				printCharacters(description);
+			printTagEnd(Tag.documentation);
 		printTagEnd(Tag.annotation);
 	}
 	
@@ -70,16 +69,15 @@ public class ContentWriterXsd extends ContentWriterXmlTag<ContentWriterXsd.Tag> 
 		atts.addAttribute ("", "name", "", "", name);
 		atts.addAttribute ("", "type", "", "", type);
 		printTagStart(Tag.attribute,atts);
-		printXsdDocumentation(description);
+			printXsdDocumentation(description);
 		printTagEnd(Tag.attribute);
 	}
 	
 	public enum Tag {
 		all,annotation,any,anyAttribute,appinfo,attribute,attributeGroup,
 		choise,complexContent,complexType,documentation,element,extension,
-		field,group,/*_import,*/include,key,keyref,list,notation,
+		field,group,_import,include,key,keyref,list,notation,
 		redefine,restriction,schema,selector,sequence,
 		simpleContent,simpleType,unoin,unique
 	}
-	
 }

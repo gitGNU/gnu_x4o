@@ -61,8 +61,8 @@ public class EldDocXTreePageWriter extends DefaultPageWriterTree implements ApiD
 		
 		writer.printTagStart(Tag.ul);
 		writer.printTagStart(Tag.li,"",null,"circle");
-		writer.characters(node.namespace.getId());
-		writer.characters(":");
+		writer.printCharacters(node.namespace.getId());
+		writer.printCharacters(":");
 		writer.printHref(href, node.elementClass.getId(), node.elementClass.getId(), "strong");
 		writer.printTagEnd(Tag.li);
 		

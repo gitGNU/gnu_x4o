@@ -50,7 +50,7 @@ public class DefaultPageWriterHelp implements ApiDocPageWriter {
 		writer.printTagStart(Tag.div,"header");
 			writer.printTagCharacters(Tag.h1, "How This API Document Is Organized", "title");
 			writer.printTagStart(Tag.div,"subTitle");
-				writer.characters("This ApiDoc document has pages corresponding to the items in the navigation bar, described as follows.");
+				writer.printCharacters("This ApiDoc document has pages corresponding to the items in the navigation bar, described as follows.");
 			writer.printTagEnd(Tag.div);
 		writer.printTagEnd(Tag.div);
 		
@@ -59,14 +59,14 @@ public class DefaultPageWriterHelp implements ApiDocPageWriter {
 			for (ApiDocConcept concept:doc.getConcepts()) {
 				writer.printTagCharacters(Tag.h2, concept.getName());
 				writer.printTagStart(Tag.p);
-					writer.characters(concept.getDescriptionHelp());
+					writer.printCharacters(concept.getDescriptionHelp());
 				writer.printTagEnd(Tag.p);
 				writer.docPageBlockNext();
 			}
 			for (ApiDocPage docPage:doc.getDocPages()) {
 				writer.printTagCharacters(Tag.h2, docPage.getName());
 				writer.printTagStart(Tag.p);
-					writer.characters(docPage.getDescription());
+					writer.printCharacters(docPage.getDescription());
 				writer.printTagEnd(Tag.p);
 				writer.docPageBlockNext();
 			}

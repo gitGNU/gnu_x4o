@@ -25,7 +25,10 @@ package	org.x4o.html;
 import java.io.Writer;
 import java.util.Calendar;
 
-import org.x4o.xml.io.sax.ext.ContentWriterXmlTag;
+import org.x4o.xml.io.XMLConstants;
+import org.x4o.xml.io.sax.ext.ContentWriterTagWrapper;
+import org.x4o.xml.io.sax.ext.ContentWriterXml;
+import org.x4o.xml.io.sax.ext.PropertyConfig;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -35,14 +38,18 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Willem Cazander
  * @version 1.0 Apr 30, 2013
  */
-public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag> {
+public class ContentWriterHtml extends ContentWriterTagWrapper<ContentWriterHtml.Tag,ContentWriterXml> {
 	
 	public ContentWriterHtml(Writer out,String encoding) {
-		super(out,encoding);
+		super(new ContentWriterXml(out, encoding),"", XMLConstants.NULL_NS_URI);
+	}
+	
+	public PropertyConfig getPropertyConfig() {
+		return getContentWriterWrapped().getPropertyConfig();
 	}
 	
 	public void printDocType(DocType doc) throws SAXException {
-		startDTD(doc.getName(), doc.getPublicId(), doc.getSystemId());
+		getContentWriterWrapped().startDTD(doc.getName(), doc.getPublicId(), doc.getSystemId());
 	}
 	
 	public void printHtmlStart(String language) throws SAXException {
@@ -70,15 +77,15 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "http-equiv", "", "", "Content-Type");
 		atts.addAttribute ("", "content", "", "", "text/html");
-		atts.addAttribute ("", "charset", "", "", getPropertyConfig().getPropertyString(OUTPUT_ENCODING));
-		startElementEnd("", "meta", "", atts);
+		atts.addAttribute ("", "charset", "", "", getPropertyConfig().getPropertyString(ContentWriterXml.OUTPUT_ENCODING));
+		printTagStartEnd(Tag.meta, atts);
 	}
 	
 	public void printHeadMeta(String name,String content) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "name", "", "", name);
 		atts.addAttribute ("", "content", "", "", content);
-		startElementEnd("", "meta", "", atts);
+		printTagStartEnd(Tag.meta, atts);
 	}
 	
 	public void printHeadLinkCss(String cssUrl) throws SAXException {
@@ -87,14 +94,14 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 		atts.addAttribute ("", "type", "", "", "text/css");
 		atts.addAttribute ("", "title", "", "", "Style");
 		atts.addAttribute ("", "href", "", "", cssUrl);
-		startElementEnd("", "link", "", atts);
+		printTagStartEnd(Tag.link, atts);
 	}
 	
 	public void printScriptInline(String script) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "type", "", "", "text/javascript");
 		printTagStart(Tag.script,atts);
-		comment(script);
+		printComment(script);
 		printTagEnd(Tag.script);
 	}
 	
@@ -107,7 +114,7 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 			text = "JavaScript is disabled on your browser.";
 		}
 		printTagStart(Tag.noscript);
-			printTagStart(Tag.div);characters(text);printTagEnd(Tag.div);
+			printTagStart(Tag.div);printCharacters(text);printTagEnd(Tag.div);
 		printTagEnd(Tag.noscript);
 	}
 
@@ -115,7 +122,7 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "name", "", "", name);
 		printTagStart(Tag.a,atts);
-		comment(" ");
+		printComment(" ");
 		printTagEnd(Tag.a);
 	}
 	
@@ -124,7 +131,7 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 		atts.addAttribute ("", "href", "", "", href);
 		atts.addAttribute ("", "target", "", "", target);
 		printTagStart(Tag.a,atts);
-		characters(title);
+		printCharacters(title);
 		printTagEnd(Tag.a);
 	}
 	
@@ -150,7 +157,7 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 			}
 			printTagStart(Tag.span,atts);
 		}
-		characters(text);
+		printCharacters(text);
 		if (spanClass!=null) {
 			printTagEnd(Tag.span);
 		}
@@ -166,7 +173,7 @@ public class ContentWriterHtml extends ContentWriterXmlTag<ContentWriterHtml.Tag
 		if (text==null) {
 			text = " ";
 		}
-		characters(text);
+		printCharacters(text);
 		printTagEnd(tag);
 	}
 	

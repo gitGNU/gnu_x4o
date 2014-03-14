@@ -80,8 +80,8 @@ public class DefaultPageWriterTree implements ApiDocPageWriter {
 		writer.printTagStart(Tag.ul);
 		writer.printTagStart(Tag.li,"",null,"circle");
 		if (node.getParent()!=null) {
-			writer.characters(node.getParent().getId());
-			writer.characters(":");
+			writer.printCharacters(node.getParent().getId());
+			writer.printCharacters(":");
 		}
 		writer.printHref(href, node.getName(), node.getName(), "strong");
 		writer.printTagEnd(Tag.li);

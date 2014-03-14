@@ -149,7 +149,7 @@ public abstract class AbstractApiDocWriter {
 				writer.docTableRowLastStart(n, null);
 				String c = printValue(doc,writer,value);
 				if (c!=null) {
-					writer.characters(c);
+					writer.printCharacters(c);
 				}
 				writer.docTableRowLastEnd();
 			}
