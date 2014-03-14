@@ -42,7 +42,9 @@ import org.x4o.xml.element.ElementInterface;
 import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.element.ElementNamespaceInstanceProvider;
 import org.x4o.xml.io.X4OConnection;
+import org.x4o.xml.io.XMLConstants;
 import org.x4o.xml.io.sax.ext.ContentWriter;
+import org.x4o.xml.io.sax.ext.ContentWriterTagWrapper;
 import org.x4o.xml.lang.X4OLanguageModule;
 import org.x4o.xml.lang.X4OLanguageModuleLoaderResult;
 import org.x4o.xml.lang.X4OLanguageSession;
@@ -63,20 +65,74 @@ public class X4ODebugWriter {
 	
 	static public final String DEBUG_URI = "http://language.x4o.org/xml/ns/debug-output"; 
 	
-	protected ContentWriter contentWriter = null;
+	protected ContentWriterTagWrapper<Tag,ContentWriter> contentWriter = null;
 	
 	public X4ODebugWriter(ContentWriter debugWriter) {
-		this.contentWriter=debugWriter;
+		this.contentWriter=new ContentWriterTagWrapper<Tag,ContentWriter>(debugWriter,DEBUG_URI,XMLConstants.NULL_NS_URI);
 	}	
 	
 	public ContentWriter getContentWriter() {
-		return contentWriter;
+		return contentWriter.getContentWriterWrapped();
 	}
 	
-	enum X4ODebugTag {
-		execute222Phase,
-		testTasg,
-		stekel
+	// TODO: rename most debug tags
+	enum Tag {
+		executePhase,
+		executePhaseDone,
+		
+		X4OConnection,
+		X4OLanguageSession,
+		X4OLanguageSessionSkipPhase,
+		X4OConnectionProperties,
+		X4OConnectionProperty,
+		
+		X4OLanguageDefaultClasses,
+		X4OLanguageDefaultClass,
+		
+		phaseOrder,
+		phase,
+		X4OPhaseListener,
+		X4OPhaseDependency,
+		
+		ElementLanguageModules,
+		ElementLanguageModule,
+		ElementLanguageModuleResult,
+		elementInterface,
+		
+		elementNamespace,
+		elementNamespaceAttribute,
+		nextAttribute,
+		ElementNamespaceInstanceProvider,
+		
+		elementObject,
+		element,
+		
+		elementClassAttribute,
+		attributeAlias,
+		
+		SAXConfig,
+		SAXConfigProperty,
+		message,
+		
+		runElementConfigurator,
+		doBind,
+		
+		elementClass,
+		elementSkipPhase,
+		
+		elementClassBase,
+		elementConfigurator,
+		elementConfiguratorGlobal,
+		
+		
+		objectConverter,
+		
+		elementBindingHandler,
+		elementBindingHandlerChildClass,
+		
+		printElementTree,
+		
+		end
 	}
 	
 	public X4OPhaseListener createDebugX4OPhaseListener() {
@@ -84,7 +140,6 @@ public class X4ODebugWriter {
 	}
 	
 	class DebugX4OPhaseListener implements X4OPhaseListener {
-
 		long startTime = 0;
 		
 		/**
@@ -99,7 +154,7 @@ public class X4ODebugWriter {
 				if (elementLanguage!=null) {
 					atts.addAttribute("", "language","","", elementLanguage.getLanguage().getLanguageName());
 				}
-				contentWriter.startElement (DEBUG_URI, X4ODebugTag.execute222Phase.name(), "", atts);
+				contentWriter.printTagStart (Tag.executePhase, atts);
 			} catch (SAXException e) {
 				throw new X4OPhaseException(phase,e);
 			}
@@ -112,10 +167,9 @@ public class X4ODebugWriter {
 				atts.addAttribute ("", "phaseId", "", "", phase.getId());
 				atts.addAttribute ("", "time", "", "", (stopTime-startTime)+"");
 				atts.addAttribute ("", "timeUnit", "", "", "ms");
-				contentWriter.startElement (DEBUG_URI, "executePhaseDone", "", atts);
-				contentWriter.endElement (DEBUG_URI, "executePhaseDone" , "");
+				contentWriter.printTagStartEnd (Tag.executePhaseDone, atts);
 				
-				contentWriter.endElement (DEBUG_URI, X4ODebugTag.execute222Phase.name() , "");
+				contentWriter.printTagEnd (Tag.executePhase);
 			} catch (SAXException e) {
 				throw new X4OPhaseException(phase,e);
 			}
@@ -141,22 +195,19 @@ public class X4ODebugWriter {
 		atts.addAttribute ("", "languageVersion", "", "", languageSession.getLanguage().getLanguageVersion());
 		atts.addAttribute ("", "className", "", "", ec.getClass().getName());
 		atts.addAttribute ("", "currentTimeMillis", "", "", System.currentTimeMillis()+"");
-		contentWriter.startElement(X4ODebugWriter.DEBUG_URI, "X4OConnection", "", atts);
+		contentWriter.printTagStart(Tag.X4OConnection, atts);
 		
 		atts = new AttributesImpl();
 		atts.addAttribute ("", "phaseStop", "", "", languageSession.getPhaseStop());
 		atts.addAttribute ("", "className", "", "", languageSession.getClass().getName());
-		contentWriter.startElement (DEBUG_URI, "X4OLanguageSession", "", atts);
+		contentWriter.printTagStart (Tag.X4OLanguageSession, atts);
 		for (String skipPhase:languageSession.getPhaseSkip()) {
-			atts = new AttributesImpl();
-			contentWriter.startElement (DEBUG_URI, "X4OLanguageSessionSkipPhase", "", atts);
-			contentWriter.characters(skipPhase);
-			contentWriter.endElement(DEBUG_URI, "X4OLanguageSessionSkipPhase", "");
+			contentWriter.printTagCharacters(Tag.X4OLanguageSessionSkipPhase, skipPhase);
 		}
-		contentWriter.endElement(DEBUG_URI, "X4OLanguageSession", "");
+		contentWriter.printTagEnd(Tag.X4OLanguageSession);
 		
 		atts = new AttributesImpl();
-		contentWriter.startElement (DEBUG_URI, "X4OConnectionProperties", "", atts);
+		contentWriter.printTagStart (Tag.X4OConnectionProperties, atts);
 		for (String key:ec.getPropertyKeys()) {
 			Object value = ec.getProperty(key);
 			AttributesImpl atts2 = new AttributesImpl();
@@ -169,22 +220,20 @@ public class X4ODebugWriter {
 				}
 				atts2.addAttribute ("", "value", "", "", value.toString());
 			}
-			
-			contentWriter.startElement (DEBUG_URI, "X4OConnectionProperty", "", atts2);
-			contentWriter.endElement(DEBUG_URI, "X4OConnectionProperty", "");
+			contentWriter.printTagStartEnd (Tag.X4OConnectionProperty, atts2);
 		}
-		contentWriter.endElement(DEBUG_URI, "X4OConnectionProperties", "");
+		contentWriter.printTagEnd (Tag.X4OConnectionProperties);
 	}
 	
 	
 	public void debugConnectionEnd() throws SAXException {
-		contentWriter.endElement(X4ODebugWriter.DEBUG_URI, "X4OConnection", "");
+		contentWriter.printTagEnd (Tag.X4OConnection);
 	}
 	
 	public void debugLanguageDefaultClasses(X4OLanguageSession ec) throws ElementException {
 		try {
 			AttributesImpl atts = new AttributesImpl();
-			contentWriter.startElement (DEBUG_URI, "X4OLanguageDefaultClasses", "", atts);
+			contentWriter.printTagStart (Tag.X4OLanguageDefaultClasses,atts);
 			X4OLanguageConfiguration conf = ec.getLanguage().getLanguageConfiguration();
 			
 			debugLanguageDefaultClass("defaultElementNamespace",conf.getDefaultElementNamespace());
@@ -201,7 +250,7 @@ public class X4ODebugWriter {
 			debugLanguageDefaultClass("defaultElementObjectPropertyValue",conf.getDefaultElementObjectPropertyValue());
 			debugLanguageDefaultClass("defaultElementNamespaceAttributeComparator",conf.getDefaultElementNamespaceAttributeComparator());
 			
-			contentWriter.endElement(DEBUG_URI, "X4OLanguageDefaultClasses", "");
+			contentWriter.printTagEnd(Tag.X4OLanguageDefaultClasses);
 		} catch (SAXException e) {
 			throw new ElementException(e);
 		}
@@ -211,30 +260,28 @@ public class X4ODebugWriter {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "name", "", "", name);
 		atts.addAttribute ("", "className", "", "", clazz.getName());
-		contentWriter.startElement (DEBUG_URI, "X4OLanguageDefaultClass", "", atts);
-		contentWriter.endElement(DEBUG_URI, "X4OLanguageDefaultClass", "");
+		contentWriter.printTagStartEnd (Tag.X4OLanguageDefaultClass, atts);
 	}
 	
 	public void debugPhaseOrder(List<X4OPhase> phases) throws X4OPhaseException {
 		X4OPhase phase = null;
 		try {
-			AttributesImpl atts = new AttributesImpl();
-			contentWriter.startElement (DEBUG_URI, "phaseOrder", "", atts);
+			contentWriter.printTagStart (Tag.phaseOrder);
 			for (X4OPhase phase2:phases) {
 				phase = phase2;
 				debugPhase(phase2);
 			}
-			contentWriter.endElement(DEBUG_URI, "phaseOrder", "");
+			contentWriter.printTagEnd(Tag.phaseOrder);
 		} catch (SAXException e) {
 			// fall back...
 			if (phase==null) {
 				if (phases.isEmpty()) {
-					throw new X4OPhaseException(null,e); /// mmmm
+					throw new X4OPhaseException(null,e); /// FIXME: mmmm phase in exception here ?
 				}
 				phase = phases.get(0);
 			}
 			throw new X4OPhaseException(phase,e);
-		}	
+		}
 	}
 	
 	private void debugPhase(X4OPhase phase) throws X4OPhaseException {
@@ -245,21 +292,16 @@ public class X4ODebugWriter {
 			atts.addAttribute ("", "runOnce", "", "", phase.isRunOnce()+"");
 			atts.addAttribute ("", "listenersSize", "", "", phase.getPhaseListeners().size()+"");
 			
-			contentWriter.startElement (DEBUG_URI, "phase", "", atts);
+			contentWriter.printTagStart (Tag.phase, atts);
 			for (X4OPhaseListener l:phase.getPhaseListeners()) {
 				atts = new AttributesImpl();
 				atts.addAttribute ("", "className", "", "", l.getClass().getName());
-				contentWriter.startElement (DEBUG_URI, "X4OPhaseListener", "", atts);
-				contentWriter.endElement(DEBUG_URI, "X4OPhaseListener", "");
+				contentWriter.printTagStartEnd (Tag.X4OPhaseListener, atts);
 			}
 			for (String dep:phase.getPhaseDependencies()) {
-				atts = new AttributesImpl();
-				//atts.addAttribute ("", "dependency", "", "", dep);
-				contentWriter.startElement (DEBUG_URI, "X4OPhaseDependency", "", atts);
-				contentWriter.characters(dep);
-				contentWriter.endElement(DEBUG_URI, "X4OPhaseDependency", "");
+				contentWriter.printTagCharacters(Tag.X4OPhaseDependency, dep);
 			}
-			contentWriter.endElement(DEBUG_URI, "phase", "");
+			contentWriter.printTagEnd(Tag.phase);
 		} catch (SAXException e) {
 			throw new X4OPhaseException(phase,e);
 		}
@@ -267,8 +309,7 @@ public class X4ODebugWriter {
 	
 	public void debugElementLanguageModules(X4OLanguageSession elementLanguage) throws ElementException {
 		try {
-			AttributesImpl attsEmpty = new AttributesImpl();
-			contentWriter.startElement (DEBUG_URI, "ElementLanguageModules", "", attsEmpty);
+			contentWriter.printTagStart (Tag.ElementLanguageModules);
 			
 			for (X4OLanguageModule module:elementLanguage.getLanguage().getLanguageModules()) {
 				AttributesImpl atts = new AttributesImpl();
@@ -276,7 +317,7 @@ public class X4ODebugWriter {
 				atts.addAttribute ("", "id", "", "", module.getId());
 				atts.addAttribute ("", "providerName", "", "", module.getProviderName());
 				atts.addAttribute ("", "providerHost", "", "", module.getProviderHost());
-				contentWriter.startElement (DEBUG_URI, "ElementLanguageModule", "", atts);
+				contentWriter.printTagStart (Tag.ElementLanguageModule, atts);
 				
 				for (X4OLanguageModuleLoaderResult result:X4OLanguageModuleLoaderResult.values()) {
 					String value = module.getLoaderResult(result);
@@ -286,8 +327,7 @@ public class X4ODebugWriter {
 					atts = new AttributesImpl();
 					atts.addAttribute ("", "resultKey", "", "", result.name());
 					atts.addAttribute ("", "resultValue", "", "", value);
-					contentWriter.startElement (DEBUG_URI, "ElementLanguageModuleResult", "", atts);
-					contentWriter.endElement(DEBUG_URI, "ElementLanguageModuleResult", "");
+					contentWriter.printTagStartEnd (Tag.ElementLanguageModuleResult, atts);
 				}
 				
 				debugElementConfiguratorGlobal(module.getElementConfiguratorGlobals());
@@ -299,9 +339,9 @@ public class X4ODebugWriter {
 					atts.addAttribute ("", "description", "", "", elementInterface.getDescription());
 					atts.addAttribute ("", "interfaceClass", "", "", elementInterface.getInterfaceClass().getName());
 					
-					contentWriter.startElement (DEBUG_URI, "elementInterface", "", atts);
+					contentWriter.printTagStart (Tag.elementInterface, atts);
 					debugElementClassBase(elementInterface);
-					contentWriter.endElement(DEBUG_URI, "elementInterface", "");
+					contentWriter.printTagEnd(Tag.elementInterface);
 				}
 				
 				for (ElementNamespace enc:module.getElementNamespaces()) {
@@ -312,21 +352,20 @@ public class X4ODebugWriter {
 					atts.addAttribute ("", "schemaResource", "", "", enc.getSchemaResource());
 					atts.addAttribute ("", "className", "", "", enc.getClass().getName());
 					
-					contentWriter.startElement (DEBUG_URI, ElementNamespace.class.getSimpleName(), "", atts);
+					contentWriter.printTagStart (Tag.elementNamespace, atts);
 					
 					for (ElementNamespaceAttribute p:enc.getElementNamespaceAttributes()) {
 						atts = new AttributesImpl();
 						atts.addAttribute ("", "attributeName", "", "", p.getAttributeName());
 						atts.addAttribute ("", "description", "", "", p.getDescription());
 						atts.addAttribute ("", "className", "", "", p.getClass().getName());
-						contentWriter.startElement (DEBUG_URI, "elementNamespaceAttribute", "", atts);
+						contentWriter.printTagStart (Tag.elementNamespaceAttribute, atts);
 						for (String para:p.getNextAttributes()) {
 							atts = new AttributesImpl();
 							atts.addAttribute ("", "attributeName", "", "", para);	
-							contentWriter.startElement (DEBUG_URI, "nextAttribute", "", atts);
-							contentWriter.endElement(DEBUG_URI, "nextAttribute", "");
+							contentWriter.printTagStartEnd (Tag.nextAttribute, atts);
 						}
-						contentWriter.endElement(DEBUG_URI, "elementNamespaceAttribute", "");
+						contentWriter.printTagEnd(Tag.elementNamespaceAttribute);
 					}
 					for (ElementClass ec:enc.getElementClasses()) {
 						debugElementClass(ec);
@@ -335,16 +374,15 @@ public class X4ODebugWriter {
 					ElementNamespaceInstanceProvider eip = enc.getElementNamespaceInstanceProvider();
 					atts = new AttributesImpl();
 					atts.addAttribute ("", "className", "", "", eip.getClass().getName());
-					contentWriter.startElement (DEBUG_URI, ElementNamespaceInstanceProvider.class.getSimpleName(), "", atts);
-					contentWriter.endElement(DEBUG_URI, ElementNamespaceInstanceProvider.class.getSimpleName(), "");
+					contentWriter.printTagStartEnd (Tag.ElementNamespaceInstanceProvider, atts);
 					
-					contentWriter.endElement(DEBUG_URI, ElementNamespace.class.getSimpleName(), "");
+					contentWriter.printTagEnd(Tag.elementNamespace);
 				}
 				
-				contentWriter.endElement(DEBUG_URI, "ElementLanguageModule", "");
+				contentWriter.printTagEnd(Tag.ElementLanguageModule);
 			}
 			
-			contentWriter.endElement(DEBUG_URI, "ElementLanguageModules", "");
+			contentWriter.printTagEnd(Tag.ElementLanguageModules);
 		} catch (SAXException e) {
 			throw new ElementException(e);
 		}
@@ -397,18 +435,18 @@ public class X4ODebugWriter {
 					atts.addAttribute ("", "exceptionWhileGetingBeanValues", "", "", e.getMessage());
 				}
 				
-				contentWriter.startElement (DEBUG_URI, "elementObject", "", atts2);
-				contentWriter.endElement(DEBUG_URI, "elementObject", "");
+				contentWriter.printTagStartEnd (Tag.elementObject, atts2);
 			}
 			
 			StringBuilder elementPath = getElementPath(element,new StringBuilder());
 			atts.addAttribute ("", "elementPath", "", "", elementPath.toString());
 			
-			contentWriter.startElement (DEBUG_URI, "element", "", atts);
-			contentWriter.endElement(DEBUG_URI, "element", "");
+			contentWriter.printTagStart(Tag.element, atts);
+			// FIXME put elementObject herer ?
+			contentWriter.printTagEnd(Tag.element);
 		} catch (SAXException e) {
 			throw new ElementException(e);
-		}	
+		}
 	}
 	
 	/**
@@ -430,30 +468,30 @@ public class X4ODebugWriter {
 	}
 	
 	public void debugSAXConfigStart() throws SAXException {
-		AttributesImpl atts = new AttributesImpl();
-		contentWriter.startElement (DEBUG_URI, "SAXConfig", "", atts);
+		contentWriter.printTagStart (Tag.SAXConfig);
 	}
 	
 	public void debugSAXConfigEnd() throws SAXException {
-		contentWriter.endElement(DEBUG_URI, "SAXConfig", "");
+		contentWriter.printTagEnd (Tag.SAXConfig);
 	}
 	
 	public void debugSAXMessage(String type,String key,String value) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "key", "", "", key);
-		atts.addAttribute ("", "value", "", "", value);
+		//atts.addAttribute ("", "value", "", "", value);
 		atts.addAttribute ("", "type", "", "", type);
-		contentWriter.startElement (DEBUG_URI, "SAXConfigProperty", "", atts);
-		contentWriter.endElement(DEBUG_URI, "SAXConfigProperty", "");
+		contentWriter.printTagStart (Tag.SAXConfigProperty, atts);
+		contentWriter.printCharacters(value);
+		contentWriter.printTagEnd(Tag.SAXConfigProperty);
 	}
 	
 	public void debugPhaseMessage(String message,Class<?> clazz) throws ElementException  {	
 		AttributesImpl atts = new AttributesImpl();
-		atts.addAttribute ("", "class", "", "", clazz.getName()+"");
+		atts.addAttribute ("", "fromClass", "", "", clazz.getName()+"");
 		try {
-			contentWriter.startElement (DEBUG_URI, "message", "", atts);
-			contentWriter.characters(message);
-			contentWriter.endElement(DEBUG_URI, "message", "");
+			contentWriter.printTagStart (Tag.message, atts);
+			contentWriter.printCharacters(message);
+			contentWriter.printTagEnd(Tag.message);
 		} catch (SAXException e) {
 			throw new ElementException(e);
 		}
@@ -467,9 +505,9 @@ public class X4ODebugWriter {
 			atts.addAttribute ("", "description", "", "", ec.getDescription());
 			atts.addAttribute ("", "className", "", "", ec.getClass().getName());
 			
-			contentWriter.startElement (DEBUG_URI, "runElementConfigurator", "", atts);
+			contentWriter.printTagStart (Tag.runElementConfigurator, atts);
 			debugElement(element);
-			contentWriter.endElement(DEBUG_URI, "runElementConfigurator", "");
+			contentWriter.printTagEnd(Tag.runElementConfigurator);
 		} catch (SAXException e) {
 			throw new ElementException(e);
 		}
@@ -485,9 +523,9 @@ public class X4ODebugWriter {
 			atts.addAttribute ("", "parentClass", "", "", element.getParent().getElementObject().getClass()+"");
 			atts.addAttribute ("", "childClass", "", "", element.getElementObject().getClass()+"");
 
-			contentWriter.startElement (DEBUG_URI, "doBind", "", atts);
+			contentWriter.printTagStart (Tag.doBind, atts);
 			debugElement(element);
-			contentWriter.endElement(DEBUG_URI, "doBind", "");
+			contentWriter.printTagEnd(Tag.doBind);
 		} catch (SAXException e) {
 			throw new ElementException(e);
 		}
@@ -501,26 +539,25 @@ public class X4ODebugWriter {
 		atts.addAttribute ("", "description", "", "", elementClass.getDescription());
 		atts.addAttribute ("", "objectClassName", "", "", ""+elementClass.getObjectClass());
 		atts.addAttribute ("", "className", "", "", elementClass.getClass().getName());
-		contentWriter.startElement (DEBUG_URI, "elementClass", "", atts);
+		contentWriter.printTagStart (Tag.elementClass, atts);
 		for (String phase:elementClass.getSkipPhases()) {
 			atts = new AttributesImpl();
 			atts.addAttribute ("", "phase", "", "", ""+phase);
-			contentWriter.startElement(DEBUG_URI, "elementSkipPhase", "", atts);
-			contentWriter.endElement(DEBUG_URI, "elementSkipPhase", "");
+			contentWriter.printTagStartEnd(Tag.elementSkipPhase, atts);
 		}
 		debugElementConfigurator(elementClass.getElementConfigurators());
 		debugElementClassBase(elementClass);
-		contentWriter.endElement(DEBUG_URI, "elementClass", "");
+		contentWriter.printTagEnd(Tag.elementClass);
 	}
 	
 	private void debugElementClassBase(ElementClassBase elementClassBase) throws SAXException {
 		AttributesImpl atts = new AttributesImpl();
 		atts.addAttribute ("", "description", "", "", elementClassBase.getDescription());
 		atts.addAttribute ("", "className", "", "", elementClassBase.getClass().getName());
-		contentWriter.startElement (DEBUG_URI, "elementClassBase", "", atts);
+		contentWriter.printTagStart (Tag.elementClassBase, atts);
 		debugElementConfigurator(elementClassBase.getElementConfigurators());
 		debugElementClassAttributes(elementClassBase.getElementClassAttributes());
-		contentWriter.endElement(DEBUG_URI, "elementClassBase", "");
+		contentWriter.printTagEnd(Tag.elementClassBase);
 	}
 	
 	private void debugElementConfigurator(List<ElementConfigurator> elementConfigurators) throws SAXException {
@@ -528,9 +565,8 @@ public class X4ODebugWriter {
 			AttributesImpl atts = new AttributesImpl();
 			atts.addAttribute ("", "description", "", "", elementConfigurator.getDescription());
 			atts.addAttribute ("", "className", "", "", elementConfigurator.getClass().getName());
-			contentWriter.startElement (DEBUG_URI, "elementConfigurator", "", atts);
-			contentWriter.endElement(DEBUG_URI, "elementConfigurator", "");
-		}	
+			contentWriter.printTagStartEnd (Tag.elementConfigurator, atts);
+		}
 	}
 	
 	private void debugElementConfiguratorGlobal(List<ElementConfiguratorGlobal> elementConfigurators) throws SAXException {
@@ -538,9 +574,8 @@ public class X4ODebugWriter {
 			AttributesImpl atts = new AttributesImpl();
 			atts.addAttribute ("", "description", "", "", elementConfigurator.getDescription());
 			atts.addAttribute ("", "className", "", "", elementConfigurator.getClass().getName());
-			contentWriter.startElement (DEBUG_URI, "elementConfiguratorGlobal", "", atts);
-			contentWriter.endElement(DEBUG_URI, "elementConfiguratorGlobal", "");
-		}	
+			contentWriter.printTagStartEnd (Tag.elementConfiguratorGlobal, atts);
+		}
 	}
 	
 	private void debugElementClassAttributes(Collection<ElementClassAttribute> elementClassAttributes) throws SAXException {
@@ -554,17 +589,16 @@ public class X4ODebugWriter {
 			atts.addAttribute ("", "runConverters", "", "", ""+elementClassAttribute.getRunConverters());
 			//atts.addAttribute ("", "runInterfaces", "", "", ""+elementClassAttribute.getRunInterfaces());
 			atts.addAttribute ("", "runResolveEL", "", "", ""+elementClassAttribute.getRunResolveEL());
-			contentWriter.startElement(DEBUG_URI, "elementClassAttribute", "", atts);
+			contentWriter.printTagStart(Tag.elementClassAttribute, atts);
 			if (elementClassAttribute.getObjectConverter()!=null) {
 				debugObjectConverter(elementClassAttribute.getObjectConverter());
 			}
 			for (String alias:elementClassAttribute.getAttributeAliases()) {
 				atts = new AttributesImpl();
 				atts.addAttribute ("", "name", "", "", ""+alias);
-				contentWriter.startElement(DEBUG_URI, "attributeAlias", "", atts);
-				contentWriter.endElement(DEBUG_URI, "attributeAlias", "");
+				contentWriter.printTagStartEnd(Tag.attributeAlias, atts);
 			}
-			contentWriter.endElement(DEBUG_URI, "elementClassAttribute", "");
+			contentWriter.printTagEnd(Tag.elementClassAttribute);
 		}	
 	}
 	
@@ -573,8 +607,11 @@ public class X4ODebugWriter {
 		atts.addAttribute ("", "objectClassTo", "", "", objectConverter.getObjectClassTo().getName());
 		atts.addAttribute ("", "objectClassBack", "", "", objectConverter.getObjectClassBack().getName());
 		atts.addAttribute ("", "className", "", "", objectConverter.getClass().getName());
-		contentWriter.startElement (DEBUG_URI, "objectConverter", "", atts);
-		contentWriter.endElement(DEBUG_URI, "objectConverter", "");
+		contentWriter.printTagStart (Tag.objectConverter, atts);
+		//for (ObjectConverter oc:objectConverter.getObjectConverters()) {
+		//	debugObjectConverter(oc); // TODO: turn me on
+		//}
+		contentWriter.printTagEnd(Tag.objectConverter);
 	}
 	
 	private void debugElementBindingHandler(List<ElementBindingHandler> elementBindingHandlers) throws SAXException {
@@ -583,16 +620,15 @@ public class X4ODebugWriter {
 			atts.addAttribute ("", "className", "", "", bind.getClass().getName());
 			atts.addAttribute ("", "description", "", "", bind.getDescription());
 			atts.addAttribute ("", "bindParentClass", "", "", bind.getBindParentClass().toString());
-			contentWriter.startElement (DEBUG_URI, "elementBindingHandler", "", atts);
-
+			contentWriter.printTagStart (Tag.elementBindingHandler, atts);
+			
 			for (Class<?> clazz:bind.getBindChildClasses()) {
 				AttributesImpl atts2 = new AttributesImpl();
 				atts2.addAttribute ("", "className", "", "", clazz.getName());
-				contentWriter.startElement (DEBUG_URI, "elementBindingHandlerChildClass", "", atts2);
-				contentWriter.endElement (DEBUG_URI, "elementBindingHandlerChildClass", "");
+				contentWriter.printTagStartEnd (Tag.elementBindingHandlerChildClass, atts2);
 			}
 			
-			contentWriter.endElement(DEBUG_URI, "elementBindingHandler", "");
+			contentWriter.printTagEnd(Tag.elementBindingHandler);
 		}
 	}
 	
@@ -611,13 +647,13 @@ public class X4ODebugWriter {
 				}
 				try {
 					AttributesImpl atts = new AttributesImpl();
-					contentWriter.startElement (X4ODebugWriter.DEBUG_URI, "printElementTree", "", atts);
+					contentWriter.printTagStart (Tag.printElementTree, atts);
 					startedPrefix.clear();
 					printXML(languageSession.getRootElement());
 					for (String prefix:startedPrefix) {
-						contentWriter.endPrefixMapping(prefix);
+						contentWriter.getContentWriterWrapped().endPrefixMapping(prefix);
 					}
-					contentWriter.endElement(X4ODebugWriter.DEBUG_URI, "printElementTree", "");
+					contentWriter.printTagEnd(Tag.printElementTree);
 					
 				} catch (SAXException e) {
 					throw new X4OPhaseException(phase,e);
@@ -641,7 +677,7 @@ public class X4ODebugWriter {
 				if (element==null) {
 					throw new SAXException("Can't print debug xml of null element.");
 				}
-				ContentWriter handler = contentWriter; //element.getLanguageSession().getX4ODebugWriter().getContentWriter();
+				ContentWriter handler = getContentWriter();
 				if (element.getElementType().equals(Element.ElementType.comment)) {
 					handler.comment((String)element.getElementObject());
 					return;
