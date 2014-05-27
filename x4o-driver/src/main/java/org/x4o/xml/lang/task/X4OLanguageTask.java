@@ -32,11 +32,29 @@ import org.x4o.xml.io.sax.ext.PropertyConfig;
  */
 public interface X4OLanguageTask {
 
+	/**
+	 * @return	Returns the task id.
+	 */
 	String getId();
+	
+	/**
+	 * @return	Returns the task name.
+	 */
 	String getName();
+	
+	/**
+	 * @return	Returns the task description.
+	 */
 	String getDescription();
 	
+	/**
+	 * @return	Returns newly created PropertyConfig for configuring this task. 
+	 */
 	PropertyConfig createTaskConfig();
 	
+	/**
+	 * @param config	The config with which the task will be runned.
+	 * @return	The task executor for running the task.
+	 */
 	X4OLanguageTaskExecutor createTaskExecutor(PropertyConfig config);
 }

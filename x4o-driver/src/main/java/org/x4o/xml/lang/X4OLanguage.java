@@ -32,7 +32,7 @@ import org.x4o.xml.element.ElementNamespace;
 import org.x4o.xml.lang.phase.X4OPhaseManager;
 
 /**
- * X4OLanguage hold the defined language.
+ * X4OLanguage hold all the base definition properties of x4o xml language.
  * 
  * @author Willem Cazander
  * @version 1.0 30 apr 2013
@@ -40,23 +40,24 @@ import org.x4o.xml.lang.phase.X4OPhaseManager;
 public interface X4OLanguage {
 	
 	/**
-	 * Returns the language for which this ElementLanguage is created.
-	 * @return	Returns the language.
+	 * Returns the language name of this x4o xml language.
+	 * @return	Returns the language name.
 	 */
 	String getLanguageName();
 	
 	/**
-	 * @return	Returns the languageVersion of the parsing of this language.
+	 * @return	Returns the language version of this language instance.
 	 */
 	String getLanguageVersion();
 
 	/**
-	 * @return the X4OPhaseManager.
+	 * Returns the phase manager which runs the phases  
+	 * @return Returns the phase manager.
 	 */
 	X4OPhaseManager getPhaseManager();
 	
 	/**
-	 * @return the languageConfiguration.
+	 * @return the language configuration.
 	 */
 	X4OLanguageConfiguration getLanguageConfiguration();
 

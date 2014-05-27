@@ -38,7 +38,7 @@ import org.x4o.xml.lang.task.X4OLanguageTaskExecutor;
  * @author Willem Cazander
  * @version 1.0 Aug 30, 2013
  */
-public class X4OTaskRunner {
+public final class X4OTaskRunner {
 	
 	static public void runTask(String languageName,String languageVersion,String taskId,List<X4OTaskProperty> props) throws X4OLanguageTaskException {
 		X4ODriver<?> driver = X4ODriverManager.getX4ODriver(languageName);

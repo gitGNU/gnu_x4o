@@ -33,5 +33,10 @@ import org.x4o.xml.lang.X4OLanguage;
  */
 public interface X4OLanguageTaskExecutor {
 
+	/**
+	 * Executes a task for which this executor is created. 
+	 * @param language	The language for which we run the task.
+	 * @throws X4OLanguageTaskException	Can be thrown in case of error.
+	 */
 	void execute(X4OLanguage language) throws X4OLanguageTaskException;
 }

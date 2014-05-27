@@ -39,7 +39,7 @@ import org.x4o.xml.lang.X4OLanguage;
 import org.xml.sax.SAXException;
 
 /**
- * EldXsdWriter creates XML Schema files fom a x4o language. 
+ * EldXsdWriter creates XML Schema files from a x4o language. 
  * 
  * @author Willem Cazander
  * @version 1.0 Aug 8, 2012

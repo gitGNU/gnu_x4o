@@ -41,6 +41,9 @@ import org.x4o.xml.lang.phase.X4OPhase;
  */
 public interface X4OLanguageSession {
 	
+	/**
+	 * @return	Returns the language from which this session in created.
+	 */
 	X4OLanguage getLanguage();
 	
 	/**
@@ -90,7 +93,6 @@ public interface X4OLanguageSession {
 	 */
 	void setRootElement(Element element);
 	
-	
 	/**
 	 * @return	Returns null or an X4ODebugWriter to write parsing steps and debug data to.
 	 */
@@ -107,7 +109,13 @@ public interface X4OLanguageSession {
 	 */
 	X4OPhase getPhaseCurrent();
 	
+	/**
+	 * @return	Returns the phase this session will stop processing.
+	 */
 	public String getPhaseStop();
 	
+	/**
+	 * @return	Returns a list of phases we skip while processing.
+	 */
 	public List<String> getPhaseSkip();
 }
